@@ -1,0 +1,4 @@
+<%= for listing <- @listings do %>
+<%= inspect listing %>
+-----<br />
+<% end %>

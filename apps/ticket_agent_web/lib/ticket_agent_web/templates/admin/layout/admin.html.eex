@@ -1,0 +1,28 @@
+<%= render "header.html", assigns %>
+<%= render "sidebar.html", assigns %>
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <%= render "breadcrumb.html", assigns %>
+    <!-- Main content -->
+    <section class="content container-fluid">
+    <%= render @view_module, @view_template, assigns %>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <%= render "footer.html", assigns %>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- Bootstrap 3.3.7 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<!-- AdminLTE App -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.0/js/adminlte.min.js" integrity="sha256-/OrZtWro6rZIn4459Zz3L+FRmZrvs5wvprCm/jRUF8A=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.7.1/ckeditor.js" integrity="sha256-z/caypJPjI0VQvkPoOkFkYRKJarx1HFweYzdAgRc3hc=" crossorigin="anonymous"></script>
+
+<script src="<%= static_path(@conn, "/js/admin/admin.js") %>"></script>
+</body>
+</html>

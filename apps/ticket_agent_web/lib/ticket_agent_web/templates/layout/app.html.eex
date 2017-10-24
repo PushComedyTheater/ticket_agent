@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" class="font-primary">
+  <head>
+    <title><%= page_title(@conn) %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <%= render "social.html", conn: @conn %>
+    <%= render "favicons.html" %>
+
+
+    <!-- Google Fonts -->
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,500,600,700%7Csubset=cyrillic,latin" rel="stylesheet" type="text/css">
+
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/bootstrap/bootstrap.min.css">
+
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-line/css/simple-line-icons.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-line-pro/style.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-hs/style.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/animate.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/fancybox/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/slick-carousel/slick/slick.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsparallaxer.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsscroller/scroller.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/advancedscroller/plugin.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/typedjs/typed.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/hs-megamenu/src/hs.megamenu.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/malihu-scrollbar/jquery.mCustomScrollbar.min.css">
+
+    <!-- CSS Unify -->
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/css/unify.css">
+
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/css/custom.css">
+  </head>
+
+  <body>
+    <main>
+      <!-- Header -->
+      <%= render TicketAgentWeb.MenuView, "menu.html", assigns %>
+      <!-- End Header -->
+      <%= render @view_module, @view_template, assigns %>
+      <!-- Promo Block -->
+      <!-- End Promo Block -->
+      <!-- Call to Action -->
+      <%= render "newsletter.html", assigns %>
+      <!-- End Call to Action -->
+
+      <!-- Footer -->
+      <%= render "footer.html", assigns %>
+      <!-- End Footer -->
+
+      <!-- Copyright Footer -->
+      <footer class="g-bg-gray-dark-v1 g-color-white-opacity-0_8 g-py-20">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 text-center text-md-left g-mb-10 g-mb-0--md">
+              <div class="d-lg-flex">
+                <small class="d-block g-font-size-default g-mr-10 g-mb-10 g-mb-0--md">2017 © All Rights Reserved.</small>
+                <ul class="u-list-inline">
+                  <li class="list-inline-item">
+                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="/privacy">Privacy Policy</a>
+                  </li>
+                  <li class="list-inline-item">
+                    <span>|</span>
+                  </li>
+                  <li class="list-inline-item">
+                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="/terms">Terms of Use</a>
+                  </li>
+                  <li class="list-inline-item">
+                    <span>|</span>
+                  </li>
+                  <li class="list-inline-item">
+                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="mailto:support@pushcomedytheater.com">Support</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-4 align-self-center">
+              <ul class="list-inline text-center text-md-right mb-0">
+                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Facebook">
+                  <a href="https://www.facebook.com/PushComedyTheater" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                    <i class="fa fa-facebook"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Twitter">
+                  <a href="https://twitter.com/pushcomedy" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                    <i class="fa fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Google Plus">
+                  <a href="https://plus.google.com/u/0/b/111820986003170275262/+PushComedyTheaterNorfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                    <i class="fa fa-google-plus"></i>
+                  </a>
+                </li>
+
+                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Yelp">
+                  <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                    <i class="fa fa-yelp"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- End Copyright Footer -->
+    </main>
+
+    <!-- JS Global Compulsory -->
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/tether.min.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/bootstrap/bootstrap.min.js"></script>
+
+    <!-- JS Implementing Plugins -->
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/hs-megamenu/src/hs.megamenu.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsparallaxer.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsscroller/scroller.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/advancedscroller/plugin.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/typedjs/typed.min.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/vendor/masonry/dist/masonry.pkgd.min.js"></script>
+
+    <!-- JS Unify -->
+    <script src="https://cdn.pushcomedytheater.com/template/js/hs.core.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.header.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/js/helpers/hs.hamburgers.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.go-to.js"></script>
+
+    <!-- JS Plugins Init. -->
+    <script>
+      $(document).on('ready', function () {
+        // Header
+        $.HSCore.components.HSHeader.init($('#js-header'));
+        $.HSCore.helpers.HSHamburgers.init('.hamburger');
+
+        // Initialization of HSMegaMenu plugin
+        $('.js-mega-menu').HSMegaMenu({
+          event: 'hover',
+          pageContainer: $('.container'),
+          breakpoint: 991
+        });
+
+        // initialization of text animation (typing)
+        $(".u-text-animation.u-text-animation--typing").typed({
+          strings: ["improvisational", "funny", "musical", "dramatic"],
+          typeSpeed: 60,
+          loop: true,
+          backDelay: 1500,
+        });
+
+        // Initialization of masonry.js
+        $('.masonry-grid').imagesLoaded().then(function () {
+          $('.masonry-grid').masonry({
+            // options
+            columnWidth: '.masonry-grid-sizer',
+            itemSelector: '.masonry-grid-item',
+            percentPosition: true
+          });
+        });
+
+        // initialization of go to
+        $.HSCore.components.HSGoTo.init('.js-go-to');
+      });
+    </script>
+     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

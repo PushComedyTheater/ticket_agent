@@ -1,0 +1,25 @@
+<br />
+<br />
+<br />
+<br />
+  <section class="g-bg-gray-light-v5 g-py-20">
+    <div class="container">
+      <div class="d-sm-flex text-center">
+
+        <div class="align-self-center ml-auto">
+          <ul class="u-list-inline">
+            <li class="list-inline-item g-mr-5">
+              <%= link "Home", to: root_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+              <i class="g-color-gray-light-v2 g-ml-5">/</i>
+            </li>
+            <li class="list-inline-item g-color-primary">
+              <span>Camps</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+<br />
+<br />
+<br />

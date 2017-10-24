@@ -1,0 +1,113 @@
+<br />
+<br />
+<br />
+<br />
+  <section class="g-bg-gray-light-v5 g-py-20">
+    <div class="container">
+      <div class="d-sm-flex text-center">
+
+        <div class="align-self-center ml-auto">
+          <ul class="u-list-inline">
+            <li class="list-inline-item g-mr-5">
+              <%= link "Home", to: root_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+              <i class="g-color-gray-light-v2 g-ml-5">/</i>
+            </li>
+            <li class="list-inline-item g-color-primary">
+              <%= link "About Us", to: about_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+      <section class="dzsparallaxer auto-init height-is-based-on-content use-loading mode-scroll loaded dzsprx-readyall " data-options='{direction: "fromtop", animation_duration: 25, direction: "reverse"}'>
+        <!-- Parallax Image -->
+        <div class="divimage dzsparallaxer--target w-100 u-bg-overlay g-bg-black-opacity-0_3--after" style="height: 140%; background-image: url(https://cdn.pushcomedytheater.com/images/headers/push_sign.jpg);"></div>
+        <!-- End Parallax Image -->
+
+        <!-- Promo Block Content -->
+        <div class="container g-color-white text-center g-py-120">
+          <h3 class="h1 g-font-weight-600 text-uppercase mb-2">About the push comedy theater</h3>
+          <p class="g-font-weight-300 g-font-size-22 text-uppercase">&nbsp;</p>
+        </div>
+        <!-- Promo Block Content -->
+      </section>
+      <!-- End Promo Block -->
+
+      <!-- Heading -->
+      <section class="container u-ns-bg-v1-bottom g-bg-white g-py-40">
+        <h2 class="h5 g-line-height-1_6">The Push Comedy Theater is a 90 seat venue in the heart of Norfolk's brand new Arts District.  Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.</p>
+        <p>The Push Comedy Theater will host live sketch, improv and stand-up comedy on Friday and Saturday nights.  During the week classes will be offered in stand-up, sketch and improv comedy as well as acting and film production.</p>
+        <p>Whether your a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.</h2>
+      </section>
+      <!-- End Heading -->
+
+      <!-- Testimonials -->
+      <section class="g-bg-gray-light-v5 g-py-100">
+        <div class="container">
+          <div class="row justify-content-center g-mb-60">
+            <div class="col-lg-8">
+              <!-- Heading -->
+              <div class="text-center">
+                <h2 class="h3 g-color-black text-uppercase mb-2">What do people say about Push Comedy Theater?</h2>
+                <div class="d-inline-block g-width-35 g-height-2 g-bg-primary mb-2"></div>
+              </div>
+              <!-- End Heading -->
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6 g-mb-30">
+              <!-- Testimonials -->
+              <div class="media g-brd-bottom g-brd-3 g-brd-gray-light-v4 g-brd-primary--hover g-bg-white g-rounded-4 g-transition-0_3 g-pa-20">
+                <div class="media-body">
+                  <span class="yelp-review" data-review-id="C-Sx2F1_jlKBM9RZTg8_NA" data-hostname="www.yelp.com">Read <a href="https://www.yelp.com/user_details?userid=wCy0y_JqzkKL1PQ8i9XJmA" rel="nofollow noopener">Lindsay I.</a>'s <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk?hrid=C-Sx2F1_jlKBM9RZTg8_NA" rel="nofollow noopener">review</a> of <a href="https://www.yelp.com/biz/r1xVJSSmaxxqpNT7BQfYdg" rel="nofollow noopener">Push Comedy Theater</a> on <a href="https://www.yelp.com" rel="nofollow noopener">Yelp</a></span>
+                </div>
+              </div>
+              <!-- End Testimonials -->
+            </div>
+
+            <div class="col-lg-6 g-mb-30">
+              <!-- Testimonials -->
+              <div class="media g-brd-bottom g-brd-3 g-brd-gray-light-v4 g-brd-primary--hover g-bg-white g-rounded-4 g-transition-0_3 g-pa-20">
+                <div class="media-body">
+<span class="yelp-review" data-review-id="PNPvwVNrwV31aO3XfleZgw" data-hostname="www.yelp.com">Read <a href="https://www.yelp.com/user_details?userid=UGizeS5GjhQyHKrFkTKguQ" rel="nofollow noopener">Paul T.</a>'s <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk?hrid=PNPvwVNrwV31aO3XfleZgw" rel="nofollow noopener">review</a> of <a href="https://www.yelp.com/biz/r1xVJSSmaxxqpNT7BQfYdg" rel="nofollow noopener">Push Comedy Theater</a> on <a href="https://www.yelp.com" rel="nofollow noopener">Yelp</a></span>
+                </div>
+              </div>
+              <!-- End Testimonials -->
+            </div>
+
+            <div class="col-lg-6 g-mb-30">
+              <!-- Testimonials -->
+              <div class="media g-brd-bottom g-brd-3 g-brd-gray-light-v4 g-brd-primary--hover g-bg-white g-rounded-4 g-transition-0_3 g-pa-20">
+                <div class="media-body">
+                  <span class="yelp-review" data-review-id="Oly1105JPxz12b1k7EqvBQ" data-hostname="www.yelp.com">Read <a href="https://www.yelp.com/user_details?userid=XO0u6pFmjaa0jgHE097h2g" rel="nofollow noopener">Brooke T.</a>'s <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk?hrid=Oly1105JPxz12b1k7EqvBQ" rel="nofollow noopener">review</a> of <a href="https://www.yelp.com/biz/r1xVJSSmaxxqpNT7BQfYdg" rel="nofollow noopener">Push Comedy Theater</a> on <a href="https://www.yelp.com" rel="nofollow noopener">Yelp</a></span>
+                </div>
+              </div>
+              <!-- End Testimonials -->
+            </div>
+
+            <div class="col-lg-6 g-mb-30">
+              <!-- Testimonials -->
+              <div class="media g-brd-bottom g-brd-3 g-brd-gray-light-v4 g-brd-primary--hover g-bg-white g-rounded-4 g-transition-0_3 g-pa-20">
+                <div class="media-body">
+                  <span class="yelp-review" data-review-id="L1Jh3j_yK6kCF1P8lcCAkg" data-hostname="www.yelp.com">Read <a href="https://www.yelp.com/user_details?userid=rL9PSbxOD4IBAfnfkq1giw" rel="nofollow noopener">Matt K.</a>'s <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk?hrid=L1Jh3j_yK6kCF1P8lcCAkg" rel="nofollow noopener">review</a> of <a href="https://www.yelp.com/biz/r1xVJSSmaxxqpNT7BQfYdg" rel="nofollow noopener">Push Comedy Theater</a> on <a href="https://www.yelp.com" rel="nofollow noopener">Yelp</a></span>
+                </div>
+              </div>
+              <!-- End Testimonials -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Testimonials -->
+      <br />
+
+      <div class="text-center responsive-video">
+        <iframe width="560" height="315" src="//www.youtube.com/embed/t6PEAREv5tk" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <!-- Team Blocks -->
+        <%= render "team.html", assigns %>
+      <!-- End Team Blocks -->
+<script async="async" src="https://www.yelp.com/embed/widgets.js" type="text/javascript"></script>

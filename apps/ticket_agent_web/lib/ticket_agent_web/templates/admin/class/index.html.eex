@@ -1,0 +1,35 @@
+ <section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Classes</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tbody><tr>
+              <th></th>
+              <th>Type</th>
+              <th>Title</th>
+              <th></th>
+            </tr>
+            <%= for class <- @classes do %>
+              <tr>
+                <td>
+                  <%= link "ADD NEW SESSION", to: admin_listing_path(@conn, :new, class_id: class.id), class: "label bg-green" %>
+                </td>
+                <td><%= class.type %></td>
+                <td><%= class.title %></td>
+                <td><i class="fa fa-fw fa-edit"></i></td>
+              </tr>
+            <% end %>
+          </tbody></table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+  </div>
+</section>
+          <!-- /.box -->

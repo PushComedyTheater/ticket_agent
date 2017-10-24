@@ -1,0 +1,19 @@
+<li class="nav-item hs-has-sub-menu g-mx-10--lg g-mx-15--xl">
+  <a id="nav-link--camps" class="nav-link g-py-7 g-px-0" href="/camps"
+     aria-haspopup="true"
+     aria-expanded="false"
+     aria-controls="nav-submenu--home"
+  >Summer Camps</a>
+
+  <!-- Submenu -->
+  <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home"
+      aria-labelledby="nav-link--home">
+    <li class="dropdown-item">
+      <%= link "Pre-Teen Improv Camp", to: camp_path(@conn, :show, "pre-teen"), class: "nav-link" %>
+    </li>
+    <li class="dropdown-item">
+      <%= link "Teen Improv and Sketch Comedy Summer Camp", to: camp_path(@conn, :show, "teen"), class: "nav-link" %>
+    </li>
+  </ul>
+  <!-- End Submenu -->
+</li>

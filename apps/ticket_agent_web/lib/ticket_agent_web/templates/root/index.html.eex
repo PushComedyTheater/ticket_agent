@@ -1,0 +1,13 @@
+<section class="g-bg-cover g-bg-pos-top-center g-bg-img-hero g-bg-black-opacity-0_3--after g-min-height-100vh g-flex-centered g-py-100" style="background-image: url(<%= header_image %>);">
+  <div class="container g-color-white text-center g-z-index-1">
+    <div class="mb-5">
+      <h2 class="g-font-weight-700 g-font-size-40 g-font-size-70--md text-uppercase g-mb-30">
+        We are
+        <span class="u-text-animation u-text-animation--typing"></span>
+      </h2>
+    </div>
+    <%= link "Take A Class", to: classes_path(@conn, :index), class: "btn u-btn-outline-white g-color-white g-bg-white-opacity-0_1 g-color-black--hover g-bg-green--hover g-font-weight-600 text-uppercase g-rounded-50 g-px-30 g-py-13" %>
+    &nbsp;
+    <%= link "Watch A Show", to: show_path(@conn, :index), class: "btn u-btn-outline-white g-color-white g-bg-white-opacity-0_1 g-color-black--hover g-bg-white--hover g-font-weight-600 text-uppercase g-rounded-50 g-px-30 g-py-13" %>
+  </div>
+</section>

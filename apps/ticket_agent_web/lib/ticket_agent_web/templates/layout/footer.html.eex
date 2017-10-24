@@ -1,0 +1,111 @@
+      <div class="g-bg-black-opacity-0_7 g-color-white-opacity-0_8 g-py-60">
+        <div class="container">
+          <div class="row">
+            <!-- Footer Content -->
+            <div class="col-lg-4 col-md-6 g-mb-40 g-mb-0--lg">
+              <div class="u-heading-v2-3--bottom g-brd-white-opacity-0_8 g-mb-20">
+                <h2 class="u-heading-v2__title h6 text-uppercase mb-0">About Us</h2>
+              </div>
+              <p>The Push Comedy Theater is a 90 seat venue in the heart of Norfolk's brand new Arts District.</p>
+              <p>Free parking available at Slone Chiropractic (<a href="http://goo.gl/9RC1KK" target="_blank">111 West Virginia Beach Blvd</a>) just one block from the theater.  There is also limited parking on the street and in the lot directly behind the theater.</p>
+              <p><script async defer src="https://pushcomedytheaterslacking.herokuapp.com/slackin.js"></script></p>
+            </div>
+            <!-- End Footer Content -->
+
+
+            <!-- Footer Content -->
+            <div class="col-lg-4 col-md-6 g-mb-40 g-mb-0--lg">
+              <div class="u-heading-v2-3--bottom g-brd-white-opacity-0_8 g-mb-20">
+                <h2 class="u-heading-v2__title h6 text-uppercase mb-0">Useful Links</h2>
+              </div>
+
+              <nav class="text-uppercase1">
+                <ul class="list-unstyled g-mt-minus-10 mb-0">
+                  <li class="g-pos-rel g-brd-bottom g-brd-white-opacity-0_1 g-py-10">
+                    <h4 class="h6 g-pr-20 mb-0">
+                      <%= link "About Us", to: about_path(@conn, :index), class: "g-color-white-opacity-0_8 g-color-white--hover" %>
+                      <i class="fa fa-angle-right g-absolute-centered--y g-right-0"></i>
+                    </h4>
+                  </li>
+                  <li class="g-pos-rel g-brd-bottom g-brd-white-opacity-0_1 g-py-10">
+                    <h4 class="h6 g-pr-20 mb-0">
+                      <%= link "Classes", to: classes_path(@conn, :index), class: "g-color-white-opacity-0_8 g-color-white--hover" %>
+                      <i class="fa fa-angle-right g-absolute-centered--y g-right-0"></i>
+                    </h4>
+                  </li>
+                  <li class="g-pos-rel g-brd-bottom g-brd-white-opacity-0_1 g-py-10">
+                    <h4 class="h6 g-pr-20 mb-0">
+                      <%= link "Shows", to: show_path(@conn, :index), class: "g-color-white-opacity-0_8 g-color-white--hover" %>
+                      <i class="fa fa-angle-right g-absolute-centered--y g-right-0"></i>
+                    </h4>
+                  </li>
+                  <li class="g-pos-rel g-brd-bottom g-brd-white-opacity-0_1 g-py-10">
+                    <h4 class="h6 g-pr-20 mb-0">
+                      <%= link "Camps", to: camp_path(@conn, :index), class: "g-color-white-opacity-0_8 g-color-white--hover" %>
+                      <i class="fa fa-angle-right g-absolute-centered--y g-right-0"></i>
+                    </h4>
+                  </li>
+                  <li class="g-pos-rel g-brd-bottom g-brd-white-opacity-0_1 g-py-10">
+                    <h4 class="h6 g-pr-20 mb-0">
+                      <%= link "Corporate Workshops", to: workshop_path(@conn, :index), class: "g-color-white-opacity-0_8 g-color-white--hover" %>
+                      <i class="fa fa-angle-right g-absolute-centered--y g-right-0"></i>
+                    </h4>
+                  </li>
+                  <li class="g-pos-rel g-py-10">
+                    <h4 class="h6 g-pr-20 mb-0">
+                      <a class="g-color-white-opacity-0_8 g-color-white--hover" href="#">Contact Us</a>
+                      <i class="fa fa-angle-right g-absolute-centered--y g-right-0"></i>
+                    </h4>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <!-- End Footer Content -->
+
+            <!-- Footer Content -->
+            <div class="col-lg-4 col-md-6">
+              <div class="u-heading-v2-3--bottom g-brd-white-opacity-0_8 g-mb-20">
+                <h2 class="u-heading-v2__title h6 text-uppercase mb-0">Our Contacts</h2>
+              </div>
+
+              <address class="g-bg-no-repeat g-font-size-12 mb-0">
+                <!-- Location -->
+                <div class="d-flex g-mb-20">
+                  <div class="g-mr-10">
+                    <span class="u-icon-v3 u-icon-size--xs g-bg-white-opacity-0_1 g-color-white-opacity-0_6">
+                      <i class="fa fa-map-marker"></i>
+                    </span>
+                  </div>
+                  <p class="mb-0">2763 Granby Street<br />Norfolk, VA 23510 <br /></p>
+                </div>
+                <!-- End Location -->
+
+                <!-- Phone -->
+                <div class="d-flex g-mb-20">
+                  <div class="g-mr-10">
+                    <span class="u-icon-v3 u-icon-size--xs g-bg-white-opacity-0_1 g-color-white-opacity-0_6">
+                      <i class="fa fa-phone"></i>
+                    </span>
+                  </div>
+                  <p class="mb-0"><a href="tel:7573337442">757.333.7442</a></p>
+                </div>
+                <!-- End Phone -->
+
+                <!-- Email and Website -->
+                <div class="d-flex g-mb-20">
+                  <div class="g-mr-10">
+                    <span class="u-icon-v3 u-icon-size--xs g-bg-white-opacity-0_1 g-color-white-opacity-0_6">
+                      <i class="fa fa-globe"></i>
+                    </span>
+                  </div>
+                  <p class="mb-0">
+                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="mailto:support@pushcomedytheater.com">support@pushcomedytheater.com</a>
+                  </p>
+                </div>
+                <!-- End Email and Website -->
+              </address>
+            </div>
+            <!-- End Footer Content -->
+          </div>
+        </div>
+      </div>

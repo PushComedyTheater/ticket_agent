@@ -1,0 +1,87 @@
+<%
+cover_image = cover_image(@changeset.data)
+%>
+<div class="box box-primary">
+  <div class="box-header with-border">
+    <h3 class="box-title">Create New Listing</h3>
+  </div>
+  <!-- /.box-header -->
+  <!-- form start -->
+  <%= form_for @changeset, admin_listing_path(@conn, :create), fn f -> %>
+    <div class="box-body">
+      <%= hidden_input(f, :type) %>
+      <%= hidden_input(f, :slug) %>
+      <%= hidden_input(f, :cover_image) %>
+
+      <div class="form-group">
+        <label>Title</label>
+        <%= text_input(f, :title, class: "form-control") %>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10) %>
+      </div>
+      <div class="form-group">
+        <label>Start Time</label>
+        <%= my_datetime_select f, :start_time %>
+      </div>
+      <div class="form-group">
+        <label>End Time</label>
+        <%= my_datetime_select f, :end_time %>
+      </div>
+    </div>
+    </div>
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Listing Images</h3>
+      </div>
+    <!-- /.box-body -->
+
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-4">Event Cover Image</div>
+        <div class="col-sm-4">
+          <img id="cover_image" src="<%= cover_image(f.data) %>" style="zoom: 50%; padding: 5px;" /><br /><br />
+          <a href="#" id="upload_cover_photo" class="btn btn-primary">
+            Upload Photo
+          </a>
+          <a href="#" id="choose_cover_photo" class="btn btn-primary">
+            Choose Existing Photo
+          </a>
+          <!-- Button trigger modal -->
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-4">Event Social Image</div>
+        <div class="col-sm-4">
+          <img id="social_image" src="<%= social_image(f.data) %>" style="zoom: 50%; padding: 5px;" /><br /><br />
+          <a href="#" id="upload_social_photo" class="btn btn-primary">
+            Upload Photo
+          </a>
+          <a href="#" id="choose_social_photo" class="btn btn-primary">
+            Choose Existing Photo
+          </a>
+          <!-- Button trigger modal -->
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Tickets</h3>
+      </div>
+    </div>
+
+    TICKDTS
+
+    <div class="box-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  <% end %>
+</div>
+<script src="//widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+<script src="<%= static_path(@conn, "/js/admin/listing.js") %>"></script>

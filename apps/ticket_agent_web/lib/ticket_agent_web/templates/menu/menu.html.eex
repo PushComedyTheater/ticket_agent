@@ -1,0 +1,79 @@
+<header id="js-header" class="u-header u-header--sticky-top u-header--toggle-section u-header--change-appearance"
+        data-header-fix-moment="300">
+    <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10"
+         data-header-fix-moment-exclude="g-bg-white g-py-10"
+         data-header-fix-moment-classes="g-bg-white-opacity-0_9 u-shadow-v18 g-py-3">
+      <nav class="js-mega-menu navbar navbar-toggleable-md">
+        <div class="container">
+          <!-- Responsive Toggle Button -->
+          <button class="navbar-toggler navbar-toggler-right btn g-line-height-1 g-brd-none g-pa-0 g-pos-abs g-right-0" type="button"
+                  aria-label="Toggle navigation"
+                  aria-expanded="false"
+                  aria-controls="navBar"
+                  data-toggle="collapse"
+                  data-target="#navBar">
+            <span class="hamburger hamburger--slider">
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </span>
+          </button>
+          <!-- End Responsive Toggle Button -->
+
+          <!-- Logo -->
+          <a href="/" class="navbar-brand">
+            <img alt="Logo" src="https://cdn.pushcomedytheater.com/images/logo-sm.png"  />
+          </a>
+          <!-- End Logo -->
+
+          <!-- Navigation -->
+          <div class="collapse navbar-collapse align-items-center flex-sm-row g-pt-10 g-pt-5--lg g-mr-40--lg" id="navBar">
+            <ul class="navbar-nav text-uppercase g-font-weight-600 ml-auto">
+
+              <li class="nav-item g-mx-10--lg g-mx-15--xl">
+                <%= link "home", to: root_path(@conn, :index), id: "nav-link--home", class: "nav-link g-py-7 g-px-0" %>
+              </li>
+
+              <%= render "shows.html", assigns %>
+
+              <%= render "classes.html", assigns %>
+
+              <li class="nav-item g-mx-10--lg g-mx-15--xl">
+                <%= link "Corporate Workshops", to: workshop_path(@conn, :index), id: "nav-link--workshop", class: "nav-link g-py-7 g-px-0" %>
+              </li>
+
+              <%= render "camps.html", assigns %>
+
+              <%= render "about.html", assigns %>
+
+              <%= if Coherence.logged_in?(@conn) do %>
+                <li class="nav-item hs-has-sub-menu g-mx-10--lg g-mx-15--xl">
+                  <%= link "Dashboard", to: dashboard_path(@conn, :index), class: "btn u-btn-outline-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
+                  <!-- Submenu -->
+                  <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home">
+                    <li class="dropdown-item">
+                      <%= link "Your Orders", to: about_path(@conn, :show, "ed"), class: "nav-link" %>
+                    </li>
+                    <li class="dropdown-item">
+                      <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "nav-link" %>
+                    </li>
+                  </ul>
+                  <!-- End Submenu -->
+                </li>
+              <% else %>
+                <li class="nav-item g-mx-10--lg g-mx-15--xl">
+                  <%= link "Login", to: session_path(@conn, :new), class: "btn u-btn-outline-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
+                </li>
+              <% end %>
+
+              <%= if is_admin(@conn.assigns) do %>
+                <li class="nav-item g-mx-10--lg g-mx-15--xl">
+                  <%= link "Admin", to: admin_dashboard_path(@conn, :index), class: "btn btn-md u-btn-darkgray g-brd-2 rounded-0" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>

@@ -1,0 +1,153 @@
+<br />
+<br />
+<br />
+<br />
+      <!-- Breadcrumbs -->
+      <section class="g-bg-gray-light-v5 g-py-20">
+        <div class="container">
+          <div class="d-sm-flex text-center">
+
+            <div class="align-self-center ml-auto">
+              <ul class="u-list-inline">
+                <li class="list-inline-item g-mr-5">
+                  <a class="u-link-v5 g-color-main g-color-primary--hover" href="/">Home</a>
+                  <i class="g-color-gray-light-v2 g-ml-5">/</i>
+                </li>
+                <li class="list-inline-item g-color-primary">
+                  <span>Corporate Workshops</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Breadcrumbs -->
+      <!-- Promo Block -->
+      <section class="container g-pt-10">
+        <div class="u-shadow-v24 g-bg-white rounded g-pa-20">
+          <div class="g-bg-cover g-bg-img-hero g-bg-black-opacity-0_1--after g-px-20 g-py-200" style="background-image: url(https://cdn.pushcomedytheater.com/images/corporate/corp0.jpg);">
+            <div class="text-center g-pos-rel g-z-index-1">
+              <span class="d-block g-color-white g-font-size-20 text-uppercase g-letter-spacing-5 g-mb-50">Push Comedy Theater's</span>
+              <h1 class="d-inline-block g-brd-around g-brd-2 g-brd-white g-color-white g-font-weight-700 g-font-size-20 g-font-size-50--md text-uppercase g-line-height-1_2 g-letter-spacing-5 g-py-12 g-px-20 g-mb-50">Corporate Workshops</h1>
+              <p class="g-color-white g-font-size-20 text-uppercase g-letter-spacing-5 mb-0">the most fun you’ve ever had at work.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Team Blocks v1 -->
+      <section class="container g-py-100">
+
+        <div id="shortcode1">
+          <!-- Figure -->
+          <figure class="row flex-md-row align-items-center">
+            <!-- Figure Body -->
+            <div class="col-md-6 px-0">
+              <div class="u-ns-bg-v1-bottom u-ns-bg-v1-right--md g-bg-white g-py-30 g-px-50">
+                <!-- Figure Info -->
+                <div class="g-mb-25">
+                  <div class="g-mb-20">
+                    <h3 class="h2 g-color-black g-mb-5">Why Improv?</h3>
+                  </div>
+                  <p>You know how important is it to bring your team together to build relationships and create an environment that encourages collaboration and teamwork. Improv is an art form that has the power to teach tremendous lessons and energize participants through play.</p>
+                </div>
+                <!-- End Figure Info -->
+
+
+                <!-- End Figure Social Icons -->
+              </div>
+            </div>
+            <!-- End Figure Body -->
+
+            <!-- Figure Image -->
+            <div class="col-md-6 px-0">
+              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/corporate/corp1.jpg" alt="Image Description">
+            </div>
+            <!-- End Figure Image -->
+          </figure>
+          <!-- End Figure -->
+
+          <!-- Figure -->
+          <figure class="row flex-md-row align-items-center">
+            <!-- Figure Body -->
+            <div class="col-md-6 push-md-6 px-0">
+              <div class="u-ns-bg-v1-bottom u-ns-bg-v1-left--md g-bg-white g-py-30 g-px-50">
+                <!-- Figure Info -->
+                <div class="g-mb-25">
+                  <div class="g-mb-20">
+                    <h3 class="h2 g-color-black g-mb-5">Lessons</h3>
+                  </div>
+                  <p>Workshop participants build listening skills, learn to think on their feet, shift their thinking to help the group before themselves, and learn to trust each other in a whole new way.</p>
+                  <p>"Yes, and" are the two most important words in Improv. By saying Yes you are accepting the contributions of others. With And, you are adding your own ideas. These two steps allow participants to create together, rather than arguing over little details. While simple in theory, people are combative by nature. “Yes, and” helps your team lose that combativeness and negativity, and focus on building a positive, supportive and creative working environment.</p>
+                </div>
+                <!-- End Figure Info -->
+              </div>
+            </div>
+            <!-- End Figure Body -->
+
+            <!-- Figure Image -->
+            <div class="col-md-6 pull-md-6 px-0">
+              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/corporate/corp2.jpg" alt="Image Description">
+            </div>
+            <!-- End Figure Image -->
+          </figure>
+          <!-- End Figure -->
+
+          <!-- Figure -->
+          <figure class="row flex-md-row align-items-center">
+            <!-- Figure Body -->
+            <div class="col-md-6 px-0">
+              <div class="u-ns-bg-v1-bottom u-ns-bg-v1-right--md g-bg-white g-py-30 g-px-50">
+                <!-- Figure Info -->
+                <div class="g-mb-25">
+                  <div class="g-mb-20">
+                    <h3 class="h2 g-color-black g-mb-5">Structure</h3>
+                  </div>
+                  <p>Workshops are typically 3 hours in length but can be customized to meet the needs and objectives of your group. Workshops can be presented at Push Comedy Theater or at your designated location.</p>
+                  <p>Through a series of warmup exercises, professional instructors tear down any nerves or reservations your team may have. Participants then learn basic improv skills, improv games, and how these lessons are applicable to their work environment.</p>
+                  <p>This workshop encourages creativity and teammate support while using laughter as a key factor.</p>
+                </div>
+                <!-- End Figure Info -->
+
+
+                <!-- End Figure Social Icons -->
+              </div>
+            </div>
+            <!-- End Figure Body -->
+
+            <!-- Figure Image -->
+            <div class="col-md-6 px-0">
+              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/corporate/corp3.jpg" alt="Image Description">
+            </div>
+            <!-- End Figure Image -->
+          </figure>
+          <!-- End Figure -->
+
+          <!-- Figure -->
+          <figure class="row flex-md-row align-items-center">
+            <!-- Figure Body -->
+            <div class="col-md-6 push-md-6 px-0">
+              <div class="u-ns-bg-v1-bottom u-ns-bg-v1-left--md g-bg-white g-py-30 g-px-50">
+                <!-- Figure Info -->
+                <div class="g-mb-25">
+                  <div class="g-mb-20">
+                    <h3 class="h2 g-color-black g-mb-5">The Instructors</h3>
+                  </div>
+                  <p>Our expert instructors trained in New York City at Upright Citizens Brigade and Chicago at iO (formerly Improv Olympic). They have been performing professionally for more than ten years.</p>
+                </div>
+                <!-- End Figure Info -->
+              </div>
+            </div>
+            <!-- End Figure Body -->
+
+            <!-- Figure Image -->
+            <div class="col-md-6 pull-md-6 px-0">
+              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/pushers.jpg" alt="Image Description">
+            </div>
+            <!-- End Figure Image -->
+          </figure>
+          <!-- End Figure -->
+        </div>
+
+
+        <!-- End Show Code -->
+      </section>

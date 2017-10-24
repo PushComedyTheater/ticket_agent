@@ -1,0 +1,57 @@
+      <section class="container g-pt-20 g-pb-70">
+        <div class="row justify-content-center g-mb-60">
+          <div class="col-lg-7">
+            <!-- Heading -->
+            <div class="text-center">
+              <h2 class="h3 g-color-black text-uppercase mb-2">Meet the Push Comedy Theater team</h2>
+              <div class="d-inline-block g-width-35 g-height-2 g-bg-primary mb-2"></div>
+            </div>
+            <!-- End Heading -->
+          </div>
+        </div>
+        <div class="row">
+          <%= for teacher <- @teachers do %>
+
+            <div class="col-lg-3 col-sm-6 g-mb-30">
+              <!-- Team Block -->
+              <figure class="u-block-hover">
+                <!-- Figure Image -->
+                <img class="w-100" src="https://cdn.pushcomedytheater.com/images/<%= teacher.slug %>.jpg" alt="Image Description">
+                <!-- End Figure Image-->
+
+                <!-- Figure Info -->
+                <figcaption class="u-block-hover__additional--partially-slide-up g-mx-15">
+                  <div class="text-center g-bg-white g-pb-20">
+                    <!-- Figure Info -->
+                    <div class="u-block-hover__visible g-pt-20 g-pb-15 g-y-20">
+                      <h4 class="h5 g-color-black g-mb-5"><%= link teacher.name, to: about_path(@conn, :show, teacher.slug), class: "g-color-black" %></h4>
+                    </div>
+                    <!-- End Info -->
+
+                    <!-- Figure Social Icons -->
+                    <ul class="list-inline mb-0">
+                      <li class="list-inline-item">
+                        <%= link to: about_path(@conn, :show, teacher.slug), class: "u-icon-v1 u-icon-size--sm g-color-gray-light-v1 g-color-dribbble--hover g-bg-transparent" do %>
+                            <i class="fa fa-info"></i>
+                        <% end %>
+                      </li>
+                      <%= for {name, link} <- teacher.social do %>
+                        <li class="list-inline-item">
+                          <a href="<%= link %>" class="u-icon-v1 u-icon-size--sm g-color-gray-light-v1 g-color-twitter--hover g-bg-transparent">
+                            <i class="fa fa-<%= name %>"></i>
+                          </a>
+                        </li>
+                      <% end %>
+                    </ul>
+                    <!-- Figure Social Icons -->
+                  </div>
+                </figcaption>
+                <!-- End Figure Info-->
+              </figure>
+              <!-- End Team Block -->
+            </div>
+
+          <% end %>
+        </div>
+        </div>
+      </section>

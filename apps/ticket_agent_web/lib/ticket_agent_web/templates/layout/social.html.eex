@@ -1,0 +1,6 @@
+<meta property="og:type" content="website">
+<meta property="og:title" content="<%= page_title(@conn) %>">
+<meta property="og:url" content="<%= full_url(@conn) %>" />
+<meta property="og:image" content="<%= page_image(@conn) %>" />
+<meta property="og:description" content="<%= page_description(@conn) %>">
+<meta property="og:site_name" content="Push Comedy Theater">

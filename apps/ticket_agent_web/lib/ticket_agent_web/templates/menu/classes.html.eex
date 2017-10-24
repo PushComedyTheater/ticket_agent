@@ -1,0 +1,17 @@
+  <li class="nav-item hs-has-sub-menu g-mx-10--lg g-mx-15--xl">
+    <%= link "Classes", to: classes_path(@conn, :index), id: "nav-link-home", class: "nav-link g-py-7 g-px-0" %>
+    <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu-demos"
+        aria-labelledby="nav-link-demos">
+    <%= for class <- class_types(@conn) do %>
+      <li class="dropdown-item hs-has-sub-menu">
+        <%= link class, to: class_type_path(@conn, :class, class), class: "nav-link" %>
+        <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-my-2" id="nav-submenu--demos--one-page"
+            aria-labelledby="nav-link--demos--one-page">
+          <%= for class <- classes_by_type(@conn, class) do %>
+            <li class="dropdown-item"><%= link class.title, to: class_path(@conn, :show, class.slug), class: "nav-link" %></li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+    </ul>
+  </li>

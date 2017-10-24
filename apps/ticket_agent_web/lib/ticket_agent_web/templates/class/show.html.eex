@@ -1,0 +1,61 @@
+<br />
+<br />
+<br />
+<br />
+      <!-- Breadcrumbs -->
+      <section class="g-bg-gray-light-v5 g-py-20">
+        <div class="container">
+          <div class="d-sm-flex text-center">
+
+            <div class="align-self-center ml-auto">
+              <ul class="u-list-inline">
+                <li class="list-inline-item g-mr-5">
+                  <a class="u-link-v5 g-color-main g-color-primary--hover" href="/">Home</a>
+                  <i class="g-color-gray-light-v2 g-ml-5">/</i>
+                </li>
+                <li class="list-inline-item g-mr-5">
+                  <a class="u-link-v5 g-color-main g-color-primary--hover" href="/classes">Classes</a>
+                  <i class="g-color-gray-light-v2 g-ml-5">/</i>
+                </li>
+                <li class="list-inline-item g-mr-5">
+                  <%= link @class.type |> String.capitalize, to: class_type_path(@conn, :class, @class.type), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+                  <i class="g-color-gray-light-v2 g-ml-5">/</i>
+                </li>
+                <li class="list-inline-item g-color-primary">
+                  <span><%= @class.title %></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End Breadcrumbs -->
+
+      <!-- Section -->
+      <section class="container g-pt-50 g-pb-40">
+        <div class="row">
+          <div class="col-lg-8 g-mb-60">
+            <div class="mb-4">
+              <h2 class="h3 text-uppercase mb-3"><%= @class.title %></h2>
+              <div class="g-width-60 g-height-1 g-bg-black"></div>
+            </div>
+            <div class="mb-5">
+              <%= @class.description |> raw() %>
+            </div>
+            <%= link to: class_type_path(@conn, :class, @class.type), id: "nav-link--workshop", class: "btn btn-xl u-btn-outline-black g-font-size-default mr-2" do %>
+              More <%= @class.type |> String.capitalize %> Classes
+            <% end %>
+
+            <%= if Enum.count(@class.listings) > 0 do %>
+              <a class="btn btn-xl u-btn-primary g-font-size-default" href="#">Enroll Now</a>
+            <% else %>
+              <a class="btn btn-xl u-btn-success g-font-size-default" href="#">Not Currently Enrolling</a>
+            <% end %>
+          </div>
+
+          <div class="col-lg-4 g-mb-60">
+            <%= img_tag(@class.cover_photo_url, class: "img-fluid") %>
+          </div>
+        </div>
+      </section>
+      <!-- End Section -->
