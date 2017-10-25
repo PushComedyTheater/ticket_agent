@@ -2,12 +2,13 @@ defmodule TicketAgentWeb.ShowView do
   alias TicketAgent.Listing
   use TicketAgentWeb, :view
   @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+  @helpers TicketAgentWeb.Router.Helpers
 
-  def ticket_link(show) do
+  def ticket_link(conn, show) do
     available_tickets = Listing.available_tickets(show)
 
     if Enum.count(available_tickets) > 0 do
-      link("Buy Tickets", to: "/ticket/new", class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15")
+      link("Buy Tickets", to: ticket_path(conn, :new, [show_id: show.slug]), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15")
     else
       link("Sold Out", to: "#", class: "btn u-btn-red g-font-size-13 text-uppercase g-py-10 g-px-15")
     end

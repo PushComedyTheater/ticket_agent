@@ -43,7 +43,7 @@
                   </div>
 
                   <div class="align-self-center">
-                    <%= ticket_link(show) %>
+                    <%= ticket_link(@conn, show) %>
                   </div>
                 </div>
               </article>

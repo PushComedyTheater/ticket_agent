@@ -77,7 +77,7 @@ defmodule TicketAgentWeb.Router do
   scope "/", TicketAgentWeb do
     pipe_through :protected
     # Add protected routes below
-    get "/", PageController, :index
+    resources "/tickets", TicketController
   end
 
   def ensure_admin(conn, params) do
