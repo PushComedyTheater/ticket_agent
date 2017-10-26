@@ -3,15 +3,15 @@ exports.config = {
   files: {
     javascripts: {
       joinTo: {
-        "js/app.js": [
+        "js/application.js": [
           "js/app.js",
           /^node_modules/,
         ],
         "js/admin.js": [
-          "js/admin/*.js",
-          "js/admin/listing/*.js",
+          "js/admin/index.js",
+          "js/admin/listing/new.js",
           /^node_modules/,
-        ]
+        ],
       }
 
       // To use a separate vendor.js bundle, specify two files path
@@ -60,13 +60,9 @@ exports.config = {
     }
   },
 
-  modules: {
-    autoRequire: {
-      "js/app.js": ["js/app"]
-    }
-  },
 
   npm: {
-    enabled: true
+    enabled: true,
+    whitelist: ["phoenix_html"]
   }
 };

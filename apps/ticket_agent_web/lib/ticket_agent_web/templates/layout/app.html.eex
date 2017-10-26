@@ -167,6 +167,6 @@
         $.HSCore.components.HSGoTo.init('.js-go-to');
       });
     </script>
-     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+     <script src="<%= static_path(@conn, "/js/application.js") %>"></script>
   </body>
 </html>
