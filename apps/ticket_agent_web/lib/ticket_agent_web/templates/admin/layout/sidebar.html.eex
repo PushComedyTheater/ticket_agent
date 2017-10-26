@@ -34,14 +34,20 @@
             <i class="fa fa-link"></i> <span>View</span>
           <% end %>
         </li>
-        <li class="header">LISTINGS</li>
+        <li class="header">SHOWS</li>
         <li>
           <%= link to: admin_listing_path(@conn, :index) do %>
             <i class="fa fa-link"></i> <span>View</span>
           <% end %>
           </a>
         </li>
-
+        <li class="header">TEACHERS</li>
+        <li>
+          <%= link to: admin_teacher_path(@conn, :index) do %>
+            <i class="fa fa-link"></i> <span>View</span>
+          <% end %>
+          </a>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

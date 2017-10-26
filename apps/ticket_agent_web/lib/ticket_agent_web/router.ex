@@ -72,6 +72,7 @@ defmodule TicketAgentWeb.Router do
     resources "/classes", ClassController, as: :admin_class
     resources "/listings", ListingController, as: :admin_listing
     resources "/images", ImageController, as: :admin_image
+    resources "/teachers", TeacherController, as: :admin_teacher
   end
 
   scope "/", TicketAgentWeb do
