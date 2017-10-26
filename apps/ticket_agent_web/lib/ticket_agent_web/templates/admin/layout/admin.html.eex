@@ -22,7 +22,6 @@
 <!-- AdminLTE App -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.0/js/adminlte.min.js" integrity="sha256-/OrZtWro6rZIn4459Zz3L+FRmZrvs5wvprCm/jRUF8A=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.7.1/ckeditor.js" integrity="sha256-z/caypJPjI0VQvkPoOkFkYRKJarx1HFweYzdAgRc3hc=" crossorigin="anonymous"></script>
-<script>require('js/admin/index.js')</script>
-<script>require('js<%= @conn.request_path %>.js')</script>
+<script src="<%= static_path(@conn, "/js/admin.js") %>"></script>
 </body>
 </html>

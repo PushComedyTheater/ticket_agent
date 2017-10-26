@@ -1,9 +1,12 @@
 const path = require('path');
 
 module.exports = {
-  entry: './js/app.js',
+  entry: {
+    application: './js/app.js',
+    admin: './js/admin/admin.js'
+  },
   output: {
-    filename: 'application.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, '../priv/static/js/')
   }
 };
