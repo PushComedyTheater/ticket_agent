@@ -73,6 +73,8 @@ defmodule TicketAgentWeb.Router do
     resources "/listings", ListingController, as: :admin_listing
     resources "/images", ImageController, as: :admin_image
     resources "/teachers", TeacherController, as: :admin_teacher
+
+    get "/", Redirect, to: "/admin/dashboard"
   end
 
   scope "/", TicketAgentWeb do

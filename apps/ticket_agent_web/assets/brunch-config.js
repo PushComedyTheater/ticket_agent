@@ -8,26 +8,12 @@ exports.config = {
           /^node_modules/,
         ],
         "js/admin.js": [
-          "js/admin/index.js",
+          "js/admin/*.js",
           "js/admin/listing/new.js",
           /^node_modules/,
         ],
       }
 
-      // To use a separate vendor.js bundle, specify two files path
-      // http://brunch.io/docs/config#-files-
-      // joinTo: {
-      //   "js/app.js": /^js/,
-      //   "js/vendor.js": /^(?!js)/
-      // }
-      //
-      // To change the order of concatenation of files, explicitly mention here
-      // order: {
-      //   before: [
-      //     "vendor/js/jquery-2.1.1.js",
-      //     "vendor/js/bootstrap.min.js"
-      //   ]
-      // }
     },
     stylesheets: {
       joinTo: "css/app.css"
