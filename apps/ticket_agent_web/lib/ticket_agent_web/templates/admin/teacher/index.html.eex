@@ -1,29 +1,29 @@
-<h2>Listing Teachers</h2>
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title">Teachers</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table class="table table-bordered">
+      <tr>
+        <th style="width: 150px"></th>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+      <%= for context <- @teachers do %>
+      <tr>
+        <td>
+          <span><%= link "Show", to: admin_teacher_path(@conn, :show, context), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Edit", to: admin_teacher_path(@conn, :edit, context), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Delete", to: admin_teacher_path(@conn, :delete, context), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        </td>
+        <td><%= context.name %></td>
+        <td><%= context.email %></td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Name</th>
-      <th>Email</th>
-
-    </tr>
-  </thead>
-  <tbody>
-<%= for context <- @teachers do %>
-    <tr>
-      <td class="text-left">
-        <span><%= link "Show", to: admin_teacher_path(@conn, :show, context), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: admin_teacher_path(@conn, :edit, context), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: admin_teacher_path(@conn, :delete, context), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-      </td>
-      <td><%= context.name %></td>
-      <td><%= context.email %></td>
-
-
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
-<span><%= link "New Teacher", to: admin_teacher_path(@conn, :new) %></span>
+</div>
+<!-- /.box -->
+<span><%= link "Create New Teacher", to: admin_teacher_path(@conn, :new), class: "btn btn-default" %></span>

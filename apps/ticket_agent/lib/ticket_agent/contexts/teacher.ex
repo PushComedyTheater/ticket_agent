@@ -17,6 +17,16 @@ defmodule TicketAgent.TeacherContext do
     Repo.all(Teacher)
   end
 
+  def change_context(%Teacher{} = teacher) do
+    Teacher.changeset(teacher, %{})
+  end
+  #
+  # def create_context(attrs \\ %{}) do
+  #   %Context{}
+  #   |> Context.changeset(attrs)
+  #   |> Repo.insert()
+  # end
+
   # @doc """
   # Gets a single context.
   #
@@ -45,11 +55,7 @@ defmodule TicketAgent.TeacherContext do
   #     {:error, %Ecto.Changeset{}}
   #
   # """
-  # def create_context(attrs \\ %{}) do
-  #   %Context{}
-  #   |> Context.changeset(attrs)
-  #   |> Repo.insert()
-  # end
+
   #
   # @doc """
   # Updates a context.
@@ -94,7 +100,5 @@ defmodule TicketAgent.TeacherContext do
   #     %Ecto.Changeset{source: %Context{}}
   #
   # """
-  # def change_context(%Context{} = context) do
-  #   Context.changeset(context, %{})
-  # end
+
 end

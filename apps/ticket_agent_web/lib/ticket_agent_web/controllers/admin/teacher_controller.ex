@@ -7,11 +7,11 @@ defmodule TicketAgentWeb.Admin.TeacherController do
     render(conn, "index.html", teachers: teachers)
   end
 
-  # def new(conn, _params) do
-  #   changeset = Teachers.change_context(%Context{})
-  #   render(conn, "new.html", changeset: changeset)
-  # end
-  #
+  def new(conn, _params) do
+    changeset = TeacherContext.change_context(%Teacher{})
+    render(conn, "new.html", changeset: changeset)
+  end
+
   # def create(conn, %{"context" => context_params}) do
   #   case Teachers.create_context(context_params) do
   #     {:ok, context} ->
