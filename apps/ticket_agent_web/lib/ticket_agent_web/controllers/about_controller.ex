@@ -10,7 +10,7 @@ defmodule TicketAgentWeb.AboutController do
 
   def show(conn, %{"id" => id}) do
     teachers = Repo.all(Teacher)
-    teacher = Enum.find(teachers, fn(teacher) -> teacher.slug == id end)
+    teacher = Repo.get_by(Teacher, [slug: id])
     render conn, "show.html", pusher: teacher, teachers: teachers
   end
 end
