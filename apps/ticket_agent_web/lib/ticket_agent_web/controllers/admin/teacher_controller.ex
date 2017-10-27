@@ -51,15 +51,13 @@ defmodule TicketAgentWeb.Admin.TeacherController do
     end
   end
 
-  # def delete(conn, %{"id" => id}) do
-  #   teacher = Repo.get!(Teacher", id)
-  #
-  #   # Here we use delete! (with a bang) because we expect
-  #   # it to always work (and if it does not, it will raise).
-  #   Repo.delete!(teacher)
-  #
-  #   conn
-  #   |> put_flash(:info, "Teacher deleted successfully.")
-  #   |> redirect(to: teacher_path(conn, :index))
-  # end
+  def delete(conn, %{"id" => id}) do
+    teacher = Repo.get!(Teacher, id)
+
+    Repo.delete!(teacher)
+
+    conn
+    |> put_flash(:info, "Teacher deleted successfully.")
+    |> redirect(to: admin_teacher_path(conn, :index))
+  end
 end
