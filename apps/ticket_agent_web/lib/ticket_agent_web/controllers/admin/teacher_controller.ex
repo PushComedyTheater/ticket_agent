@@ -1,58 +1,65 @@
 defmodule TicketAgentWeb.Admin.TeacherController do
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Teacher, TeacherContext}
+
+  alias TicketAgent.{Repo, Teacher}
 
   def index(conn, _params) do
-    teachers = TeacherContext.list_teachers()
+    teachers = Repo.all(Teacher)
     render(conn, "index.html", teachers: teachers)
   end
 
   def new(conn, _params) do
-    changeset = TeacherContext.change_context(%Teacher{})
+    changeset = Teacher.changeset(%Teacher{}, %{})
     render(conn, "new.html", changeset: changeset)
   end
 
-  # def create(conn, %{"context" => context_params}) do
-  #   case Teachers.create_context(context_params) do
-  #     {:ok, context} ->
-  #       conn
-  #       |> put_flash(:info, "Context created successfully.")
-  #       |> redirect(to: context_path(conn, :show, context))
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "new.html", changeset: changeset)
-  #   end
-  # end
-  #
-  # def show(conn, %{"id" => id}) do
-  #   context = Teachers.get_context!(id)
-  #   render(conn, "show.html", context: context)
-  # end
-  #
-  # def edit(conn, %{"id" => id}) do
-  #   context = Teachers.get_context!(id)
-  #   changeset = Teachers.change_context(context)
-  #   render(conn, "edit.html", context: context, changeset: changeset)
-  # end
-  #
-  # def update(conn, %{"id" => id, "context" => context_params}) do
-  #   context = Teachers.get_context!(id)
-  #
-  #   case Teachers.update_context(context, context_params) do
-  #     {:ok, context} ->
-  #       conn
-  #       |> put_flash(:info, "Context updated successfully.")
-  #       |> redirect(to: context_path(conn, :show, context))
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "edit.html", context: context, changeset: changeset)
-  #   end
-  # end
-  #
+  def create(conn, %{"teacher" => teacher_params}) do
+    changeset = Teacher.changeset(%Teacher{}, teacher_params)
+
+    case Repo.insert(changeset) do
+      {:ok, teacher} ->
+        conn
+        |> put_flash(:info, "Teacher created successfully.")
+        |> redirect(to: admin_teacher_path(conn, :show, teacher))
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
+  end
+
+  def show(conn, %{"id" => id}) do
+    teacher = Repo.get!(Teacher, id)
+    render(conn, "show.html", teacher: teacher)
+  end
+
+  def edit(conn, %{"id" => id}) do
+    teacher = Repo.get!(Teacher, id)
+    changeset = Teacher.changeset(teacher, %{})
+    render(conn, "edit.html", teacher: teacher, changeset: changeset)
+  end
+
+  def update(conn, %{"id" => id, "teacher" => teacher_params}) do
+    teacher = Repo.get!(Teacher, id)
+    changeset = Teacher.changeset(teacher, teacher_params)
+
+    case Repo.update(changeset) do
+      {:ok, teacher} ->
+        conn
+        |> put_flash(:info, "Teacher updated successfully.")
+        |> redirect(to: admin_teacher_path(conn, :show, teacher))
+      {:error, changeset} ->
+        render(conn, "edit.html", teacher: teacher, changeset: changeset)
+    end
+  end
+
   # def delete(conn, %{"id" => id}) do
-  #   context = Teachers.get_context!(id)
-  #   {:ok, _context} = Teachers.delete_context(context)
+  #   teacher = Repo.get!(Teacher", id)
+  #
+  #   # Here we use delete! (with a bang) because we expect
+  #   # it to always work (and if it does not, it will raise).
+  #   Repo.delete!(teacher)
   #
   #   conn
-  #   |> put_flash(:info, "Context deleted successfully.")
-  #   |> redirect(to: context_path(conn, :index))
+  #   |> put_flash(:info, "Teacher deleted successfully.")
+  #   |> redirect(to: teacher_path(conn, :index))
   # end
 end

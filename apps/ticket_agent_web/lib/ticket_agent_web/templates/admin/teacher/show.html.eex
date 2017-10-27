@@ -1,0 +1,27 @@
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title"><%= @teacher.name %></h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table class="table table-bordered">
+      <tr>
+        <th>Name</th>
+        <td><%= @teacher.name %></td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td><%= @teacher.email %></td>
+      </tr>
+      <tr>
+        <th>Biography</th>
+        <td><%= raw @teacher.biography %></td>
+      </tr>
+      <tr>
+        <th>Social</th>
+        <td><%= social_links(@teacher.social) %></td
+      </tr>
+    </table>
+  </div>
+</div><span><%= link "Edit", to: admin_teacher_path(@conn, :edit, @teacher) %></span>
+<span><%= link "Back", to: admin_teacher_path(@conn, :index) %></span>
