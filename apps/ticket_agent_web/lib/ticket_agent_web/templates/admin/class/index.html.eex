@@ -24,7 +24,7 @@
                 </td>
                 <td><%= class.type %></td>
                 <td><%= class.title %></td>
-                <td><i class="fa fa-fw fa-edit"></i></td>
+                <td></td>
               </tr>
             <% end %>
           </tbody></table>

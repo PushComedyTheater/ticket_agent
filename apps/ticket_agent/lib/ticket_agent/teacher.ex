@@ -18,10 +18,13 @@ defmodule TicketAgent.Teacher do
   @doc false
   def changeset(%Teacher{} = class, attrs) do
     slug = generate_slug(attrs)
+
+    attrs = Atomizer.atomize(attrs)
+
     attrs =
       attrs
-      |> Map.put("slug", slug)
-      |> Map.put_new("social", %{})
+      |> Map.put(:slug, slug)
+      |> Map.put_new(:social, %{})
 
     class
     |> cast(attrs, [:slug, :biography, :email, :name, :social])
