@@ -16,7 +16,7 @@
               <!-- Team Block -->
               <figure class="u-block-hover">
                 <!-- Figure Image -->
-                <img class="w-100" src="https://cdn.pushcomedytheater.com/images/<%= teacher.slug %>.jpg" alt="Image Description">
+                <img class="w-100" src="https://cdn.pushcomedytheater.com/images/<%= teacher.slug %>.jpg" alt="<%= teacher.name %>" onerror="this.src='https://cdn.pushcomedytheater.com/images/red_mask.png';">
                 <!-- End Figure Image-->
 
                 <!-- Figure Info -->

@@ -16,10 +16,13 @@ defmodule TicketAgent.Teacher do
   end
 
   @doc false
-  # def changeset(%{} = class, attrs) do
   def changeset(%Teacher{} = class, attrs) do
     slug = generate_slug(attrs)
-    attrs = Map.put(attrs, "slug", slug)
+    attrs =
+      attrs
+      |> Map.put("slug", slug)
+      |> Map.put_new("social", %{})
+
     class
     |> cast(attrs, [:slug, :biography, :email, :name, :social])
     |> validate_required([:name, :email])

@@ -14,24 +14,17 @@
         </div>
       </div>
 
-      <!-- search form (Optional) -->
-      <form action="#" method="get" class="sidebar-form" style="display: none">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-          <span class="input-group-btn">
-              <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-              </button>
-            </span>
-        </div>
-      </form>
-      <!-- /.search form -->
-
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">CLASSES</li>
         <li>
           <%= link to: admin_class_path(@conn, :index) do %>
             <i class="fa fa-link"></i> <span>View</span>
+          <% end %>
+        </li>
+        <li>
+          <%= link to: admin_class_path(@conn, :new) do %>
+            <i class="fa fa-plus"></i> <span>New</span>
           <% end %>
         </li>
         <li class="header">SHOWS</li>
@@ -41,10 +34,17 @@
           <% end %>
           </a>
         </li>
+        <li>
+          <%= link to: admin_listing_path(@conn, :index) do %>
+            <i class="fa fa-plus"></i> <span>New</span>
+          <% end %>
+          </a>
+        </li>
         <li class="header">TEACHERS</li>
         <li>
           <%= link to: admin_teacher_path(@conn, :index) do %>
-            <i class="fa fa-link"></i> <span>View</span>
+            <span class="glyphicon glyphicon-user"></span>
+            <span>View</span>
           <% end %>
           </a>
         </li>
