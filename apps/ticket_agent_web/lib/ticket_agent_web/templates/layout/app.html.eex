@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/hs-megamenu/src/hs.megamenu.css">
     <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/hamburgers/hamburgers.min.css">
     <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/malihu-scrollbar/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/custombox/4.0.3/custombox.min.css" integrity="sha256-3rPUClLpOdxgbKzqJ4dT8Um1bRm2YZmUBpZZaH46dyg=" crossorigin="anonymous" />
 
     <!-- CSS Unify -->
     <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/css/unify.css">
@@ -124,7 +125,7 @@
     <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/advancedscroller/plugin.js"></script>
     <script src="https://cdn.pushcomedytheater.com/template/vendor/typedjs/typed.min.js"></script>
     <script src="https://cdn.pushcomedytheater.com/template/vendor/masonry/dist/masonry.pkgd.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/custombox/4.0.3/custombox.min.js" integrity="sha256-3dCvh9Ar+IBGrK82FBU4xIUnY7N7ma1epBq2sHgpgY8=" crossorigin="anonymous"></script>
     <!-- JS Unify -->
     <script src="https://cdn.pushcomedytheater.com/template/js/hs.core.js"></script>
     <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.header.js"></script>
