@@ -39,6 +39,14 @@ defmodule TicketAgent.Factory do
     }
   end
 
+  def listing_image_factory do
+    %TicketAgent.ListingImage{
+      listing: build(:listing),
+      url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png",
+      type: "cover"
+    }
+  end
+
   def user_factory do
     %TicketAgent.User{
       name: sequence(:name, &"Jane Smith#{&1}"),

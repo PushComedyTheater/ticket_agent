@@ -21,9 +21,9 @@
           <!-- End Responsive Toggle Button -->
 
           <!-- Logo -->
-          <a href="/" class="navbar-brand">
+          <%= link to: root_path(@conn, :index), class: "navbar-brand" do %>
             <img alt="Logo" src="https://cdn.pushcomedytheater.com/images/logo-sm.png"  />
-          </a>
+          <% end %>
           <!-- End Logo -->
 
           <!-- Navigation -->

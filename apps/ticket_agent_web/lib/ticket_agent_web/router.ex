@@ -41,6 +41,7 @@ defmodule TicketAgentWeb.Router do
     resources "/about", AboutController, only: [:index, :show]
     resources "/camps", CampController, only: [:index, :show]
     resources "/shows", ShowController, only: [:index, :show], param: "titled_slug"
+    resources "/tickets", TicketController
 
     get "/workshops", WorkshopController, :index, as: :workshop
     get "/classes", ClassController, :index, as: :classes
@@ -79,8 +80,6 @@ defmodule TicketAgentWeb.Router do
 
   scope "/", TicketAgentWeb do
     pipe_through :protected
-    # Add protected routes below
-    resources "/tickets", TicketController
   end
 
   def ensure_admin(conn, params) do
