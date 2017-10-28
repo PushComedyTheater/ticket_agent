@@ -9,8 +9,7 @@
         <div class="box-body table-responsive no-padding">
           <table class="table table-hover">
             <tbody><tr>
-              <th width="190px;"></th>
-              <th>Type</th>
+              <th width="250px;">Actions</th>
               <th>Title</th>
               <th>Currently Offered?</th>
             </tr>
@@ -20,11 +19,15 @@
                   <span><%= link "View", to: admin_class_path(@conn, :show, class), class: "btn btn-info btn-xs" %></span>
                   <span><%= link "Edit", to: admin_class_path(@conn, :edit, class), class: "btn btn-warning btn-xs" %></span>
                   <span><%= link "Delete", to: admin_class_path(@conn, :delete, class), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+
+                </td>
+                <td><%= class.title %></td>
+                <td>
+                  <%= if TicketAgent.Class.currently_offered?(class) do %>
+                  <i class="fa fa-fw fa-check"></i> Yes<br />
+                  <% end %>
                   <span><%= link "Create Listing", to: admin_listing_path(@conn, :new, class_id: class.id), class: "btn btn-success btn-xs" %>
                 </td>
-                <td><%= class.type %></td>
-                <td><%= class.title %></td>
-                <td></td>
               </tr>
             <% end %>
           </tbody></table>

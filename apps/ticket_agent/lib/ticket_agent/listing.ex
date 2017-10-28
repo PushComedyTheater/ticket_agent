@@ -6,7 +6,6 @@ defmodule TicketAgent.Listing do
   @required ~w(type slug title description status start_time end_time)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  @derive {Phoenix.Param, key: :slug}
 
   schema "listings" do
     belongs_to :account, Account

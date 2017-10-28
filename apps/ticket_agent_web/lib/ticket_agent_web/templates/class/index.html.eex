@@ -51,7 +51,7 @@
                   <br />
                   <div class="pull-right">
                     <%= link "More Info", to: class_path(@conn, :show, class.slug), class: "btn btn-xl u-btn-outline-black g-font-size-default mr-2" %>
-                    <%= if Enum.count(class.listings) > 0 do %>
+                    <%= if TicketAgent.Class.currently_offered?(class) do %>
                       <a class="btn btn-xl u-btn-primary g-font-size-default" href="#">Enroll Now</a>
                     <% else %>
                       <a class="btn btn-xl u-btn-success g-font-size-default" href="#">Not Currently Enrolling</a>

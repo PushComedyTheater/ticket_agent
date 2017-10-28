@@ -1,0 +1,31 @@
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title"><%= @class.title %></h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table class="table table-bordered">
+      <tr>
+        <th>Title</th>
+        <td><%= @class.title %></td>
+      </tr>
+      <tr>
+        <th>Slug</th>
+        <td><%= @class.slug %></td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td><%= raw @class.description %></td>
+      </tr>
+      <tr>
+        <th>Cover Photo</th>
+        <td><img src="<%= @class.cover_photo_url %>" %></td>
+      </tr>
+      <tr>
+        <th>Social Photo</th>
+        <td><img src="<%= @class.social_photo_url %>" %></td>
+      </tr>
+    </table>
+  </div>
+</div><span><%= link "Edit", to: admin_class_path(@conn, :edit, @class) %></span>
+<span><%= link "Back", to: admin_class_path(@conn, :index) %></span>

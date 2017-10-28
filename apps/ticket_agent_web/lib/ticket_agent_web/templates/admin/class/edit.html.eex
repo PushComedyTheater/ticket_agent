@@ -1,0 +1,6 @@
+<h2>Edit Class</h2>
+
+<%= render "form.html", changeset: @changeset, classes: @classes, class_types: @class_types,
+                        action: admin_class_path(@conn, :update, @class) %>
+
+<span><%= link "Back", to: admin_class_path(@conn, :index) %></span>
