@@ -1,74 +1,56 @@
-<!-- Portfolio Single Item -->
-<section class="container g-py-100">
-  <img class="img-fluid w-100 g-mb-30" src="<%= cover_image(@show) %>" alt="Image Description">
+<style type="text/css">
+  #main_container {
+    background-color: #ededed;
+  }
+</style>
 
-  <div class="row g-mb-70">
-    <div class="col-md-8 g-mb-30">
-      <div class="mb-5">
-        <h2 class="g-color-black mb-1"><%= @show.title %></h2>
-        <p><%= raw @show.description %></p>
-      </div>
-      <%= ticket_link(@conn, @show) %>
-    </div>
+<div id="photoParent" style="background: url('<%= cover_image(@show) %>') no-repeat; background-size: 100%; min-height: 550px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
+</div>
 
-    <div class="col-md-4 g-mb-30">
-      <!-- Client -->
-      <div class="mb-5">
-        <h3 class="h5 g-color-black mb-3">Buy Tickets</h3>
-        <label class="pull-left" style="padding-right: 20px; padding-top: 8px;">Quantity:</label>
-        <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-          <input class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
 
-          <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-13 rounded-0 g-pa-5">
-            <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
-            <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
-          </div>
-        </div>
-        <br />
-
-        <div id="modal" class="text-left g-max-width-600 g-bg-white g-pa-20" style="display: none;">
-                    <button type="button" class="close" onclick="Custombox.modal.close();">
-                      <i class="hs-icon hs-icon-close"></i>
-                    </button>
-                    <h4 class="g-mb-20">Modal title</h4>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                    <p>It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                  </div>
-                  <!-- End Demo modal window -->
- <a class="btn u-btn-primary" href="#modal" data-modal-target="#modal" data-modal-effect="slit">Launch Modal</a>
-        <%= ticket_link(@conn, @show) %>
-      </div>
-      <div class="mb-5">
-        <h3 class="h5 g-color-black mb-3">Price Per Ticket:</h3>
-        <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#">
-          <%= cost(@show) %>
-        </a>
-      </div>
-      <!-- End Client -->
-
-      <!-- Designers -->
-      <div class="mb-5" style="display: none;">
-        <h3 class="h5 g-color-black mb-3">Cast:</h3>
-        <ul class="list-unstyled">
-          <li class="my-3">
-
-          </li>
-        </ul>
-      </div>
-      <!-- End Designers -->
-
-      <!-- Tags -->
-      <div class="g-mb-30">
-        <h3 class="h5 g-color-black mb-3">Tags:</h3>
+<section class="g-bg-blue-opacity-0_7 g-py-50 g-px-30 u-shadow-v1-5" style="margin-bottom: 5px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9 align-self-center">
+        <h2 class="h1" style="color: #fff;"><%= @show.title %></h2>
+        <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
+          <strong><%= event_date(@show.start_time) %></strong>&nbsp;
+          <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15"><i class="fa fa-dollar g-mr-3"></i> <strong><%= cost(@show) %></strong></span>
+          </p>
         <ul class="u-list-inline mb-0">
           <%= for tag <- @show.listing_tags do %>
           <li class="list-inline-item g-mb-10">
-            <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><%= tag.tag %></a>
+            <a class="u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><strong><%= tag.tag %></strong></a>
           </li>
           <% end %>
         </ul>
       </div>
-      <!-- End Tags -->
+      <div class="col-md-3 align-self-center text-md">
+        <%= render TicketAgentWeb.TicketModalView, "modal.html", conn: @conn, show: @show %>
+
+        <a href="#" class="btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15"  href="#modal" data-modal-target="#modal" data-modal-effect="slit">
+          <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="container g-pt-20 g-pb-40" style="background-color: #fff; ">
+  <div class="row g-mb-70">
+    <div class="col-md-8 g-mb-30">
+      <div class="mb-5">
+        <h4 class="g-color-black mb-1">About This Show</h4>
+        <hr />
+
+        <p class="lead g-mb-20 g-mb-0--md"><%= raw @show.description %></p>
+      </div>
+    </div>
+
+
+
+    <div class="col-md-4 g-mb-50">
+      <!-- Client -->
+      <!-- End Client -->
 
       <!-- Share -->
       <div class="mb-4">
@@ -91,7 +73,6 @@
       <!-- End Share -->
     </div>
   </div>
-
-
 </section>
 <!-- End Portfolio Single Item -->
+<br />

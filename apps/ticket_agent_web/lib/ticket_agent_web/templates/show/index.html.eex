@@ -35,7 +35,6 @@
                   <div>
                     <%= raw TicketAgentWeb.LayoutView.truncated_description(show.description) %>
                   </div>
-                  <div align="right"><%= link "More Information", to: show_path(@conn, :show, show), class: "g-color-primary " %></div>
                 </div>
 
                 <div class="media g-font-size-12 g-brd-top g-brd-gray-light-v4 g-pa-15-30">
@@ -43,7 +42,7 @@
                   </div>
 
                   <div class="align-self-center">
-                    <%= ticket_link(@conn, show) %>
+                    <%= link "More Information", to: show_path(@conn, :show, show), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
                   </div>
                 </div>
               </article>

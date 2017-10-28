@@ -7,11 +7,26 @@ defmodule TicketAgentWeb.ShowView do
   def ticket_link(conn, show) do
     available_tickets = Listing.available_tickets(show)
 
-    if Enum.count(available_tickets) > 0 do
-      link("Buy Tickets", to: ticket_path(conn, :new, [show_id: show.slug]), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15")
-    else
-      link("Sold Out", to: "#", class: "btn u-btn-red g-font-size-13 text-uppercase g-py-10 g-px-15")
+    type = link("Buy Tickets", to: ticket_path(conn, :new, [show_id: show.slug]), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15")
+
+
+    link =
+      if Enum.count(available_tickets) > 0 do
+        link("Buy Tickets", to: "#modal", data_modal_target: "#modal", data_modal_effect: "#slit", class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15")
+      else
+        link("Sold Out", to: "#", class: "btn u-btn-red g-font-size-13 text-uppercase g-py-10 g-px-15")
+      end
+
+    content_tag :div do
+      content_tag :div, [id: "modal", class: "text-left g-max-width-600 g-bg-white g-pa-20"] do
+        [link]
+      end
+      error = content_tag(:p, "Hello")
+      [link, error]
     end
+
+
+
   end
 
   def cost(show) do
@@ -20,7 +35,7 @@ defmodule TicketAgentWeb.ShowView do
       |> Listing.ticket_cost
       |> :erlang.float_to_binary([decimals: 2])
 
-    "$#{cost}"
+    "#{cost}"
   end
 
   def event_date(date) do

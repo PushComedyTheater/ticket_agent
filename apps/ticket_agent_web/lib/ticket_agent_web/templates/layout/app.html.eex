@@ -40,7 +40,7 @@
   </head>
 
   <body>
-    <main>
+    <main id="main_container">
       <!-- Header -->
       <%= render TicketAgentWeb.MenuView, "menu.html", assigns %>
       <!-- End Header -->
