@@ -131,6 +131,7 @@
     <script src="https://cdn.pushcomedytheater.com/template/js/helpers/hs.hamburgers.js"></script>
     <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.go-to.js"></script>
     <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.count-qty.js"></script>
+    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.modal-window.js"></script>
 
     <!-- JS Plugins Init. -->
     <script>
@@ -139,6 +140,7 @@
         $.HSCore.components.HSHeader.init($('#js-header'));
         $.HSCore.helpers.HSHamburgers.init('.hamburger');
         $.HSCore.components.HSCountQty.init('.js-quantity');
+        $.HSCore.components.HSModalWindow.init('[data-modal-target]:not(.js-modal-markup)');
         // Initialization of HSMegaMenu plugin
         $('.js-mega-menu').HSMegaMenu({
           event: 'hover',
