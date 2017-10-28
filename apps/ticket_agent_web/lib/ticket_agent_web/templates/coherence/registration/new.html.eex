@@ -59,7 +59,14 @@
           <header class="text-center mb-4">
             <h2 class="h2 g-color-black g-font-weight-600">Checkout As Guest</h2>
           </header>
-          We strongly recommend that you create an account.
+          <div class="mb-4">
+            While we strongly recommend that you create an account, you are welcome to checkout as a guest.
+          </div>
+          <div class="mb-4">
+            <a href="<%= @conn.params["redirect_url"] %>&guest_checkout=true" class="btn btn-md btn-block u-btn-primary rounded g-py-13">
+              Checkout As Guest
+            </a>
+          </div>
         </div>
       </div>
     </div>

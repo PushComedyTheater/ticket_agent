@@ -14,11 +14,28 @@
     <div class="col-md-4 g-mb-30">
       <!-- Client -->
       <div class="mb-5">
+        <h3 class="h5 g-color-black mb-3">Buy Tickets</h3>
+        <label class="pull-left" style="padding-right: 20px; padding-top: 8px;">Quantity:</label>
+        <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+          <input class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
+
+          <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-13 rounded-0 g-pa-5">
+            <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
+            <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+          </div>
+        </div>
+        <br />
+        <div style="display: none;">
+          Total:
+          <br />
+          <br />
+        </div>
+
+
         <%= ticket_link(@conn, @show) %>
       </div>
-
       <div class="mb-5">
-        <h3 class="h5 g-color-black mb-3">Price:</h3>
+        <h3 class="h5 g-color-black mb-3">Price Per Ticket:</h3>
         <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#">
           <%= cost(@show) %>
         </a>
