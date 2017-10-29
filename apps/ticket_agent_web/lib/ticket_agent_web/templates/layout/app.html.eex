@@ -1,197 +1,185 @@
 <!DOCTYPE html>
-<html lang="en" class="font-primary">
-  <head>
-    <title><%= page_title(@conn) %></title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <%= render "social.html", conn: @conn %>
-    <%= render "favicons.html" %>
+<html lang="en">
 
+<head>
+  <!-- Title -->
+  <title>Unify - Responsive Website Template</title>
 
-    <!-- Google Fonts -->
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,500,600,700%7Csubset=cyrillic,latin" rel="stylesheet" type="text/css">
+  <!-- Required Meta Tags Always Come First -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <!-- CSS Global Compulsory -->
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/bootstrap/bootstrap.min.css">
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="favicon.ico">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C500%2C600%2C700%7CPlayfair+Display%7CRoboto%7CRaleway%7CSpectral%7CRubik">
+  <!-- CSS Global Compulsory -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha256-m/h/cUDAhf6/iBRixTbuc8+Rg2cIETQtPcH9D3p2Kg0=" crossorigin="anonymous" />
+  <!-- CSS Global Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" integrity="sha256-7O1DfUu4pybYI7uAATw34eDrgQaWGOfMV/8erfDQz/Q=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/icon-line-pro/style.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/icon-etlinefont/style.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/icon-hs/style.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/dzsparallaxer.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/dzsscroller/scroller.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/advancedscroller/plugin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.css" integrity="sha256-iTSF1I/IZRmBtIEP7g2S69f9hbqn82KtOTSixlK+jck=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.css" integrity="sha256-DbEot+lC/Kpjr33eXzHSzQQZNrDS9IYQRXxj/KvBrJc=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/hs-megamenu/src/hs.megamenu.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.9.1/hamburgers.min.css" integrity="sha256-hCM6SsLZUT2/Vkykg2meK/x+qOo9SJPfYif9agoSGOk=" crossorigin="anonymous" />
+  <!-- CSS Unify -->
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/unify-core.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/unify-components.css">
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/unify-globals.css">
 
-    <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-line/css/simple-line-icons.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-line-pro/style.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/icon-hs/style.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/animate.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/fancybox/jquery.fancybox.min.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/slick-carousel/slick/slick.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsparallaxer.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsscroller/scroller.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/advancedscroller/plugin.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/typedjs/typed.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/hs-megamenu/src/hs.megamenu.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/hamburgers/hamburgers.min.css">
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/vendor/malihu-scrollbar/jquery.mCustomScrollbar.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/custombox/4.0.3/custombox.min.css" integrity="sha256-3rPUClLpOdxgbKzqJ4dT8Um1bRm2YZmUBpZZaH46dyg=" crossorigin="anonymous" />
+  <!-- CSS Customization -->
+  <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/custom.css">
+</head>
 
-    <!-- CSS Unify -->
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/css/unify.css">
-
-    <!-- CSS Customization -->
-    <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/css/custom.css">
-
-
-    <style type="text/css">
-
-@media (max-width: 1024px) {
-    .navbar-header {
-        float: none;
-    }
-    .navbar-toggle {
-        display: block;
-    }
-    .navbar-collapse {
-        border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .navbar-collapse.collapse {
-        display: none!important;
-    }
-    .navbar-nav {
-        float: none!important;
-        margin: 7.5px -15px;
-    }
-    .navbar-nav>li {
-        float: none;
-    }
-    .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-}
-
-    </style>
-  </head>
-
-  <body>
-    <main id="main_container">
-      <!-- Header -->
+<body>
+  <main>
       <%= render TicketAgentWeb.MenuView, "menu.html", assigns %>
-      <!-- End Header -->
-      <%= render @view_module, @view_template, assigns %>
-      <!-- Promo Block -->
-      <!-- End Promo Block -->
-      <!-- Call to Action -->
-      <%= render "newsletter.html", assigns %>
-      <!-- End Call to Action -->
 
-      <!-- Footer -->
-      <%= render "footer.html", assigns %>
-      <!-- End Footer -->
+<%= render @view_module, @view_template, assigns %>
 
-      <!-- Copyright Footer -->
-      <footer class="g-bg-gray-dark-v1 g-color-white-opacity-0_8 g-py-20">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-8 text-center text-md-left g-mb-10 g-mb-0--md">
-              <div class="d-lg-flex">
-                <small class="d-block g-font-size-default g-mr-10 g-mb-10 g-mb-0--md">2017 © All Rights Reserved.</small>
-                <ul class="u-list-inline">
-                  <li class="list-inline-item">
-                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="/privacy">Privacy Policy</a>
-                  </li>
-                  <li class="list-inline-item">
-                    <span>|</span>
-                  </li>
-                  <li class="list-inline-item">
-                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="/terms">Terms of Use</a>
-                  </li>
-                  <li class="list-inline-item">
-                    <span>|</span>
-                  </li>
-                  <li class="list-inline-item">
-                    <a class="g-color-white-opacity-0_8 g-color-white--hover" href="mailto:support@pushcomedytheater.com">Support</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
 
-            <div class="col-md-4 align-self-center">
-              <ul class="list-inline text-center text-md-right mb-0">
-                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Facebook">
-                  <a href="https://www.facebook.com/PushComedyTheater" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                    <i class="fa fa-facebook"></i>
-                  </a>
+    <!-- End Header -->
+    <%= render "newsletter.html", assigns %>
+    <%= render "footer.html", assigns %>
+    <footer class="g-bg-gray-dark-v1 g-color-white-opacity-0_8 g-py-20">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 text-center text-md-left g-mb-10 g-mb-0--md">
+            <div class="d-lg-flex">
+              <small class="d-block g-font-size-default g-mr-10 g-mb-10 g-mb-0--md">2017 © All Rights Reserved.</small>
+              <ul class="u-list-inline">
+                <li class="list-inline-item">
+                  <a class="g-color-white-opacity-0_8 g-color-white--hover" href="/privacy">Privacy Policy</a>
                 </li>
-                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Twitter">
-                  <a href="https://twitter.com/pushcomedy" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                    <i class="fa fa-twitter"></i>
-                  </a>
+                <li class="list-inline-item">
+                  <span>|</span>
                 </li>
-                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Google Plus">
-                  <a href="https://plus.google.com/u/0/b/111820986003170275262/+PushComedyTheaterNorfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                    <i class="fa fa-google-plus"></i>
-                  </a>
+                <li class="list-inline-item">
+                  <a class="g-color-white-opacity-0_8 g-color-white--hover" href="/terms">Terms of Use</a>
                 </li>
-
-                <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Yelp">
-                  <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                    <i class="fa fa-yelp"></i>
-                  </a>
+                <li class="list-inline-item">
+                  <span>|</span>
+                </li>
+                <li class="list-inline-item">
+                  <a class="g-color-white-opacity-0_8 g-color-white--hover" href="mailto:support@pushcomedytheater.com">Support</a>
                 </li>
               </ul>
             </div>
           </div>
+
+          <div class="col-md-4 align-self-center">
+            <ul class="list-inline text-center text-md-right mb-0">
+              <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Facebook">
+                <a href="https://www.facebook.com/PushComedyTheater" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                  <i class="fa fa-facebook"></i>
+                </a>
+              </li>
+              <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Twitter">
+                <a href="https://twitter.com/pushcomedy" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                  <i class="fa fa-twitter"></i>
+                </a>
+              </li>
+              <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Google Plus">
+                <a href="https://plus.google.com/u/0/b/111820986003170275262/+PushComedyTheaterNorfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                  <i class="fa fa-google-plus"></i>
+                </a>
+              </li>
+
+              <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Yelp">
+                <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
+                  <i class="fa fa-yelp"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </footer>
-      <!-- End Copyright Footer -->
-    </main>
+      </div>
+    </footer>
+    <!-- End Copyright Footer -->
+  </main>
 
-    <!-- JS Global Compulsory -->
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/jquery/jquery.min.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/tether.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <div class="u-outer-spaces-helper"></div>
 
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/bootstrap/bootstrap.min.js"></script>
 
-    <!-- JS Implementing Plugins -->
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/hs-megamenu/src/hs.megamenu.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsparallaxer.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/dzsscroller/scroller.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/dzsparallaxer/advancedscroller/plugin.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/typedjs/typed.min.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/vendor/masonry/dist/masonry.pkgd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/custombox/4.0.3/custombox.min.js" integrity="sha256-3dCvh9Ar+IBGrK82FBU4xIUnY7N7ma1epBq2sHgpgY8=" crossorigin="anonymous"></script>
-    <!-- JS Unify -->
-    <script src="https://cdn.pushcomedytheater.com/template/js/hs.core.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.header.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/js/helpers/hs.hamburgers.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.go-to.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.count-qty.js"></script>
-    <script src="https://cdn.pushcomedytheater.com/template/js/components/hs.modal-window.js"></script>
+  <!-- JS Global Compulsory -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js" integrity="sha256-ihAoc6M/JPfrIiIeayPE9xjin4UWjsx2mjW/rtmxLM4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.4.1/jquery-migrate.min.js" integrity="sha256-SOuLUArmo4YXtXONKz+uxIGSKneCJG4x0nVcA0pFzV0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js" integrity="sha256-rD86dXv7/J2SvI9ebmNi5dSuQdvzzrrN2puPca/ILls=" crossorigin="anonymous"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/popper.js/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha256-DiWJXXyq81WlPRnDfGmgYZj2aOVCKyEdJ1l+2TmDuAs=" crossorigin="anonymous"></script>
 
-    <!-- JS Plugins Init. -->
-    <script>
-      $(document).on('ready', function () {
+  <!-- JS Implementing Plugins -->
+  <script src="https://assets.pushcomedytheater.com/2.0/hs-megamenu/src/hs.megamenu.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/dzsparallaxer.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/dzsscroller/scroller.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/advancedscroller/plugin.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.jquery.min.js" integrity="sha256-sLYUdmo3eloR4ytzZ+7OJsswEB3fuvUGehbzGBOoy+8=" crossorigin="anonymous"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/image-select/src/ImageSelect.jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.1.1/masonry.pkgd.min.js" integrity="sha256-smfzbGDPGmErohy6T4GYOwE4m/195BPvF80A89X23j4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/custombox/4.0.3/custombox.min.js" integrity="sha256-3dCvh9Ar+IBGrK82FBU4xIUnY7N7ma1epBq2sHgpgY8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.6/typed.min.js" integrity="sha256-lg08cUS9fRaVhpYQy3GfoNMMXKaS63bhSXqW8MfuABw=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js" integrity="sha256-T8epxt0QUasmGlUNsLFhR9pCNt7fsu/GMR6/9IoEU1A=" crossorigin="anonymous"></script>
+
+  <!-- JS Unify -->
+  <script src="https://assets.pushcomedytheater.com/2.0/js/hs.core.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.header.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/helpers/hs.hamburgers.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.scroll-nav.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.go-to.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.sticky-block.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/helpers/hs.height-calc.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.carousel.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.count-qty.js"></script>
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.modal-window.js"></script>
+
+  <!-- JS Custom -->
+  <script src="https://assets.pushcomedytheater.com/2.0/js/custom.js"></script>
+
+  <!-- JS Plugins Init. -->
+  <script>
+    $(document).on('ready', function () {
+
         // Header
         $.HSCore.components.HSHeader.init($('#js-header'));
         $.HSCore.helpers.HSHamburgers.init('.hamburger');
         $.HSCore.components.HSCountQty.init('.js-quantity');
         $.HSCore.components.HSModalWindow.init('[data-modal-target]:not(.js-modal-markup)');
-        // Initialization of HSMegaMenu plugin
+        // initialization of HSMegaMenu plugin
         $('.js-mega-menu').HSMegaMenu({
           event: 'hover',
           pageContainer: $('.container'),
           breakpoint: 991
         });
 
-        // initialization of text animation (typing)
-        $(".u-text-animation.u-text-animation--typing").typed({
+        var typed = new Typed('.u-text-animation.u-text-animation--typing', {
           strings: ["improvisational", "funny", "musical", "dramatic"],
           typeSpeed: 60,
           loop: true,
           backDelay: 1500,
         });
 
-        // Initialization of masonry.js
+        // initialization of go to
+        $.HSCore.components.HSGoTo.init('.js-go-to');
+
+        $.HSCore.helpers.HSHeightCalc.init();
+      });
+
+      $(window).on('load', function () {
+        // initialization of HSScrollNav
+        $.HSCore.components.HSScrollNav.init($('#js-scroll-nav'), {
+          duration: 700,
+          easing: 'easeOutExpo',
+          over: $('.u-secondary-navigation')
+        });
+
+        // initialization of masonry.js
         $('.masonry-grid').imagesLoaded().then(function () {
           $('.masonry-grid').masonry({
             // options
@@ -201,10 +189,11 @@
           });
         });
 
-        // initialization of go to
-        $.HSCore.components.HSGoTo.init('.js-go-to');
+        // initialization of sticky blocks
+        $.HSCore.components.HSStickyBlock.init('.js-sticky-block');
       });
-    </script>
-     <script src="<%= static_path(@conn, "/js/application.js") %>"></script>
-  </body>
+  </script>
+
+</body>
+
 </html>
