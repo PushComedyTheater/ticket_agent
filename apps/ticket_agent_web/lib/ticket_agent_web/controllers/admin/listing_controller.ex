@@ -18,8 +18,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def show(conn, %{"titled_slug" => titled_slug}) do
-    [slug|_] = titled_slug |> String.split("-")
-    show = load_show(slug)
+    show = load_show(titled_slug)
     render(conn, "show.html", show: show)
   end
 
@@ -34,7 +33,15 @@ defmodule TicketAgentWeb.Admin.ListingController do
     render conn, "new.html", changeset: changeset
   end
 
-  def load_show(slug) do
+  def edit(conn, %{"titled_slug" => titled_slug}) do
+    show = load_show(titled_slug)
+    changeset = Listing.changeset(show, %{})
+    render(conn, "edit.html", show: show, changeset: changeset)
+  end
+
+  def load_show(titled_slug) do
+    [slug|_] = titled_slug |> String.split("-")
+
     Repo.get_by!(Listing, slug: slug)
     |> Repo.preload(:class)
     |> Repo.preload(:images)

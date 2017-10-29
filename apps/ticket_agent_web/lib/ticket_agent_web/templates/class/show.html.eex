@@ -48,6 +48,16 @@
 
             <%= if Enum.count(@class.listings) > 0 do %>
               <a class="btn btn-xl u-btn-primary g-font-size-default" href="#">Enroll Now</a>
+
+<div id="modal" class="text-left g-max-width-1000 g-bg-white g-pa-20" style="display: none; width: 950px; border-radius: 15px;">
+  BLAH
+</div>
+
+
+        <a href="#" class="btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15"  href="#modal" data-modal-target="#modal" data-modal-effect="slit">
+          <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
+        </a>
+
             <% else %>
               <a class="btn btn-xl u-btn-success g-font-size-default" href="#">Not Currently Enrolling</a>
             <% end %>

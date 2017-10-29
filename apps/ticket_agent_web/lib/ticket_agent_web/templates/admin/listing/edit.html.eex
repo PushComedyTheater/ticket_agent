@@ -1,0 +1,6 @@
+<h2>Edit Listing</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: admin_listing_path(@conn, :update, @show) %>
+
+<span><%= link "Back", to: admin_listing_path(@conn, :index) %></span>

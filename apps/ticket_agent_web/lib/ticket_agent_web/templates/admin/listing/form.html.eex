@@ -1,0 +1,86 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :title, class: "control-label" %>
+    <%= text_input f, :title, class: "form-control" %>
+    <%= error_tag f, :title %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :description, class: "control-label" %>
+    <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10) %>
+    <%= error_tag f, :description %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :status, class: "control-label" %>
+    <%= select f, :status, [
+      "Unpublished": "unpublished",
+      "Active": "active",
+      "Canceled": "canceled",
+      "Deleted": "deleted"
+    ], selected: f.data.status, prompt: "None" %>
+    <%= error_tag f, :status %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :start_time, class: "control-label" %>
+    <%= my_datetime_select f, :start_time %>
+    <%= error_tag f, :start_time %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :end_time, class: "control-label" %>
+    <%= my_datetime_select f, :end_time %>
+    <%= error_tag f, :end_time %>
+  </div>
+
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Listing Images</h3>
+      </div>
+    <!-- /.box-body -->
+
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-4">Event Cover Image</div>
+        <div class="col-sm-4">
+          <img id="cover_image" src="<%= cover_image(f.data) %>" style="zoom: 50%; padding: 5px;" /><br /><br />
+          <a href="#" id="upload_cover_photo" class="btn btn-primary">
+            Upload Photo
+          </a>
+          <a href="#" id="choose_cover_photo" class="btn btn-primary">
+            Choose Existing Photo
+          </a>
+          <!-- Button trigger modal -->
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="box-body">
+      <div class="row">
+        <div class="col-sm-4">Event Social Image</div>
+        <div class="col-sm-4">
+          <img id="social_image" src="<%= social_image(f.data) %>" style="zoom: 50%; padding: 5px;" /><br /><br />
+          <a href="#" id="upload_social_photo" class="btn btn-primary">
+            Upload Photo
+          </a>
+          <a href="#" id="choose_social_photo" class="btn btn-primary">
+            Choose Existing Photo
+          </a>
+          <!-- Button trigger modal -->
+        </div>
+      </div>
+    </div>
+    <br />
+
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

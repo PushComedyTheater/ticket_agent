@@ -33,15 +33,16 @@ defmodule TicketAgentWeb.TicketModalView do
   end
 
   def event_date(%Listing{start_time: start_time, end_time: end_time} = show) when not is_nil(start_time) and not is_nil(end_time) do
-    start_date = NaiveDateTime.to_date(show.start_time) |> IO.inspect
-    end_date =  NaiveDateTime.to_date(show.end_time) |> IO.inspect
+    start_date = NaiveDateTime.to_date(show.start_time)
+    end_date =  NaiveDateTime.to_date(show.end_time)
 
     case start_date == end_date do
       true ->
-        Calendar.Strftime.strftime!(start_time, "%b %d, %Y - %l:%M%p")
+        Calendar.Strftime.strftime!(start_time, "%a, %b %e")
       false ->
-        Calendar.Strftime.strftime!(start_time, "%b %d, %Y - %l:%M%p")
-
+        start = Calendar.Strftime.strftime!(start_time, "%a, %b %e")
+        finish = Calendar.Strftime.strftime!(end_time, "%a, %b %e")
+        "#{start}-#{finish}"
     end
   end
 end
