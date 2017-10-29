@@ -71,9 +71,10 @@ defmodule TicketAgentWeb.Router do
     pipe_through [:protected, :ensure_admin, :admin_layout]
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
     resources "/classes", ClassController, as: :admin_class
-    resources "/listings", ListingController, as: :admin_listing
+    resources "/listings", ListingController, as: :admin_listing, param: "titled_slug"
     resources "/images", ImageController, as: :admin_image
     resources "/teachers", TeacherController, as: :admin_teacher
+    resources "/tickets", TicketController, as: :admin_ticket
 
     get "/", Redirect, to: "/admin/dashboard"
   end

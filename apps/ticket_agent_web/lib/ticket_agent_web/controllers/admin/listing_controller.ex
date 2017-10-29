@@ -11,13 +11,16 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def new(conn, %{"class_id" => class_id}) do
-
     class = Repo.get(Class, class_id)
-
     changeset = conn.assigns.current_user
                 |> Listing.from_class(class)
-
     render conn, "new.html", changeset: changeset, class: class
+  end
+
+  def show(conn, %{"titled_slug" => titled_slug}) do
+    [slug|_] = titled_slug |> String.split("-")
+    show = load_show(slug)
+    render(conn, "show.html", show: show)
   end
 
   def new(conn, _params) do
@@ -29,5 +32,12 @@ defmodule TicketAgentWeb.Admin.ListingController do
         type: "show"})
 
     render conn, "new.html", changeset: changeset
+  end
+
+  def load_show(slug) do
+    Repo.get_by!(Listing, slug: slug)
+    |> Repo.preload(:class)
+    |> Repo.preload(:images)
+    |> Repo.preload(:tickets)
   end
 end

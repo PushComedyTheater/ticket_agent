@@ -1,0 +1,54 @@
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title"><%= @show.title %></h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table class="table table-bordered">
+      <tr>
+        <th>Title</th>
+        <td><%= @show.title %></td>
+      </tr>
+      <tr>
+        <th>Type</th>
+        <td><%= @show.type %></td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td><%= raw @show.description %></td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td><%= @show.status %></td>
+      </tr>
+      <tr>
+        <th>Start Time</th>
+        <td><%= @show.start_time %></td>
+      </tr>
+      <tr>
+        <th>End Time</th>
+        <td><%= @show.end_time %></td>
+      </tr>
+      <tr>
+        <th>Related Class</th>
+        <td><%= link @show.class.title, to: admin_class_path(@conn, :show, @show.class), class: "btn btn-info btn-xs" %></td>
+      </tr>
+      <tr>
+        <th>Related Class</th>
+        <td>
+          <%= for image <- @show.images do %>
+            <div>
+              <%= image.type %><br /><img src="<%= image.url %>" style="width: 300px;" />
+            </div>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <th>Tickets</th>
+        <td><%= link Enum.count(@show.tickets), to: admin_ticket_path(@conn, :index, [show_id: @show.id]) %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+<span><%= link "Edit", to: admin_listing_path(@conn, :edit, @show) %></span>
+<span><%= link "Back", to: admin_listing_path(@conn, :index) %></span>
