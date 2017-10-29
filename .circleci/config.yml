@@ -1,0 +1,55 @@
+# Elixir CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-elixir/ for more details
+version: 2
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/elixir:1.5.2
+      - image: redis:3.2-alpine
+      - image: circleci/postgres:9.5
+        env:
+          - POSTGRES_USER=ubuntu
+          - POSTGRES_DB=ticket_agent_test
+    steps:
+      - checkout
+      - run:
+          name: Environment
+          command: printenv
+      - restore_cache:
+          key: myapp-deps-{{ checksum "mix.lock" }}
+      - run:
+          name: Setup Hex/Rebar
+          command: |
+            mix local.hex --force
+            mix local.rebar --force
+      - run:
+          name: Get dependencies
+          command: |
+            MIX_ENV="test" mix deps.get
+      - run:
+          name: Compile dependencies
+          command: |
+            MIX_ENV="test" mix deps.compile
+      - run:
+          name: Compile code
+          command: |
+            MIX_ENV="test" mix compile
+      - save_cache:
+          key: myapp-deps-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+            - _build
+      - run:
+          name: Create database
+          command: |
+            MIX_ENV="test" mix ecto.create
+      - run:
+          name: Execute Tests
+          command: |
+            MIX_ENV="test" mix test
+      - run:
+          name: Execute Credo
+          command: |
+            MIX_ENV="test" mix credo

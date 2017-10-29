@@ -24,7 +24,21 @@ defmodule TicketAgentWeb.TicketModalView do
       end
   end
 
-  def event_date(%Listing{start_time: nil} = show)  do
+  def event_time(%Listing{start_time: nil} = show) do
+    ""
+  end
+
+  def event_time(%Listing{start_time: start_time, end_time: nil} = show) do
+    Calendar.Strftime.strftime!(start_time, "%I:%M %p")
+  end
+
+  def event_time(%Listing{start_time: start_time, end_time: end_time} = show) when not is_nil(start_time) and not is_nil(end_time) do
+    start = Calendar.Strftime.strftime!(start_time, "%I:%M %p")
+    finish = Calendar.Strftime.strftime!(end_time, "%I:%M %p")
+    "#{start}-#{finish}"
+  end
+
+  def event_date(%Listing{start_time: nil} = show) do
     ""
   end
 

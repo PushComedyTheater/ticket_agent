@@ -37,6 +37,38 @@
 
     <!-- CSS Customization -->
     <link rel="stylesheet" href="https://cdn.pushcomedytheater.com/template/css/custom.css">
+
+
+    <style type="text/css">
+
+@media (max-width: 1024px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin: 7.5px -15px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+    </style>
   </head>
 
   <body>
@@ -116,6 +148,8 @@
     <!-- JS Global Compulsory -->
     <script src="https://cdn.pushcomedytheater.com/template/vendor/jquery/jquery.min.js"></script>
     <script src="https://cdn.pushcomedytheater.com/template/vendor/tether.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+
     <script src="https://cdn.pushcomedytheater.com/template/vendor/bootstrap/bootstrap.min.js"></script>
 
     <!-- JS Implementing Plugins -->
