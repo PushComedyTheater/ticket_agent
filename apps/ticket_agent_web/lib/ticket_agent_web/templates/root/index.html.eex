@@ -11,3 +11,13 @@
     <%= link "Watch A Show", to: show_path(@conn, :index), class: "btn u-btn-outline-white g-color-white g-bg-white-opacity-0_1 g-color-black--hover g-bg-white--hover g-font-weight-600 text-uppercase g-rounded-50 g-px-30 g-py-13" %>
   </div>
 </section>
+<script type="text/javascript">
+$(document).on('ready', function () {
+        var typed = new Typed('.u-text-animation.u-text-animation--typing', {
+          strings: ["improvisational", "funny", "musical", "dramatic"],
+          typeSpeed: 60,
+          loop: true,
+          backDelay: 1500,
+        });
+});
+</script>
