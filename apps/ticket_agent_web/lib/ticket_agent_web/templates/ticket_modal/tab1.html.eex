@@ -1,0 +1,21 @@
+<div class="tab-pane fade show active" id="nav-1-1-default-hor-left--1" role="tabpanel">
+  <div class="d-flex justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30">
+    <h5 class="pull-left">Date</h5>
+    <h5 class="pull-right" style="text-align: right;"><strong><%= event_date(@show) %></strong><br /><%= event_time(@show) %></h5>
+  </div>
+
+  <div id="plus_wrapper" class="d-flex justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30">
+    <h5 class="pull-left">Ticket Quantity</h5>
+
+    <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus" style="margin-left: -280px;">
+      <input id="js_result" class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="0" readonly>
+
+      <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-13 rounded-0 g-pa-5">
+        <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
+        <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+      </div>
+    </div>
+    <h5 class="pull-right" style="text-align: right;">$<%= event_cost(@show) %></h5>
+  </div>
+  <a id="tab1_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
+</div>

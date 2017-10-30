@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   <%= render "social.html", conn: @conn %>
   <%= render "favicons.html" %>
   <!-- Google Fonts -->
@@ -38,6 +39,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.css" integrity="sha256-DbEot+lC/Kpjr33eXzHSzQQZNrDS9IYQRXxj/KvBrJc=" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/hs-megamenu/src/hs.megamenu.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hamburgers/0.9.1/hamburgers.min.css" integrity="sha256-hCM6SsLZUT2/Vkykg2meK/x+qOo9SJPfYif9agoSGOk=" crossorigin="anonymous" />
+
+ <link  rel="stylesheet" href="https://cdn.pushcomedytheater.com/2.0/custombox/custombox.min.css">
   <!-- CSS Unify -->
   <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/unify-core.css">
   <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/unify-components.css">
@@ -49,14 +52,18 @@
 
 <body>
   <main>
-      <%= render TicketAgentWeb.MenuView, "menu.html", assigns %>
-
-<%= render @view_module, @view_template, assigns %>
-
-
-    <!-- End Header -->
+    <!-- MENU INCLUDE -->
+    <%= render TicketAgentWeb.MenuView, "menu.html", assigns %>
+    <!-- END MENU INCLUDE -->
+    <!-- VIEW MODULE INCLUDE -->
+    <%= render @view_module, @view_template, assigns %>
+    <!-- END VIEW MODULE INCLUDE -->
+    <!-- NEWSLETTER INCLUDE -->
     <%= render "newsletter.html", assigns %>
+    <!-- END NEWSLETTER INCLUDE -->
+    <!-- FOOTER INCLUDE -->
     <%= render "footer.html", assigns %>
+    <!-- END FOOTER INCLUDE -->
     <footer class="g-bg-gray-dark-v1 g-color-white-opacity-0_8 g-py-20">
       <div class="container">
         <div class="row">
@@ -142,11 +149,11 @@
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.sticky-block.js"></script>
   <script src="https://assets.pushcomedytheater.com/2.0/js/helpers/hs.height-calc.js"></script>
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.carousel.js"></script>
-  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.count-qty.js"></script>
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.modal-window.js"></script>
 
   <!-- JS Custom -->
   <script src="https://assets.pushcomedytheater.com/2.0/js/custom.js"></script>
+  <script src="<%= static_path(@conn, "/js/application.js") %>"></script>
 
   <!-- JS Plugins Init. -->
   <script>
@@ -187,6 +194,8 @@
             percentPosition: true
           });
         });
+
+        $.HSCore.components.HSModalWindow.init('[data-modal-target]');
 
         // initialization of sticky blocks
         $.HSCore.components.HSStickyBlock.init('.js-sticky-block');

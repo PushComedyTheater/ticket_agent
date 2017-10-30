@@ -1,6 +1,10 @@
 defmodule TicketAgentWeb.ErrorView do
   use TicketAgentWeb, :view
 
+  def render("error.json", %{message: message}) do
+    %{message: message}
+  end
+
   def render("404.html", _assigns) do
     "Page not found"
   end

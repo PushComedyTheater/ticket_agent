@@ -3,6 +3,18 @@ defmodule TicketAgentWeb.TicketModalView do
   alias TicketAgent.Listing
   import Ecto.Query
 
+  def user_first_name(conn) do
+    Coherence.current_user_name(conn)
+    |> String.split(" ")
+    |> hd
+  end
+
+  def user_last_name(conn) do
+    Coherence.current_user_name(conn)
+    |> String.split(" ")
+    |> tl
+  end
+
   def ticket_link(conn, show) do
     available_tickets = Listing.available_tickets(show)
 
@@ -22,6 +34,15 @@ defmodule TicketAgentWeb.TicketModalView do
           class: "btn u-btn-red g-font-size-13 text-uppercase g-py-10 g-px-15"
         )
       end
+  end
+
+  def event_cost(show) do
+    cost =
+      show
+      |> Listing.ticket_cost
+      |> :erlang.float_to_binary([decimals: 2])
+
+    "#{cost}"
   end
 
   def event_time(%Listing{start_time: nil} = show) do

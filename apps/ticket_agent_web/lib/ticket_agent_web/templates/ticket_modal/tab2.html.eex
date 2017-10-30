@@ -1,0 +1,185 @@
+<div class="tab-pane fade" id="nav-1-1-default-hor-left--2" role="tabpanel">
+  <h4 class="g-mb-10"> <strong>Buyer Information</strong>  </h4>
+
+  <div id="not_logged_in">
+    <p class="g-font-size-12">Checkout as a guest or <a id="toggle_login_form" href="#">Sign in with your Push account</a>
+    <div class="form-inline">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="first_name" placeholder="First Name">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="last_name" placeholder="Last Name">
+    </div>
+    <br />
+    <div class="form-inline">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email" placeholder="Emai">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email_confirm" placeholder="Confirm Email">
+    </div>
+  </div>
+
+  <div id="logged_in" style="display: none;">
+    <h3 class="card-header h5 text-white g-bg-primary g-brd-transparent rounded-0">
+      <i class="fa fa-user g-font-size-default g-mr-5"></i>
+      Logged In As <span id="user_name">Patrick Veverka</span>
+    </h3>
+  </div>
+
+  <div id="login_form" style="display: none;">
+    <div class="card rounded-0">
+      <h3 class="card-header h5 rounded-0">
+        <i class="fa fa-user g-font-size-default g-mr-5"></i>
+        Sign in with your Push account
+      </h3>
+
+      <div class="card-block">
+        <div id="email_group" class="form-group g-mb-20">
+          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
+          <input class="form-control form-control-md rounded-0" type="email" id="session_email" name="session[email]" placeholder="user@domain.com" required="" type="email">
+          <small id="email_required" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+
+        <div id="password_group" class="form-group g-mb-35">
+          <div class="row justify-content-between">
+            <div class="col align-self-center">
+              <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Password:</label>
+            </div>
+            <div class="col align-self-center text-right">
+              <%= TicketAgentWeb.Coherence.ViewHelpers.coherence_links(@conn, :new_session, register: false, class: "d-inline-block g-font-size-12 mb-2") %>
+            </div>
+          </div>
+          <input class="form-control form-control-md rounded-0" id="session_password" name="session[password]" placeholder="Password" required="" type="password">
+          <small id="password_required" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+
+        <div id="error_alert" class="alert alert-dismissible fade show g-bg-red g-color-white rounded-0" role="alert" style="display: none;">
+          <button type="button" class="close u-alert-close--light" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+
+          <div class="media">
+            <span class="d-flex g-mr-10 g-mt-5">
+              <i class="icon-ban g-font-size-25"></i>
+            </span>
+            <span id="error_message" class="media-body align-self-center">
+              <strong>Oh snap!</strong> Change a few things up and try submitting again.
+            </span>
+          </div>
+        </div>
+
+        <div id="login_group" class="form-group g-mb-35">
+          <a id="tab2_login_button" href="#" class="btn u-btn-primary btn-lg btn-block g-mr-10 g-mb-15">Login</a>
+        </div>
+
+        <div class="d-flex justify-content-center text-center g-mb-30">
+          <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+          <span class="align-self-center g-color-gray-dark-v3 mx-4">OR</span>
+          <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+        </div>
+
+        <div class="row text-center no-gutters g-mb-10">
+          <div class="col-4">
+            <%= link(
+              to: auth_path(@conn, :index, "facebook"),
+              target: "_blank",
+              class: "u-icon-v3 g-bg-facebook g-color-white g-color-white--hover g-mr-15 g-mb-20") do %>
+              <i class="fa fa-facebook"></i>
+            <% end %>
+          </div>
+          <div class="col-4">
+            <%= link(
+              to: auth_path(@conn, :index, "twitter"),
+              target: "_blank",
+              class: "u-icon-v3 g-bg-twitter g-color-white g-color-white--hover g-mr-15 g-mb-20") do %>
+              <i class="fa fa-twitter"></i>
+            <% end %>
+          </div>
+          <div class="col-4">
+            <%= link(
+              to: auth_path(@conn, :index, "google"),
+              target: "_blank",
+              class: "u-icon-v3 g-bg-google-plus g-color-white g-color-white--hover g-mr-15 g-mb-20") do %>
+                <i class="fa fa-google-plus"></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).on('ready', function () {
+    window.load_logged_in_user();
+    $("#tab2_login_button").on("click", function(e) {
+      var csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
+      var values = {
+        session: {
+          email: $("#session_email").val(),
+          password: $("#session_password").val()
+        }
+      };
+
+      var valid_form = true;
+      if (values.session.email.length == 0) {
+        $("#email_required").show();
+        $("#email_group").addClass("u-has-error-v1");
+        valid_form = false;
+      } else {
+        $("#email_required").hide();
+        $("#email_group").removeClass("u-has-error-v1");
+      }
+
+      if (values.session.password.length == 0) {
+        $("#password_required").show();
+        $("#password_group").addClass("u-has-error-v1");
+        valid_form = false;
+      } else {
+        $("#password_required").hide();
+        $("#password_group").removeClass("u-has-error-v1");
+      }
+
+      if (!valid_form) {
+        return false;
+      }
+
+      $.ajax({
+        url: "/api/sessions",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("X-CSRF-Token", csrf_token);
+        },
+        data: JSON.stringify(values)
+      })
+      .error(function(xhr, textStatus, errorThrown) {
+        $("#error_message").html(xhr.responseJSON.message);
+        $("#error_alert").show();
+      })
+      .success(function() {
+        window.load_logged_in_user();
+        $("#not_logged_in").hide();
+        $("#logged_in").show();
+        $("#login_form").hide();
+      });
+      e.preventDefault();
+    });
+
+    $("#toggle_login_form").on("click", function() {
+      $("#not_logged_in").hide();
+      $("#logged_in").hide();
+      $("#login_form").show();
+    });
+  });
+
+  window.load_logged_in_user = function() {
+    $.getJSON("/api/sessions", function( data ) {
+      if (data.logged_in) {
+        $("#logged_in").show();
+        $("#not_logged_in").hide();
+        $("#user_name").html(data.name);
+      } else {
+        $("#logged_in").hide();
+        $("#not_logged_in").show();
+        $("#user_name").html(data.name);
+      }
+    });
+  }
+</script>

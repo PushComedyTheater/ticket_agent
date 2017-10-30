@@ -1,4 +1,4 @@
-<div id="modal" class="text-left g-max-width-1000 g-bg-white g-pa-20" style="display: none; width: 950px; border-radius: 15px;">
+<div id="modal" class="text-left g-max-width-1000 g-bg-white g-pa-20" style="display: none; width: 1024px; border-radius: 15px;">
   <button type="button" class="close" onclick="Custombox.modal.close();">
     <i class="hs-icon hs-icon-close"></i>
   </button>
@@ -13,7 +13,7 @@
     <li class="nav-item">
       <a class="nav-link active" data-toggle="tab" href="#nav-1-1-default-hor-left--1" role="tab">
         <i class="icon-hotel-restaurant-003 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-        Choose Your Tickets
+        Ticket Quantity
       </a>
     </li>
     <li class="nav-item">
@@ -29,40 +29,58 @@
       </a>
     </li>
   </ul>
-  <!-- End Nav tabs -->
-<hr />
+  <hr />
   <div style="width: 60%; float: left; border-right: 1px solid #ccc; padding-right: 25px;">
     <div id="nav-1-1-default-hor-left" class="tab-content">
-      <div class="tab-pane fade show active" id="nav-1-1-default-hor-left--1" role="tabpanel">
-        <h4 class="g-mb-10"><strong>Select Tickets</strong></h4>
-
-      <div class="d-flex justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30">
-        <h5 class="pull-left">Date</h5>
-        <h5 class="pull-right" style="text-align: right;"><%= event_date(@show) %><br />7:00 PM–9:00 PM</h5>
-      </div>
-
-      <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-        <input class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
-
-        <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-13 rounded-0 g-pa-5">
-          <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
-          <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
-        </div>
-      </div>
-
-
-      </div>
-
-      <div class="tab-pane fade" id="nav-1-1-default-hor-left--2" role="tabpanel">
-        <p>This isn't real at all either.</p>
-      </div>
-
-      <div class="tab-pane fade" id="nav-1-1-default-hor-left--3" role="tabpanel">
-        <p>At this point, who knows.</p>
-      </div>
+      <%= render "tab1.html", conn: @conn, show: @show %>
+      <%= render "tab2.html", conn: @conn, show: @show %>
+      <%= render "tab3.html", conn: @conn, show: @show %>
     </div>
   </div>
-  <div id="subtotal" style="width: 40%; float: right; vertical-align: top; padding: 5px;">
-
+  <div id="subtotal" style="width: 40%; float: right; vertical-align: top; padding-left: 25px;">
+    <h4 class="g-mb-10"><strong>Your Order</strong></h4>
+    <div class="table-responsive">
+      <table id="invoice_total" class="table" style="display: none;">
+        <tbody class="text-center">
+          <tr>
+            <td id="invoice_quantity" class="g-width-70 g-color-gray-dark-v4 g-font-weight-600 g-py-15">0</td>
+            <td class="g-max-width-300 text-left g-py-15">
+              <h4 class="g-color-gray-dark-v4 g-font-weight-700 g-font-size-16"><%= @conn.assigns.page_title_modal %></h4>
+              <p class="g-color-gray-dark-v5 g-font-size-12 mb-0">Sunday, November 5, 7:00PM</p>
+            </td>
+            <td id="invoice_cost" class="g-color-gray-dark-v4 g-font-weight-600 g-py-15">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
+<script type="text/javascript">
+  var ticket_cost = <%= event_cost(@show) %>;
+  $(document).on('ready', function () {
+    $("#js_result").bind("change", function() {
+      var result = $('#js_result'),
+          resultVal = parseInt(result.val()),
+          total = (resultVal * ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+
+          $("#invoice_quantity").html(resultVal);
+
+          $("#invoice_cost").html("$" + total);
+
+          if (resultVal > 0) {
+            $("#invoice_total").show();
+          } else {
+            $("#invoice_total").hide();
+          }
+    });
+    $("#tab1_continue").on("click", function() {
+      var result = $('#js_result'),
+          resultVal = parseInt(result.val());
+      if (resultVal > 0) {
+        $('.nav a[href="#nav-1-1-default-hor-left--2"]').tab('show')
+      } else {
+        alert("Choose a ticket");
+      }
+    })
+  });
+</script>
