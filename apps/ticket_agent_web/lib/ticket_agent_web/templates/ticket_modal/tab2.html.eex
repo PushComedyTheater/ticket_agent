@@ -3,21 +3,38 @@
 
   <div id="not_logged_in">
     <p class="g-font-size-12">Checkout as a guest or <a id="toggle_login_form" href="#">Sign in with your Push account</a>
-    <div class="form-inline">
+    <div id="name_group" class="form-inline">
       <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="first_name" placeholder="First Name">
       <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="last_name" placeholder="Last Name">
+      <small id="name_group_error" class="form-control-feedback"></small>
     </div>
     <br />
-    <div class="form-inline">
-      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email" placeholder="Emai">
+    <div id="email_group" class="form-inline">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email" placeholder="Email">
       <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email_confirm" placeholder="Confirm Email">
+       <small id="email_group_error" class="form-control-feedback"></small>
+    </div>
+    <br />
+    <label class="d-flex align-items-center justify-content-between">
+      <span style="padding-left: 25px;">Create a Push account for faster checkout in the future.</span>
+      <div class="u-check" style="padding-right: -550px;">
+        <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" name="create_account" id="create_account" type="checkbox">
+        <div class="u-check-icon-radio-v8">
+          <i class="fa" data-check-icon=""></i>
+        </div>
+      </div>
+    </label>
+    <div id="create_account_password" class="form-inline" style="display: none;">
+      <input type="password" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="password" placeholder="Password">
+      <input type="password" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="password_confirm" placeholder="Confirm Password">
+      <small id="create_account_password_error" class="form-control-feedback"></small>
     </div>
   </div>
 
   <div id="logged_in" style="display: none;">
     <h3 class="card-header h5 text-white g-bg-primary g-brd-transparent rounded-0">
       <i class="fa fa-user g-font-size-default g-mr-5"></i>
-      Logged In As <span id="user_name">Patrick Veverka</span>
+      Logged In As <span id="user_name"></span>
     </h3>
   </div>
 
@@ -76,7 +93,7 @@
         <div class="row text-center no-gutters g-mb-10">
           <div class="col-4">
             <%= link(
-              to: auth_path(@conn, :index, "facebook"),
+              to: auth_path(@conn, :index, "facebook", [redirect: "close_popup"]),
               target: "_blank",
               class: "u-icon-v3 g-bg-facebook g-color-white g-color-white--hover g-mr-15 g-mb-20") do %>
               <i class="fa fa-facebook"></i>
@@ -84,7 +101,7 @@
           </div>
           <div class="col-4">
             <%= link(
-              to: auth_path(@conn, :index, "twitter"),
+              to: auth_path(@conn, :index, "twitter", [redirect: "close_popup"]),
               target: "_blank",
               class: "u-icon-v3 g-bg-twitter g-color-white g-color-white--hover g-mr-15 g-mb-20") do %>
               <i class="fa fa-twitter"></i>
@@ -92,21 +109,99 @@
           </div>
           <div class="col-4">
             <%= link(
-              to: auth_path(@conn, :index, "google"),
+              to: auth_path(@conn, :index, "google", [redirect: "close_popup"]),
               target: "_blank",
               class: "u-icon-v3 g-bg-google-plus g-color-white g-color-white--hover g-mr-15 g-mb-20") do %>
                 <i class="fa fa-google-plus"></i>
             <% end %>
           </div>
         </div>
+        <div class="row text-center no-gutters g-mb-10 pull-right" align="center">
+          <a href="#" id="tab2_continue_as_guest">Continue as a guest</a>
+        </div>
       </div>
     </div>
   </div>
+
+  <hr />
+
+  <h4 class="g-mb-10"> <strong>Guests Information</strong>  </h4>
+  <br />
+  <form id="attendee_wrapper">
+    <div id="attendee_form" style="overflow: scroll; height: 400px;">
+    </div>
+    <a id="tab2_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
+  </form>
+
 </div>
+
+<script id="entry-template" type="text/x-handlebars-template">
+  <div class="card rounded-0">
+    <h3 class="card-header h5 rounded-0">
+      <i class="fa fa-user g-font-size-default g-mr-5"></i>
+      Guest {{count}} Information
+    </h3>
+
+    <div class="card-block">
+      <div id="attendee_div_{{count}}">
+        <div id="first_name_group_{{count}}" class="form-group g-mb-20">
+          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">First Name</label>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_first_name_{{count}}" name="attendee_first_name_{{count}}" placeholder="First Name" required>
+          <small id="first_name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+
+        <div id="last_name_group_{{count}}" class="form-group g-mb-20">
+          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Last Name</label>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_last_name_{{count}}" name="attendee_last_name_{{count}}" placeholder="Last Name" required>
+          <small id="last_name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+
+        <div id="email_group_{{count}}" class="form-group g-mb-20">
+          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_{{count}}" name="attendee_email_{{count}}" placeholder="user@domain.com" requiredtype="email">
+          <small id="email_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+      </div>
+
+      <a id="guest_{{count}}" onclick="window.save_ticket({{count}}, false)" data-group="{{count}}" href="#" class="guest_save btn btn-md btn-block u-btn-inset u-btn-outline-blue g-mr-10 g-mb-15" role="guest_save">Save Ticket</a>
+    </div>
+  </div>
+</script>
 
 <script type="text/javascript">
   $(document).on('ready', function () {
     window.load_logged_in_user();
+
+    $("#tab2_continue").on("click", function(e) {
+      var result = $('#js_result'),
+          resultVal = parseInt(result.val());
+
+      var valid_tickets = true;
+      for (var i = 1; i <= resultVal; i++) {
+        if (!window.save_ticket(i, true)) {
+          valid_tickets = false;
+        }
+      }
+
+      var result = window.validate_login() && valid_tickets;
+      if (result) {
+        $('.nav a[href="#nav-1-1-default-hor-left--3"]').tab('show')
+        return true;
+      } else {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    $("#create_account").on("change click", function(e) {
+      var checked = $(this).attr("checked") == "checked";
+      if (checked) {
+        $("#create_account_password").show();
+      } else {
+        $("#create_account_password").hide();
+      }
+    });
+
     $("#tab2_login_button").on("click", function(e) {
       var csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
       var values = {
@@ -154,20 +249,154 @@
         $("#error_alert").show();
       })
       .success(function() {
-        window.load_logged_in_user();
-        $("#not_logged_in").hide();
-        $("#logged_in").show();
-        $("#login_form").hide();
+        window.login_success();
       });
       e.preventDefault();
     });
 
     $("#toggle_login_form").on("click", function() {
+      $("#attendee_form").hide();
       $("#not_logged_in").hide();
       $("#logged_in").hide();
       $("#login_form").show();
     });
+
+    $("#tab2_continue_as_guest").on("click", function() {
+      $("#attendee_form").show();
+      $("#not_logged_in").show();
+      $("#logged_in").hide();
+      $("#login_form").hide();
+    });
   });
+
+  window.validate_login = function() {
+    window.load_logged_in_user();
+    var not_logged_in = $("#not_logged_in").css("display") == "block";
+    var logged_in = $("#logged_in").css("display") == "block";
+    var login_form = $("#login_form").css("display") == "block";
+
+    if (logged_in) {
+      return true;
+    }
+
+    if (login_form) {
+      return false;
+    }
+
+    if (not_logged_in) {
+      var first_name = $("#first_name").val();
+      var last_name = $("#last_name").val();
+      var email = $("#email").val();
+      var email_confirm = $("#email_confirm").val();
+      var password = $("#password").val();
+      var password_confirm = $("#password_confirm").val();
+      var checked = $("#create_account").attr("checked") == "checked";
+      var valid = true;
+
+      if ((first_name.length == 0) || (last_name.length == 0)) {
+        $("#name_group").addClass("u-has-error-v1");
+        $("#name_group_error").html("First and last name are required fields.");
+        valid = false;
+      } else {
+        $("#name_group").removeClass("u-has-error-v1");
+        $("#name_group_error").html("");
+      }
+
+      if (email != email_confirm) {
+        $("#email_group").addClass("u-has-error-v1");
+        $("#email_group_error").html("Email addresses must match.");
+        valid = false;
+      } else {
+        if ((email.length == 0) || (email_confirm.length == 0)) {
+          $("#email_group").addClass("u-has-error-v1");
+          $("#email_group_error").html("Email address is a required field.");
+          valid = false;
+        } else {
+          $("#email_group").removeClass("u-has-error-v1");
+          $("#email_group_error").html("");
+        }
+      }
+
+      if (checked) {
+        if (password != password_confirm) {
+          $("#create_account_password").addClass("u-has-error-v1");
+          $("#create_account_password_error").html("Passwords must match.");
+          valid = false;
+        } else {
+          if ((password.length == 0) || (password_confirm.length == 0)) {
+            $("#create_account_password").addClass("u-has-error-v1");
+            $("#create_account_password_error").html("Password is a required field.");
+            valid = false;
+          } else {
+            $("#create_account_password").removeClass("u-has-error-v1");
+            $("#create_account_password_error").html("");
+          }
+        }
+      }
+      return valid;
+    }
+  }
+
+  window.save_ticket = function(counter, btn_click) {
+    var valid_form = true;
+    var first_name = $("#attendee_first_name_" + counter).val();
+    var last_name = $("#attendee_last_name_" + counter).val();
+    var email = $("#attendee_email_" + counter).val();
+
+    if ($("#attendee_div_" + counter).css("display") == "block") {
+
+      if (first_name.length == 0) {
+        $("#first_name_required_" + counter).show();
+        $("#first_name_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      }
+
+      if (last_name.length == 0) {
+        $("#last_name_required_" + counter).show();
+        $("#last_name_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      }
+
+      if (email.length == 0) {
+        $("#email_required_" + counter).show();
+        $("#email_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      }
+
+      if (valid_form) {
+        $("#attendee_div_" + counter).hide();
+        $("#guest_" + counter).html("Edit Ticket For " + first_name + " " + last_name);
+      }
+    } else {
+      if (!btn_click) {
+        $("#attendee_div_" + counter).show();
+        $("#guest_" + counter).html("Save Ticket");
+      }
+    }
+    return valid_form;
+  }
+
+  window.load_attendee_forms = function(count) {
+    var source   = $("#entry-template").html();
+    window.attendee_template = Handlebars.compile(source);
+
+    var output = "";
+
+    for (var i = 0; i < count; i++) {
+      var context = {count: i+1};
+      var html    = window.attendee_template(context);
+      output += html;
+    }
+    $("#attendee_form").html(output);
+  }
+
+  window.login_success = function() {
+    window.load_logged_in_user();
+    $("#not_logged_in").hide();
+    $("#logged_in").show();
+    $("#login_form").hide();
+    $("#attendee_form").show();
+  }
 
   window.load_logged_in_user = function() {
     $.getJSON("/api/sessions", function( data ) {
@@ -183,3 +412,8 @@
     });
   }
 </script>
+
+
+
+
+

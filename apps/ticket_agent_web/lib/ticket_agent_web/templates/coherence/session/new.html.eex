@@ -46,13 +46,28 @@
                   </div>
                   <div class="row text-center no-gutters g-mb-10">
                     <div class="col-4">
-                      <%= link to: auth_path(@conn, :index, "facebook"), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-facebook g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-facebook"></i></span><% end %>
+                      <%= link(
+                        to: auth_path(@conn, :index, "facebook"),
+                        target: "_blank",
+                        class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-facebook g-rounded-50x g-mr-15 g-mb-20") do %>
+                        <span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-facebook"></i></span>
+                      <% end %>
                     </div>
                     <div class="col-4">
-                      <%= link to: auth_path(@conn, :index, "twitter"), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-twitter g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-twitter"></i></span><% end %>
+                      <%= link(
+                        to: auth_path(@conn, :index, "twitter"),
+                        target: "_blank",
+                        class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-twitter g-rounded-50x g-mr-15 g-mb-20") do %>
+                        <span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-twitter"></i></span>
+                      <% end %>
                     </div>
                     <div class="col-4">
-                      <%= link to: auth_path(@conn, :index, "google"), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-google-plus g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-google-plus"></i></span><% end %>
+                      <%= link(
+                        to: auth_path(@conn, :index, "google"),
+                        target: "_blank",
+                        class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-google-plus g-rounded-50x g-mr-15 g-mb-20") do %>
+                        <span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-google-plus"></i></span>
+                      <% end %>
                     </div>
                   </div>
 
@@ -67,3 +82,8 @@
           </div>
         </div>
       </section>
+<script type="text/javascript">
+  window.login_success = function() {
+    window.location.reload(true);
+  }
+</script>

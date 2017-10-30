@@ -17,5 +17,8 @@
     </div>
     <h5 class="pull-right" style="text-align: right;">$<%= event_cost(@show) %></h5>
   </div>
+  <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none;">
+    <strong>Oh snap!</strong> Choose more than zero tickets.
+  </div>
   <a id="tab1_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
 </div>

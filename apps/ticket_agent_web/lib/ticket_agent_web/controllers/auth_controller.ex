@@ -31,7 +31,7 @@ defmodule TicketAgentWeb.AuthController do
                                                 user.access_token_secret)
     Config.auth_module()
     |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
-    |> redirect(to: "/dashboard")
+    |> render_success
   end
 
   def callback(conn, %{"provider" => provider, "code" => code}) do
@@ -45,7 +45,34 @@ defmodule TicketAgentWeb.AuthController do
                                                 nil)
     Config.auth_module()
     |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
-    |> redirect(to: "/dashboard")
+    |> render_success
+  end
+
+  defp render_success(conn) do
+    refresh = """
+      <html>
+      <head>
+      <script>
+        window.onunload = refreshParent;
+        function refreshParent() {
+          window.opener.login_success();
+        }
+        window.setTimeout("window.close()", 500);
+      </script>
+      </head>
+      <body>
+      <center>
+      <img src="https://cdn.pushcomedytheater.com/2.0/lg.fidget-spinner.gif">
+      <br />
+      Logging you in...
+      </center>
+      </body>
+      </html>
+    """
+
+    conn
+    |> put_resp_content_type("text/html")
+    |> send_resp(200, refresh)
   end
 
   defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")

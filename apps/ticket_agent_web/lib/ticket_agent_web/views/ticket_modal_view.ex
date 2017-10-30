@@ -15,6 +15,11 @@ defmodule TicketAgentWeb.TicketModalView do
     |> tl
   end
 
+  def event_display_time(show) do
+    "Sunday, November 5, 7:00PM"
+    event_date(show) <> ", " <> event_time(show)
+  end
+
   def ticket_link(conn, show) do
     available_tickets = Listing.available_tickets(show)
 
