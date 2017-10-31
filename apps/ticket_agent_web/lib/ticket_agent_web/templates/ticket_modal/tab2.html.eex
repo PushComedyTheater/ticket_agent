@@ -128,7 +128,7 @@
   <h4 class="g-mb-10"> <strong>Guests Information</strong>  </h4>
   <br />
   <form id="attendee_wrapper">
-    <div id="attendee_form" style="overflow: scroll; height: 400px;">
+    <div id="attendee_form" style="overflow: scroll; height: 200px;">
     </div>
     <a id="tab2_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
   </form>
