@@ -1,0 +1,16 @@
+<div class="tab-pane fade" id="nav-1-1-default-hor-left--3" role="tabpanel">
+  <p>Credit Card Information Entered Here</p>
+  <form action="/your-server-side-code" method="POST">
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+    data-amount="999"
+    data-name="Stripe.com"
+    data-description="Widget"
+    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+    data-locale="auto"
+    data-zip-code="true">
+  </script>
+</form>
+</div>
+<script type="text/javascript"></script>

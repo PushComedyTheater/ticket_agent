@@ -122,69 +122,16 @@
       </div>
     </div>
   </div>
-
-  <hr />
-
-  <h4 class="g-mb-10"> <strong>Guests Information</strong>  </h4>
-  <br />
-  <form id="attendee_wrapper">
-    <div id="attendee_form" style="overflow: scroll; height: 200px;">
-    </div>
-    <a id="tab2_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
-  </form>
-
 </div>
 
-<script id="entry-template" type="text/x-handlebars-template">
-  <div class="card rounded-0">
-    <h3 class="card-header h5 rounded-0">
-      <i class="fa fa-user g-font-size-default g-mr-5"></i>
-      Guest {{count}} Information
-    </h3>
 
-    <div class="card-block">
-      <div id="attendee_div_{{count}}">
-        <div id="first_name_group_{{count}}" class="form-group g-mb-20">
-          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">First Name</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_first_name_{{count}}" name="attendee_first_name_{{count}}" placeholder="First Name" required>
-          <small id="first_name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
-        </div>
-
-        <div id="last_name_group_{{count}}" class="form-group g-mb-20">
-          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Last Name</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_last_name_{{count}}" name="attendee_last_name_{{count}}" placeholder="Last Name" required>
-          <small id="last_name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
-        </div>
-
-        <div id="email_group_{{count}}" class="form-group g-mb-20">
-          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_{{count}}" name="attendee_email_{{count}}" placeholder="user@domain.com" requiredtype="email">
-          <small id="email_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
-        </div>
-      </div>
-
-      <a id="guest_{{count}}" onclick="window.save_ticket({{count}}, false)" data-group="{{count}}" href="#" class="guest_save btn btn-md btn-block u-btn-inset u-btn-outline-blue g-mr-10 g-mb-15" role="guest_save">Save Ticket</a>
-    </div>
-  </div>
-</script>
 
 <script type="text/javascript">
   $(document).on('ready', function () {
     window.load_logged_in_user();
 
     $("#tab2_continue").on("click", function(e) {
-      var result = $('#js_result'),
-          resultVal = parseInt(result.val());
-
-      var valid_tickets = true;
-      for (var i = 1; i <= resultVal; i++) {
-        if (!window.save_ticket(i, true)) {
-          valid_tickets = false;
-        }
-      }
-
-      var result = window.validate_login() && valid_tickets;
-      if (result) {
+      if (window.validate_login()) {
         $('.nav a[href="#nav-1-1-default-hor-left--3"]').tab('show')
         return true;
       } else {
@@ -255,14 +202,12 @@
     });
 
     $("#toggle_login_form").on("click", function() {
-      $("#attendee_form").hide();
       $("#not_logged_in").hide();
       $("#logged_in").hide();
       $("#login_form").show();
     });
 
     $("#tab2_continue_as_guest").on("click", function() {
-      $("#attendee_form").show();
       $("#not_logged_in").show();
       $("#logged_in").hide();
       $("#login_form").hide();
@@ -337,60 +282,8 @@
     }
   }
 
-  window.save_ticket = function(counter, btn_click) {
-    var valid_form = true;
-    var first_name = $("#attendee_first_name_" + counter).val();
-    var last_name = $("#attendee_last_name_" + counter).val();
-    var email = $("#attendee_email_" + counter).val();
-
-    if ($("#attendee_div_" + counter).css("display") == "block") {
-
-      if (first_name.length == 0) {
-        $("#first_name_required_" + counter).show();
-        $("#first_name_group_" + counter).addClass("u-has-error-v1");
-        valid_form = false;
-      }
-
-      if (last_name.length == 0) {
-        $("#last_name_required_" + counter).show();
-        $("#last_name_group_" + counter).addClass("u-has-error-v1");
-        valid_form = false;
-      }
-
-      if (email.length == 0) {
-        $("#email_required_" + counter).show();
-        $("#email_group_" + counter).addClass("u-has-error-v1");
-        valid_form = false;
-      }
-
-      if (valid_form) {
-        $("#attendee_div_" + counter).hide();
-        $("#guest_" + counter).html("Edit Ticket For " + first_name + " " + last_name);
-      }
-    } else {
-      if (!btn_click) {
-        $("#attendee_div_" + counter).show();
-        $("#guest_" + counter).html("Save Ticket");
-      }
-    }
-    return valid_form;
-  }
-
-  window.load_attendee_forms = function(count) {
-    var source   = $("#entry-template").html();
-    window.attendee_template = Handlebars.compile(source);
-
-    var output = "";
-
-    for (var i = 0; i < count; i++) {
-      var context = {count: i+1};
-      var html    = window.attendee_template(context);
-      output += html;
-    }
-    $("#attendee_form").html(output);
-  }
-
   window.login_success = function() {
+    alert("COOL");
     window.load_logged_in_user();
     $("#not_logged_in").hide();
     $("#logged_in").show();
@@ -412,8 +305,3 @@
     });
   }
 </script>
-
-
-
-
-

@@ -18,12 +18,18 @@
     </li>
     <li class="nav-item">
       <a class="nav-link" id="tabb2" data-toggle="tab" href="#nav-1-1-default-hor-left--2" role="tab">
+      <i class="icon-hotel-restaurant-037 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+        Buyer Information
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="tabb2" data-toggle="tab" href="#nav-1-1-default-hor-left--3" role="tab">
       <i class="icon-hotel-restaurant-182 d-block g-font-size-25 u-tab-line-icon-pro"></i>
         Ticket Information
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" id="tabb3" data-toggle="tab" href="#nav-1-1-default-hor-left--3" role="tab">
+      <a class="nav-link" id="tabb3" data-toggle="tab" href="#nav-1-1-default-hor-left--4" role="tab">
         <i class="icon-hotel-restaurant-064 d-block g-font-size-25 u-tab-line-icon-pro"></i>
         Payment Information
       </a>
