@@ -1,4 +1,4 @@
-<div id="modal" class="text-left g-max-width-1000 g-bg-white g-pa-20" style="display: none; width: 1024px; min-height: 50%; max-height: 85%;border-radius: 15px;">
+<div id="modal" class="text-left g-max-width-1000 g-bg-white g-pa-20" style="display: none; width: 1024px; min-height: 50%; border-radius: 15px;">
   <button type="button" class="close" onclick="Custombox.modal.close();">
     <i class="hs-icon hs-icon-close"></i>
   </button>
