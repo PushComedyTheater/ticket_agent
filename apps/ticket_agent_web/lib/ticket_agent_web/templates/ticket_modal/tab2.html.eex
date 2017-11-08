@@ -4,14 +4,14 @@
   <div id="not_logged_in">
     <p class="g-font-size-12">Checkout as a guest or <a id="toggle_login_form" href="#">Sign in with your Push account</a>
     <div id="name_group" class="form-inline">
-      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="first_name" placeholder="First Name">
-      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="last_name" placeholder="Last Name">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="signup_first_name" placeholder="First Name">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="signup_last_name" placeholder="Last Name">
       <small id="name_group_error" class="form-control-feedback"></small>
     </div>
     <br />
     <div id="email_group" class="form-inline">
-      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email" placeholder="Email">
-      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="email_confirm" placeholder="Confirm Email">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="signup_email" placeholder="Email">
+      <input type="text" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="signup_email_confirm" placeholder="Confirm Email">
        <small id="email_group_error" class="form-control-feedback"></small>
     </div>
     <br />
@@ -25,8 +25,8 @@
       </div>
     </label>
     <div id="create_account_password" class="form-inline" style="display: none;">
-      <input type="password" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="password" placeholder="Password">
-      <input type="password" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="password_confirm" placeholder="Confirm Password">
+      <input type="password" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="signup_password" placeholder="Password">
+      <input type="password" class="form-control form-control-lg rounded-0 mr-sm-3 mb-3 mb-lg-0" id="signup_password_confirm" placeholder="Confirm Password">
       <small id="create_account_password_error" class="form-control-feedback"></small>
     </div>
     <br />
