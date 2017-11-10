@@ -67,7 +67,6 @@ defmodule TicketAgent.Listing do
             order_by: [asc: :start_time],
             preload: [:images, :listing_tags, :tickets],
             select: l
-
     Repo.all(query)
   end
 
@@ -100,16 +99,17 @@ defmodule TicketAgent.Listing do
   end
 
   def ticket_cost(show) do
-    query = from t in Ticket,
-            where: t.listing_id == ^show.id,
-            where: t.status == "available",
-            where: fragment("? < NOW()", t.sale_start),
-            order_by: [asc: :price],
-            limit: 1,
-            select: t
-    price = Repo.one(query)
-            |> Map.get(:price)
-    price / 100
+    Enum.at(show.tickets, 0).price / 100
+    # query = from t in Ticket,
+    #         where: t.listing_id == ^show.id,
+    #         where: t.status == "available",
+    #         where: fragment("? < NOW()", t.sale_start),
+    #         order_by: [asc: :price],
+    #         limit: 1,
+    #         select: t
+    # price = Repo.one(query)
+    #         |> Map.get(:price)
+    # price / 100
   end
 
   defimpl Phoenix.Param, for: TicketAgent.Listing do
