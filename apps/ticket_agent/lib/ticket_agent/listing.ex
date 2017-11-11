@@ -99,6 +99,7 @@ defmodule TicketAgent.Listing do
   end
 
   def ticket_cost(show) do
+    show = Repo.preload(show, :tickets)
     Enum.at(show.tickets, 0).price / 100
     # query = from t in Ticket,
     #         where: t.listing_id == ^show.id,
