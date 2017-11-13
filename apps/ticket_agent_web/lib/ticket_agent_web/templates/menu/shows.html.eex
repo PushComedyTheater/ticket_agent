@@ -1,7 +1,3 @@
 <li class="nav-item g-mx-10--lg g-mx-15--xl">
-  <a id="nav-link--improv" class="nav-link g-py-7 g-px-0" href="/shows"
-     aria-haspopup="true"
-     aria-expanded="false"
-     aria-controls="nav-submenu--home"
-  >Shows</a>
+  <%= link "Shows", to: listing_path(@conn, :index), class: "nav-link g-py-7 g-px-0", id: "nav-link--improv" %>
 </li>

@@ -51,13 +51,11 @@ defmodule TicketAgentWeb.Router do
     coherence_routes :protected
   end
 
-
-
   scope "/", TicketAgentWeb do
     pipe_through :browser # Use the default browser stack
     resources "/about", AboutController, only: [:index, :show]
     resources "/camps", CampController, only: [:index, :show]
-    resources "/shows", ShowController, only: [:index, :show], param: "titled_slug"
+    resources "/listings", ListingController, only: [:index, :show], param: "titled_slug"
     resources "/tickets", TicketController
 
     get "/workshops", WorkshopController, :index, as: :workshop

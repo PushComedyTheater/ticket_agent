@@ -1,4 +1,4 @@
-defmodule TicketAgentWeb.ShowView do
+defmodule TicketAgentWeb.ListingView do
   alias TicketAgent.Listing
   use TicketAgentWeb, :view
   @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)

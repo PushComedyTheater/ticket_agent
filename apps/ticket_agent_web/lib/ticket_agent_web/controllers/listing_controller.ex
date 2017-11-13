@@ -1,4 +1,4 @@
-defmodule TicketAgentWeb.ShowController do
+defmodule TicketAgentWeb.ListingController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Listing, Repo}
   import Ecto.Query

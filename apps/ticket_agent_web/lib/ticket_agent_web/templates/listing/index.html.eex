@@ -16,21 +16,21 @@
               <!-- Article -->
               <article class="g-bg-white">
                 <figure class="g-pos-rel">
-                  <%= link to: show_path(@conn, :show, show) do %>
+                  <%= link to: listing_path(@conn, :show, show) do %>
                     <img class="img-fluid w-100" src="<%= social_image(show) %>" style="height: 264px;" alt="<%= show.title %>">
                   <% end %>
 
                   <figcaption class="g-pos-abs g-bottom-0 g-left-0">
-                    <%= link event_date(show.start_time), to: show_path(@conn, :show, show), class: "btn btn-med u-btn-primary rounded-0" %>
+                    <%= link event_date(show.start_time), to: listing_path(@conn, :show, show), class: "btn btn-med u-btn-primary rounded-0" %>
                   </figcaption>
                   <figcaption class="g-pos-abs g-bottom-0 g-right-0">
-                    <%= link cost(show), to: show_path(@conn, :show, show), class: "btn btn-med u-btn-blue rounded-0" %>
+                    <%= link cost(show), to: listing_path(@conn, :show, show), class: "btn btn-med u-btn-blue rounded-0" %>
                   </figcaption>
                 </figure>
 
                 <div class="g-pa-30">
                   <h4 class="g-font-weight-100 g-mb-15">
-                    <%= link show.title, to: show_path(@conn, :show, show), class: "g-color-main g-text-underline--none--hover" %>
+                    <%= link show.title, to: listing_path(@conn, :show, show), class: "g-color-main g-text-underline--none--hover" %>
                   </h4>
                   <div>
                     <%= raw TicketAgentWeb.LayoutView.truncated_description(show.description) %>
@@ -42,7 +42,7 @@
                   </div>
 
                   <div class="align-self-center">
-                    <%= link "More Information", to: show_path(@conn, :show, show), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
+                    <%= link "More Information", to: listing_path(@conn, :show, show), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
                   </div>
                 </div>
               </article>
