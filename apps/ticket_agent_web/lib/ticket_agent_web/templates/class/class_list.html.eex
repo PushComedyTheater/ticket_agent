@@ -36,7 +36,7 @@
               <!-- Clients -->
               <div class="d-flex justify-content-between">
                 <div class="d-block mr-5">
-                  <%= img_tag(class.cover_photo_url, class: "g-width-170") %>
+                  <%= img_tag(class.photo_url, class: "g-width-170") %>
                 </div>
                 <div class="d-block">
                   <h2 class="h4 g-color-black g-font-weight-600"><%= link class.title, to: class_path(@conn, :show, class.slug), class: "g-color-black" %></h2>

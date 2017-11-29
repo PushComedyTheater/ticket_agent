@@ -50,38 +50,38 @@ defmodule TicketAgentWeb.TicketModalView do
     "#{cost}"
   end
 
-  def event_time(%Listing{start_time: nil} = show) do
+  def event_time(%Listing{start_at: nil} = show) do
     ""
   end
 
-  def event_time(%Listing{start_time: start_time, end_time: nil} = show) do
-    Calendar.Strftime.strftime!(start_time, "%I:%M %p")
+  def event_time(%Listing{start_at: start_at, end_at: nil} = show) do
+    Calendar.Strftime.strftime!(start_at, "%I:%M %p")
   end
 
-  def event_time(%Listing{start_time: start_time, end_time: end_time} = show) when not is_nil(start_time) and not is_nil(end_time) do
-    start = Calendar.Strftime.strftime!(start_time, "%I:%M %p")
-    finish = Calendar.Strftime.strftime!(end_time, "%I:%M %p")
+  def event_time(%Listing{start_at: start_at, end_at: end_at} = show) when not is_nil(start_at) and not is_nil(end_at) do
+    start = Calendar.Strftime.strftime!(start_at, "%I:%M %p")
+    finish = Calendar.Strftime.strftime!(end_at, "%I:%M %p")
     "#{start}-#{finish}"
   end
 
-  def event_date(%Listing{start_time: nil} = show) do
+  def event_date(%Listing{start_at: nil} = show) do
     ""
   end
 
-  def event_date(%Listing{start_time: start_time, end_time: nil} = show) when not is_nil(start_time) do
-    Calendar.Strftime.strftime!(start_time, "%a, %b %e")
+  def event_date(%Listing{start_at: start_at, end_at: nil} = show) when not is_nil(start_at) do
+    Calendar.Strftime.strftime!(start_at, "%a, %b %e")
   end
 
-  def event_date(%Listing{start_time: start_time, end_time: end_time} = show) when not is_nil(start_time) and not is_nil(end_time) do
-    start_date = NaiveDateTime.to_date(show.start_time)
-    end_date =  NaiveDateTime.to_date(show.end_time)
+  def event_date(%Listing{start_at: start_at, end_at: end_at} = show) when not is_nil(start_at) and not is_nil(end_at) do
+    start_date = NaiveDateTime.to_date(show.start_at)
+    end_date =  NaiveDateTime.to_date(show.end_at)
 
     case start_date == end_date do
       true ->
-        Calendar.Strftime.strftime!(start_time, "%a, %b %e")
+        Calendar.Strftime.strftime!(start_at, "%a, %b %e")
       false ->
-        start = Calendar.Strftime.strftime!(start_time, "%a, %b %e")
-        finish = Calendar.Strftime.strftime!(end_time, "%a, %b %e")
+        start = Calendar.Strftime.strftime!(start_at, "%a, %b %e")
+        finish = Calendar.Strftime.strftime!(end_at, "%a, %b %e")
         "#{start}-#{finish}"
     end
   end

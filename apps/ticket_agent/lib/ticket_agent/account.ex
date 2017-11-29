@@ -12,6 +12,10 @@ defmodule TicketAgent.Account do
     field :enabled, :boolean
     field :logo, :string
     belongs_to :creator, User, references: :id, foreign_key: :creator_id, type: Ecto.UUID
+
+    has_many :classes, Class
+    has_many :events, Event
+
     timestamps()
   end
 

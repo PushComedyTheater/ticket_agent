@@ -11,11 +11,12 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Class do
       add :slug, :text, null: false
       add :description, :text, null: false
       add :menu_order, :integer
+      add :account_id, references(:accounts, type: :binary_id)
       add :prerequisite_id, references(:classes, type: :binary_id)
-      add :cover_photo_url, :text
-      add :social_photo_url, :text
+      add :photo_url, :text
       timestamps()
     end
     create unique_index(:classes, [:slug])
+    create index(:classes, [:type])
   end
 end

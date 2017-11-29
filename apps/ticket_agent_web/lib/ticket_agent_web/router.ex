@@ -55,7 +55,7 @@ defmodule TicketAgentWeb.Router do
     pipe_through :browser # Use the default browser stack
     resources "/about", AboutController, only: [:index, :show]
     resources "/camps", CampController, only: [:index, :show]
-    resources "/listings", ListingController, only: [:index, :show], param: "titled_slug"
+    resources "/events", EventController, only: [:index, :show], param: "titled_slug"
     resources "/tickets", TicketController
 
     get "/workshops", WorkshopController, :index, as: :workshop
@@ -86,7 +86,7 @@ defmodule TicketAgentWeb.Router do
     pipe_through [:protected, :ensure_admin, :admin_layout]
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
     resources "/classes", ClassController, as: :admin_class
-    resources "/listings", ListingController, as: :admin_listing, param: "titled_slug"
+    resources "/events", EventController, as: :admin_event, param: "titled_slug"
     resources "/images", ImageController, as: :admin_image
     resources "/teachers", TeacherController, as: :admin_teacher
     resources "/tickets", TicketController, as: :admin_ticket

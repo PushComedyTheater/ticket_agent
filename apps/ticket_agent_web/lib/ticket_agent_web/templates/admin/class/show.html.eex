@@ -18,12 +18,8 @@
         <td><%= raw @class.description %></td>
       </tr>
       <tr>
-        <th>Cover Photo</th>
-        <td><img src="<%= @class.cover_photo_url %>" %></td>
-      </tr>
-      <tr>
-        <th>Social Photo</th>
-        <td><img src="<%= @class.social_photo_url %>" %></td>
+        <th>Photo</th>
+        <td><img src="<%= @class.photo_url %>" %></td>
       </tr>
     </table>
   </div>

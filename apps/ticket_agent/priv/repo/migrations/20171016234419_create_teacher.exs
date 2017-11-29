@@ -1,4 +1,4 @@
-defmodule TicketAgent.Repo.Migrations.CreateTeachers do
+defmodule TicketAgent.Repo.Migrations.CreateTeacher do
   use Ecto.Migration
 
   def change do
@@ -13,5 +13,6 @@ defmodule TicketAgent.Repo.Migrations.CreateTeachers do
       timestamps()
     end
 
+    create index(:teachers, [:slug])
   end
 end

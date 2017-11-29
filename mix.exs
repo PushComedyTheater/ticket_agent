@@ -37,7 +37,8 @@ defmodule TicketAgent.Umbrella.Mixfile do
       "ecto.setup": [
         "ecto.create",
         "ecto.migrate",
-        "run apps/ticket_agent/priv/repo/seeds.exs"
+        "run apps/ticket_agent/priv/repo/seeds.exs",
+        "ecto.dump"
         ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "test": ["ecto.create --quiet", "ecto.migrate", "test"]

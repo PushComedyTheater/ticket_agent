@@ -14,6 +14,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
       add :status, :ticket_status, default: "available"
       add :description, :text, null: true
       add :price, :integer, null: false
+      
       add :sale_start, :naive_datetime, null: true
       add :sale_end, :naive_datetime, null: true
 

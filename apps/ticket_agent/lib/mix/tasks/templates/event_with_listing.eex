@@ -1,0 +1,31 @@
+Logger.info "=========== Writing Event <%= String.replace(@title, "\"", "'") %> ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "<%= @slug %>",
+    title: "<%= String.replace(@title, "\"", "'") %>",
+    description: """
+    <%= @description %>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing <%= String.replace(@title, "\"", "'") %> ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "<%= @slug %>",
+    title: "<%= String.replace(@title, "\"", "'") %>",
+    description: """
+    <%= @description %>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("<%= @start_time %>"),
+    end_at:  NaiveDateTime.from_iso8601!("<%= @end_time %>")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="

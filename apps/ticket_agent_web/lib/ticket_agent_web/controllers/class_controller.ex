@@ -11,7 +11,7 @@ defmodule TicketAgentWeb.ClassController do
     classes = query
               |> Repo.all()
               |> Repo.preload(:prerequisite)
-              |> Repo.preload(:listings)
+              |> Repo.preload(:events)
     render conn, "index.html", classes: classes
   end
 

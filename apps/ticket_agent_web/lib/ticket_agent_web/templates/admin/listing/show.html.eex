@@ -50,5 +50,5 @@
     </table>
   </div>
 </div>
-<span><%= link "Edit", to: admin_listing_path(@conn, :edit, @show) %></span>
-<span><%= link "Back", to: admin_listing_path(@conn, :index) %></span>
+<span><%= link "Edit", to: admin_event_path(@conn, :edit, @show) %></span>
+<span><%= link "Back", to: admin_event_path(@conn, :index) %></span>

@@ -1,0 +1,7 @@
+Logger.info "=========== Writing <%= @photo_type %> photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "<%= @photo %>",
+  type: "<%= @photo_type %>"
+})
+Logger.info "=========== Inserted <%= @photo_type %> photo for #{listing.id} ==========="

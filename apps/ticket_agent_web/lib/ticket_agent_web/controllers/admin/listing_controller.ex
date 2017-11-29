@@ -25,10 +25,9 @@ defmodule TicketAgentWeb.Admin.ListingController do
   def new(conn, _params) do
     changeset = Listing.changeset(
       %Listing{
-        start_time: NaiveDateTime.utc_now(),
-        end_time: NaiveDateTime.utc_now(),
-        slug: Listing.generate_slug(),
-        type: "show"})
+        start_at: NaiveDateTime.utc_now(),
+        end_at: NaiveDateTime.utc_now(),
+        slug: Listing.generate_slug()})
 
     render conn, "new.html", changeset: changeset
   end

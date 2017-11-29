@@ -7,4 +7,5 @@ config :ticket_agent, TicketAgent.Repo,
   password: "postgres",
   database: "ticket_agent_dev",
   hostname: "localhost",
-  pool_size: 10
+  pool_size: 10,
+  log: false

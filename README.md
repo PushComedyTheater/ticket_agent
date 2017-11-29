@@ -84,3 +84,8 @@ users -> ticket means that's the person who bought it
 
 registration -> ticket is the person who is going to the show
 
+
+
+An event has listings
+
+Listings have tickets

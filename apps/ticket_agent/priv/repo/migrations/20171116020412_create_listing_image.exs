@@ -3,6 +3,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.ListingImage do
 
   def change do
   	execute "CREATE TYPE listing_image_type AS ENUM ('cover', 'social', 'additional')"
+    
     create table(:listing_images, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :listing_id, references(:listings, on_delete: :nothing, type: :binary_id), null: false

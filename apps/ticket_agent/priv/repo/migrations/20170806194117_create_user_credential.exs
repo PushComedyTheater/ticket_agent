@@ -14,5 +14,6 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.UserCredential do
       timestamps()
     end
 
+    create index(:user_credentials, [:user_id])
   end
 end

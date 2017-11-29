@@ -29,13 +29,13 @@
         </li>
         <li class="header">SHOWS</li>
         <li>
-          <%= link to: admin_listing_path(@conn, :index) do %>
+          <%= link to: admin_event_path(@conn, :index) do %>
             <i class="fa fa-link"></i> <span>View</span>
           <% end %>
           </a>
         </li>
         <li>
-          <%= link to: admin_listing_path(@conn, :index) do %>
+          <%= link to: admin_event_path(@conn, :index) do %>
             <i class="fa fa-plus"></i> <span>New</span>
           <% end %>
           </a>

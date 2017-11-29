@@ -26,6 +26,7 @@ defmodule TicketAgent.Repo.Migrations.CreateCoherenceUser do
       timestamps()
     end
     create unique_index(:users, [:email])
+    create index(:users, [:name])
 
   end
 end

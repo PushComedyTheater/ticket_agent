@@ -1,0 +1,17 @@
+Logger.info "=========== Writing Class Listing <%= String.replace(@title, "\"", "'") %> ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: nil,
+    class_id: <%= @class_id %>,
+    slug: "<%= @slug %>",
+    title: "<%= String.replace(@title, "\"", "'") %>",
+    description: """
+    <%= @description %>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("<%= @start_time %>"),
+    end_at:  NaiveDateTime.from_iso8601!("<%= @end_time %>")
+  }
+)
+Logger.info "=========== Inserted Class Listing #{listing.id} ==========="

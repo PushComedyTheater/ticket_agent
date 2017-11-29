@@ -22,8 +22,7 @@ defmodule TicketAgent.Factory do
       title: title,
       slug: slug,
       description: @lorem,
-      cover_photo_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/covers/wd4vnbdjwchrclmuhomg.png",
-      social_photo_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png"
+      photo_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/covers/wd4vnbdjwchrclmuhomg.png"
     }
   end
 
@@ -34,8 +33,8 @@ defmodule TicketAgent.Factory do
       title: ExMachina.Sequence.next("title"),
       description: @lorem,
       status: "active",
-      start_time: DateTime.utc_now(),
-      end_time: nil
+      start_at: DateTime.utc_now(),
+      end_at: nil
     }
   end
 

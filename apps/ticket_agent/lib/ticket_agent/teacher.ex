@@ -1,5 +1,4 @@
 defmodule TicketAgent.Teacher do
-  @moduledoc false
   use TicketAgent.Schema
   alias TicketAgent.Atomizer
 
@@ -8,9 +7,9 @@ defmodule TicketAgent.Teacher do
 
   schema "teachers" do
     field :slug, :string
-    field :biography, :string
-    field :email, :string
     field :name, :string
+    field :email, :string
+    field :biography, :string    
     field :social, :map
     timestamps()
   end

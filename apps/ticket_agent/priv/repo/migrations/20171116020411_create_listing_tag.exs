@@ -1,4 +1,4 @@
-defmodule TicketAgent.Repo.Migrations.CreateListingTags do
+defmodule TicketAgent.Repo.Migrations.CreateListingTag do
   use Ecto.Migration
 
   def change do

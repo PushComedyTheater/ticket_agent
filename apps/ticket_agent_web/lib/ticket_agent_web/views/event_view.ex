@@ -1,4 +1,4 @@
-defmodule TicketAgentWeb.ListingView do
+defmodule TicketAgentWeb.EventView do
   alias TicketAgent.Listing
   use TicketAgentWeb, :view
   @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
@@ -89,9 +89,11 @@ defmodule TicketAgentWeb.ListingView do
     public_id =
       social_image.url
       |> String.split("/")
+      |> IO.inspect
       |> List.last()
       |> String.split(".")
       |> List.first()
+      |> IO.inspect
 
     Cloudinex.Url.for(public_id, %{
       width: 350,

@@ -26,7 +26,7 @@
                   <%= if TicketAgent.Class.currently_offered?(class) do %>
                   <i class="fa fa-fw fa-check"></i> Yes<br />
                   <% end %>
-                  <span><%= link "Create Listing", to: admin_listing_path(@conn, :new, class_id: class.id), class: "btn btn-success btn-xs" %>
+                  <span><%= link "Create Listing", to: admin_event_path(@conn, :new, class_id: class.id), class: "btn btn-success btn-xs" %>
                 </td>
               </tr>
             <% end %>

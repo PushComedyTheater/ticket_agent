@@ -1,8 +1,5 @@
 defmodule TicketAgent.TicketRegistration do
-  use Ecto.Schema
-  import Ecto.Changeset
-  alias TicketAgent.TicketRegistration
-
+  use TicketAgent.Schema
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,7 +7,7 @@ defmodule TicketAgent.TicketRegistration do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
-
+    belongs_to :ticket, Ticket, references: :id, foreign_key: :ticket_id, type: Ecto.UUID
     timestamps()
   end
 

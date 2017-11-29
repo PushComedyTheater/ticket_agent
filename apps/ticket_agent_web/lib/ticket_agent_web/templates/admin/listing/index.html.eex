@@ -15,9 +15,9 @@
             <%= for listing <- @listings do %>
               <tr>
                 <td align="center">
-                  <span><%= link "View", to: admin_listing_path(@conn, :show, listing), class: "btn btn-info btn-xs" %></span>
-                  <span><%= link "Edit", to: admin_listing_path(@conn, :edit, listing), class: "btn btn-warning btn-xs" %></span>
-                  <span><%= link "Delete", to: admin_listing_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+                  <span><%= link "View", to: admin_event_path(@conn, :show, listing), class: "btn btn-info btn-xs" %></span>
+                  <span><%= link "Edit", to: admin_event_path(@conn, :edit, listing), class: "btn btn-warning btn-xs" %></span>
+                  <span><%= link "Delete", to: admin_event_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
                 </td>
                 <td><%= listing.title %></td>
                 <td>

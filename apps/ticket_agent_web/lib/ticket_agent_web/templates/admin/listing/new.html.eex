@@ -7,7 +7,7 @@ cover_image = cover_image(@changeset.data)
   </div>
   <!-- /.box-header -->
   <!-- form start -->
-  <%= form_for @changeset, admin_listing_path(@conn, :create), fn f -> %>
+  <%= form_for @changeset, admin_event_path(@conn, :create), fn f -> %>
     <div class="box-body">
       <%= hidden_input(f, :type) %>
       <%= hidden_input(f, :slug) %>

@@ -1,26 +1,25 @@
 defmodule TicketAgent.Listing do
-  @moduledoc false
-  import Ecto.Query
   use TicketAgent.Schema
 
-  @required ~w(type slug title description status start_time end_time)a
+  @required ~w(slug title description status start_at end_at)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
   schema "listings" do
-    belongs_to :account, Account
-    belongs_to :user, User
-    belongs_to :class, Class
+    belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
+    belongs_to :event, Event, references: :id, foreign_key: :event_id, type: Ecto.UUID
+    belongs_to :class, Class, references: :id, foreign_key: :class_id, type: Ecto.UUID
+
     has_many :images, ListingImage
-    has_many :listing_tags, ListingTag
     has_many :tickets, Ticket
-    field :type, :string
+    has_many :listing_tags, ListingTag
+
     field :slug, :string
     field :title, :string
     field :description, :string
     field :status, :string
-    field :start_time, :naive_datetime
-    field :end_time, :naive_datetime
+    field :start_at, :naive_datetime
+    field :end_at, :naive_datetime
     timestamps()
   end
 
@@ -28,10 +27,9 @@ defmodule TicketAgent.Listing do
     listing
     |> cast(attr, @required)
     |> validate_required(@required)
-    |> validate_inclusion(:type, ~w(class show workshop))
     |> validate_inclusion(:status, ~w(unpublished active canceled deleted))
-    |> assoc_constraint(:account)
-    |> assoc_constraint(:user)
+    |> cast_assoc(:event)
+    |> cast_assoc(:user)
     |> unique_constraint(:slug)
   end
 
@@ -42,8 +40,8 @@ defmodule TicketAgent.Listing do
   end
 
   def from_class(current_user, %Class{} = class) do
-    cover_image = %ListingImage{url: class.cover_photo_url, type: "cover"}
-    social_image = %ListingImage{url: class.social_photo_url, type: "social"}
+    cover_image = %ListingImage{url: class.photo_url, type: "cover"}
+    social_image = %ListingImage{url: class.photo_url, type: "social"}
 
     %Listing{images: [cover_image, social_image]}
     |> changeset(%{

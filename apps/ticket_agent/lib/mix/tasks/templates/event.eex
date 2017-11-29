@@ -1,0 +1,14 @@
+Logger.info "=========== BEGIN Processing Universe Event <%= String.replace(@title, "\"", "'") %> ==========="
+<%= if @type == :class do %>
+<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/class_listing.eex", assigns: assigns %>
+<% else %>
+<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/event_with_listing.eex", assigns: assigns %>
+<% end %>
+<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/photo.eex", assigns: [photo_type: "social", photo: @social_photo]  %>
+<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/photo.eex", assigns: [photo_type: "cover", photo: @cover_photo]  %>
+<%= for tag <- @tags do %>
+# Insert <%= tag %>
+<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/tag.eex", assigns: [tag: tag] %>
+<% end %>
+<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/ticket.eex", assigns: assigns %>
+Logger.info "=========== END Processing Universe Event <%= String.replace(@title, "\"", "'") %> ==========="

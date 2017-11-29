@@ -8,6 +8,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketRegistrations do
       add :last_name, :string
       add :email, :string
 
+      add :ticket_id, references(:tickets, on_delete: :delete_all, type: :binary_id), null: false
       timestamps()
     end
 

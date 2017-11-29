@@ -1,7 +1,7 @@
 defmodule TicketAgent.ListingImage do
-  @moduledoc false
   use TicketAgent.Schema
 
+  @required ~w(url type listing_id)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -10,6 +10,13 @@ defmodule TicketAgent.ListingImage do
     field :url, :string
     field :type, :string
     timestamps()
+  end
+
+  def changeset(%ListingImage{} = listing_image, attr \\ %{}) do
+    listing_image
+    |> cast(attr, @required)
+    |> assoc_constraint(:listing)
+    |> validate_required(@required)
   end
 
   def public_id(%ListingImage{url: url}) do

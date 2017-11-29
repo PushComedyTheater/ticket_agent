@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.LoadEvents do
-  alias TicketAgent.{Account, Listing, Repo, User}
+  alias TicketAgent.{Account, Event, EventTag, Listing, Mappings, Repo, User}
   import Ecto.Query
 
   require Logger
@@ -8,208 +8,236 @@ defmodule Mix.Tasks.LoadEvents do
   def run(_) do
     Application.ensure_all_started(:ticket_agent)
 
-    {:ok, pid} = StringIO.open("")
+    non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
+                |> String.split("\n")
 
-    classes =
-      "./apps/ticket_agent/lib/mix/tasks/classes.json"
-      |> File.read!
-      |> Poison.decode!
-
-    shows =
-      "./apps/ticket_agent/lib/mix/tasks/shows.json"
-      |> File.read!
-      |> Poison.decode!
-
-    url = "https://www.universe.com/users/push-comedy-theater-CT01HK/portfolio/current.json"
-    body = load_json(url)
-
-    string = """
-    Logger.info "Getting account and user"
-    account = TicketAgent.Repo.one(from x in TicketAgent.Account, order_by: [desc: x.id], limit: 1)
-    user = TicketAgent.Repo.one(from x in TicketAgent.User, order_by: [desc: x.id], limit: 1)
-    """
-
-    IO.write(pid, string)
-    Enum.each(body["data"]["portfolio"]["hosting"], &process_item(&1, classes, shows, pid))
-
-    string = StringIO.flush(pid)
-    existing = File.read!("./apps/ticket_agent/priv/repo/classes.exs")
-
-    File.write("./apps/ticket_agent/priv/repo/seeds.exs", existing <> string)
+    parse_history_files(non_words)
+    # parse_current(non_words)
   end
 
-  def process_item(show, classes, shows, pid) do
-    mappings = %{
-      "Improv 101 with Brad McMurran" => "improv101",
-      "Improv for Teens at the Push Comedy Theater" => "teen_improv",
-      "Musical Improv 101" => "music_improv101",
-      "KidProv 201 at the Push Comedy Theater" => "kidprov201",
-      "Musical Improv Studio" => "music_improv_studio",
-      "​Improv 201 at the Push Comedy Theater" => "improv201",
-      "Sketch Comedy Writing 101" => "sketch101",
-      "KidProv at the Push Comedy Theater" => "kidprov101",
-      "Musical Improv 201" => "music_improv201"
-    }
+  def parse_current(now_words) do
+    body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")  
+    Enum.each(body["listings"], fn(listing) ->
+      id = listing["id"]
+      url = "https://www.universe.com/api/v2/listings/#{id}.json"
+      item = load_json_no_decode(url)
+      title = String.trim(listing["title"])
+      base = "/Users/patrickveverka/Code/ticket_agent/apps/ticket_agent/lib/mix/tasks/data"
+      uri = if title == "Workshop: Tales from the Campfire" do
+        "#{base}/workshops/#{id}.json"
+      else
+        case Enum.find(Mappings.mappings, fn({reg, _}) -> String.match?(title, reg) end) do
+          {h, class_id} ->
+            IO.puts "class"
+            "#{base}/classes/#{id}.json"
+          n ->
+            IO.puts "show"
+            "#{base}/shows/#{id}.json"
+        end
+      end
+      IO.inspect uri
+      File.write!(uri, item) |> IO.inspect
+    end)
+  end
 
-    url = "https://www.universe.com/api/v2/listings/#{show["id"]}.json"
+  def parse_history_files(non_words) do
+    load_classes(non_words)
+    load_shows(non_words)
+    load_workshops(non_words)
+    load_camps(non_words)
+  end
 
-    #IO.inspect "Parsing #{show["id"]} at #{url}"
+  def load_classes(non_words) do
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/classes")
+    {:ok, pid} = StringIO.open("")
+    base = "./apps/ticket_agent/lib/mix/tasks/data/classes/"
 
-    body = load_json(url)
+    files = File.ls!(base)
+    counter = Enum.count(files)
+    preface = load_preface("classes")
 
-    images = body["images"]
+    files
+    |> Enum.chunk_every(10)
+    |> Enum.with_index
+    |> Enum.each(fn({chunk, index}) -> 
+      Logger.info "Processing #{index+1} of class chunks"  
+      {:ok, pid} = StringIO.open("")
+      Enum.each(chunk, fn(file) ->
+        process_file(base <> file, non_words, :class, pid)
+      end)
+      string = StringIO.flush(pid)
+      File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)    
+      StringIO.close(pid)
+    end)
+  end
+
+  def load_shows(non_words) do
+    {:ok, pid} = StringIO.open("")
+    base = "./apps/ticket_agent/lib/mix/tasks/data/shows/"
+
+    files = File.ls!(base)
+    counter = Enum.count(files)
+    preface = load_preface("shows")
+
+    files
+    |> Enum.chunk_every(20)
+    |> Enum.with_index
+    |> Enum.each(fn({chunk, index}) -> 
+      Logger.info "Processing #{index+1} of show chunks"  
+      {:ok, pid} = StringIO.open("")
+      Enum.each(chunk, fn(file) ->
+        process_file(base <> file, non_words, :show, pid)
+      end)
+      string = StringIO.flush(pid)
+      File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)    
+      StringIO.close(pid)
+    end)  
+  end
+
+  def load_workshops(non_words) do
+    {:ok, pid} = StringIO.open("")
+    base = "./apps/ticket_agent/lib/mix/tasks/data/workshops/"
+
+    files = File.ls!(base)
+    counter = Enum.count(files)
+
+    preface = load_preface("workshops")
+
+    keywords = 
+      files
+      |> Enum.with_index()
+      |> Enum.reduce([], fn({file, index}, acc) ->
+        Logger.info "Processing #{index + 1} of #{counter} workshops"
+        acc ++ process_file(base <> file, non_words, :workshop, pid)
+      end)
+      |> Enum.uniq
+      |> Enum.sort
+    
+    string = StringIO.flush(pid)
+
+    File.write("./apps/ticket_agent/priv/repo/seeds/workshops/listings_0.exs", preface <> string)    
+  end
+
+  def load_camps(non_words) do
+    {:ok, pid} = StringIO.open("")
+    base = "./apps/ticket_agent/lib/mix/tasks/data/camps/"
+
+    files = File.ls!(base)
+    counter = Enum.count(files)
+
+    preface = load_preface("camps")
+
+    keywords = 
+      files
+      |> Enum.with_index()
+      |> Enum.reduce([], fn({file, index}, acc) ->
+        Logger.info "Processing #{index + 1} of #{counter} camps"
+        acc ++ process_file(base <> file, non_words, :workshop, pid)
+      end)
+      |> Enum.uniq
+      |> Enum.sort
+    
+    string = StringIO.flush(pid)
+
+    File.write("./apps/ticket_agent/priv/repo/seeds/camps/listings_0.exs", preface <> string)    
+  end  
+
+  def process_file(file, non_words, type, pid) do
+    body = 
+      file
+      |> File.read!
+      |> Poison.decode!()
+
     event = body["events"] |> hd
     listing = body["listing"]
     price = listing["price"]
+    slug = listing["slug"]
+    title = String.trim(listing["title"])
+    class_id = load_class_id(title, type)
+    
+    description = listing["description"]
+    tags = load_tags(price, title, description, type)
+    keywords = get_keywords(description, non_words)
 
-    social_photo = Enum.find(images, fn(x) -> x["id"] == listing["event_photo_id"] end)
-                  |> Map.get("social_image")
+    {social_photo, cover_photo} = process_images(body["images"], listing["event_photo_id"])
+
+    item = EEx.eval_file(
+      "./apps/ticket_agent/lib/mix/tasks/templates/event.eex",
+      assigns: [
+        slug: slug,
+        title: title,
+        class_id: class_id,
+        type: type,
+        description: listing["description_html"],
+        start_time: event["start_time"],
+        end_time: event["end_time"],
+        cover_photo: cover_photo,
+        social_photo: social_photo,
+        price: price,
+        created_at: listing["created_at"],
+        tags: Enum.uniq(tags ++ keywords)
+      ]
+    )
+    IO.write(pid, item)
+
+    keywords
+  end
+
+  defp clean_directory(dir) do
+    File.rm_rf!(dir)
+    File.mkdir!(dir)
+  end
+  defp load_class_id(title, :class) do
+    title = String.trim(title)
+    title = if String.at(title, 0) == "​" do
+      String.split(title, "​") |> tl |> hd
+    else
+      title
+    end
+    case Enum.find(Mappings.mappings, fn({reg, _}) -> String.match?(title, reg) end) do
+      {_, class_id} ->
+        "#{class_id}.id"
+      _ ->
+        raise title
+        nil
+    end
+  end
+  defp load_class_id(_, _), do: nil
+  
+  defp process_images(images, event_photo_id) do
+    photo = Enum.find(images, fn(x) -> x["id"] == event_photo_id end)
+    %{"social_image" => social_photo, "url" => cover_photo} = photo
 
     social_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, social_photo) |> hd) <> "/-/inline/yes/"
-
-    public_id = String.split(social_photo, "/") |> Enum.at(3)
-
-    social_photo = case Cloudinex.resource(public_id) do
-      {:ok, %{"secure_url" => social_photo}} ->
-        IO.inspect "ok"
-        social_photo
-      {:error, _} ->
-        IO.inspect "GOTTA UPLOAD"
-        {:ok, %{"secure_url" => social_photo, "public_id" => public_id}} = Cloudinex.Uploader.upload_url(social_photo, %{public_id: public_id})
-        social_photo
-    end
-
-    cover_photo = Enum.find(images, fn(x) -> x["id"] == listing["event_photo_id"] end)
-                  |> Map.get("url")
-
+    social_public_id = String.split(social_photo, "/") |> Enum.at(3)
+    
     cover_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, cover_photo) |> hd) <> "/-/inline/yes/"
+    cover_public_id = String.split(cover_photo, "/") |> Enum.at(3)
+   
+    {Cloudinex.Url.for(social_public_id), Cloudinex.Url.for(cover_public_id)}
+  end
 
-    public_id = String.split(cover_photo, "/") |> Enum.at(3)
-
-    cover_photo = case Cloudinex.resource(public_id) do
-      {:ok, %{"secure_url" => cover_photo}} ->
-        IO.inspect "ok"
-        cover_photo
-      {:error, _} ->
-        IO.inspect "GOTTA UPLOAD"
-        {:ok, %{"secure_url" => cover_photo, "public_id" => public_id}} = Cloudinex.Uploader.upload_url(cover_photo, %{public_id: public_id})
-        cover_photo
+  def load_tags(_, _, _, :class), do: ["class"]
+  def load_tags(price, title, description, type) do
+    title = String.downcase(title)
+    tags = [Atom.to_string(type)]
+    if price == 0 do
+      tags = tags ++ ["free"]
+    else
+      if price <= 5 do
+        tags = tags ++ ["deal"]
+      end
     end
 
-    is_class = Enum.any?(classes, fn(x) -> x["id"] == listing["id"] end)
-    is_show = Enum.any?(shows, fn(x) -> x["id"] == listing["id"] end)
-
-    listing_type = ""
-    listing_type = if is_class do "class" else listing_type end
-    listing_type = if is_show do "show" else listing_type end
-
-    title = String.trim(listing["title"])
-
-    class_id = if is_class do "#{mappings[title]}.id" else "nil" end
-
-    string = """
-    description = \"\"\"
-    #{listing["description_html"]}
-    \"\"\"
-Logger.info "Writing Class #{title}"
-listing = %TicketAgent.Listing{
-    user_id: user.id,
-    account_id: account.id,
-    class_id: #{class_id},
-    type: "#{listing_type}",
-    title: "#{title}",
-    slug: "#{listing["slug"]}",
-    description: description,
-    status: "active",
-    start_time:  NaiveDateTime.from_iso8601!("#{event["start_time"]}"),
-    end_time:  NaiveDateTime.from_iso8601!("#{event["end_time"]}")
-}
-|> TicketAgent.Repo.insert!
-
-Logger.info "> Writing cover photo for #{title}"
-%TicketAgent.ListingImage{
-  listing_id: listing.id,
-  url: "#{cover_photo}",
-  type: "cover"
-}
-|> TicketAgent.Repo.insert!
-
-Logger.info "> Writing social photo for #{title}"
-%TicketAgent.ListingImage{
-  listing_id: listing.id,
-  url: "#{social_photo}",
-  type: "social"
-}
-|> TicketAgent.Repo.insert!
-
-Logger.info "> Writing 88 tickets for #{title}"
-
-Enum.each(1..88, fn(x) ->
-  %TicketAgent.Ticket{
-    listing_id: listing.id,
-    name: "Ticket for #{title}",
-    status: "available",
-    description: "Ticket for #{title}",
-    price: #{round(price) * 100},
-    sale_start:  NaiveDateTime.from_iso8601!("#{listing["created_at"]}")
-  }
-  |> TicketAgent.Repo.insert!
-end)
-     """
-IO.write(pid, string)
-
-     if is_show do
-       if listing["price"] == 0 do
-         IO.write(pid, generate_tag("free", title))
-       else
-         if listing["price"] <= 5 do
-           IO.write(pid, generate_tag("deal", title))
-         end
-       end
-       if String.match?(title, ~r/\bworkshop\b/i) do
-         IO.write(pid, generate_tag("workshop", title))
-       end
-       if String.match?(title, ~r/\bharold\b/i) do
-         IO.write(pid, generate_tag("harold", title))
-       end
-       if String.match?(title, ~r/who dunnit/i) do
-         IO.write(pid, generate_tag("murder-mystery", title))
-       end
-       if String.match?(title, ~r/date night/i) do
-         IO.write(pid, generate_tag("date-night", title))
-       end
-       if String.match?(title, ~r/good talk/i) do
-         IO.write(pid, generate_tag("good-talk", title))
-       end
-       if String.match?(title, ~r/girl-prov/i) do
-         IO.write(pid, generate_tag("girl-prov", title))
-       end
-       if String.match?(title, ~r/\bteacher\b/i) do
-         IO.write(pid, generate_tag("graduation-show", title))
-       end
-       if String.match?(title, ~r/\bstandup\b|\bstand-up\b/i) do
-         IO.write(pid, generate_tag("standup", title))
-       end
-       if String.match?(title, ~r/\blip\b/i) do
-         IO.write(pid, generate_tag("music", title))
-         IO.write(pid, generate_tag("lip-sync", title))
-       end
-      #  IO.inspect listing["title"]
-     end
-
+    Enum.reduce(Mappings.regex_mappings, tags, fn({reg, val}, acc) ->
+      if String.match?(title, reg) do
+        acc = acc ++ val
+      end
+      acc
+    end)
+    |> Enum.uniq()
   end
 
-  defp generate_tag(tag, title) do
-    """
-Logger.info ">> Writing tag #{tag} for #{title}"
-%TicketAgent.ListingTag{
-  listing_id: listing.id,
-  tag: "#{tag}"
-}
-|> TicketAgent.Repo.insert!
-
-    """
-  end
   defp load_json(url) do
     url
     |> Tesla.get
@@ -217,28 +245,154 @@ Logger.info ">> Writing tag #{tag} for #{title}"
     |> Poison.decode!
   end
 
-  defp get_keywords(text) do
-    non_words = ["theater", "comedy", "from", "will", "this", "that", "brad", "mary", "push"]
-    description = HtmlSanitizeEx.strip_tags(text)
+  defp load_json_no_decode(url) do
+    url
+    |> Tesla.get
+    |> Map.fetch!(:body)
+  end
 
-    description = Regex.replace(~r/\W/, description, " ")
-                  |> String.replace("\n", " ")
-                  |> String.replace(".", " ")
-                  |> String.replace("_", "")
-                  |> String.replace("   ", " ")
-                  |> String.replace("  ", " ")
-
-      String.split(description, " ")
-      |> Enum.reduce(%{}, fn(word, acc) ->
-        if String.length(word) > 0 && !Enum.member?(non_words, String.downcase(word)) do
-          if Map.has_key?(acc, word) do
-            {_, acc} = Map.get_and_update(acc, word, fn current_value -> {current_value, current_value + 1} end)
-          else
-            acc = Map.put(acc, word, 1)
-          end
+  defp get_keywords(text, non_words) do
+    Regex.scan(~r/(\w+)/, text)
+    |> Enum.map(fn([_, word]) ->
+      String.downcase(word)
+    end)
+    |> Enum.reduce(%{}, fn(word, acc) ->
+      if String.length(word) > 0 && !Enum.member?(non_words, String.downcase(word)) do
+        if Map.has_key?(acc, word) do
+          {_, acc} = Map.get_and_update(acc, word, fn current_value -> {current_value, current_value + 1} end)
+        else
+          acc = Map.put(acc, word, 1)
         end
-        acc
-      end)
-      |> Enum.filter(fn({x,y}) -> y > 2 end)
+      end
+      acc
+    end)    
+    |> Enum.filter(fn({x,y}) -> 
+      y > 2 && String.length(x) > 2 && String.valid?(x)
+    end)  
+    |> Enum.map(fn({x,_}) -> 
+      x
+    end)  
+  end
+
+  defp process_image do
+    # IO.puts social_public_id
+    # Logger.info "process_images -> Loading social photo with public id #{social_public_id}"
+
+    # social_photo = case Cloudinex.resource(social_public_id) do
+    #   {:ok, %{"secure_url" => social_photo}} ->
+    #     Logger.info "process_images -> Social photo with public_id #{social_public_id} found"
+    #     social_photo
+    #   {:error, _} ->
+    #     Logger.warn "process_images -> Social photo with public_id #{social_public_id} not found, uploading"
+    #     case Cloudinex.Uploader.upload_url(social_photo, %{public_id: social_public_id}) do
+    #       {:ok, %{"secure_url" => uploaded_social_photo}} ->
+    #         uploaded_social_photo
+    #       {:error, reason} ->
+    #         Logger.error "#{inspect reason}"
+    #         social_photo
+    #     end
+    # end 
+  end    
+
+  defp blah do
+    # {:ok, pid} = StringIO.open("")
+    # [
+    #   "./apps/ticket_agent/lib/mix/tasks/data/classes/",
+    #   "./apps/ticket_agent/lib/mix/tasks/data/shows/",
+    #   "./apps/ticket_agent/lib/mix/tasks/data/workshops/",
+    #   "./apps/ticket_agent/lib/mix/tasks/data/camps/"
+    # ]
+    # |> Enum.reduce([], fn(base, acc) ->
+    #   stuff = 
+    #     base
+    #     |> File.ls!()
+    #     |> Enum.reduce([], fn(file, cnt) ->
+    #       body = 
+    #         base <> file
+    #         |> File.read!
+    #         |> Poison.decode!()
+
+    #       listing = body["listing"]
+    #       images = body["images"]
+    #       event_photo_id = listing["event_photo_id"]
+    #       photo = Enum.find(images, fn(x) -> x["id"] == event_photo_id end)
+    #       %{"social_image" => social_photo, "url" => cover_photo} = photo            
+    #       social_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, social_photo) |> hd) <> "/-/inline/yes/"
+    #       social_public_id = String.split(social_photo, "/") |> Enum.at(3)
+    #       cover_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, cover_photo) |> hd) <> "/-/inline/yes/"
+    #       cover_public_id = String.split(cover_photo, "/") |> Enum.at(3)
+
+    #       result = []
+    #       if Enum.member?(missing, social_public_id) do
+    #         result = result ++ [social_photo] 
+    #       end
+    #       if Enum.member?(missing, cover_public_id) do
+    #         result = result ++ [cover_photo]  
+    #       end          
+
+    #       cnt = cnt ++ result
+    #     end)
+    #   acc = acc ++ stuff
+    # end)
+    # |> Enum.uniq
+    # |> Enum.each(fn(url) ->
+    #   IO.inspect url
+    #   photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, url) |> hd) <> "/-/inline/yes/"
+    #   public_id = String.split(photo, "/") |> Enum.at(3)
+    #   case Cloudinex.resource(public_id) do
+    #     {:ok, _} ->
+    #       Logger.info "public_id #{public_id} is cool"
+    #       :ok
+    #     {:error, _} ->
+    #       # Logger.warn "public_id #{public_id} is not cool"
+    #       case Cloudinex.Uploader.upload_url(photo, %{public_id: public_id}) do
+    #       {:ok, _} ->
+    #         Logger.info "uploaded"
+    #       {:error, reason} ->
+    #         Logger.error "#{inspect reason}"
+    #     end
+    #   end
+    # end)
+    # string = StringIO.flush(pid)
+    # IO.inspect string
+    # File.write!("./apps/ticket_agent/priv/repo/missing.txt", string)    
+    # |> IO.inspect
+    
+  end
+
+  defp load_preface(type) do
+    preface = """
+require Logger
+
+Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
+
+account = SeedHelpers.create_account("Push Comedy Theater")
+user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
+"""
+if type == "classes" do
+  preface = preface <> """
+Logger.info "Loading classes"
+improv101 = SeedHelpers.create_class(%{slug: "improv101"})
+improv201 = SeedHelpers.create_class(%{slug: "improv201"})
+improv301 = SeedHelpers.create_class(%{slug: "improv301"})
+improv401 = SeedHelpers.create_class(%{slug: "improv401"})
+improv501 = SeedHelpers.create_class(%{slug: "improv501"})
+improv_studio = SeedHelpers.create_class(%{slug: "improv_studio"})
+kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
+kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
+music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})
+music_improv201 = SeedHelpers.create_class(%{slug: "music_improv201"})
+music_improv_studio = SeedHelpers.create_class(%{slug: "music_improv_studio"})
+teen_improv = SeedHelpers.create_class(%{slug: "teen_improv"})
+sketch101 = SeedHelpers.create_class(%{slug: "sketch101"})
+sketch201 = SeedHelpers.create_class(%{slug: "sketch201"})
+standup101 = SeedHelpers.create_class(%{slug: "standup101"})
+acting101 = SeedHelpers.create_class(%{slug: "acting101"})
+"""
+  end
+  preface = preface <> """
+Logger.info "Seeding #{type}"
+  """      
+  preface
   end
 end

@@ -14,12 +14,14 @@ defmodule TicketAgent.Schema do
       alias TicketAgent.{
         Account,
         Class,
+        Event,
         Listing,
         ListingImage,
         ListingTag,
         Repo,
         Teacher,
         Ticket,
+        TicketRegistration,
         User,
         UserCredential
       }

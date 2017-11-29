@@ -1,0 +1,15 @@
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    user_id: nil,
+    name: "Ticket for <%= String.replace(@title, "\"", "'") %>",
+    status: "available",
+    description: "Ticket for <%= String.replace(@title, "\"", "'") %>",
+    price: <%= round(@price) * 100 %>,
+    sale_start:  NaiveDateTime.from_iso8601!("<%= @created_at %>")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
