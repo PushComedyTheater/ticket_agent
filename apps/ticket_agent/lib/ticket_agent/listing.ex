@@ -57,38 +57,42 @@ defmodule TicketAgent.Listing do
     })
   end
 
-  # def upcoming_shows do
-  #   date = NaiveDateTime.utc_now()
-  #   query = from l in Listing,
-  #           where: fragment("? >= NOW()", l.start_time),
-  #           where: l.type == "show",
-  #           order_by: [asc: :start_time],
-  #           preload: [:images, :listing_tags, :tickets],
-  #           select: l
-  #   Repo.all(query)
-  # end
-
   def upcoming_shows do
-    date = NaiveDateTime.utc_now()
-    query = from l in Listing,
-            where: fragment("? >= NOW()", l.start_at),
-            where: not is_nil(l.event_id),
+    query = from [listings, tickets] in listings_with_ticket_count(),
+            where: fragment("? >= NOW()", listings.start_at),
+            where: not is_nil(listings.event_id),
             order_by: [asc: :start_at],
-            preload: [:images, :tickets],
-            select: l
+            preload: [:images],
+            select: [listings, tickets.count]
     Repo.all(query)
   end
 
-  def current_classes do
-    date = NaiveDateTime.utc_now()
-    query = from l in Listing,
-            where: l.end_time >= ^date,
-            where: l.type == "class",
-            order_by: [desc: :title],
+  def upcoming_classes do
+    query = from [listings, tickets] in listings_with_ticket_count(),
+            where: fragment("? >= NOW()", listings.start_at),
+            where: not is_nil(listings.class_id),
+            order_by: [asc: :start_at],
             preload: [:images],
-            select: l
+            select: [listings, tickets.count]
 
     Repo.all(query)
+  end
+
+  def listing_with_ticket_count(slug) do
+    query = from listing in Listing,
+            join: tickets in fragment("(SELECT count(*) as count, listing_id FROM tickets WHERE status = 'available' AND locked_until IS NULL AND sale_start <= NOW() GROUP BY listing_id)"),
+            on: listing.id == tickets.listing_id,
+            where: listing.slug == ^slug,
+            preload: [:images, :tickets, :listing_tags],
+            select: [listing, tickets.count]
+
+    Repo.one(query)
+  end
+
+  def listings_with_ticket_count do
+    from listing in Listing,
+    join: tickets in fragment("(SELECT count(*) as count, listing_id FROM tickets WHERE status = 'available' AND locked_until IS NULL AND sale_start <= NOW() GROUP BY listing_id)"),
+    on: listing.id == tickets.listing_id
   end
 
   def slugified_title(title) do

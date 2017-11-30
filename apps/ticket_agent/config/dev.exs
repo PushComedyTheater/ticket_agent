@@ -8,4 +8,4 @@ config :ticket_agent, TicketAgent.Repo,
   database: "ticket_agent_dev",
   hostname: "localhost",
   pool_size: 10,
-  log: false
+  log: true

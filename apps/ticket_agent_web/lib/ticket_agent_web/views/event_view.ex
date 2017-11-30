@@ -78,7 +78,6 @@ defmodule TicketAgentWeb.EventView do
   def listing_tags(show) do
     Enum.take(show.listing_tags, 5)
     |> Enum.map_join(", ", fn tag -> tag.tag end)
-    |> IO.inspect()
   end
 
   def social_image(show) do
@@ -89,11 +88,9 @@ defmodule TicketAgentWeb.EventView do
     public_id =
       social_image.url
       |> String.split("/")
-      |> IO.inspect
       |> List.last()
       |> String.split(".")
       |> List.first()
-      |> IO.inspect
 
     Cloudinex.Url.for(public_id, %{
       width: 350,
