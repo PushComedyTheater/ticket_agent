@@ -6,15 +6,13 @@
 
 <div id="photoParent" style="background: url('<%= cover_image(@show) %>') no-repeat; background-size: 100%; min-height: 550px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
 </div>
-
-
 <section class="g-bg-blue-opacity-0_7 g-py-50 g-px-30 u-shadow-v1-5" style="margin-bottom: 5px;">
   <div class="container">
     <div class="row">
       <div class="col-md-9 align-self-center">
         <h2 class="h1" style="color: #fff;"><%= @show.title %></h2>
         <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
-          <strong><%= event_date(@show.start_time) %></strong>&nbsp;
+          <strong><%= event_date(@show.start_at) %></strong>&nbsp;
           <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15"><i class="fa fa-dollar g-mr-3"></i> <strong><%= cost(@show) %></strong></span>
           </p>
         <ul class="u-list-inline mb-0">

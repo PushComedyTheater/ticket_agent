@@ -33,7 +33,7 @@
                     <%= link show.title, to: event_path(@conn, :show, show), class: "g-color-main g-text-underline--none--hover" %>
                   </h4>
                   <div>
-                    <%= raw TicketAgentWeb.LayoutView.truncated_description(show.description) %>
+                    <%= raw HtmlSanitizeEx.basic_html(TicketAgentWeb.LayoutView.truncated_description(show.description)) %>
                   </div>
                 </div>
 

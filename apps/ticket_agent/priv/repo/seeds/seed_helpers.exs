@@ -94,10 +94,11 @@ defmodule SeedHelpers do
     end
   end
 
-  def create_event(%{slug: slug} = event) do
-    Logger.info "Seeds->create_event:   Checking if event with slug #{slug} exists"
+  def create_event(%{slug: slug, title} = event) do
+    title = String.trim(title)
+    Logger.info "Seeds->create_event:   Checking if event with slug #{slug} or title #{title} exists"
     query = from e in Event,
-            where: e.slug == ^slug,
+            where: e.slug == ^slug or e.title == ^title,
             select: e
 
     case Repo.one(query) do
@@ -106,7 +107,7 @@ defmodule SeedHelpers do
         struct(Event, event)
         |> TicketAgent.Repo.insert!        
       event ->
-        Logger.info "Seeds->create_event:   Event #{slug} already exists"
+        Logger.info "Seeds->create_event:   Event with slug #{slug} or title #{title} exists"
         event
     end
   end

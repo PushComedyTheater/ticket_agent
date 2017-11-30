@@ -28,14 +28,4 @@ defmodule TicketAgent.Event do
     |> cast_assoc(:account)
     |> cast_assoc(:user)
   end  
-
-  def upcoming_events do
-    date = NaiveDateTime.utc_now()
-    query = from l in Listing,
-            where: fragment("? >= NOW()", l.start_at),
-            order_by: [asc: :start_at],
-            preload: [:images, :listing_tags, :tickets],
-            select: l
-    Repo.all(query)
-  end
 end

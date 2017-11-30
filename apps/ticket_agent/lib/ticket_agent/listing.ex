@@ -57,13 +57,24 @@ defmodule TicketAgent.Listing do
     })
   end
 
+  # def upcoming_shows do
+  #   date = NaiveDateTime.utc_now()
+  #   query = from l in Listing,
+  #           where: fragment("? >= NOW()", l.start_time),
+  #           where: l.type == "show",
+  #           order_by: [asc: :start_time],
+  #           preload: [:images, :listing_tags, :tickets],
+  #           select: l
+  #   Repo.all(query)
+  # end
+
   def upcoming_shows do
     date = NaiveDateTime.utc_now()
     query = from l in Listing,
-            where: fragment("? >= NOW()", l.start_time),
-            where: l.type == "show",
-            order_by: [asc: :start_time],
-            preload: [:images, :listing_tags, :tickets],
+            where: fragment("? >= NOW()", l.start_at),
+            where: not is_nil(l.event_id),
+            order_by: [asc: :start_at],
+            preload: [:images, :tickets],
             select: l
     Repo.all(query)
   end
