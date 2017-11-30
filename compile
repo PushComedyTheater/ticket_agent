@@ -1,5 +1,4 @@
 # compile
 
 info "Building Phoenix static assets"
-webpack
-mix phx.digest
+MIX_ENV=prod webpack -p
