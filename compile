@@ -2,4 +2,4 @@
 
 info "Building Phoenix static assets"
 webpack
-mix phoenix.digest
+mix phx.digest
