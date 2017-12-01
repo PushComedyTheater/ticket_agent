@@ -9,21 +9,23 @@ defmodule TicketAgentWeb.AboutController do
   Whether your a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.  
   """
 
-  @teachers Repo.all(Teacher)
   def index(conn, _params) do
+    teachers = Repo.all(Teacher)
+
     conn
     |> assign(:page_title, "About The Push Comedy Theater")
     |> assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(@theater_description, false))
-    |> render("index.html", teachers: @teachers)
+    |> render("index.html", teachers: teachers)
   end
 
   def show(conn, %{"id" => id}) do
     teacher = Repo.get_by(Teacher, [slug: id])
+    teachers = Repo.all(Teacher)
 
     conn
     |> assign(:page_title, teacher.name)
     |> assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(teacher.biography, false))
     |> assign(:page_image, "https://cdn.pushcomedytheater.com/images/#{teacher.slug}.jpg")
-    |> render("show.html", teacher: teacher, teachers: @teachers)
+    |> render("show.html", teacher: teacher, teachers: teachers)
   end
 end
