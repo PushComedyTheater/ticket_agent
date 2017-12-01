@@ -102,28 +102,40 @@ defmodule TicketAgent.Listing do
       |> String.replace(~r/(\s|-)+/, "-")
   end
 
-  def available_tickets(show) do
+  def available_ticket_count(show) do
     query = from t in Ticket,
             where: t.listing_id == ^show.id,
             where: t.status == "available",
-            where: fragment("? < NOW()", t.sale_start),
-            select: t
-    Repo.all(query)
+            where: is_nil(t.locked_until),
+            where: fragment("? <= NOW()", t.sale_start),
+            select: count(t.id)
+    Repo.one(query)
   end
 
   def ticket_cost(show) do
-    show = Repo.preload(show, :tickets)
-    Enum.at(show.tickets, 0).price / 100
-    # query = from t in Ticket,
-    #         where: t.listing_id == ^show.id,
-    #         where: t.status == "available",
-    #         where: fragment("? < NOW()", t.sale_start),
-    #         order_by: [asc: :price],
-    #         limit: 1,
-    #         select: t
-    # price = Repo.one(query)
-    #         |> Map.get(:price)
-    # price / 100
+    query = from t in Ticket,
+            where: t.listing_id == ^show.id,
+            where: t.status == "available",
+            where: is_nil(t.locked_until),
+            where: fragment("? <= NOW()", t.sale_start),
+            select: [min(t.price), max(t.price)]
+
+    [min, max] = Repo.one(query)
+
+    cost = if min == max do
+      (min / 100)
+      |> :erlang.float_to_binary(decimals: 2)
+    else
+      lower =   
+        (min / 100)
+        |> :erlang.float_to_binary(decimals: 2)
+
+      upper =   
+        (max / 100)
+        |> :erlang.float_to_binary(decimals: 2)
+        
+      "#{lower} - #{upper}"
+    end
   end
 
   defimpl Phoenix.Param, for: TicketAgent.Listing do

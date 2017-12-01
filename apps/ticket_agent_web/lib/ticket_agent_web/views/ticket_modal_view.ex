@@ -21,10 +21,10 @@ defmodule TicketAgentWeb.TicketModalView do
   end
 
   def ticket_link(conn, show) do
-    available_tickets = Listing.available_tickets(show)
+    available_ticket_count = Listing.available_ticket_count(show)
 
     link =
-      if Enum.count(available_tickets) > 0 do
+      if Enum.count(available_ticket_count) > 0 do
         link(
           "Buy Tickets",
           to: "#modal",
@@ -42,12 +42,7 @@ defmodule TicketAgentWeb.TicketModalView do
   end
 
   def event_cost(show) do
-    cost =
-      show
-      |> Listing.ticket_cost
-      |> :erlang.float_to_binary([decimals: 2])
-
-    "#{cost}"
+    Listing.ticket_cost(show)
   end
 
   def event_time(%Listing{start_at: nil} = show) do

@@ -29,10 +29,10 @@ defmodule Mix.Tasks.LoadEvents do
         case Enum.find(Mappings.mappings, fn({reg, _}) -> String.match?(title, reg) end) do
           {h, class_id} ->
             IO.puts "class"
-            "#{base}/classes/#{id}.json"
+            "#{base}/newstuff/classes/#{id}.json"
           n ->
             IO.puts "show"
-            "#{base}/shows/#{id}.json"
+            "#{base}/newstuff/shows/#{id}.json"
         end
       end
       IO.inspect uri
@@ -41,15 +41,62 @@ defmodule Mix.Tasks.LoadEvents do
   end
 
   def parse_history_files(non_words) do
-    load_classes(non_words)
-    load_shows(non_words)
-    load_workshops(non_words)
-    load_camps(non_words)
+    load_new_stuff(non_words)
+    # load_classes(non_words)
+    # load_shows(non_words)
+    # load_workshops(non_words)
+    # load_camps(non_words)
+  end
+
+  def load_new_stuff(non_words) do
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/classes")
+    base = "./apps/ticket_agent/lib/mix/tasks/data/newstuff/classes/"
+
+    files = File.ls!(base)
+    counter = Enum.count(files)
+    preface = load_preface("classes")
+
+    files
+    |> Enum.chunk_every(10)
+    |> Enum.with_index
+    |> Enum.each(fn({chunk, index}) -> 
+      Logger.info "Processing #{index+1} of class chunks"  
+      {:ok, pid} = StringIO.open("")
+      Enum.each(chunk, fn(file) ->
+        process_file(base <> file, non_words, :class, pid)
+      end)
+      string = StringIO.flush(pid)
+      File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)    
+      StringIO.close(pid)
+    end)
+
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/shows")
+    base = "./apps/ticket_agent/lib/mix/tasks/data/newstuff/shows/"
+
+    files = File.ls!(base)
+    counter = Enum.count(files)
+    preface = load_preface("shows")
+
+    files
+    |> Enum.chunk_every(20)
+    |> Enum.with_index
+    |> Enum.each(fn({chunk, index}) -> 
+      Logger.info "Processing #{index+1} of show chunks"  
+      {:ok, pid} = StringIO.open("")
+      Enum.each(chunk, fn(file) ->
+        process_file(base <> file, non_words, :show, pid)
+      end)
+      string = StringIO.flush(pid)
+      File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)    
+      StringIO.close(pid)
+    end)   
+    
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/camps")    
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/workshops")    
   end
 
   def load_classes(non_words) do
     clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/classes")
-    {:ok, pid} = StringIO.open("")
     base = "./apps/ticket_agent/lib/mix/tasks/data/classes/"
 
     files = File.ls!(base)
@@ -72,7 +119,6 @@ defmodule Mix.Tasks.LoadEvents do
   end
 
   def load_shows(non_words) do
-    {:ok, pid} = StringIO.open("")
     base = "./apps/ticket_agent/lib/mix/tasks/data/shows/"
 
     files = File.ls!(base)

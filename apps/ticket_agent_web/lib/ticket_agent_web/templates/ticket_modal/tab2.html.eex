@@ -40,6 +40,13 @@
       <i class="fa fa-user g-font-size-default g-mr-5"></i>
       Logged In As <span id="user_name"></span>
     </h3>
+    <br />
+    <br />
+    <br />
+    
+    <div id="loggedin_group" class="form-group g-mb-35">
+      <a id="tab2_logged_in_continue_button" href="#" class="btn u-btn-primary btn-lg btn-notice btn-block g-mr-10 g-mb-15">Continue</a>
+    </div>
   </div>
 
   <div id="login_form" style="display: none;">
@@ -123,15 +130,14 @@
   </div>
 </div>
 
-
 <script type="text/javascript">
   window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
   $(document).on('ready', function () {
     window.load_logged_in_user();
 
-    $("#tab2_continue").on("click", function(e) {
+    $("#tab2_continue, #tab2_logged_in_continue_button").on("click", function(e) {
       if (window.validate_login()) {
-        $('.nav a[href="#nav-1-1-default-hor-left--3"]').tab('show')
+        $('.nav a[href="#nav-1-1-default-hor-left--3"]').tab('show');
         return true;
       } else {
         e.preventDefault();
@@ -285,7 +291,6 @@
   }
 
   window.login_success = function() {
-    alert("COOL");
     window.load_logged_in_user();
     $("#not_logged_in").hide();
     $("#logged_in").show();

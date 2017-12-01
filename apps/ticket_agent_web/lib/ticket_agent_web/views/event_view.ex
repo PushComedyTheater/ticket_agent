@@ -39,8 +39,9 @@ defmodule TicketAgentWeb.EventView do
     |> Enum.map(&(&1.tag))
     |> Poison.encode!
   end
+
   def ticket_link(conn, show) do
-    available_tickets = Listing.available_tickets(show)
+    available_ticket_count = Listing.available_ticket_count(show)
 
     type =
       link(
@@ -50,7 +51,7 @@ defmodule TicketAgentWeb.EventView do
       )
 
     link =
-      if Enum.count(available_tickets) > 0 do
+      if Enum.count(available_ticket_count) > 0 do
         link(
           "Buy Tickets",
           to: "#modal",
@@ -77,12 +78,8 @@ defmodule TicketAgentWeb.EventView do
   end
 
   def cost(show) do
-    cost =
-      show
-      |> Listing.ticket_cost()
-      |> :erlang.float_to_binary(decimals: 2)
-
-    "$#{cost}"
+    show
+    |> Listing.ticket_cost()
   end
 
   def event_date(date) do

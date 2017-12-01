@@ -1,5 +1,6 @@
 require Logger
 import Ecto.Query
+use Coherence.Config
 alias TicketAgent.{Account, Class, Event, Listing, ListingImage, ListingTag, Repo, Teacher, User}
 
 defmodule SeedHelpers do
@@ -34,15 +35,19 @@ defmodule SeedHelpers do
     user = case Repo.one(query) do
       nil ->
         Logger.info "Seeds->create_user:    Creating user"
-        %User{
+
+        changes = %{
           name: "Patrick Veverka",
-          email: email,
-          password: "secret",
-          password_confirmation: "secret",
-          role: "admin",
+          email: "patrick@pushcomedytheater.com",
+          password: "supersecret",
+          password_confirmation: "supersecret",
           account_id: account.id
         }
-        |> TicketAgent.Repo.insert!
+
+        %User{}
+        |> User.changeset(changes)
+        |> Repo.insert!
+
       user ->
         Logger.info "Seeds->create_user:    User with email #{email} already exists"
         user

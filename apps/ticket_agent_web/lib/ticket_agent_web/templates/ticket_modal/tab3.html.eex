@@ -4,7 +4,7 @@
   <form id="attendee_wrapper">
     <div id="attendee_form" style="overflow: scroll; height: 200px;">
     </div>
-    <a id="tab2_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
+    <a id="tab3_continue" href="#" class="btn u-btn-blue btn-lg btn-block g-mr-10 g-mb-15">Continue</a>
   </form>
 
 </div>
@@ -20,19 +20,19 @@
       <div id="attendee_div_{{count}}">
         <div id="first_name_group_{{count}}" class="form-group g-mb-20">
           <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">First Name</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_first_name_{{count}}" name="attendee_first_name_{{count}}" placeholder="First Name" required>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_first_name_{{count}}" name="attendee_first_name_{{count}}" placeholder="First Name" value="patrick" required>
           <small id="first_name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
         </div>
 
         <div id="last_name_group_{{count}}" class="form-group g-mb-20">
           <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Last Name</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_last_name_{{count}}" name="attendee_last_name_{{count}}" placeholder="Last Name" required>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_last_name_{{count}}" name="attendee_last_name_{{count}}" placeholder="Last Name" value="veverka" required>
           <small id="last_name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
         </div>
 
         <div id="email_group_{{count}}" class="form-group g-mb-20">
           <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_{{count}}" name="attendee_email_{{count}}" placeholder="user@domain.com" requiredtype="email">
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_{{count}}" name="attendee_email_{{count}}" placeholder="user@domain.com" value="patrick@veverka.net" requiredtype="email">
           <small id="email_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
         </div>
       </div>
@@ -44,7 +44,7 @@
 
 <script type="text/javascript">
   $(document).on('ready', function () {
-    $("#tab2_continue").on("click", function(e) {
+    $("#tab3_continue").on("click", function(e) {
       var result = $('#js_result'),
           resultVal = parseInt(result.val());
 
@@ -56,7 +56,7 @@
       }
 
       if (valid_tickets) {
-        $('.nav a[href="#nav-1-1-default-hor-left--3"]').tab('show')
+        $('.nav a[href="#nav-1-1-default-hor-left--4"]').tab('show')
         return true;
       } else {
         e.preventDefault();

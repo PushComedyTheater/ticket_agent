@@ -15,6 +15,10 @@ module.exports = {
     new CopyWebpackPlugin([
       // {output}/file.txt
       { from: './images', to: '../images/' },
+      {
+        from: './static/apple-developer-merchantid-domain-association',
+        to: '../.well-known/'
+      }
     ])
   ]
 };

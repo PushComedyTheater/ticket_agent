@@ -1,5 +1,6 @@
 require Logger
 Code.load_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
+Code.load_file("users.exs", "./apps/ticket_agent/priv/repo/seeds")
 Code.load_file("classes.exs", "./apps/ticket_agent/priv/repo/seeds")
 Code.load_file("teachers.exs", "./apps/ticket_agent/priv/repo/seeds")
 

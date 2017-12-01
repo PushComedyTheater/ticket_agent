@@ -41,6 +41,7 @@
       <%= render "tab1.html", conn: @conn, show: @show %>
       <%= render "tab2.html", conn: @conn, show: @show %>
       <%= render "tab3.html", conn: @conn, show: @show %>
+      <%= render "tab4.html", conn: @conn, show: @show %>
     </div>
   </div>
   <div id="subtotal" style="width: 40%; float: right; vertical-align: top; padding-left: 25px;">
