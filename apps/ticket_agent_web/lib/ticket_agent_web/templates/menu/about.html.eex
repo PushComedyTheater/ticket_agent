@@ -1,5 +1,5 @@
 <li class="nav-item hs-has-sub-menu g-mx-10--lg g-mx-15--xl">
-  <a id="nav-link--camps" class="nav-link g-py-7 g-px-0" href="/about">About Us</a>
+  <%= link "about us", to: about_path(@conn, :index), id: "nav-link--about", class: menu_class(@conn.path_info, "about") %>
   <!-- Submenu -->
   <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home">
     <li class="dropdown-item">

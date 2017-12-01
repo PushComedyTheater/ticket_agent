@@ -55,24 +55,19 @@ defmodule SeedHelpers do
     user
   end  
 
-  def create_teacher(name, biography, email, social \\ %{}) do
-    Logger.info "Seeds->create_teacher: Checking if teacher with name #{name} exists"
+  def create_teacher(%{slug: slug} = teacher) do
+    Logger.info "Seeds->create_teacher: Checking if teacher with slug #{slug} exists"
     query = from t in Teacher,
-            where: t.name == ^name,
+            where: t.slug == ^slug,
             select: t
 
     case Repo.one(query) do
       nil ->
-        Logger.info "Seeds->create_teacher: Creating teacher with name #{name}"
-        %Teacher{
-          biography: biography,
-          email: email,
-          name: name,
-          social: social
-        }
+        Logger.info "Seeds->create_teacher: Creating teacher with slug #{slug}"
+        struct(Teacher, teacher)
         |> TicketAgent.Repo.insert!        
       teacher ->
-        Logger.info "Seeds->create_teacher: Teacher #{name} already exists"
+        Logger.info "Seeds->create_teacher: Teacher #{slug} already exists"
         teacher
     end    
   end
@@ -94,7 +89,7 @@ defmodule SeedHelpers do
     end
   end
 
-  def create_event(%{slug: slug, title} = event) do
+  def create_event(%{slug: slug, title: title} = event) do
     title = String.trim(title)
     Logger.info "Seeds->create_event:   Checking if event with slug #{slug} or title #{title} exists"
     query = from e in Event,

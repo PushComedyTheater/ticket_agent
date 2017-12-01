@@ -1,8 +1,12 @@
 defmodule TicketAgentWeb.LayoutView do
   use TicketAgentWeb, :view
 
-  def open_graph_description(text) do
+  def open_graph_description(text, true) do
     HtmlSanitizeEx.strip_tags(text) |> truncated_description()
+  end
+
+  def open_graph_description(text, false) do
+    HtmlSanitizeEx.strip_tags(text)
   end
 
   def truncated_description(text, opts \\ []) do

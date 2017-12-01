@@ -4,15 +4,15 @@ defmodule TicketAgentWeb.ClassController do
   import Ecto.Query
 
   def index(conn, _params) do
-    query = from c in Class,
-            group_by: [c.type, c.id],
-            order_by: [c.type, c.menu_order],
-            select: c
-    classes = query
-              |> Repo.all()
-              |> Repo.preload(:prerequisite)
-              |> Repo.preload(:events)
-    render conn, "index.html", classes: classes
+    # query = from c in Class,
+    #         group_by: [c.type, c.id],
+    #         order_by: [c.type, c.menu_order],
+    #         select: c
+    # classes = query
+    #           |> Repo.all()
+    #           |> Repo.preload(:prerequisite)
+    #           |> Repo.preload(:events)
+    render conn, "index.html", classes: []
   end
 
   def class(conn, params) do

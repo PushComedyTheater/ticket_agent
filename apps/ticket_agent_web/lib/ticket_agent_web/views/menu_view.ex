@@ -23,11 +23,9 @@ defmodule TicketAgentWeb.MenuView do
     Repo.all(query)
   end
 
-  def active(path, conn) do
-
-    " class=active"
-  end
-
+  def menu_class([], "/"), do: "nav-link g-py-7 active g-px-0"
+  def menu_class(path_info, path) when hd(path_info) == path, do: "nav-link g-py-7 active g-px-0"
+  def menu_class(_, _), do: "nav-link g-py-7 g-px-0"
   def show_breadcrumb(conn) do
     false
   end

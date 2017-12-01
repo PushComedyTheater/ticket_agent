@@ -62,7 +62,7 @@ defmodule TicketAgent.Listing do
             where: fragment("? >= NOW()", listings.start_at),
             where: not is_nil(listings.event_id),
             order_by: [asc: :start_at],
-            preload: [:images],
+            preload: [:images, :listing_tags],
             select: [listings, tickets.count]
     Repo.all(query)
   end

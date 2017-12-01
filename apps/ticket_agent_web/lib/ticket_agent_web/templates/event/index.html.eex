@@ -13,51 +13,16 @@
     <div class="container g-pt-100 g-pb-70" style="margin-top: -100px;">
       <div class="row">
         <!-- Sidebar -->
-        <div class="col-lg-3 g-pr-40--lg g-mb-50 g-mb-0--lg">
-          <!-- Tags -->
-          <h2 class="h5 text-uppercase g-color-gray-dark-v1">Tags</h2>
-          <hr class="g-brd-gray-light-v4 g-my-15">
-          <ul class="list-inline g-mb-40">
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">Web Design</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">Unify</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">Template</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">HTML</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">CSS</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">Mobile</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">iOS</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">UI</a>
-            </li>
-            <li class="list-inline-item my-2">
-              <a class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover rounded g-py-4 g-px-10" href="#">Web</a>
-            </li>
-          </ul>
-          <!-- End Tags -->
-        </div>
-        <!-- End Sidebar -->
 
+        <!-- End Sidebar -->
         <!-- Search Results -->
-        <div class="col-lg-9">
-          <%= for shows <- Enum.chunk(@shows, 2) do %>
+        <div class="col-lg-12">
+          <%= for shows <- Enum.chunk(@shows, 3) do %>
             <div class="row">
             <%= for [show, ticket_count] <- shows do %>
-            <div class="col-lg-6 g-mb-30">
+            <div class="col-lg-4 g-mb-30">
               <!-- Search Result -->
-              <article class="g-bg-white" style="border: 1px dashed #f2f2f2;">
+              <article data-show="<%= show.id %>" class="g-bg-white" style="border: 1px dashed #f2f2f2;" data-tags='<%= raw show_tags(show) %>'>
                 <figure class="g-pos-rel">
                   <%= link to: event_path(@conn, :show, show) do %>
                     <img class="img-fluid w-100" src="<%= social_image(show) %>" style="height: 264px;" alt="<%= show.title %>">

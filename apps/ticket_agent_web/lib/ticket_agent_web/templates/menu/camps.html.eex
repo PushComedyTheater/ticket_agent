@@ -1,5 +1,5 @@
 <li class="nav-item hs-has-sub-menu g-mx-10--lg g-mx-15--xl">
-  <a id="nav-link--camps" class="nav-link g-py-7 g-px-0" href="/camps"
+  <a id="nav-link--camps" class="<%= menu_class(@conn.path_info, "camps") %>" href="/camps"
      aria-haspopup="true"
      aria-expanded="false"
      aria-controls="nav-submenu--home"

@@ -1,3 +1,4 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -8,5 +9,12 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, '../priv/static/js/')
-  }
+  },
+  context: path.join(__dirname, ''),
+  plugins: [
+    new CopyWebpackPlugin([
+      // {output}/file.txt
+      { from: './images', to: '../images/' },
+    ])
+  ]
 };

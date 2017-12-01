@@ -25,6 +25,20 @@ defmodule TicketAgentWeb.EventView do
     })
   end
 
+  def aggregated_tags(shows) do
+    Enum.reduce(shows, [], fn([show, _], acc) ->
+      tags = Enum.map(show.listing_tags, fn(x) -> x.tag end)
+      acc = acc ++ tags
+    end)
+    |> Enum.uniq
+    |> Enum.sort
+  end
+
+  def show_tags(show) do
+    show.listing_tags
+    |> Enum.map(&(&1.tag))
+    |> Poison.encode!
+  end
   def ticket_link(conn, show) do
     available_tickets = Listing.available_tickets(show)
 

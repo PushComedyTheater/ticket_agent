@@ -13,7 +13,7 @@
               <i class="g-color-gray-light-v2 g-ml-5">/</i>
             </li>
             <li class="list-inline-item g-color-primary">
-              <span><%= @conn.assigns.pusher.name %></span>
+              <span><%= @conn.assigns.teacher.name %></span>
             </li>
           </ul>
         </div>

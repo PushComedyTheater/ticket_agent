@@ -1,0 +1,13 @@
+        <div class="col-lg-3 g-pr-40--lg g-mb-50 g-mb-0--lg">
+          <!-- Tags -->
+          <h2 class="h5 text-uppercase g-color-gray-dark-v1">Tags</h2>
+          <hr class="g-brd-gray-light-v4 g-my-15">
+          <ul id="aggregated_tags" class="list-inline g-mb-40">
+            <%= for tag <- aggregated_tags(@shows) do %>
+            <li class="list-inline-item my-2">
+              <a data-selected="false" class="u-tags-v1 g-color-main g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15 tagger" href="#"><%= tag %></a>
+            </li>
+            <% end %>
+          </ul>
+          <!-- End Tags -->
+        </div>

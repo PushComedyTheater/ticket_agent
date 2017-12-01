@@ -21,22 +21,11 @@
           <!-- Navigation -->
           <div class="collapse navbar-collapse align-items-center flex-sm-row g-pt-10 g-pt-5--lg g-mr-40--lg" id="navBar">
             <ul class="navbar-nav text-uppercase g-pos-rel g-font-weight-600 ml-auto">
-              <!-- Intro -->
-              <li class="nav-item active g-mx-10--lg g-mx-15--xl">
-                <%= link "home", to: root_path(@conn, :index), id: "nav-link--home", class: "nav-link g-py-7 g-px-0" %>
-              </li>
-              <!-- End Intro -->
-
+              <%= render "home.html", assigns %>
               <%= render "shows.html", assigns %>
-
               <%= render "classes.html", assigns %>
-
-              <li class="nav-item g-mx-10--lg g-mx-15--xl">
-                <%= link "Corporate Workshops", to: workshop_path(@conn, :index), id: "nav-link--workshop", class: "nav-link g-py-7 g-px-0" %>
-              </li>
-
+              <%= render "workshops.html", assigns %>
               <%= render "camps.html", assigns %>
-
               <%= render "about.html", assigns %>
 
               <%= if Coherence.logged_in?(@conn) do %>

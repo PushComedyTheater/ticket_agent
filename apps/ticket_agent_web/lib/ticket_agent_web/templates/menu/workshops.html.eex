@@ -1,0 +1,3 @@
+<li class="nav-item g-mx-10--lg g-mx-15--xl">
+  <%= link "Corporate Workshops", to: workshop_path(@conn, :index), id: "nav-link--workshop", class: menu_class(@conn.path_info, "/workshops") %>
+</li>
