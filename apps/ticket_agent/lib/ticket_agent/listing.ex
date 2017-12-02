@@ -134,7 +134,7 @@ defmodule TicketAgent.Listing do
         (max / 100)
         |> :erlang.float_to_binary(decimals: 2)
         
-      "#{lower} - #{upper}"
+      [lower, upper]
     end
   end
 

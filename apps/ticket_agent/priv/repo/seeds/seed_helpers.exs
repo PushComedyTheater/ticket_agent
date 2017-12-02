@@ -41,7 +41,8 @@ defmodule SeedHelpers do
           email: "patrick@pushcomedytheater.com",
           password: "supersecret",
           password_confirmation: "supersecret",
-          account_id: account.id
+          account_id: account.id,
+          user_role: "admin"
         }
 
         %User{}

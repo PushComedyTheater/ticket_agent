@@ -1,7 +1,7 @@
 <section class="g-bg-gray-light-v5">
   <div class="container g-py-100">
     <div class="row justify-content-center">
-      <div class="col-sm-8 col-lg-5">
+      <div class="col-lg-8">
         <div class="u-shadow-v21 g-bg-white rounded g-py-40 g-px-30">
           <header class="text-center mb-4">
             <h2 class="h2 g-color-black g-font-weight-600">Register</h2>
@@ -12,7 +12,7 @@
             </div>
           <% end %>
           <%= form_for @changeset, registration_path(@conn, :create), [as: :registration, class: "g-py-15"], fn f  -> %>
-            <div class="form-group">
+            <div class="mb-4">
             	<label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13"><%= dgettext("coherence", "Name") %>:</label>
               <%= text_input f, :name, class: "form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15", required: "", placeholder: "John Doe" %>
               <%= error_tag f, :name %>
@@ -52,21 +52,6 @@
               </div>
             </div>
           <% end %>
-        </div>
-      </div>
-      <div class="col-sm-8 col-lg-5">
-        <div class="u-shadow-v21 g-bg-white rounded g-py-40 g-px-30">
-          <header class="text-center mb-4">
-            <h2 class="h2 g-color-black g-font-weight-600">Checkout As Guest</h2>
-          </header>
-          <div class="mb-4">
-            While we strongly recommend that you create an account, you are welcome to checkout as a guest.
-          </div>
-          <div class="mb-4">
-            <a href="<%= @conn.params["redirect_url"] %>&guest_checkout=true" class="btn btn-md btn-block u-btn-primary rounded g-py-13">
-              Checkout As Guest
-            </a>
-          </div>
         </div>
       </div>
     </div>

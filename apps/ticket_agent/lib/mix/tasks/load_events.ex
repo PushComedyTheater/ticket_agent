@@ -10,9 +10,8 @@ defmodule Mix.Tasks.LoadEvents do
 
     non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
                 |> String.split("\n")
-
+    parse_current(non_words)
     parse_history_files(non_words)
-    # parse_current(non_words)
   end
 
   def parse_current(now_words) do

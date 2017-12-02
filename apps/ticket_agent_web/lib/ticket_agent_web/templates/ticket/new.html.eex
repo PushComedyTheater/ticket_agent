@@ -1,0 +1,126 @@
+<br />
+<br />
+<br />
+<br />
+<!-- News Block -->
+<br />
+<div class="container g-pt-100 g-pb-70">
+  <div align="center">
+    <img src="<%= TicketAgentWeb.EventView.social_image(@show) %>" class="rounded-circle" style="width: 170px; margin-top: -100px; align: center;">
+  </div>
+  <div align="center">
+    <h3 class="g-mb-10"><strong>Purchasing Tickets for <%= @conn.assigns.page_title_modal %></strong></h3>
+  </div>
+  <br />
+  <ul class="nav text-center nav-justified u-nav-v7-1">
+    <li class="nav-item">
+      <a class="nav-link" id="tasbb1" data-toggle="tab" href="#" role="tab">
+        <i class="icon-hotel-restaurant-003 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+        Ticket Quantity
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="tabb2" data-toggle="tab" href="#nav-1-1-default-hor-left--3" role="tab">
+      <i class="icon-hotel-restaurant-182 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+        Ticket Information
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="tabb3" data-toggle="tab" href="#nav-1-1-default-hor-left--4" role="tab">
+        <i class="icon-hotel-restaurant-064 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+        Payment Information
+      </a>
+    </li>
+  </ul>
+  <hr />
+  <div class="row">
+    <div class="col-md-12 g-mb-30">
+      <!-- Products Block -->
+      <div class="g-overflow-x-scroll g-overflow-x-visible--lg">
+        <table class="text-center w-100">
+          <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-black text-uppercase">
+            <tr>
+              <th class="g-font-weight-400 text-left g-pb-20">Product</th>
+              <th class="g-font-weight-400 g-width-50 g-pb-20">Qty</th>
+              <th class="g-font-weight-400 g-width-130 g-pb-20">Total</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- Item-->
+            <tr class="g-brd-bottom g-brd-gray-light-v3">
+              <td class="text-left g-py-25 g-px-10" style="padding-right: 5px;">
+                <div class="d-inline-block align-middle">
+                  <h4 class="h6 g-color-black"><%= @show.title %></h4>
+                  <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_6 mb-0">
+                    <li>Date: <strong>Sat, Dec 2, 2017</strong></li>
+                    <li>Time:  8:00PM - 9:30PM</li>
+                    <li>Price: $ 5.00</li>
+                  </ul>
+                </div>
+              </td>
+              <td>
+                <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+                  <input id="js_result" class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
+
+                  <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
+                    <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
+                    <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+                  </div>
+                </div>
+              </td>
+              <td class="text-right g-color-black">
+                <span class="g-color-gray-dark-v2 g-font-size-13 mr-4" id="invoice_cost">$ 5.00</span>
+                <span class="g-color-gray-dark-v4 g-color-black--hover g-cursor-pointer">
+                  <i></i>
+                </span>
+              </td>
+            </tr>
+            <!-- End Item-->
+          </tbody>
+        </table>
+      </div>
+      <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none;">
+        <strong>Uh oh!</strong> You must choose more than zero tickets.
+      </div>      
+      <button class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
+        <i class="fa fa-check-circle g-mr-5"></i>
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var ticket_cost = 5;
+  $(document).on('ready', function () {
+    $("#js_result").bind("change", function() {
+      var result = $('#js_result'),
+          resultVal = parseInt(result.val()),
+          total = (resultVal * ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+
+          $("#invoice_cost").html("$" + total);
+
+          if (resultVal > 0) {
+            $("#ticket_count_error").hide();
+            $("#invoice_total").show();
+          } else {
+            $("#ticket_count_error").show();
+            $("#invoice_total").hide();
+          }
+    });
+    $("#tab1_continue, #tabb2").on("click", function(e) {
+      var result = $('#js_result'),
+          resultVal = parseInt(result.val());
+      if (resultVal > 0) {
+        window.load_attendee_forms(resultVal);
+        $("#ticket_count_error").hide();
+        $('.nav a[href="#nav-1-1-default-hor-left--2"]').tab('show')
+      } else {
+        $("#ticket_count_error").show();
+        e.preventDefault();
+        return false;
+      }
+    })
+  });
+</script>
