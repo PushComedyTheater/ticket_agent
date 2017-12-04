@@ -148,10 +148,9 @@ defmodule SeedHelpers do
     end  
   end
 
-  def create_image(%{type: type, listing_id: listing_id} = listing_image) do
-    Logger.info "Seeds->create_image:   Checking if image with type #{type} and listing_id #{listing_id} exists"
+  def create_image(%{listing_id: listing_id} = listing_image) do
+    Logger.info "Seeds->create_image:   Checking if image with listing_id #{listing_id} exists"
     query = from l in ListingImage,
-            where: l.type == ^type,
             where: l.listing_id == ^listing_id,
             select: l
 
@@ -161,7 +160,7 @@ defmodule SeedHelpers do
         struct(ListingImage, listing_image)
         |> TicketAgent.Repo.insert!        
       listing ->
-        Logger.info "Seeds->create_image:   Image with type #{type} and listing_id #{listing_id} exists"
+        Logger.info "Seeds->create_image:   Image with type listing_id #{listing_id} exists"
         listing
     end  
   end

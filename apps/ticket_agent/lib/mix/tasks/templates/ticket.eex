@@ -2,7 +2,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for <%= String.replace(@title, "\"", "'") %>",
     status: "available",
     description: "Ticket for <%= String.replace(@title, "\"", "'") %>",

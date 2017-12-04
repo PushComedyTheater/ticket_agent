@@ -18,6 +18,8 @@ defmodule TicketAgent.Schema do
         Listing,
         ListingImage,
         ListingTag,
+        Order,
+        Random,
         Repo,
         Teacher,
         Ticket,

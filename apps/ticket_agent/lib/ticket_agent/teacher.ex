@@ -16,7 +16,7 @@ defmodule TicketAgent.Teacher do
 
   @doc false
   def changeset(%Teacher{} = class, attrs) do
-    slug = generate_slug(attrs)
+    slug = generate_teacher_slug(attrs)
 
     attrs = Atomizer.atomize(attrs)
 
@@ -30,7 +30,7 @@ defmodule TicketAgent.Teacher do
     |> validate_required([:name, :email])
   end
 
-  def generate_slug(attrs) do
+  def generate_teacher_slug(attrs) do
     Map.get_lazy(attrs, "name", fn() -> Map.get(attrs, :name, "") end)
     |> String.split(" ")
     |> hd

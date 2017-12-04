@@ -1,4 +1,5 @@
 defmodule TicketAgentWeb.RootView do
+  alias TicketAgent.Random
   use TicketAgentWeb, :view
 
   @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)

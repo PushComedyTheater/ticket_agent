@@ -1,4 +1,5 @@
 require Logger
+alias TicketAgent.Random
 
 Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 
@@ -77,18 +78,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bc96f7b9-01c2-4ac8-9566-5bfdfa7f658d",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bc96f7b9-01c2-4ac8-9566-5bfdfa7f658d",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bc96f7b9-01c2-4ac8-9566-5bfdfa7f658d"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -128,7 +121,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Teacher's Pet",
     status: "available",
     description: "Ticket for Teacher's Pet",
@@ -212,18 +205,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9bd8303c-a46b-4654-8fc9-c7eb6b68a587",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9bd8303c-a46b-4654-8fc9-c7eb6b68a587",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9bd8303c-a46b-4654-8fc9-c7eb6b68a587"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -255,7 +240,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Second Saturday Stand-Up",
     status: "available",
     description: "Ticket for Second Saturday Stand-Up",
@@ -367,18 +352,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/2818bca8-8162-47b8-999f-625527ad42d0",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/2818bca8-8162-47b8-999f-625527ad42d0",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/2818bca8-8162-47b8-999f-625527ad42d0"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -418,7 +395,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Girl-Prov: The Girls' Night of Improv",
     status: "available",
     description: "Ticket for Girl-Prov: The Girls' Night of Improv",
@@ -522,18 +499,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bdd1ac16-4eaa-4a83-87eb-eb7d4aadbd35",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bdd1ac16-4eaa-4a83-87eb-eb7d4aadbd35",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bdd1ac16-4eaa-4a83-87eb-eb7d4aadbd35"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -565,7 +534,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for The Improv Riot: The Short Form Improv Show",
     status: "available",
     description: "Ticket for The Improv Riot: The Short Form Improv Show",
@@ -653,18 +622,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/e736e2a2-4950-4b7c-b606-f0ce63e26dff",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/e736e2a2-4950-4b7c-b606-f0ce63e26dff",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/e736e2a2-4950-4b7c-b606-f0ce63e26dff"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -696,7 +657,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Who Dunnit? ...The Improvised Murder Mystery (January)",
     status: "available",
     description: "Ticket for Who Dunnit? ...The Improvised Murder Mystery (January)",
@@ -788,18 +749,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/27884f84-c5fe-414b-ad7c-2ed7b10519e8",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/27884f84-c5fe-414b-ad7c-2ed7b10519e8",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/27884f84-c5fe-414b-ad7c-2ed7b10519e8"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -839,7 +792,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Musical Improv with Double Treble",
     status: "available",
     description: "Ticket for Musical Improv with Double Treble",
@@ -935,18 +888,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6d12e202-9751-4905-b307-1f75327c98bf",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6d12e202-9751-4905-b307-1f75327c98bf",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6d12e202-9751-4905-b307-1f75327c98bf"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -970,7 +915,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Monocle: Style Glamour Sophistication Comedy",
     status: "available",
     description: "Ticket for Monocle: Style Glamour Sophistication Comedy",
@@ -1050,18 +995,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -1093,7 +1030,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
     status: "available",
     description: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
@@ -1209,18 +1146,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/de52f7d0-daa6-4b61-b647-322e1c8b9958",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/de52f7d0-daa6-4b61-b647-322e1c8b9958",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/de52f7d0-daa6-4b61-b647-322e1c8b9958"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -1244,7 +1173,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Good Talk: The Brad McMurran Show",
     status: "available",
     description: "Ticket for Good Talk: The Brad McMurran Show",
@@ -1400,18 +1329,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/818fdbf4-f518-4ddb-8ef8-965046822e9d",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/818fdbf4-f518-4ddb-8ef8-965046822e9d",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/818fdbf4-f518-4ddb-8ef8-965046822e9d"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -1451,7 +1372,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for The Pushie Awards Show",
     status: "available",
     description: "Ticket for The Pushie Awards Show",
@@ -1567,18 +1488,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b5bd4b74-ec38-471b-b92f-d2bd16e1eccd",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b5bd4b74-ec38-471b-b92f-d2bd16e1eccd",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b5bd4b74-ec38-471b-b92f-d2bd16e1eccd"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -1610,7 +1523,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for A Very Pushers Christmas",
     status: "available",
     description: "Ticket for A Very Pushers Christmas",
@@ -1702,18 +1615,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b7859a45-0317-4f90-8f27-146deca5bd64",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b7859a45-0317-4f90-8f27-146deca5bd64",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b7859a45-0317-4f90-8f27-146deca5bd64"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -1737,7 +1642,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for TOO FAR: The Dirty, Inappropriate Comedy Show",
     status: "available",
     description: "Ticket for TOO FAR: The Dirty, Inappropriate Comedy Show",
@@ -1849,18 +1754,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bbdfb86d-39d8-465c-8f0e-9b5d33a8b4ec",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bbdfb86d-39d8-465c-8f0e-9b5d33a8b4ec",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bbdfb86d-39d8-465c-8f0e-9b5d33a8b4ec"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -1908,7 +1805,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Stories With Santa",
     status: "available",
     description: "Ticket for Stories With Santa",
@@ -2016,18 +1913,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/83a0c1e9-fd2e-4b82-9e5b-a1edaf6416c9",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/83a0c1e9-fd2e-4b82-9e5b-a1edaf6416c9",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/83a0c1e9-fd2e-4b82-9e5b-a1edaf6416c9"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -2067,7 +1956,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
     status: "available",
     description: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
@@ -2155,18 +2044,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/e736e2a2-4950-4b7c-b606-f0ce63e26dff",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/e736e2a2-4950-4b7c-b606-f0ce63e26dff",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/e736e2a2-4950-4b7c-b606-f0ce63e26dff"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -2198,7 +2079,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Who Dunnit? ...The Improvised Murder Mystery",
     status: "available",
     description: "Ticket for Who Dunnit? ...The Improvised Murder Mystery",
@@ -2278,18 +2159,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/10788d93-9d86-4d73-be89-a775d43e1b1e",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/10788d93-9d86-4d73-be89-a775d43e1b1e",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/10788d93-9d86-4d73-be89-a775d43e1b1e"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -2337,7 +2210,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for The Upright Senior Citizens Brigade: Holiday Extravaganza!",
     status: "available",
     description: "Ticket for The Upright Senior Citizens Brigade: Holiday Extravaganza!",
@@ -2453,18 +2326,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -2512,7 +2377,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Date Night",
     status: "available",
     description: "Ticket for Date Night",
@@ -2604,18 +2469,10 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing social photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4",
-  type: "social"
-})
-Logger.info "=========== Inserted social photo for #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4",
-  type: "cover"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -2647,7 +2504,7 @@ Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
-    user_id: nil,
+    slug: Random.generate_slug(),
     name: "Ticket for Harold Night",
     status: "available",
     description: "Ticket for Harold Night",

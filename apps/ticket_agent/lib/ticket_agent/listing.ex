@@ -33,20 +33,13 @@ defmodule TicketAgent.Listing do
     |> unique_constraint(:slug)
   end
 
-  def generate_slug() do
-    # credo:disable-for-lines:3
-    :crypto.strong_rand_bytes(6)
-    |> Base.encode16(case: :lower)
-  end
-
   def from_class(current_user, %Class{} = class) do
-    cover_image = %ListingImage{url: class.photo_url, type: "cover"}
-    social_image = %ListingImage{url: class.photo_url, type: "social"}
+    cover_image = %ListingImage{url: class.photo_url}
 
-    %Listing{images: [cover_image, social_image]}
+    %Listing{images: [cover_image]}
     |> changeset(%{
       type: "class",
-      slug: generate_slug(),
+      slug: Random.generate_slug(),
       account_id: current_user.account_id,
       user_id: current_user.id,
       title: class.title,

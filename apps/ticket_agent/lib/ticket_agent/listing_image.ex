@@ -1,14 +1,13 @@
 defmodule TicketAgent.ListingImage do
   use TicketAgent.Schema
 
-  @required ~w(url type listing_id)a
+  @required ~w(url listing_id)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
   schema "listing_images" do
     belongs_to :listing, Listing, references: :id, foreign_key: :listing_id, type: Ecto.UUID
     field :url, :string
-    field :type, :string
     timestamps()
   end
 

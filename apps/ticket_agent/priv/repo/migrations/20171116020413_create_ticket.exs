@@ -6,9 +6,10 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
 
     create table(:tickets, primary_key: false) do
       add :id, :binary_id, primary_key: true
+      add :slug, :text, null: false
 
       add :listing_id, references(:listings, on_delete: :delete_all, type: :binary_id), null: false
-      add :user_id, references(:users, on_delete: :nothing, type: :binary_id), null: true
+      add :order_id, references(:orders, on_delete: :nothing, type: :binary_id), null: true
 
       add :name, :text, null: false
       add :status, :ticket_status, default: "available"
@@ -22,5 +23,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
 
       timestamps()
     end
+
+    create unique_index(:tickets, [:slug])
   end
 end

@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.LoadEvents do
-  alias TicketAgent.{Account, Event, EventTag, Listing, Mappings, Repo, User}
+  alias TicketAgent.{Account, Event, EventTag, Listing, Mappings, Random, Repo, User}
   import Ecto.Query
 
   require Logger
@@ -204,7 +204,7 @@ defmodule Mix.Tasks.LoadEvents do
     tags = load_tags(price, title, description, type)
     keywords = get_keywords(description, non_words)
 
-    {social_photo, cover_photo} = process_images(body["images"], listing["event_photo_id"])
+    {_, cover_photo} = process_images(body["images"], listing["event_photo_id"])
 
     item = EEx.eval_file(
       "./apps/ticket_agent/lib/mix/tasks/templates/event.eex",
@@ -217,7 +217,6 @@ defmodule Mix.Tasks.LoadEvents do
         start_time: event["start_time"],
         end_time: event["end_time"],
         cover_photo: cover_photo,
-        social_photo: social_photo,
         price: price,
         created_at: listing["created_at"],
         tags: Enum.uniq(tags ++ keywords)
@@ -408,6 +407,7 @@ defmodule Mix.Tasks.LoadEvents do
   defp load_preface(type) do
     preface = """
 require Logger
+alias TicketAgent.Random
 
 Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 

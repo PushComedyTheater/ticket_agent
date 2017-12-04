@@ -13,6 +13,6 @@ defmodule TicketAgent.Repo.Migrations.CreateTeacher do
       timestamps()
     end
 
-    create index(:teachers, [:slug])
+    create unique_index(:teachers, [:slug])
   end
 end

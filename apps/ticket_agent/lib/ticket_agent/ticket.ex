@@ -7,7 +7,7 @@ defmodule TicketAgent.Ticket do
 
   schema "tickets" do
     belongs_to :listing, Listing, references: :id, foreign_key: :listing_id, type: Ecto.UUID
-    belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
+    field :slug, :string
     field :name, :string
     field :status, :string
     field :description, :string

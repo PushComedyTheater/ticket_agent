@@ -1,7 +1,5 @@
 defmodule TicketAgentWeb.Admin.ListingController do
-  alias TicketAgent.Repo
-  alias TicketAgent.Class
-  alias TicketAgent.Listing
+  alias TicketAgent.{Class, Listing, Random, Repo}
   import Ecto.Query
   use TicketAgentWeb, :controller
 
@@ -27,7 +25,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
       %Listing{
         start_at: NaiveDateTime.utc_now(),
         end_at: NaiveDateTime.utc_now(),
-        slug: Listing.generate_slug()})
+        slug: Random.generate_slug()})
 
     render conn, "new.html", changeset: changeset
   end
