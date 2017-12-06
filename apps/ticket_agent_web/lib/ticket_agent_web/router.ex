@@ -57,11 +57,16 @@ defmodule TicketAgentWeb.Router do
     resources "/camps", CampController, only: [:index, :show]
     resources "/events", EventController, only: [:index, :show], param: "titled_slug"
     resources "/tickets", TicketController
+    resources "/orders", OrderController
+    
+    get "/ticket_auth", TicketAuthController, :new, as: :ticket_auth
+    get "/ticket_information/new", TicketInformationController, :new, as: :ticket_information
 
     get "/workshops", WorkshopController, :index, as: :workshop
     get "/classes", ClassController, :index, as: :classes
     get "/classes/:type", ClassController, :class, as: :class_type
     get "/class/:id", ClassController, :show, as: :class
+    
     get "/privacy", RootController, :privacy, as: :privacy
     get "/terms", RootController, :terms, as: :terms
     get "/", RootController, :index

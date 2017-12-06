@@ -1,0 +1,229 @@
+<%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+<section class="g-bg-gray-light-v5">
+  <div class="container g-py-100 u-shadow-v21 g-bg-white rounded g-py-40 g-px-30">
+    <div align="center">
+      <img src="<%= @conn.assigns.page_image %>" class="rounded-circle" style="width: 170px; margin-top: -100px; align: center;">
+    </div>
+    <div align="center">
+      <h3 class="g-mb-10"><strong>Purchasing <%= @conn.assigns.ticket_count %> Ticket(s) for <%= @show.title %></strong></h3>
+    </div>
+    <br />
+    <ul class="nav text-center nav-justified u-nav-v7-1">
+      <li class="nav-item">
+        <a class="nav-link" id="tasbb1" data-toggle="tab" href="#" role="tab">
+          <i class="icon-hotel-restaurant-003 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+          Ticket Quantity
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="tabb2" data-toggle="tab" href="#nav-1-1-default-hor-left--3" role="tab">
+        <i class="icon-hotel-restaurant-182 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+          Ticket Information
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" id="tabb3" data-toggle="tab" href="#nav-1-1-default-hor-left--4" role="tab">
+          <i class="icon-hotel-restaurant-064 d-block g-font-size-25 u-tab-line-icon-pro"></i>
+          Payment Information
+        </a>
+      </li>
+    </ul>
+    <hr />
+<div id="accordion-03" class="u-accordion" role="tablist" aria-multiselectable="true">
+  <!-- Card -->
+  <div class="card rounded-0 g-mb-5">
+    <div id="accordion-03-heading-01" class="u-accordion__header" role="tab">
+      <h5 class="mb-0">
+        <a class="d-block u-link-v5 g-color-main g-color-primary--hover g-font-size-16 " href="#accordion-03-body-01" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="true" aria-controls="accordion-03-body-01">Marketing
+        </a>
+      </h5>
+    </div>
+    <div id="accordion-03-body-01" class="collapse show" role="tabpanel" aria-labelledby="accordion-03-heading-01">
+      <div class="u-accordion__body g-brd-top g-brd-gray-light-v4 g-color-gray-dark-v5">
+        This is where we sit down, grab a cup of coffee and dial in the details. Understanding the task at hand and ironing out the wrinkles is key. Now that we've aligned the details, it's time to get things mapped out and organized. This part is really crucial
+        in keeping the project in line to completion.
+      </div>
+    </div>
+  </div>
+  <!-- End Card -->
+
+  <!-- Card -->
+  <div class="card rounded-0 g-mb-5">
+    <div id="accordion-03-heading-02" class="u-accordion__header" role="tab">
+      <h5 class="mb-0">
+        <a class="collapsed d-block u-link-v5 g-color-main g-color-primary--hover g-font-size-16 " href="#accordion-03-body-02" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-02">Strategy
+        </a>
+      </h5>
+    </div>
+    <div id="accordion-03-body-02" class="collapse" role="tabpanel" aria-labelledby="accordion-03-heading-02">
+      <div class="u-accordion__body g-brd-top g-brd-gray-light-v4 g-color-gray-dark-v5">
+        This is where we sit down, grab a cup of coffee and dial in the details. Understanding the task at hand and ironing out the wrinkles is key. Now that we've aligned the details, it's time to get things mapped out and organized. This part is really crucial
+        in keeping the project in line to completion.
+      </div>
+    </div>
+  </div>
+  <!-- End Card -->
+
+  <!-- Card -->
+  <div class="card rounded-0 g-mb-5">
+    <div id="accordion-03-heading-03" class="u-accordion__header" role="tab">
+      <h5 class="mb-0">
+        <a class="collapsed d-block u-link-v5 g-color-main g-color-primary--hover g-font-size-16 " href="#accordion-03-body-03" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-03">Design
+        </a>
+      </h5>
+    </div>
+    <div id="accordion-03-body-03" class="collapse" role="tabpanel" aria-labelledby="accordion-03-heading-03">
+      <div class="u-accordion__body g-brd-top g-brd-gray-light-v4 g-color-gray-dark-v5">
+        This is where we sit down, grab a cup of coffee and dial in the details. Understanding the task at hand and ironing out the wrinkles is key. Now that we've aligned the details, it's time to get things mapped out and organized. This part is really crucial
+        in keeping the project in line to completion.
+      </div>
+    </div>
+  </div>
+  <!-- End Card -->
+</div>
+
+
+    <div class="text-center g-mb-50">
+      <h2 class="h4">Your Order Details</span>
+      </h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover u-table--v2 text-center text-uppercase g-col-border-side-0">
+        <thead>
+          <tr class="g-bg-primary g-color-white g-col-border-top-0">
+            <th class="g-brd-white-opacity-0_1">Ticket Description</th>
+            <th class="g-brd-white-opacity-0_1">Guest Name</th>
+            <th class="g-brd-white-opacity-0_1">Ticket Cost</th>
+          </tr>
+        </thead>
+
+        <tbody class="g-font-size-12 g-color-black-opacity-0_6 g-font-weight-600">
+          <%= for ticket <- @conn.assigns.tickets do %>
+            <tr>
+              <td class="g-color-black-opacity-0_8" scope="row">Ticket For  to <%= raw HtmlSanitizeEx.basic_html(@show.title) %></td>
+              <td><%= ticket["name"] %></td>
+              <td>$<%= :erlang.float_to_binary(@conn.assigns.ticket_cost / 100, decimals: 2) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td>&nbsp;</td>
+            <td></td>
+            <td></td>
+          </tr>
+
+          <tr>
+            <td></td>
+            <td class="pull-right" scope="row">Total: </td>
+            <td>$<%= @conn.assigns.total_cost_string %></td>
+          </tr>
+        </tbody>        
+      </table>
+    </div>
+    <hr />
+    <form action="/charge" method="post" id="payment-form" class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
+      <div class="form-group row g-mb-25">
+        <div id="payment-request-button" class="col-sm-12">
+        </div>
+      </div>
+      <div class="d-flex justify-content-center text-center g-mb-30">
+        <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+        <span class="align-self-center g-color-gray-dark-v5 mx-4">OR ENTER CREDIT CARD DETAILS</span>
+        <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+      </div>        
+      <div class="form-group row g-mb-25">
+        <label for="card-element" class="col-sm-2 col-form-label">Credit Card Number</label>
+        <div id="card-number" class="col-lg-10">
+        </div>
+      </div>  
+      <div class="form-group row g-mb-25">
+        <label for="card-element" class="col-sm-2 col-form-label">Expiration Date</label>
+        <div id="card-expiry" class="col-lg-10">
+        </div>
+      </div> 
+      <div class="form-group row g-mb-25">
+        <label for="card-element" class="col-sm-2 col-form-label">CVV Code</label>
+        <div id="card-cvc" class="col-lg-10">
+        </div>
+      </div>      
+      <div class="form-group row align-self-center" align="center">
+        <div class="ml-sm-auto col-lg-12 align-self-center">
+          <button type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= @conn.assigns.total_cost_string %></button>
+        </div>
+      </div>      
+    </form>
+  </div>
+</section>
+<script type="text/javascript">
+  $(document).on('ready', function () {
+    // Create a Stripe client
+    var stripe = Stripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+
+    var paymentRequest = stripe.paymentRequest({
+      country: 'US',
+      currency: 'usd',
+      total: {
+        label: "<%= @conn.assigns.ticket_count %> Ticket(s) to <%= raw HtmlSanitizeEx.basic_html(@show.title) %>",
+        amount: <%= @conn.assigns.total_cost * 100 %>,
+      },
+      displayItems: [
+        <%= for ticket <- @conn.assigns.tickets do %>
+          {
+            label: "Ticket For <%= ticket["name"] %> to <%= raw HtmlSanitizeEx.basic_html(@show.title) %>",
+            amount: <%= @conn.assigns.ticket_cost %>,
+          },
+        <% end %>
+      ],      
+    });
+
+    // Create an instance of Elements
+    var elements = stripe.elements();
+
+    var prButton = elements.create('paymentRequestButton', {
+      paymentRequest: paymentRequest,
+    });
+
+    paymentRequest.canMakePayment().then(function(result) {
+      if (result) {
+        prButton.mount('#payment-request-button');
+      } else {
+        document.getElementById('payment-request-button').style.display = 'none';
+      }
+    });
+
+    var cardNumber = elements.create('cardNumber', {});
+    cardNumber.mount('#card-number');
+
+    cardNumber.on("change", function(event) {
+      console.log("DUDE");
+      if (event.error) {
+        console.log(event.error);
+      }
+    });
+
+    var cardExpiry = elements.create('cardExpiry', {});
+    cardExpiry.mount('#card-expiry');
+
+    cardExpiry.on("change", function(event) {
+      console.log("DUDE");
+      if (event.error) {
+        console.log(event.error);
+      }
+    });
+
+    var cardCvc = elements.create('cardCvc', {});
+    cardCvc.mount('#card-cvc');
+
+    cardCvc.on("change", function(event) {
+      console.log("DUDE");
+      if (event.error) {
+        console.log(event.error);
+      }
+    });
+    
+
+    $("#payment-form").on("submit", function(e) {
+      e.preventDefault();
+      console.log("CLICKED");
+    })
+  });
+</script>

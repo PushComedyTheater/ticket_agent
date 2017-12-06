@@ -14,7 +14,7 @@
      *
      * @var Object _baseConfig
      */
-    _baseConfig: {},
+    _baseConfig: {maximum: 100},
 
     /**
      *
@@ -33,7 +33,6 @@
      */
 
     init: function (selector, config) {
-
       this.collection = selector && $(selector).length ? $(selector) : $();
       if (!$(selector).length) return;
 
@@ -41,14 +40,14 @@
           $.extend({}, this._baseConfig, config) : this._baseConfig;
 
       this.config.itemSelector = selector;
-
-      this.initCountQty();
+      
+      this.initCountQty(this.config);
 
       return this.pageCollection;
 
     },
 
-    initCountQty: function () {
+    initCountQty: function (config) {
       //Variables
       var $self = this,
           collection = $self.pageCollection;
@@ -65,8 +64,9 @@
         $plus.on('click', function (e) {
           e.preventDefault();
 
-          resultVal += 1;
-
+          if (resultVal < config.maximum) {
+            resultVal += 1;
+          }
           $result.val(resultVal).trigger('change');
         });
 

@@ -4,7 +4,7 @@
   }
 </style>
 
-<div id="photoParent" style="background: url('<%= cover_image(@show) %>') no-repeat; background-size: 100%; min-height: 450px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
+<div id="photoParent" style="background: url('<%= Listing.listing_image(@show) %>') no-repeat; background-size: 100%; min-height: 450px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
 </div>
 <section class="g-bg-blue-opacity-0_7 g-py-50 g-px-30 u-shadow-v1-5" style="margin-bottom: 5px;">
   <div class="container" style="border: 1px">

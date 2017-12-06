@@ -1,104 +1,104 @@
-<br />
-<br />
-<br />
-<br />
-<!-- News Block -->
-<br />
-<div class="container g-pt-100 g-pb-70">
-  <div align="center">
-    <img src="<%= TicketAgentWeb.EventView.social_image(@show) %>" class="rounded-circle" style="width: 170px; margin-top: -100px; align: center;">
+<%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+<section class="g-bg-white">
+  <div class="container">
+    <form class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
+      <div class="form-inline">
+        <div class="form-group col-sm-4 g-pt-10">
+          <p class="form-control-static">Number of tickets: </p>
+        </div>
+        <div class="form-group col-sm-4">
+          <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+            <input id="js_result" class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
+            <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
+              <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
+              <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-sm-4">
+          Total:&nbsp;&nbsp;<strong id="invoice_cost">$ <%= event_cost(@show) %></strong>
+        </div>
+      </div>       
+    </form>
   </div>
-  <div align="center">
-    <h3 class="g-mb-10"><strong>Purchasing Tickets for <%= @conn.assigns.page_title_modal %></strong></h3>
-  </div>
+
+  <%= if Coherence.logged_in?(@conn) do %>
+  <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
+    <i class="fa fa-check-circle g-mr-5"></i>
+    Continue As <%= Coherence.current_user_name(@conn) %>
+  </button>
+  <% else %>
   <br />
-  <ul class="nav text-center nav-justified u-nav-v7-1">
-    <li class="nav-item">
-      <a class="nav-link" id="tasbb1" data-toggle="tab" href="#" role="tab">
-        <i class="icon-hotel-restaurant-003 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-        Ticket Quantity
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tabb2" data-toggle="tab" href="#nav-1-1-default-hor-left--3" role="tab">
-      <i class="icon-hotel-restaurant-182 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-        Ticket Information
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="tabb3" data-toggle="tab" href="#nav-1-1-default-hor-left--4" role="tab">
-        <i class="icon-hotel-restaurant-064 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-        Payment Information
-      </a>
-    </li>
-  </ul>
-  <hr />
-  <div class="row">
-    <div class="col-md-12 g-mb-30">
-      <!-- Products Block -->
-      <div class="g-overflow-x-scroll g-overflow-x-visible--lg">
-        <table class="text-center w-100">
-          <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-black text-uppercase">
-            <tr>
-              <th class="g-font-weight-400 text-left g-pb-20">Product</th>
-              <th class="g-font-weight-400 g-width-50 g-pb-20">Qty</th>
-              <th class="g-font-weight-400 g-width-130 g-pb-20">Total</th>
-              <th></th>
-            </tr>
-          </thead>
 
-          <tbody>
-            <!-- Item-->
-            <tr class="g-brd-bottom g-brd-gray-light-v3">
-              <td class="text-left g-py-25 g-px-10" style="padding-right: 5px;">
-                <div class="d-inline-block align-middle">
-                  <h4 class="h6 g-color-black"><%= @show.title %></h4>
-                  <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_6 mb-0">
-                    <li>Date: <strong>Sat, Dec 2, 2017</strong></li>
-                    <li>Time:  8:00PM - 9:30PM</li>
-                    <li>Price: $ 5.00</li>
-                  </ul>
-                </div>
-              </td>
-              <td>
-                <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-                  <input id="js_result" class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
-
-                  <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
-                    <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
-                    <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
-                  </div>
-                </div>
-              </td>
-              <td class="text-right g-color-black">
-                <span class="g-color-gray-dark-v2 g-font-size-13 mr-4" id="invoice_cost">$ 5.00</span>
-                <span class="g-color-gray-dark-v4 g-color-black--hover g-cursor-pointer">
-                  <i></i>
-                </span>
-              </td>
-            </tr>
-            <!-- End Item-->
-          </tbody>
-        </table>
+  <div class="container">
+    <form class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
+      <div align="center">
+        <h3 class="g-mb-10"><strong>Customer Information</strong></h3>
       </div>
-      <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none;">
-        <strong>Uh oh!</strong> You must choose more than zero tickets.
+      <p class="form-text text-muted">
+        Because you chose to continue as a guest, we will need your name and email address to send you your receipt.
+  </p>
+      <div id="name_group" class="form-group g-mb-20">
+        <label class="g-mb-10">Name: </label>
+        <div class="input-group g-brd-primary--focus">
+          <div class="input-group-addon d-flex align-items-center g-color-gray-light-v1 rounded-0">
+            <i class="icon-user"></i>
+          </div>
+          <input class="form-control form-control-md rounded-0" id="guest_name" name="name" type="text" placeholder="John Doe">
+        </div>
+        <small id="name_required" class="form-control-feedback" style="display: none;">This is a required field.</small>
+      </div>
+      <div id="email_group" class="form-group g-mb-20">
+        <label class="g-mb-10">Email Address: </label>
+        <div class="input-group g-brd-primary--focus">
+          <div class="input-group-addon d-flex align-items-center g-color-gray-light-v1 rounded-0">
+            <i class="icon-envelope-letter"></i>
+          </div>
+          <input class="form-control form-control-md rounded-0" id="guest_email" name="email" type="email" placeholder="you@domain.com">
+        </div>
+        <small id="email_required" class="form-control-feedback" style="display: none;">This is a required field.</small>
       </div>      
-      <button class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
+      <button id="continue_as_guest" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
         <i class="fa fa-check-circle g-mr-5"></i>
-        Continue
+        Continue as Guest
       </button>
-    </div>
-  </div>
-</div>
+          
+    </form>
+  </div>  
+  <% end %>
+</section>
+
 <script type="text/javascript">
-  var ticket_cost = 5;
+  window.ticket_cost = <%= event_cost(@show) %>;
+  window.show_id = "<%= @show.slug %>";
+  
+  window.redirect_it = function(ticket_count, name, email) {
+    var details = {
+      show_id: window.show_id,
+      buyer_name: name,
+      buyer_email: email,
+      ticket_count: ticket_count,
+      guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
+      tickets: []
+    }
+    var encodedData = window.btoa(JSON.stringify(details));
+    Cookies.set("ticket_data", encodedData);
+    var redirect_url = "/ticket_information/new?show_id=" + show_id;
+    window.location.href = redirect_url;
+  }
+
   $(document).on('ready', function () {
+    $.HSCore.components.HSCountQty.init('.js-quantity', {maximum: 20});
     $("#js_result").bind("change", function() {
       var result = $('#js_result'),
-          resultVal = parseInt(result.val()),
-          total = (resultVal * ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+          resultVal = parseInt(result.val());
 
+          if (resultVal >= 20) {
+            $('#js_result').val("20");
+            resultVal = 20;
+          }
+
+          var total = (resultVal * window.ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
           $("#invoice_cost").html("$" + total);
 
           if (resultVal > 0) {
@@ -109,18 +109,55 @@
             $("#invoice_total").hide();
           }
     });
-    $("#tab1_continue, #tabb2").on("click", function(e) {
+    $("#continue").on("click", function(e) {
       var result = $('#js_result'),
           resultVal = parseInt(result.val());
       if (resultVal > 0) {
-        window.load_attendee_forms(resultVal);
         $("#ticket_count_error").hide();
-        $('.nav a[href="#nav-1-1-default-hor-left--2"]').tab('show')
+        window.redirect_it(resultVal, "", "");
       } else {
         $("#ticket_count_error").show();
         e.preventDefault();
         return false;
       }
     })
+    $("#continue_as_guest").on("click", function(e) {
+      var result = $('#js_result'),
+          resultVal = parseInt(result.val());
+      if (resultVal > 0) {
+        $("#ticket_count_error").hide();
+        var name = $("#guest_name").val().trim();
+        var email = $("#guest_email").val().trim();
+        var email_valid = $("#guest_email")[0].checkValidity();
+
+        if (name.length <= 0) {
+          $("#name_group").addClass("u-has-error-v1");
+          $("#name_required").show();
+          return false;
+        } else {
+          $("#name_group").removeClass("u-has-error-v1");
+          $("#name_required").hide();          
+        }
+
+        if ((email.length <= 0) || (!email_valid)) {
+          if (!email_valid) {
+            $("#email_required").html("Email must be a valid email address.");
+          } else {
+            $("#email_required").html("This is a required field.");
+          }
+          $("#email_group").addClass("u-has-error-v1");
+          $("#email_required").show();
+          return false;          
+        } else {
+          $("#email_group").removeClass("u-has-error-v1");
+          $("#email_required").hide();
+        }
+        window.redirect_it(resultVal, name, email);
+      } else {
+        $("#ticket_count_error").show();
+        e.preventDefault();
+        return false;
+      }
+    })    
   });
 </script>

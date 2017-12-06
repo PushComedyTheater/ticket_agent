@@ -1,20 +1,11 @@
-defmodule TicketAgentWeb.TicketController do
+defmodule TicketAgentWeb.TicketInformationController do
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Event, Listing, Repo}
+  alias TicketAgent.Listing
+  plug TicketAgentWeb.ValidateShowRequest
   plug TicketAgentWeb.ShowLoader
 
-  def new(conn, %{"show_id" => id, "guest_checkout" => "true"}), do: render_new(conn, id)
-  def new(conn, %{"show_id" => id}) do
-    if !Coherence.logged_in?(conn) do
-      conn
-      |> redirect(to: ticket_auth_path(conn, :new, %{show_id: id}))
-    else
-      render_new(conn, id)
-    end
-  end
-
-  defp render_new(conn, show_id) do
-    [listing, ticket_count] = Listing.listing_with_ticket_count(show_id)
+  def new(conn, params) do
+    [listing, available_ticket_count] = Listing.listing_with_ticket_count(conn.assigns.show_id)
 
     message = """
       Please choose how many tickets you would like to purchase for this show.
@@ -28,6 +19,6 @@ defmodule TicketAgentWeb.TicketController do
     |> assign(:page_title_modal, "#{listing.title}")
     |> assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(listing.description, true))
     |> assign(:page_image, Listing.listing_image(listing))
-    |> render("new.html", show: listing, ticket_count: ticket_count)
+    |> render(:new, show: listing)
   end
 end

@@ -1,0 +1,127 @@
+<%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+<section class="g-bg-white">
+  <div class="container">
+    <div class="row">
+      <%= for num <- (1..@ticket_count) do %>
+        <div class="col-md-6 flex-md-first align-self-center g-mb-80">
+
+          <div class="card rounded-0">
+            <h3 class="card-header h5 rounded-0">
+              <i class="fa fa-user g-font-size-default g-mr-5"></i>
+              Guest <%= num %> Information
+            </h3>
+
+            <div class="card-block">
+              <div id="attendee_div_<%= num %>">
+                <div id="name_group_<%= num %>" class="form-group g-mb-20">
+                  <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Name</label>
+                  <input class="form-control form-control-md rounded-0" type="email" id="attendee_name_<%= num %>" name="attendee_name_<%= num %>" placeholder="Name" required value="Patrick<%= num %> Veverka">
+                  <small id="name_required_<%= num %>" style="display: none;" class="form-control-feedback">This is a required field.</small>
+                </div>
+
+                <div id="email_group_<%= num %>" class="form-group g-mb-20">
+                  <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
+                  <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_<%= num %>" name="attendee_email_<%= num %>" placeholder="user@domain.com" requiredtype="email" value="patrick<%= num %>@veverka.net">
+                  <small id="email_required_<%= num %>" style="display: none;" class="form-control-feedback">This is a required field.</small>
+                </div>
+              </div>
+
+              <a id="guest_<%= num %>" onclick="return window.save_ticket(<%= num %>, false)" data-group="<%= num %>" href="#" class="guest_save btn btn-md btn-block u-btn-inset u-btn-outline-blue g-mr-10 g-mb-15" role="guest_save">Save Ticket</a>
+            </div>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+    <hr />
+    <div class="row">
+      <a href="#" id="continue" class="btn btn-md btn-block u-btn-blue rounded g-py-13">CONTINUE</a>
+    </div>
+    <br />
+  </div>
+</section>
+<script type="text/javascript">
+  window.ticket_count = <%= @conn.assigns.ticket_count %>;
+  window.buyer_name = "<%= @conn.assigns.buyer_name %>";
+  window.buyer_email = "<%= @conn.assigns.buyer_email %>";
+  window.show_id = "<%= @conn.assigns.show_id %>";
+  window.guest_checkout = <%= @conn.assigns.guest_checkout %>;
+
+  window.redirect_it = function(ticket_count, name, email) {
+    var details = {
+      show_id: window.show_id,
+      buyer_name: window.buyer_name,
+      buyer_email: window.buyer_email,
+      ticket_count: window.ticket_count,
+      guest_checkout: window.guest_checkout,
+      tickets: []
+    }
+
+    for (var i = 1; i <= window.ticket_count; i++) {
+      details.tickets.push(window.get_ticket_value(i));
+    }
+    var encodedData = window.btoa(JSON.stringify(details));
+    Cookies.set("ticket_data", encodedData);
+    var redirect_url = "/orders/new?show_id=" + show_id;
+    window.location.href = redirect_url;
+  }
+
+  $("#continue").on("click", function(e) {
+    var valid_tickets = true;
+    for (var i = 1; i <= window.ticket_count; i++) {
+      if (!window.save_ticket(i, true)) {
+        valid_tickets = false;
+      }
+    }
+
+    if (valid_tickets) {
+      window.redirect_it();
+      return true;
+    } else {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  window.save_ticket = function(counter, btn_click) {
+    var valid_form = true;
+    var name = $("#attendee_name_" + counter).val();
+    var email = $("#attendee_email_" + counter).val();
+
+    if ($("#attendee_div_" + counter).css("display") == "block") {
+
+      if (name.length == 0) {
+        $("#name_required_" + counter).show();
+        $("#name_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      }
+
+      if (email.length == 0) {
+        $("#email_required_" + counter).show();
+        $("#email_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      }
+
+      if (valid_form) {
+        $("#attendee_div_" + counter).hide();
+        $("#guest_" + counter).html("Edit Ticket For " + name);
+      }
+    } else {
+      if (!btn_click) {
+        $("#attendee_div_" + counter).show();
+        $("#guest_" + counter).html("Save Ticket");
+      }
+    }
+    return valid_form;
+  }
+
+  window.get_ticket_value = function(counter) {
+    var name = $("#attendee_name_" + counter).val();
+    var email = $("#attendee_email_" + counter).val();
+    
+    return {
+      name: name, 
+      email: email
+    }
+  }  
+</script>

@@ -34,9 +34,9 @@ defmodule TicketAgent.Listing do
   end
 
   def from_class(current_user, %Class{} = class) do
-    cover_image = %ListingImage{url: class.photo_url}
+    listing_image = %ListingImage{url: class.photo_url}
 
-    %Listing{images: [cover_image]}
+    %Listing{images: [listing_image]}
     |> changeset(%{
       type: "class",
       slug: Random.generate_slug(),
@@ -80,6 +80,27 @@ defmodule TicketAgent.Listing do
             select: [listing, tickets.count]
 
     Repo.one(query)
+  end
+
+  def listing_image(show) do
+    social_image =
+      show.images
+      |> hd
+
+    public_id =
+      social_image.url
+      |> String.split("/")
+      |> List.last()
+      |> String.split(".")
+      |> List.first()
+
+    Cloudinex.Url.for(public_id, %{
+      width: 1050,
+      height: 400,
+      gravity: "north",
+      crop: "fill",
+      flags: 'progressive'
+    })
   end
 
   def listings_with_ticket_count do
@@ -130,6 +151,17 @@ defmodule TicketAgent.Listing do
       [lower, upper]
     end
   end
+
+  def ticket_cost_number(show) do
+    query = from t in Ticket,
+            where: t.listing_id == ^show.id,
+            where: t.status == "available",
+            where: is_nil(t.locked_until),
+            where: fragment("? <= NOW()", t.sale_start),
+            select: max(t.price)
+
+    Repo.one(query)
+  end  
 
   defimpl Phoenix.Param, for: TicketAgent.Listing do
     def to_param(%{slug: slug, title: title}) do

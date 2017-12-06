@@ -4,27 +4,6 @@ defmodule TicketAgentWeb.EventView do
   @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
   @helpers TicketAgentWeb.Router.Helpers
 
-  def cover_image(show) do
-    social_image =
-      show.images
-      |> Enum.find(fn x -> x.type == "cover" end)
-
-    public_id =
-      social_image.url
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
-    Cloudinex.Url.for(public_id, %{
-      width: 1050,
-      height: 400,
-      gravity: "north",
-      crop: "fill",
-      flags: 'progressive'
-    })
-  end
-
   def aggregated_tags(shows) do
     Enum.reduce(shows, [], fn([show, _], acc) ->
       tags = Enum.map(show.listing_tags, fn(x) -> x.tag end)
@@ -91,25 +70,7 @@ defmodule TicketAgentWeb.EventView do
     |> Enum.map_join(", ", fn tag -> tag.tag end)
   end
 
-  def social_image(show) do
-    social_image =
-      show.images
-      |> Enum.find(fn x -> x.type == "social" end)
-
-    public_id =
-      social_image.url
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
-    Cloudinex.Url.for(public_id, %{
-      width: 350,
-      height: 264,
-      gravity: "north",
-      crop: "thumb",
-      fetch_format: 'auto',
-      flags: 'progressive'
-    })
+  def listing_image(show) do
+    Listing.listing_image(show)
   end
 end
