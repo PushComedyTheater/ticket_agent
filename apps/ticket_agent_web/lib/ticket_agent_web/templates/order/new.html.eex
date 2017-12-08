@@ -1,174 +1,199 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
-<section class="g-bg-gray-light-v5">
-  <div class="container g-py-100 u-shadow-v21 g-bg-white rounded g-py-40 g-px-30">
-    <div align="center">
-      <img src="<%= @conn.assigns.page_image %>" class="rounded-circle" style="width: 170px; margin-top: -100px; align: center;">
-    </div>
-    <div align="center">
-      <h3 class="g-mb-10"><strong>Purchasing <%= @conn.assigns.ticket_count %> Ticket(s) for <%= @show.title %></strong></h3>
-    </div>
-    <br />
-    <ul class="nav text-center nav-justified u-nav-v7-1">
-      <li class="nav-item">
-        <a class="nav-link" id="tasbb1" data-toggle="tab" href="#" role="tab">
-          <i class="icon-hotel-restaurant-003 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-          Ticket Quantity
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="tabb2" data-toggle="tab" href="#nav-1-1-default-hor-left--3" role="tab">
-        <i class="icon-hotel-restaurant-182 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-          Ticket Information
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" id="tabb3" data-toggle="tab" href="#nav-1-1-default-hor-left--4" role="tab">
-          <i class="icon-hotel-restaurant-064 d-block g-font-size-25 u-tab-line-icon-pro"></i>
-          Payment Information
-        </a>
-      </li>
-    </ul>
-    <hr />
-<div id="accordion-03" class="u-accordion" role="tablist" aria-multiselectable="true">
-  <!-- Card -->
-  <div class="card rounded-0 g-mb-5">
-    <div id="accordion-03-heading-01" class="u-accordion__header" role="tab">
-      <h5 class="mb-0">
-        <a class="d-block u-link-v5 g-color-main g-color-primary--hover g-font-size-16 " href="#accordion-03-body-01" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="true" aria-controls="accordion-03-body-01">Marketing
-        </a>
-      </h5>
-    </div>
-    <div id="accordion-03-body-01" class="collapse show" role="tabpanel" aria-labelledby="accordion-03-heading-01">
-      <div class="u-accordion__body g-brd-top g-brd-gray-light-v4 g-color-gray-dark-v5">
-        This is where we sit down, grab a cup of coffee and dial in the details. Understanding the task at hand and ironing out the wrinkles is key. Now that we've aligned the details, it's time to get things mapped out and organized. This part is really crucial
-        in keeping the project in line to completion.
-      </div>
-    </div>
+<!-- Demo modal window -->
+<div id="modal-type-aftersometime" class="js-autonomous-popup text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;" data-modal-type="aftersometime" data-open-effect="zoomIn" data-close-effect="zoomOut" data-delay="100" data-speed="500">
+  <button type="button" class="close" onclick="Custombox.modal.close();">
+    <i class="hs-icon hs-icon-close"></i>
+  </button>
+  <h4 class="g-mb-20">Preparing Your Order</h4>
+  <hr>
+  <div class="progress g-height-20 rounded-0 u-progress g-mb-20">
+    <div id="ticket_bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" data-percentage="0"></div>
   </div>
-  <!-- End Card -->
-
-  <!-- Card -->
-  <div class="card rounded-0 g-mb-5">
-    <div id="accordion-03-heading-02" class="u-accordion__header" role="tab">
-      <h5 class="mb-0">
-        <a class="collapsed d-block u-link-v5 g-color-main g-color-primary--hover g-font-size-16 " href="#accordion-03-body-02" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-02">Strategy
-        </a>
-      </h5>
-    </div>
-    <div id="accordion-03-body-02" class="collapse" role="tabpanel" aria-labelledby="accordion-03-heading-02">
-      <div class="u-accordion__body g-brd-top g-brd-gray-light-v4 g-color-gray-dark-v5">
-        This is where we sit down, grab a cup of coffee and dial in the details. Understanding the task at hand and ironing out the wrinkles is key. Now that we've aligned the details, it's time to get things mapped out and organized. This part is really crucial
-        in keeping the project in line to completion.
-      </div>
-    </div>
-  </div>
-  <!-- End Card -->
-
-  <!-- Card -->
-  <div class="card rounded-0 g-mb-5">
-    <div id="accordion-03-heading-03" class="u-accordion__header" role="tab">
-      <h5 class="mb-0">
-        <a class="collapsed d-block u-link-v5 g-color-main g-color-primary--hover g-font-size-16 " href="#accordion-03-body-03" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-03">Design
-        </a>
-      </h5>
-    </div>
-    <div id="accordion-03-body-03" class="collapse" role="tabpanel" aria-labelledby="accordion-03-heading-03">
-      <div class="u-accordion__body g-brd-top g-brd-gray-light-v4 g-color-gray-dark-v5">
-        This is where we sit down, grab a cup of coffee and dial in the details. Understanding the task at hand and ironing out the wrinkles is key. Now that we've aligned the details, it's time to get things mapped out and organized. This part is really crucial
-        in keeping the project in line to completion.
-      </div>
-    </div>
-  </div>
-  <!-- End Card -->
+  <p>We are validating and reserving your tickets and registration.</p>
 </div>
-
-
-    <div class="text-center g-mb-50">
-      <h2 class="h4">Your Order Details</span>
-      </h2>
+<!-- End Demo modal window -->
+<section class="g-bg-white">
+  <div class="container">
+    <div class="row" align="center">
+    <div id="ticket_countdown" class="col-md-12 alert alert-warning block" role="alert" align="center">
+      Your tickets will be released if you do not complete your order in the next: <strong id="locked_until"></strong>
+    </div>    
+      
     </div>
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover u-table--v2 text-center text-uppercase g-col-border-side-0">
-        <thead>
-          <tr class="g-bg-primary g-color-white g-col-border-top-0">
-            <th class="g-brd-white-opacity-0_1">Ticket Description</th>
-            <th class="g-brd-white-opacity-0_1">Guest Name</th>
-            <th class="g-brd-white-opacity-0_1">Ticket Cost</th>
-          </tr>
-        </thead>
-
-        <tbody class="g-font-size-12 g-color-black-opacity-0_6 g-font-weight-600">
-          <%= for ticket <- @conn.assigns.tickets do %>
-            <tr>
-              <td class="g-color-black-opacity-0_8" scope="row">Ticket For  to <%= raw HtmlSanitizeEx.basic_html(@show.title) %></td>
-              <td><%= ticket["name"] %></td>
-              <td>$<%= :erlang.float_to_binary(@conn.assigns.ticket_cost / 100, decimals: 2) %></td>
+    <div class="row">
+      <div class="table-responsive col-md-6">
+        <table class="table table-bordered table-hover u-table--v2 text-center text-uppercase g-col-border-side-0">
+          <thead>
+            <tr class="g-bg-blue g-color-white g-col-border-top-0">
+              <th class="g-brd-white-opacity-0_1">Ticket</th>
+              <th class="g-brd-white-opacity-0_1">Cost</th>
             </tr>
-          <% end %>
-          <tr>
-            <td>&nbsp;</td>
-            <td></td>
-            <td></td>
-          </tr>
-
-          <tr>
-            <td></td>
-            <td class="pull-right" scope="row">Total: </td>
-            <td>$<%= @conn.assigns.total_cost_string %></td>
-          </tr>
-        </tbody>        
-      </table>
-    </div>
-    <hr />
-    <form action="/charge" method="post" id="payment-form" class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
-      <div class="form-group row g-mb-25">
-        <div id="payment-request-button" class="col-sm-12">
-        </div>
+          </thead>
+          <tbody class="g-font-size-12 g-color-black-opacity-0_6 g-font-weight-600">
+            <%= for ticket <- @conn.assigns.tickets do %>
+              <tr>
+                <td class="g-color-black-opacity-0_8" scope="row">Ticket For <%= ticket["name"] %></td>
+                <td>$<%= :erlang.float_to_binary(@conn.assigns.ticket_cost / 100, decimals: 2) %></td>
+              </tr>
+            <% end %>
+            <tr>
+              <td class="pull-right" scope="row">Total: </td>
+              <td>$<%= @conn.assigns.total_price_string %></td>
+            </tr>
+          </tbody>        
+        </table>
       </div>
-      <div class="d-flex justify-content-center text-center g-mb-30">
-        <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-        <span class="align-self-center g-color-gray-dark-v5 mx-4">OR ENTER CREDIT CARD DETAILS</span>
-        <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-      </div>        
-      <div class="form-group row g-mb-25">
-        <label for="card-element" class="col-sm-2 col-form-label">Credit Card Number</label>
-        <div id="card-number" class="col-lg-10">
-        </div>
-      </div>  
-      <div class="form-group row g-mb-25">
-        <label for="card-element" class="col-sm-2 col-form-label">Expiration Date</label>
-        <div id="card-expiry" class="col-lg-10">
-        </div>
-      </div> 
-      <div class="form-group row g-mb-25">
-        <label for="card-element" class="col-sm-2 col-form-label">CVV Code</label>
-        <div id="card-cvc" class="col-lg-10">
-        </div>
-      </div>      
-      <div class="form-group row align-self-center" align="center">
-        <div class="ml-sm-auto col-lg-12 align-self-center">
-          <button type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= @conn.assigns.total_cost_string %></button>
-        </div>
-      </div>      
-    </form>
+      <div class="col-md-6">
+        <form action="/charge" method="post" id="payment-form" class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
+          <div class="form-group row g-mb-25">
+            <div id="payment-request-button" class="col-sm-12">
+            </div>
+          </div>
+          <div class="d-flex justify-content-center text-center g-mb-30">
+            <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+            <span class="align-self-center g-color-gray-dark-v5 mx-4">OR ENTER CREDIT CARD DETAILS</span>
+            <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+          </div>        
+          <fieldset>
+          <div class="form-group row g-mb-25">
+            <label for="card-element" class="col-sm-4 col-form-label">Card Number</label>
+            <div id="card-number" class="form-control col-md-6 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 card_class">
+            </div>
+            
+          </div>  
+          <div class="form-group row g-mb-25">
+            <label for="card-element" class="col-sm-4 col-form-label">Expiration Date</label>
+            <div id="card-expiry" class="form-control col-md-6 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 card_class">
+            </div>
+          </div> 
+          <div class="form-group row g-mb-25">
+            <label for="card-element" class="col-sm-4 col-form-label">CVV Code</label>
+            <div id="card-cvc" class="form-control col-md-3 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 card_class">
+            </div>
+          </div>   
+          <div class="form-group row g-mb-25">
+            <label for="card-element" class="col-sm-4 col-form-label">Zip Code</label>
+            <input type="text" id="card_zip" name="card_zip" class="form-control col-md-3 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15" placeholder="123455">
+          </div>                
+          </fieldset>
+          <div class="form-group row align-self-center" align="center">
+            <div class="ml-sm-auto col-lg-12 align-self-center">
+              <button type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= @conn.assigns.total_price_string %></button>
+              <br />
+              <br />
+              <div id="card_error" class="alert alert-danger" role="alert" style="display: none;">
+                <strong>Oh snap!</strong> Change a few things up and try submitting again.
+              </div>
+            </div>
+          </div>      
+        </form> 
+
+      </div>
+    </div>
   </div>
 </section>
+<!-- JS Plugins Init. -->
 <script type="text/javascript">
+  window.buyer_email = "<%= @conn.assigns.buyer_email %>";
+  window.buyer_name = "<%= @conn.assigns.buyer_name %>";
+  window.csrf_token = $('meta[name="csrf-token"]').attr('content');
+  window.guest_checkout = <%= @conn.assigns.guest_checkout %>;
+  window.order_id = "";
+  window.show_id = "<%= @conn.assigns.show_id %>";
+  window.listing_id = "<%= @conn.assigns.listing_id %>";
+  window.ticket_count = <%= @conn.assigns.ticket_count %>;
+
+  window.reserve_tickets = function() {
+    var tickets = [
+<%= for ticket <- @conn.assigns.tickets do %>
+      {
+        listing_id: window.listing_id,
+        email: "<%= ticket["email"] %>",
+        name: "<%= ticket["name"] %>",
+      },
+<% end %>      
+    ]
+    var values = {
+      email: window.buyer_email,
+      name: window.buyer_name,
+      guest_checkout: window.guest_checkout,
+      order_id: window.order_id,
+      listing_id: window.listing_id,
+      total_price: <%= @conn.assigns.total_price %>,
+      tickets: tickets
+    }
+    $.ajax({
+        // The URL for the request
+        url: "/orders",
+        // The data to send (will be converted to a query string)
+        data: JSON.stringify(values),
+        // Whether this is a POST or GET request
+        type: "POST",
+        // The type of data we expect back
+        contentType: "application/json",
+        dataType: "json",
+        // add in csrf_token
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+        },        
+    }).done(function( json ) {
+      // Code to run if the request succeeds (is done);
+      // The response is passed to the function
+      console.log(json);
+      window.order_id = json.slug;
+      var locked_until = moment(json.locked_until).tz('America/New_York');
+      var now = moment();
+
+      if (locked_until.diff(now) > 0) {
+        var until = locked_until.format("YYYY/MM/DD HH:mm:ss");
+        $("#locked_until").countdown(
+          until, 
+          function(event) {
+            $(this).text(event.strftime('%M:%S'));
+          }).on(
+            'finish.countdown', 
+            function(event) {
+              $("#ticket_countdown").html("Your tickets were released.")
+        });
+      } else {
+        window.location.href = "/events/" + window.show_id + "?msg=released_tickets"
+      }  
+    }).fail(function( xhr, status, errorThrown ) {
+      // Code to run if the request fails; the raw request and
+      // status codes are passed to the function
+      window.log_it("Received error creating order: ")
+      window.log_it("errorThrown: " + errorThrown);
+    });    
+  }
+  
+  window.stripeTokenHandler = function(token) {
+    console.log(token);
+  }
+
   $(document).on('ready', function () {
+    window.reserve_tickets();
+
+    $.HSCore.components.HSModalWindow.init('.js-autonomous-popup', {
+      autonomous: true
+    });    
+
     // Create a Stripe client
-    var stripe = Stripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+    var stripe = Stripe('pk_test_DDoJlLuiZAEY5SnIRu9IKOzp');
 
     var paymentRequest = stripe.paymentRequest({
       country: 'US',
       currency: 'usd',
+      requestPayerName: true,
+      requestPayerPhone: true,
+      requestPayerEmail: true,
       total: {
-        label: "<%= @conn.assigns.ticket_count %> Ticket(s) to <%= raw HtmlSanitizeEx.basic_html(@show.title) %>",
-        amount: <%= @conn.assigns.total_cost * 100 %>,
+        label: "Total for <%= @conn.assigns.ticket_count %> ticket(s)",
+        amount: <%= @conn.assigns.total_price * 100 %>,
       },
       displayItems: [
         <%= for ticket <- @conn.assigns.tickets do %>
           {
-            label: "Ticket For <%= ticket["name"] %> to <%= raw HtmlSanitizeEx.basic_html(@show.title) %>",
+            label: "Ticket For <%= ticket["name"] %>",
             amount: <%= @conn.assigns.ticket_cost %>,
           },
         <% end %>
@@ -190,13 +215,34 @@
       }
     });
 
+    paymentRequest.on('token', function(ev) {
+      console.log(ev);
+      // Send the token to your server to charge it!
+      fetch('/charges', {
+        method: 'POST',
+        body: JSON.stringify({token: ev.token.id}),
+      })
+      .then(function(response) {
+        if (response.ok) {
+          // Report to the browser that the payment was successful, prompting
+          // it to close the browser payment interface.
+          ev.complete('success');
+        } else {
+          // Report to the browser that the payment failed, prompting it to
+          // re-show the payment interface, or show an error message and close
+          // the payment interface.
+          ev.complete('fail');
+        }
+      });
+    });
+
     var cardNumber = elements.create('cardNumber', {});
     cardNumber.mount('#card-number');
 
     cardNumber.on("change", function(event) {
-      console.log("DUDE");
       if (event.error) {
-        console.log(event.error);
+        $("#card_error").show()
+        $("#card_error").html(event.error.message);
       }
     });
 
@@ -204,9 +250,9 @@
     cardExpiry.mount('#card-expiry');
 
     cardExpiry.on("change", function(event) {
-      console.log("DUDE");
       if (event.error) {
-        console.log(event.error);
+        $("#card_error").show()
+        $("#card_error").html(event.error.message);
       }
     });
 
@@ -214,16 +260,32 @@
     cardCvc.mount('#card-cvc');
 
     cardCvc.on("change", function(event) {
-      console.log("DUDE");
       if (event.error) {
-        console.log(event.error);
+        $("#card_error").show()
+        $("#card_error").html(event.error.message);
+
       }
     });
     
-
     $("#payment-form").on("submit", function(e) {
       e.preventDefault();
-      console.log("CLICKED");
+
+      var additionalData = {
+        name: window.buyer_name,
+        address_zip: $("#card_zip").val()
+      };
+
+      stripe.createToken(cardNumber, additionalData).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          console.log(result.error);
+        } else {
+          // Send the token to your server
+          window.stripeTokenHandler(result.token);
+        }
+      });
+
     })
   });
 </script>
+<script src="https://assets.pushcomedytheater.com/2.0/jquery.countdown.min.js"></script>

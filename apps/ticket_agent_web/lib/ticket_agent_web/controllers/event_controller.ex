@@ -8,12 +8,19 @@ defmodule TicketAgentWeb.EventController do
     |> render("index.html", shows: Listing.upcoming_shows)
   end
 
-  def show(conn, %{"titled_slug" => titled_slug}) do
+  def show(conn, %{"titled_slug" => titled_slug} = params) do
     [listing, ticket_count] =
       titled_slug
       |> String.split("-")
       |> hd
       |> Listing.listing_with_ticket_count()
+
+      
+    conn = case params["msg"] do
+      nil -> conn
+      "released_tickets" -> 
+        put_flash(conn, :error, "Your tickets were released due to session timeout.")
+    end
 
     conn
     |> assign(:page_title, "#{listing.title} at Push Comedy Theater")

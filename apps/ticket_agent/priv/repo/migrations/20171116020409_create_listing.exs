@@ -19,13 +19,13 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Listing do
       timestamps()
     end
 
+    create unique_index(:listings, [:slug])
+
     create index(:listings, [:user_id])
     create index(:listings, [:event_id])
     create index(:listings, [:class_id])
 
     create index(:listings, [:start_at])
     create index(:listings, [:end_at])
-
-    create unique_index(:listings, [:slug])
   end
 end

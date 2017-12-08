@@ -8,47 +8,11 @@ defmodule Mix.Tasks.LoadEvents do
   def run(_) do
     Application.ensure_all_started(:ticket_agent)
 
-    list = [[1,2,[3]],4]
-
-
-# nests = [1, 2, [3, 4, [5],['hi']], [6, [[[7, 'hello']]]]]
-
-# def flatten(container):
-#     for i in container:
-#         if isinstance(i, (list,tuple)):
-#             for j in flatten(i):
-#                 yield j
-#         else:
-#             yield i
-
-# print list(flatten(nests))
-
-    flatten(list)
-    |> IO.inspect 
-    # non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
-    #             |> String.split("\n")
+    non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
+                |> String.split("\n")
     # parse_current(non_words)
-    # parse_history_files(non_words)
+    parse_history_files(non_words)
   end
-
-  def flatten([]), do: []
-  def flatten([h|t]), do: flatten(h) ++ flatten(t)
-  def flatten(h), do: [h] 
-
-  # def flatten(x) when is_list(x) do
-  #   IO.inspect "is list"
-  #   IO.inspect x
-  #   Enum.reduce(x, [], fn(item, acc) -> 
-  #     IO.inspect "SUBFLATTEN"
-  #     acc = acc ++ [flatten(item)]
-  #   end)
-  #   |> IO.inspect
-  # end
-  # def flatten(x) when not is_list(x) do
-  #   IO.inspect "NOT LIST"
-  #   IO.inspect x
-  #   x
-  # end
 
   def parse_current(now_words) do
     body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")  

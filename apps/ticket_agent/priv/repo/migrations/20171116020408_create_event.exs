@@ -17,8 +17,8 @@ defmodule TicketAgent.Repo.Migrations.CreateEvent do
       timestamps()
     end
 
+    create unique_index(:events, [:slug])
     create index(:events, [:account_id])
     create index(:events, [:user_id])
-    create unique_index(:events, [:slug])
   end
 end

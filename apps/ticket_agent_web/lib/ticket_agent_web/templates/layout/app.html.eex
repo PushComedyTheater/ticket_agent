@@ -119,7 +119,8 @@
   <script src="https://assets.pushcomedytheater.com/2.0/popper.js/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha256-DiWJXXyq81WlPRnDfGmgYZj2aOVCKyEdJ1l+2TmDuAs=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js" integrity="sha256-+JMHsXRyeTsws/tzbIh5YHQxRdKCuNjmvNcTFtY6DLc=" crossorigin="anonymous"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js" integrity="sha256-/As5lS2upX/fOCO/h/5wzruGngVW3xPs3N8LN4FkA5Q=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.14/moment-timezone-with-data.min.js" integrity="sha256-FJZOELgwnfQRdG8KZUSWCYgucECDf4w5kfQdQSGbVpI=" crossorigin="anonymous"></script>
   <!-- JS Implementing Plugins -->
   <script src="https://assets.pushcomedytheater.com/2.0/hs-megamenu/src/hs.megamenu.js"></script>
   <script src="https://assets.pushcomedytheater.com/2.0/dzsparallaxer/dzsparallaxer.js"></script>
@@ -131,7 +132,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/custombox/4.0.3/custombox.min.js" integrity="sha256-3dCvh9Ar+IBGrK82FBU4xIUnY7N7ma1epBq2sHgpgY8=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.6/typed.min.js" integrity="sha256-lg08cUS9fRaVhpYQy3GfoNMMXKaS63bhSXqW8MfuABw=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js" integrity="sha256-T8epxt0QUasmGlUNsLFhR9pCNt7fsu/GMR6/9IoEU1A=" crossorigin="anonymous"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js" integrity="sha256-Ikk5myJowmDQaYVCUD0Wr+vIDkN8hGI58SGWdE671A8=" crossorigin="anonymous"></script>
   <!-- JS Unify -->
   <script src="https://assets.pushcomedytheater.com/2.0/js/hs.core.js"></script>
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.header.js"></script>
@@ -144,6 +145,7 @@
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.modal-window.js"></script>
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.step-form.js"></script>
 
+  <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.countdown.js"></script>
   <!-- JS Custom -->
   <script src="https://assets.pushcomedytheater.com/2.0/js/custom.js"></script>
     <script src="<%= static_path(@conn, "/js/application.js") %>"></script>

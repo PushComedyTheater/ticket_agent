@@ -51,12 +51,12 @@ defmodule TicketAgent.Listing do
   end
 
   def upcoming_shows do
-    query = from [listings, tickets] in listings_with_ticket_count(),
-            where: fragment("? >= NOW()", listings.start_at),
-            where: not is_nil(listings.event_id),
+    query = from l in Listing,
+            where: fragment("? >= NOW()", l.start_at),
+            where: not is_nil(l.event_id),
             order_by: [asc: :start_at],
-            preload: [:images, :listing_tags],
-            select: [listings, tickets.count]
+            preload: [:event, :images, :listing_tags],
+            select: l
     Repo.all(query)
   end
 
@@ -82,7 +82,7 @@ defmodule TicketAgent.Listing do
     Repo.one(query)
   end
 
-  def listing_image(show) do
+  def listing_image(show, width \\ 1050) do
     social_image =
       show.images
       |> hd
@@ -95,7 +95,7 @@ defmodule TicketAgent.Listing do
       |> List.first()
 
     Cloudinex.Url.for(public_id, %{
-      width: 1050,
+      width: width,
       height: 400,
       gravity: "north",
       crop: "fill",

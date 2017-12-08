@@ -15,5 +15,6 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.UserCredential do
     end
 
     create index(:user_credentials, [:user_id])
+    create index(:user_credentials, [:provider])
   end
 end

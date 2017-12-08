@@ -70,7 +70,7 @@ defmodule TicketAgentWeb.EventView do
     |> Enum.map_join(", ", fn tag -> tag.tag end)
   end
 
-  def listing_image(show) do
-    Listing.listing_image(show)
+  def listing_image(show, width \\ 1050) do
+    Listing.listing_image(show, width)
   end
 end

@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.TicketController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Event, Listing, Repo}
-  plug TicketAgentWeb.ShowLoader
+  plug TicketAgentWeb.ShowLoader when action in [:new]
 
   def new(conn, %{"show_id" => id, "guest_checkout" => "true"}), do: render_new(conn, id)
   def new(conn, %{"show_id" => id}) do
@@ -14,13 +14,19 @@ defmodule TicketAgentWeb.TicketController do
   end
 
   defp render_new(conn, show_id) do
-    [listing, ticket_count] = Listing.listing_with_ticket_count(show_id)
+    [listing, available_ticket_count] = Listing.listing_with_ticket_count(show_id)
+
+    maximum = if available_ticket_count < 20 do
+      available_ticket_count
+    else
+      20
+    end
 
     message = """
       Please choose how many tickets you would like to purchase for this show.
       <br />
       <br />
-      We only allow a maximum of 20 tickets per purchase.
+      We only allow a maximum of #{maximum} tickets per purchase.
     """
     conn
     |> assign(:message, message)
@@ -28,6 +34,6 @@ defmodule TicketAgentWeb.TicketController do
     |> assign(:page_title_modal, "#{listing.title}")
     |> assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(listing.description, true))
     |> assign(:page_image, Listing.listing_image(listing))
-    |> render("new.html", show: listing, ticket_count: ticket_count)
+    |> render("new.html", show: listing, ticket_count: available_ticket_count, maximum_tickets: maximum)
   end
 end

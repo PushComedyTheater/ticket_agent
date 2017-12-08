@@ -14,6 +14,7 @@ defmodule TicketAgent.Application do
 
     Supervisor.start_link([
       supervisor(TicketAgent.Repo, []),
+      supervisor(TicketAgent.Clock, []),
     ], strategy: :one_for_one, name: TicketAgent.Supervisor)
   end
 end

@@ -1,4 +1,5 @@
 defmodule TicketAgentWeb.ValidateShowRequest do
+  require Logger
   import Plug.Conn
   import Phoenix.Controller
   alias TicketAgent.Listing
@@ -22,7 +23,7 @@ defmodule TicketAgentWeb.ValidateShowRequest do
       |> assign(:buyer_name, buyer_name)
       |> assign(:buyer_email, buyer_email)
       |> assign(:guest_checkout, guest_checkout)
-      |> assign(:ticket_count, Enum.count(tickets))
+      |> assign(:ticket_count, ticket_count)
       |> assign(:show_id, show_id)
       |> assign(:tickets, tickets)
     else

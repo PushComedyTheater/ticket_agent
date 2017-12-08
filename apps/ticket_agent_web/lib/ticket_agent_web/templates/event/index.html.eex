@@ -19,13 +19,13 @@
         <div class="col-lg-12">
           <%= for shows <- Enum.chunk(@shows, 3) do %>
             <div class="row">
-            <%= for [show, ticket_count] <- shows do %>
+            <%= for show <- shows do %>
             <div class="col-lg-4 g-mb-30">
               <!-- Search Result -->
               <article data-show="<%= show.id %>" class="g-bg-white" style="border: 1px dashed #f2f2f2;" data-tags='<%= raw show_tags(show) %>'>
                 <figure class="g-pos-rel">
                   <%= link to: event_path(@conn, :show, show) do %>
-                    <img class="img-fluid w-100" src="<%= listing_image(show) %>" style="height: 264px;" alt="<%= show.title %>">
+                    <img class="img-fluid w-100" src="<%= listing_image(show, 400) %>" style="height: 264px;" alt="<%= show.title %>">
                   <% end %>
 
                   <figcaption class="g-pos-abs g-bottom-0 g-left-0">

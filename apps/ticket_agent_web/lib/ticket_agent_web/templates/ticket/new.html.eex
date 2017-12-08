@@ -7,25 +7,26 @@
           <p class="form-control-static">Number of tickets: </p>
         </div>
         <div class="form-group col-sm-4">
-          <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-            <input id="js_result" class="js-result form-control text-center g-font-size-13 rounded-0" type="text" value="1" readonly>
-            <div class="input-group-addon d-flex align-items-center g-width-30 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
-              <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
-              <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
-            </div>
-          </div>
+          <select class="form-control rounded-0" id="ticket_count">
+            <%= for i <- (1..@maximum_tickets) do %>
+              <option><%= i %></option>
+            <% end %>
+          </select>
         </div>
         <div class="form-group col-sm-4">
           Total:&nbsp;&nbsp;<strong id="invoice_cost">$ <%= event_cost(@show) %></strong>
         </div>
-      </div>       
+      </div>   
+          <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none; margin-top: 15px;">
+            <strong>Uh oh!</strong> You must choose more than zero tickets.
+          </div>          
     </form>
   </div>
 
   <%= if Coherence.logged_in?(@conn) do %>
   <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
     <i class="fa fa-check-circle g-mr-5"></i>
-    Continue As <%= Coherence.current_user_name(@conn) %>
+    <span id="logged_in_text">Purchase 1 Ticket As <%= Coherence.current_user_name(@conn) %></span>
   </button>
   <% else %>
   <br />
@@ -37,7 +38,7 @@
       </div>
       <p class="form-text text-muted">
         Because you chose to continue as a guest, we will need your name and email address to send you your receipt.
-  </p>
+      </p>
       <div id="name_group" class="form-group g-mb-20">
         <label class="g-mb-10">Name: </label>
         <div class="input-group g-brd-primary--focus">
@@ -60,7 +61,7 @@
       </div>      
       <button id="continue_as_guest" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
         <i class="fa fa-check-circle g-mr-5"></i>
-        Continue as Guest
+        <span id="guest_text">Purchase 1 Ticket As Guest</span>
       </button>
           
     </form>
@@ -87,77 +88,64 @@
     window.location.href = redirect_url;
   }
 
+  window.set_button = function() {
+    var resultVal = parseInt($("#ticket_count").val());
+    var guest_name = $("#guest_name").val().trim();
+    if (guest_name.length == 0) {
+      guest_name = "Guest";
+    }
+    console.log(guest_name);
+    $("#guest_text").text("Purchase " + resultVal + " Ticket(s) As " + guest_name);
+    $("#logged_in_text").text("Purchase " + resultVal + " Ticket(s) As <%= Coherence.current_user_name(@conn) %>");
+  }
+
   $(document).on('ready', function () {
-    $.HSCore.components.HSCountQty.init('.js-quantity', {maximum: 20});
-    $("#js_result").bind("change", function() {
-      var result = $('#js_result'),
-          resultVal = parseInt(result.val());
-
-          if (resultVal >= 20) {
-            $('#js_result').val("20");
-            resultVal = 20;
-          }
-
-          var total = (resultVal * window.ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-          $("#invoice_cost").html("$" + total);
-
-          if (resultVal > 0) {
-            $("#ticket_count_error").hide();
-            $("#invoice_total").show();
-          } else {
-            $("#ticket_count_error").show();
-            $("#invoice_total").hide();
-          }
-    });
-    $("#continue").on("click", function(e) {
-      var result = $('#js_result'),
-          resultVal = parseInt(result.val());
-      if (resultVal > 0) {
-        $("#ticket_count_error").hide();
-        window.redirect_it(resultVal, "", "");
-      } else {
-        $("#ticket_count_error").show();
-        e.preventDefault();
-        return false;
-      }
+    $("#ticket_count").on("change", function() {
+      window.set_button();
+      var resultVal = parseInt($("#ticket_count").val());
+      var total = (resultVal * window.ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+      $("#invoice_cost").html("$" + total);
     })
+
+    $("#guest_name").on("change", function() {
+      window.set_button();
+    });
+
+    $("#continue").on("click", function(e) {
+      var resultVal = parseInt($("#ticket_count").val());
+      e.preventDefault();
+      window.redirect_it(resultVal, "", "");
+    })
+
     $("#continue_as_guest").on("click", function(e) {
-      var result = $('#js_result'),
-          resultVal = parseInt(result.val());
-      if (resultVal > 0) {
-        $("#ticket_count_error").hide();
-        var name = $("#guest_name").val().trim();
-        var email = $("#guest_email").val().trim();
-        var email_valid = $("#guest_email")[0].checkValidity();
+      var resultVal = parseInt($("#ticket_count").val());
+      var name = $("#guest_name").val().trim();
+      var email = $("#guest_email").val().trim();
+      var email_valid = $("#guest_email")[0].checkValidity();
 
-        if (name.length <= 0) {
-          $("#name_group").addClass("u-has-error-v1");
-          $("#name_required").show();
-          return false;
-        } else {
-          $("#name_group").removeClass("u-has-error-v1");
-          $("#name_required").hide();          
-        }
-
-        if ((email.length <= 0) || (!email_valid)) {
-          if (!email_valid) {
-            $("#email_required").html("Email must be a valid email address.");
-          } else {
-            $("#email_required").html("This is a required field.");
-          }
-          $("#email_group").addClass("u-has-error-v1");
-          $("#email_required").show();
-          return false;          
-        } else {
-          $("#email_group").removeClass("u-has-error-v1");
-          $("#email_required").hide();
-        }
-        window.redirect_it(resultVal, name, email);
-      } else {
-        $("#ticket_count_error").show();
-        e.preventDefault();
+      if (name.length <= 0) {
+        $("#name_group").addClass("u-has-error-v1");
+        $("#name_required").show();
         return false;
+      } else {
+        $("#name_group").removeClass("u-has-error-v1");
+        $("#name_required").hide();          
       }
+
+      if ((email.length <= 0) || (!email_valid)) {
+        if (!email_valid) {
+          $("#email_required").html("Email must be a valid email address.");
+        } else {
+          $("#email_required").html("This is a required field.");
+        }
+        $("#email_group").addClass("u-has-error-v1");
+        $("#email_required").show();
+        return false;          
+      } else {
+        $("#email_group").removeClass("u-has-error-v1");
+        $("#email_required").hide();
+      }
+      window.redirect_it(resultVal, name, email);
     })    
   });
 </script>

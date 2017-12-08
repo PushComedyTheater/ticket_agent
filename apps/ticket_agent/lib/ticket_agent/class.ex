@@ -29,21 +29,4 @@ defmodule TicketAgent.Class do
     |> cast_assoc(:prerequisite)
     |> validate_required([:type, :title])
   end
-
-  def currently_offered?(%Class{id: class_id} = class) do
-    date = NaiveDateTime.utc_now()
-    # query = from l in Listing,
-    #         where: fragment("? >= NOW()", l.start_at),
-    #         where: l.type == "class",
-    #         where: l.class_id == ^class_id,
-    #         order_by: [asc: :start_at],
-    #         select: l.id
-
-    query = from e in Event,
-            where: e.type == "class",
-            where: e.class_id == ^class_id,
-            select: e.id
-
-    Repo.aggregate(query, :count, :id) > 0
-  end
 end

@@ -18,5 +18,6 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Class do
     end
     create unique_index(:classes, [:slug])
     create index(:classes, [:type])
+    create index(:classes, [:prerequisite_id])
   end
 end
