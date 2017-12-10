@@ -1,15 +1,18 @@
 defmodule TicketAgent.Services.Stripe do
   @stripe_api_version "2017-08-15"
   @stripe_user_agent "TicketAgent 1.0"
+  alias TicketAgent.{OrderDetail, Repo}
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
-  def create_charge_with_customer(customer, amount, description, metadata \\ %{}) do
+  def create_charge_with_customer(customer, amount, description, order_id, metadata \\ %{}) do
     create_charge(nil, customer, amount, description, metadata)
+    |> insert_order_details(order_id)
   end
 
-  def create_charge_with_token(token, amount, description, metadata \\ %{}) do
+  def create_charge_with_token(token, amount, description, order_id, metadata \\ %{}) do
     create_charge(token, nil, amount, description, metadata)
+    |> insert_order_details(order_id)
   end  
   
   def create_customer(token, name, email, metadata \\ %{}) do
@@ -42,7 +45,6 @@ defmodule TicketAgent.Services.Stripe do
     body = 
       values
       |> URI.encode_query()
-      |> IO.inspect
 
     uri = api_url() <> "/charges"
 
@@ -66,6 +68,16 @@ defmodule TicketAgent.Services.Stripe do
       "currency" => "usd"
     }   
   end  
+
+  defp insert_order_details({status, response}, order_id) do
+    parsed_response = OrderDetail.parse_stripe_response(response, order_id)
+
+    %OrderDetail{}
+    |> OrderDetail.changeset(parsed_response)
+    |> Repo.insert!
+
+    {status, response}
+  end
 
   defp request(method, url, headers, body, hackney_options) do
     case :hackney.request(method, url, load_headers(headers, method), body, hackney_options) do

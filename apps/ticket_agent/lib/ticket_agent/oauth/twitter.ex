@@ -17,11 +17,15 @@ defmodule TicketAgent.Twitter do
 
     ExTwitter.configure(:process, config)
     
-    {:ok, access_token} = ExTwitter.access_token(oauth_verifier, oauth_token)
-    
-    access_token
+    case ExTwitter.access_token(oauth_verifier, oauth_token) do
+      {:ok, access_token} ->
+        access_token
+      anything ->
+        IO.inspect anything
+        nil
+    end
   end
-
+  def get_user!(nil), do: nil
   def get_user!(%{oauth_token: oauth_token, oauth_token_secret: oauth_token_secret}) do
     config = Application.get_env(:ticket_agent, Twitter)
 

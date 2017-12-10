@@ -51,7 +51,6 @@ defmodule TicketAgentWeb.OrderController do
     end
 
     conn
-    |> put_status(500)
     |> render("delete.json", %{})
   end
 

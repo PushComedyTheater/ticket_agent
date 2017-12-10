@@ -1,11 +1,50 @@
 defmodule TicketAgentWeb.ChargeController do
+  require Logger
   use TicketAgentWeb, :controller
   alias TicketAgent.{Listing, Order, Repo}
   alias TicketAgent.Finders.CardFinder
   alias TicketAgent.Services.Stripe
   import Ecto.Query
+  plug TicketAgentWeb.LoadListing when action in [:create]
+  plug TicketAgentWeb.LoadOrder when action in [:create]
+  
+  # guest checkout
+  def create(conn, %{"guest_checkout" => true, "total_price" => price, "token" => %{"token_id" => token_id}} = params) do
+    Logger.info "Checking out a guest with token #{token_id}.  We only create a charge, no customer"
 
-  def create(conn, params) do
+    metadata = %{
+      "order_id" => conn.assigns.order.id,
+      "order_slug" => conn.assigns.order.slug,
+      "email" => params["email"],
+      "ticket_count" => Enum.count(params["tickets"]),
+      "listing_id" => conn.assigns.listing.id,
+      "name" => params["name"]
+    }
+
+    description = "Tickets for #{conn.assigns.listing.title}"
+
+    case Stripe.create_charge_with_token(token_id, price, description, conn.assigns.order.id, metadata) do
+      {:ok, stripe_response} ->
+        conn
+        |> render("create.json", %{stripe_response: stripe_response})        
+      {:error, reason} when is_map(reason) ->
+        Logger.error "Stripe had an error with structure: #{inspect reason}"
+        message = get_in(reason, ["error", "message"])
+        conn
+        |> put_status(422)
+        |> render("error.json", %{reason: message})        
+      {:error, reason} ->
+        Logger.error "#{inspect reason}"
+        conn
+        |> put_status(422)
+        |> render("error.json", %{reason: "There was an issue communicating with our credit card processor.  Please try again."})
+    end
+  end
+
+  def create(conn, %{"guest_checkout" => false} = params) do
+
+# user = TicketAgent.Repo.all(TicketAgent.User) |> hd
+# TicketAgent.Coherence.UserEmail.confirmation(user, "http://google.com")
     price = params["total_price"]
     token = params["token"]
     token_id = token["token_id"]

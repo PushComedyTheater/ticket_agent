@@ -152,15 +152,20 @@ window.send_token_for_charge = function (values, ev) {
       ev.complete("success");
     }
     
-    //window.console_dir(json);
+    window.console_dir(json);
     // //window.console_group_end();
   }).fail(function (xhr, status, errorThrown) {
     if (ev && ev.complete) {
       ev.complete("fail");
     }
-    // window.console_error("Received error creating order: ")
-    // window.console_error("errorThrown: " + errorThrown);
-    // //window.console_group_end();
+    $("#card_error").show()
+    $("#card_error").html(errorThrown);   
+    if (xhr && xhr.responseJSON && xhr.responseJSON.reason) {
+      $("#card_error").html(xhr.responseJSON.reason);   
+    }
+    window.loading_token = false;
+    $("#submit_button").html(window.old_submit_text);
+    $("#submit_button").css("disabled", "");    
   });
 } 
 
@@ -219,6 +224,9 @@ window.setup_card_number = function(div_id) {
       $("#card_error").show()
       $("#card_error").html(event.error.message);
     }
+    if (event.complete) {
+      $("#card_error").hide()
+    }    
   });  
 }
 
@@ -230,6 +238,9 @@ window.setup_card_expiry = function(div_id) {
       $("#card_error").show()
       $("#card_error").html(event.error.message);
     }
+    if (event.complete) {
+      $("#card_error").hide()
+    }    
   });
 }
 
@@ -241,32 +252,46 @@ window.setup_card_cvc = function(div_id) {
       $("#card_error").show()
       $("#card_error").html(event.error.message);
     }
+    if (event.complete) {
+      $("#card_error").hide()
+    }
   });
 }
 
 window.setup_submit_button = function(div_id) {
   $(div_id).on("submit", function (ev) {
     ev.preventDefault();
+    $("#card_error").hide();
+    window.old_submit_text = $("#submit_button").html();
+    $("#submit_button").html("Processing....");
+    $("#submit_button").css("disabled", "disabled");
 
-    var additional_data = {
-      name: window.buyer_name,
-      address_zip: $("#card_zip").val()
-    };
+    if (window.loading_token) {
+      return false;
+    }
 
-    window.stripe_instance.createToken(window.card_number, additional_data).then(function (result) {
-      if (result.error) {
-        // Inform the user if there was an error
-        //window.console_log("There was an error:");
-        //window.console_log(result.error);
-      } else {
-        // Send the token to your server
-        console.log("SEND TOKEN");
-        console.log(result);
-        window.stripeTokenHandler(result, ev);
+    window.loading_token = true;
 
-      }
-    });
+    var card_zip = $("#card_zip").val().trim();
 
+    if (card_zip.length >= 5) {
+      var additional_data = {
+        name: window.buyer_name,
+        address_zip: $("#card_zip").val()
+      };
+
+      window.stripe_instance.createToken(window.card_number, additional_data).then(function (result) {
+        if (result.error) {
+          $("#card_error").show()
+          $("#card_error").html(result.error.message);          
+        } else {
+          window.stripeTokenHandler(result, ev);
+        }
+      });
+    } else {
+      $("#card_error").show()
+      $("#card_error").html("Please enter a valid zip code.");
+    }
   })  
 }
 

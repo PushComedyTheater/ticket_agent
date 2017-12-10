@@ -75,7 +75,7 @@
           </fieldset>
           <div class="form-group row align-self-center" align="center">
             <div class="ml-sm-auto col-lg-12 align-self-center">
-              <button type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= @conn.assigns.total_price_string %></button>
+              <button id="submit_button" type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= @conn.assigns.total_price_string %></button>
               <br />
               <br />
               <div id="card_error" class="alert alert-danger" role="alert" style="display: none;">

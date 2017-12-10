@@ -23,16 +23,27 @@ defmodule TicketAgentWeb.AuthController do
   access protected resources on behalf of the user.
   """
   def callback(conn, %{"provider" => "twitter", "oauth_token" => oauth_token, "oauth_verifier" => oauth_verifier}) do
-    access_token = Twitter.get_token!(oauth_token, oauth_verifier)
-    user = Twitter.get_user!(access_token)
-    user = User.find_or_create_with_credentials(user.name,
-                                                user.email,
-                                                "twitter",
-                                                user.access_token,
-                                                user.access_token_secret)
-    Config.auth_module()
-    |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
-    |> render_success
+    twitter_user =
+      oauth_token
+      |> Twitter.get_token!(oauth_verifier)
+      |> Twitter.get_user!()
+    
+      if twitter_user do
+        user = User.find_or_create_with_credentials(
+          twitter_user.name,
+          twitter_user.email,
+          "twitter",
+          twitter_user.access_token,
+          twitter_user.access_token_secret
+        )
+        Config.auth_module()
+        |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
+        |> redirect(to: "/dashboard")
+      else 
+        conn
+        |> put_flash(:error, "There was an issue signing into Twitter. Please try again.")
+        |> redirect(to: session_path(conn, :new))
+      end
   end
 
   def callback(conn, %{"provider" => provider, "code" => code}) do
@@ -46,43 +57,16 @@ defmodule TicketAgentWeb.AuthController do
                                                 nil)
     Config.auth_module()
     |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
-    |> render_success
+    |> redirect(to: "/dashboard")
   end
 
-  defp render_success(conn) do
-    refresh = """
-      <html>
-      <head>
-      <script>
-        window.onunload = refreshParent;
-        function refreshParent() {
-          window.opener.login_success();
-        }
-        window.setTimeout("window.close()", 500);
-      </script>
-      </head>
-      <body>
-      <center>
-      <img src="https://cdn.pushcomedytheater.com/2.0/lg.fidget-spinner.gif">
-      <br />
-      Logging you in...
-      </center>
-      </body>
-      </html>
-    """
-
-    conn
-    |> put_resp_content_type("text/html")
-    |> send_resp(200, refresh)
-  end
-
-  defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
-  defp authorize_url!("facebook"), do: Facebook.authorize_url!(scope: "user_photos, email")
-  defp authorize_url!("twitter"),  do: Twitter.authorize_url!()
+  defp authorize_url!("google"),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
+  defp authorize_url!("facebook"), do: TicketAgent.Facebook.authorize_url!(scope: "user_photos, email")
+  defp authorize_url!("twitter"), do: Twitter.authorize_url!()
   defp authorize_url!(_), do: raise "No matching provider available"
 
-  defp get_token!("google", code),   do: Google.get_token!(code: code)
-  defp get_token!("facebook", code), do: Facebook.get_token!(code: code)
+  defp get_token!("google", code),   do: TicketAgent.Google.get_token!(code: code)
+  defp get_token!("facebook", code), do: TicketAgent.Facebook.get_token!(code: code)
   defp get_token!(_, _), do: raise "No matching provider available"
 
   defp get_user!("google", client) do
