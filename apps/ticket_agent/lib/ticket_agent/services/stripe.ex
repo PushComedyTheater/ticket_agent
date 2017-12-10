@@ -4,19 +4,68 @@ defmodule TicketAgent.Services.Stripe do
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
-  def charge(token, amount, description) do
-    body = %{
+  def create_charge_with_customer(customer, amount, description, metadata \\ %{}) do
+    create_charge(nil, customer, amount, description, metadata)
+  end
+
+  def create_charge_with_token(token, amount, description, metadata \\ %{}) do
+    create_charge(token, nil, amount, description, metadata)
+  end  
+  
+  def create_customer(token, name, email, metadata \\ %{}) do
+    values = %{
       "source" => token, 
-      "amount" => amount, 
-      "description" => description,
-      "currency" => "usd"
+      "email" => email, 
+      "description" => name
     }
-    |> URI.encode_query()
+    
+    values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
+      acc = Map.put(acc, "metadata[#{key}]", value)
+    end)
+    
+    body = 
+      values
+      |> URI.encode_query()
+      |> IO.inspect
+
+    uri = api_url() <> "/customers"
+
+    request(:post, uri, [], body, hackney_opts())
+  end  
+
+  defp create_charge(token, customer, amount, description, metadata) do
+    values = load_charge_values(token, customer, amount, description, metadata)
+    values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
+      acc = Map.put(acc, "metadata[#{key}]", value)
+    end) 
+
+    body = 
+      values
+      |> URI.encode_query()
+      |> IO.inspect
 
     uri = api_url() <> "/charges"
 
     request(:post, uri, [], body, hackney_opts())
   end
+
+  defp load_charge_values(token, nil, amount, description, metadata) do
+    values = %{
+      "source" => token, 
+      "amount" => amount, 
+      "description" => description,
+      "currency" => "usd"
+    }   
+  end
+
+  defp load_charge_values(nil, customer_id, amount, description, metadata) do
+    values = %{
+      "customer" => customer_id, 
+      "amount" => amount, 
+      "description" => description,
+      "currency" => "usd"
+    }   
+  end  
 
   defp request(method, url, headers, body, hackney_options) do
     case :hackney.request(method, url, load_headers(headers, method), body, hackney_options) do

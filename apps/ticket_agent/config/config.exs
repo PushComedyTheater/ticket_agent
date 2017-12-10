@@ -19,6 +19,11 @@ config :coherence,
 
 # config :oauth2, debug: true
 
+config :coherence,
+  email_from_name: "Push Comedy Theater",
+  email_from_email: "support@pushcomedytheater.com"
+
+
 config :coherence, TicketAgentWeb.Coherence.Mailer,
   adapter: Swoosh.Adapters.Mailgun,
   api_key: System.get_env("MAILGUN_API_KEY"),
@@ -47,7 +52,11 @@ config :ticket_agent, Twitter,
   consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
   redirect_uri: System.get_env("TWITTER_REDIRECT_URI")
 
-config :ticket_agent, :ticket_lock_length, String.to_integer(System.get_env("TICKET_LOCK_LENGTH"))
+value = case System.get_env("TICKET_LOCK_LENGTH") do
+  nil -> 302
+  value -> String.to_integer(value)
+end
+config :ticket_agent, :ticket_lock_length, value
 
 config :ticket_agent, Stripe, 
   secret_key: System.get_env("STRIPE_SECRET_KEY"),

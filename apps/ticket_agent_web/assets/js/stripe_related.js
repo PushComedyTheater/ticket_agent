@@ -121,10 +121,11 @@ window.load_window_values = function () {
 window.stripeTokenHandler = function (result, ev) {
   //window.console_log("We got a token");
   //window.console_log(result);
-  console.log(window.parse_stripe_response(result));
-  var values = $.extend({}, window.load_window_values(), result);
-  console.log(values);
-  send_token_for_charge(result, ev);
+  var stripeValues = window.parse_stripe_response(result);
+  // //window.console_log("loading window values and concating");
+  var values = $.extend({}, window.load_window_values(), stripeValues);
+  // //window.console_dir(values);
+  window.send_token_for_charge(values, ev);
 }
 
 window.send_token_for_charge = function (values, ev) {
