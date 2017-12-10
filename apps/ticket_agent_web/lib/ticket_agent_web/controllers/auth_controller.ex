@@ -2,6 +2,7 @@ defmodule TicketAgentWeb.AuthController do
   use TicketAgentWeb, :controller
   use Coherence.Config
   alias TicketAgent.{Repo, User, UserCredential}
+  alias TicketAgent.{Facebook, Google, Twitter}
 
   @doc """
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider

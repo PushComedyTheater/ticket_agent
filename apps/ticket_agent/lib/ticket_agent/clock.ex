@@ -6,9 +6,9 @@ defmodule TicketAgent.Clock do
   end
 
   def init([]) do
-    children = []
-      # worker(TicketAgent.Clock.ResetTickets, [])
-    # ]
+    children = [
+      #worker(TicketAgent.Clock.ResetTickets, [])
+    ]
     supervise(children, strategy: :one_for_one, name: TicketAgent.ClockSupervisor)
   end
 

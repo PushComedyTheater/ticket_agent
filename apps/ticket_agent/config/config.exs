@@ -46,3 +46,10 @@ config :ticket_agent, Twitter,
   consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
   consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
   redirect_uri: System.get_env("TWITTER_REDIRECT_URI")
+
+config :ticket_agent, :ticket_lock_length, String.to_integer(System.get_env("TICKET_LOCK_LENGTH"))
+
+config :ticket_agent, Stripe, 
+  secret_key: System.get_env("STRIPE_SECRET_KEY"),
+  publishable_key: System.get_env("STRIPE_PUBLISHABLE_KEY"),
+  api_url: System.get_env("STRIPE_API_URL")

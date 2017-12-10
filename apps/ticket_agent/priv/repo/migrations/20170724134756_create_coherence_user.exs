@@ -22,11 +22,13 @@ defmodule TicketAgent.Repo.Migrations.CreateCoherenceUser do
       add :last_sign_in_ip, :string
       # unlockable_with_token
       add :unlock_token, :string
+      add :stripe_customer_id, :string
 
       timestamps()
     end
     create unique_index(:users, [:email])
     create index(:users, [:name])
+    create index(:users, [:stripe_customer_id])
 
   end
 end

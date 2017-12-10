@@ -11,6 +11,11 @@ defmodule TicketAgentWeb.Router do
     plug Coherence.Authentication.Session  # Add this
   end
 
+  pipeline :webhook_browser do
+    plug :accepts, ["html"]
+    plug :put_secure_browser_headers
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug :fetch_session
@@ -51,10 +56,17 @@ defmodule TicketAgentWeb.Router do
     coherence_routes :protected
   end
 
+  scope "/webhook", TicketAgentWeb do
+    pipe_through :webhook_browser
+
+    post "/:provider", WebhookController, :create
+  end
+
   scope "/", TicketAgentWeb do
     pipe_through :browser # Use the default browser stack
     resources "/about", AboutController, only: [:index, :show]
     resources "/camps", CampController, only: [:index, :show]
+    resources "/charges", ChargeController, only: [:create]
     resources "/events", EventController, only: [:index, :show], param: "titled_slug"
     resources "/tickets", TicketController
     resources "/orders", OrderController

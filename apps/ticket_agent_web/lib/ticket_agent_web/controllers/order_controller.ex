@@ -2,7 +2,9 @@ defmodule TicketAgentWeb.OrderController do
   require Logger
   use TicketAgentWeb, :controller
 
-  alias TicketAgent.{Event, Listing, Order, OrderFinder, OrderState, Random, Repo, TicketState}
+  alias TicketAgent.{Event, Listing, Order, Random, Repo}
+  alias TicketAgent.State.OrderState
+  alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.ValidateShowRequest when action in [:new]
   plug TicketAgentWeb.ShowLoader when action in [:new]
 
@@ -29,59 +31,37 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def create(conn, params) do
-    # {order, tickets, locked_until} = 
-    #   params
-    #   |> find_or_create_order()
-    #   |> maybe_reserve_tickets(params)
+    {order, tickets, locked_until} = 
+      params
+      |> OrderFinder.find_or_create_order()
+      |> maybe_reserve_tickets(params)
 
-    order = find_or_create_order(params)
-    tickets = []
-    locked_until = NaiveDateTime.utc_now()
-    
     conn
     |> put_status(200)
     |> render("create.json", %{order: order, tickets: tickets, locked_until: locked_until})
   end
 
-  defp maybe_reserve_tickets(order, params) do
-    IO.inspect "maybereserve"
-    order
-    |> TicketState.reserve_tickets(params["listing_id"], params["tickets"])
-  end
-
-  defp find_or_create_order(%{"order_id" => "", "name" => name, "email" => email, "total_price" => total_price} = params) do
-    # create order since it's not
-    Logger.info "No order id was passed from the template (params: #{inspect params}"
-
-    case OrderFinder.find_started_order(email, total_price) do
+  def delete(conn, params) do
+    case OrderFinder.find_started_order(params["email"], params["total_price"]) do
       nil ->
-        Logger.info "Creating a new order for this user"
-        %Order{}
-        |> Order.changeset(%{
-          slug: Random.generate_slug(),
-          name: name,
-          email_address: email,
-          total_price: total_price,
-          status: "started"
-        })
-        |> Repo.insert!
+        Logger.warn("Not able to find this order")
       order ->
-        Logger.info "Found an existing started order #{inspect order}"
         order
+        |> maybe_release_tickets(params)        
     end
+
+    conn
+    |> put_status(500)
+    |> render("delete.json", %{})
   end
 
-  defp find_or_create_order(%{"order_id" => order_id, "name" => name, "email" => email, "total_price" => total_price} = params) do
-    # create order since it's not
-    Logger.info "Order ID #{order_id} was passed from the template (params: #{inspect params}"
-    order = Repo.get_by!(Order, slug: order_id)
-
+  defp maybe_reserve_tickets(order, %{"listing_id" => listing_id, "tickets" => tickets} = params) do
     order
-    |> Order.changeset(%{
-      name: name,
-      email_address: email,
-      total_price: total_price
-    })
-    |> Repo.update!    
+    |> OrderState.reserve_tickets(listing_id, tickets)
+  end
+
+  defp maybe_release_tickets(order, %{"listing_id" => listing_id, "tickets" => tickets} = params) do
+    order
+    |> OrderState.destroy_order(listing_id, tickets)
   end  
 end

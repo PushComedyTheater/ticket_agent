@@ -1,0 +1,24 @@
+<form class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
+  <div align="center">
+    <h3 class="g-mb-10"><strong>Ticket Quantity</strong></h3>
+  </div>
+
+  <div class="form-inline">
+    <div class="form-group col-sm-4 g-pt-10">
+      <p class="form-control-static">Number of tickets: </p>
+    </div>
+    <div class="form-group col-sm-4">
+      <select class="form-control rounded-0" id="ticket_count">
+        <%= for i <- (1..@maximum_tickets) do %>
+          <option><%= i %></option>
+        <% end %>
+      </select>
+    </div>
+    <div class="form-group col-sm-4">
+      Total:&nbsp;&nbsp;<strong id="invoice_cost">$ <%= event_cost(@show) %></strong>
+    </div>
+  </div>   
+      <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none; margin-top: 15px;">
+        <strong>Uh oh!</strong> You must choose more than zero tickets.
+      </div>          
+</form>

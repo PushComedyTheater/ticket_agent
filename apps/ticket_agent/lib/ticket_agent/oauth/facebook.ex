@@ -1,4 +1,4 @@
-defmodule Facebook do
+defmodule TicketAgent.Facebook do
   @moduledoc """
   An OAuth2 strategy for Facebook.
   """

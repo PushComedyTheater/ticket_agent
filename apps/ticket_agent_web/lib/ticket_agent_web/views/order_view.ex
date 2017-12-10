@@ -9,7 +9,13 @@ defmodule TicketAgentWeb.OrderView do
       total_price: order.total_price,
       status: order.status,
       locked_until: locked_until,
-      tickets: tickets
+      tickets: render_many(tickets, TicketAgentWeb.TicketView, "show.json")
     }
-  end  
+  end
+
+  def render("delete.json", %{}) do
+    %{
+      message: "ok"
+    }
+  end
 end

@@ -10,9 +10,9 @@ defmodule Mix.Tasks.LoadEvents do
 
     non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
                 |> String.split("\n")
-    # parse_current(non_words)
+    parse_current(non_words)
     parse_history_files(non_words)
-  end
+  end 
 
   def parse_current(now_words) do
     body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")  

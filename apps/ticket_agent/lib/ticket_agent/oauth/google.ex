@@ -1,4 +1,4 @@
-defmodule Google do
+defmodule TicketAgent.Google do
   @moduledoc """
   An OAuth2 strategy for Google.
   """

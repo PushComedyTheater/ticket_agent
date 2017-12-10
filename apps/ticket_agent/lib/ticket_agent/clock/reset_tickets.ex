@@ -16,7 +16,6 @@ defmodule TicketAgent.Clock.ResetTickets do
 
   # Process
   def handle_info(:tick, interval) do
-    Logger.info "handle_info"
     expired_tickets_query()
     |> Repo.all
     |> Enum.each(&release_ticket/1)
@@ -59,7 +58,6 @@ defmodule TicketAgent.Clock.ResetTickets do
       t in Ticket, 
       where: t.status == "locked",
       where: fragment("? <= (NOW() AT TIME ZONE 'UTC')", t.locked_until),
-      lock: "FOR UPDATE",
       select: t
     )  
   end

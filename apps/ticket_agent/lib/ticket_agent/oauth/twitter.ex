@@ -1,4 +1,4 @@
-defmodule Twitter do
+defmodule TicketAgent.Twitter do
   @moduledoc false
   def authorize_url!(params \\ []) do
     config = Application.get_env(:ticket_agent, Twitter)

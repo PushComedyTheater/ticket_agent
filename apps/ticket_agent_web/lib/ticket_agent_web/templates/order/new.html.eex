@@ -1,13 +1,10 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
 <!-- Demo modal window -->
 <div id="modal-type-aftersometime" class="js-autonomous-popup text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;" data-modal-type="aftersometime" data-open-effect="zoomIn" data-close-effect="zoomOut" data-delay="100" data-speed="500">
-  <button type="button" class="close" onclick="Custombox.modal.close();">
-    <i class="hs-icon hs-icon-close"></i>
-  </button>
   <h4 class="g-mb-20">Preparing Your Order</h4>
   <hr>
   <div class="progress g-height-20 rounded-0 u-progress g-mb-20">
-    <div id="ticket_bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" data-percentage="0"></div>
+    <div id="ticket_bar" class="progress-bar" role="progressbar" style="width: 20%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" data-percentage="0"></div>
   </div>
   <p>We are validating and reserving your tickets and registration.</p>
 </div>
@@ -93,18 +90,16 @@
   </div>
 </section>
 <!-- JS Plugins Init. -->
+
 <script type="text/javascript">
   window.buyer_email = "<%= @conn.assigns.buyer_email %>";
   window.buyer_name = "<%= @conn.assigns.buyer_name %>";
   window.csrf_token = $('meta[name="csrf-token"]').attr('content');
   window.guest_checkout = <%= @conn.assigns.guest_checkout %>;
+  window.listing_id = "<%= @conn.assigns.listing_id %>";
   window.order_id = "";
   window.show_id = "<%= @conn.assigns.show_id %>";
-  window.listing_id = "<%= @conn.assigns.listing_id %>";
-  window.ticket_count = <%= @conn.assigns.ticket_count %>;
-
-  window.reserve_tickets = function() {
-    var tickets = [
+  window.tickets = [
 <%= for ticket <- @conn.assigns.tickets do %>
       {
         listing_id: window.listing_id,
@@ -112,180 +107,19 @@
         name: "<%= ticket["name"] %>",
       },
 <% end %>      
-    ]
-    var values = {
-      email: window.buyer_email,
-      name: window.buyer_name,
-      guest_checkout: window.guest_checkout,
-      order_id: window.order_id,
-      listing_id: window.listing_id,
-      total_price: <%= @conn.assigns.total_price %>,
-      tickets: tickets
-    }
-    $.ajax({
-        // The URL for the request
-        url: "/orders",
-        // The data to send (will be converted to a query string)
-        data: JSON.stringify(values),
-        // Whether this is a POST or GET request
-        type: "POST",
-        // The type of data we expect back
-        contentType: "application/json",
-        dataType: "json",
-        // add in csrf_token
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
-        },        
-    }).done(function( json ) {
-      // Code to run if the request succeeds (is done);
-      // The response is passed to the function
-      console.log(json);
-      window.order_id = json.slug;
-      var locked_until = moment(json.locked_until).tz('America/New_York');
-      var now = moment();
+    ];
+  window.ticket_price = <%= @conn.assigns.ticket_cost %>;
+  window.total_price = <%= @conn.assigns.total_price %>;  
 
-      if (locked_until.diff(now) > 0) {
-        var until = locked_until.format("YYYY/MM/DD HH:mm:ss");
-        $("#locked_until").countdown(
-          until, 
-          function(event) {
-            $(this).text(event.strftime('%M:%S'));
-          }).on(
-            'finish.countdown', 
-            function(event) {
-              $("#ticket_countdown").html("Your tickets were released.")
-        });
-      } else {
-        window.location.href = "/events/" + window.show_id + "?msg=released_tickets"
-      }  
-    }).fail(function( xhr, status, errorThrown ) {
-      // Code to run if the request fails; the raw request and
-      // status codes are passed to the function
-      window.log_it("Received error creating order: ")
-      window.log_it("errorThrown: " + errorThrown);
-    });    
-  }
-  
-  window.stripeTokenHandler = function(token) {
-    console.log(token);
-  }
-
-  $(document).on('ready', function () {
-    window.reserve_tickets();
-
-    $.HSCore.components.HSModalWindow.init('.js-autonomous-popup', {
-      autonomous: true
-    });    
-
-    // Create a Stripe client
-    var stripe = Stripe('pk_test_DDoJlLuiZAEY5SnIRu9IKOzp');
-
-    var paymentRequest = stripe.paymentRequest({
-      country: 'US',
-      currency: 'usd',
-      requestPayerName: true,
-      requestPayerPhone: true,
-      requestPayerEmail: true,
-      total: {
-        label: "Total for <%= @conn.assigns.ticket_count %> ticket(s)",
-        amount: <%= @conn.assigns.total_price * 100 %>,
-      },
-      displayItems: [
-        <%= for ticket <- @conn.assigns.tickets do %>
-          {
-            label: "Ticket For <%= ticket["name"] %>",
-            amount: <%= @conn.assigns.ticket_cost %>,
-          },
-        <% end %>
-      ],      
-    });
-
-    // Create an instance of Elements
-    var elements = stripe.elements();
-
-    var prButton = elements.create('paymentRequestButton', {
-      paymentRequest: paymentRequest,
-    });
-
-    paymentRequest.canMakePayment().then(function(result) {
-      if (result) {
-        prButton.mount('#payment-request-button');
-      } else {
-        document.getElementById('payment-request-button').style.display = 'none';
+   $(document).on('ready', function () {
+    var modal = new Custombox.modal({
+      content: {
+        effect: 'fadein',
+        target: '#modal-type-aftersometime'
       }
     });
-
-    paymentRequest.on('token', function(ev) {
-      console.log(ev);
-      // Send the token to your server to charge it!
-      fetch('/charges', {
-        method: 'POST',
-        body: JSON.stringify({token: ev.token.id}),
-      })
-      .then(function(response) {
-        if (response.ok) {
-          // Report to the browser that the payment was successful, prompting
-          // it to close the browser payment interface.
-          ev.complete('success');
-        } else {
-          // Report to the browser that the payment failed, prompting it to
-          // re-show the payment interface, or show an error message and close
-          // the payment interface.
-          ev.complete('fail');
-        }
-      });
-    });
-
-    var cardNumber = elements.create('cardNumber', {});
-    cardNumber.mount('#card-number');
-
-    cardNumber.on("change", function(event) {
-      if (event.error) {
-        $("#card_error").show()
-        $("#card_error").html(event.error.message);
-      }
-    });
-
-    var cardExpiry = elements.create('cardExpiry', {});
-    cardExpiry.mount('#card-expiry');
-
-    cardExpiry.on("change", function(event) {
-      if (event.error) {
-        $("#card_error").show()
-        $("#card_error").html(event.error.message);
-      }
-    });
-
-    var cardCvc = elements.create('cardCvc', {});
-    cardCvc.mount('#card-cvc');
-
-    cardCvc.on("change", function(event) {
-      if (event.error) {
-        $("#card_error").show()
-        $("#card_error").html(event.error.message);
-
-      }
-    });
-    
-    $("#payment-form").on("submit", function(e) {
-      e.preventDefault();
-
-      var additionalData = {
-        name: window.buyer_name,
-        address_zip: $("#card_zip").val()
-      };
-
-      stripe.createToken(cardNumber, additionalData).then(function(result) {
-        if (result.error) {
-          // Inform the user if there was an error
-          console.log(result.error);
-        } else {
-          // Send the token to your server
-          window.stripeTokenHandler(result.token);
-        }
-      });
-
-    })
-  });
+    modal.open();     
+   });
 </script>
+<script type="text/javascript" src="/js/stripe_related.js"></script>
 <script src="https://assets.pushcomedytheater.com/2.0/jquery.countdown.min.js"></script>

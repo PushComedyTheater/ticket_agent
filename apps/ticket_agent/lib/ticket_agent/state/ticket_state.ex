@@ -1,5 +1,5 @@
 require Logger
-defmodule TicketAgent.TicketState do
+defmodule TicketAgent.State.TicketState do
   alias Ecto.Multi
   alias TicketAgent.{Listing, Order, Repo, Ticket}
   import Ecto.{Changeset, Query}
@@ -15,31 +15,7 @@ defmodule TicketAgent.TicketState do
     ticket_count = ticket_count - existing_count
     Logger.info "There are #{existing_count} existing tickets, meaning we have to create #{ticket_count} tickets"
 
-    # func = reserve_transaction(listing_id, ticket_count, order_id, tickets)
-    # {:ok, _} = Repo.transaction(func)
-
-    # tickets = 
-    #   listing_id
-    #   |> find_query(order_id)
-    #   |> Repo.all
-
-    # minium_ticket = Enum.min_by(tickets, fn(ticket) -> ticket.locked_until end)
     
-    # {:ok, datetime} = Calendar.NaiveDateTime.to_date_time(minium_ticket.locked_until, "UTC") 
-    # locked_until = Calendar.DateTime.Format.iso8601_basic(datetime)
-
-    # tickets =
-    #   tickets
-    #   |> Enum.reduce([], fn(ticket, acc) ->
-    #     acc ++ [
-    #       %{
-    #         id: ticket.id,
-    #         email: ticket.guest_email,
-    #         name: ticket.guest_name,
-    #         slug: ticket.slug
-    #       }
-    #     ]
-    #   end)
     {order, [], NaiveDateTime.utc_now()}
   end
 
@@ -88,7 +64,7 @@ defmodule TicketAgent.TicketState do
       t in Ticket, 
       where: t.listing_id == ^listing_id,
       where: t.order_id == ^order_id,
-      where: t.status == "locked",
+      where: t.status == "locked" or t.status == "purchased",
       select: t
     )    
   end

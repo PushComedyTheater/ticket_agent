@@ -7,6 +7,16 @@ defmodule TicketAgentWeb.TicketView do
     }
   end  
 
+  def render("show.json", %{ticket: ticket}) do
+    %{
+      id: ticket.id,
+      name: ticket.guest_name,
+      email: ticket.guest_email,
+      status: ticket.status,
+      locked_until: ticket.locked_until
+    }
+  end  
+
   def event_date(date) do
     #Sat, Dec 2, 2017
     Calendar.Strftime.strftime!(date, "%a %b %d, %Y")
