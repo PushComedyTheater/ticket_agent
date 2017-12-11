@@ -1,14 +1,13 @@
 defmodule TicketAgent.Twitter do
   @moduledoc false
-  def authorize_url!(params \\ []) do
+  def authorize_url!(params \\ %{}) do
     config = Application.get_env(:ticket_agent, Twitter)
 
     ExTwitter.configure(:process, config)
     
     token = ExTwitter.request_token(config[:redirect_uri])
-    
-    {:ok, authenticate_url} = ExTwitter.authorize_url(token.oauth_token)
-    
+
+    {:ok, authenticate_url} = ExTwitter.authorize_url(token.oauth_token, params)
     authenticate_url
   end
 

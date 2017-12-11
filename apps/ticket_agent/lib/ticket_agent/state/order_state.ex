@@ -5,6 +5,40 @@ defmodule TicketAgent.State.OrderState do
   alias TicketAgent.Finders.TicketFinder
   import Ecto.{Changeset, Query}
 
+  def set_order_processing_transaction(order) do
+    Multi.new()
+    |> Multi.update_all(:processing_order,
+      from(
+        o in Order, 
+        where: o.id == ^order.id,
+        where: o.status == "started"
+      ),
+      [
+        set: [
+          status: "processing"
+        ]
+      ],
+      returning: true
+    )    
+  end
+
+  def set_order_completed_transaction(order) do
+    Multi.new()
+    |> Multi.update_all(:processing_order,
+      from(
+        o in Order, 
+        where: o.id == ^order.id,
+        where: o.status == "processing"
+      ),
+      [
+        set: [
+          status: "completed"
+        ]
+      ],
+      returning: true
+    )    
+  end
+
   def reserve_tickets(%{id: order_id} = order, listing_id, input_tickets) do
     ticket_count = Enum.count(input_tickets)
 

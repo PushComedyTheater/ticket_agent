@@ -13,12 +13,13 @@ defmodule TicketAgent.User do
     field :email, :string
     coherence_schema()
     field :role, :string
+    field :stripe_customer_id, :string
     timestamps()
   end
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:name, :email, :account_id, :role] ++ coherence_fields())
+    |> cast(params, [:name, :email, :account_id, :role, :stripe_customer_id] ++ coherence_fields())
     |> validate_required([:name, :email])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
@@ -66,5 +67,24 @@ defmodule TicketAgent.User do
     end
 
     user
+  end
+
+  def get_stripe_customer_id(nil), do: nil
+  def get_stripe_customer_id(%{id: user_id} = user) do
+    from(
+      u in User,
+      where: u.id == ^user_id,
+      select: u.stripe_customer_id
+    )
+    |> Repo.one!
+  end
+
+  def update_stripe_customer_id(user, stripe_customer_id) do
+    user
+    |> User.changeset(%{
+      stripe_customer_id: stripe_customer_id
+    })
+    |> Repo.update!
+    |> IO.inspect
   end
 end

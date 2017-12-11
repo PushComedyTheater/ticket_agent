@@ -1,7 +1,8 @@
 defmodule TicketAgent.Services.Stripe do
+  require Logger
   @stripe_api_version "2017-08-15"
   @stripe_user_agent "TicketAgent 1.0"
-  alias TicketAgent.{OrderDetail, Repo}
+  alias TicketAgent.{OrderDetail, Repo, User}
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
@@ -14,12 +15,14 @@ defmodule TicketAgent.Services.Stripe do
     create_charge(token, nil, amount, description, metadata)
     |> insert_order_details(order_id)
   end  
-  
-  def create_customer(token, name, email, metadata \\ %{}) do
+   
+  def create_customer(token, user, stripe_customer_id, metadata \\ %{})
+  def create_customer(token, user, nil, metadata) do
+    Logger.info "Creating a customer because we don't have a key"
     values = %{
       "source" => token, 
-      "email" => email, 
-      "description" => name
+      "email" => user.email, 
+      "description" => user.name
     }
     
     values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
@@ -29,12 +32,30 @@ defmodule TicketAgent.Services.Stripe do
     body = 
       values
       |> URI.encode_query()
-      |> IO.inspect
 
-    uri = api_url() <> "/customers"
+    uri = "#{api_url()}/customers"
 
-    request(:post, uri, [], body, hackney_opts())
-  end  
+    case request(:post, uri, [], body, hackney_opts()) do
+      {:ok, %{"id" => stripe_customer_id} = response} ->
+        {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
+      anything ->
+        Logger.error "Received bad response from Stripe"
+        {:error, anything}
+    end
+  end
+
+  def create_customer(token, user, stripe_customer_id, metadata) when not is_nil(stripe_customer_id) do
+    uri = "#{api_url()}/customers/#{stripe_customer_id}"
+    Logger.info "Getting a customer because we have a key from #{uri}"
+    
+    case request(:get, uri, [], "", hackney_opts()) do
+      {:ok, %{"id" => stripe_customer_id} = response} ->
+        {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
+      {:error, error} ->
+        Logger.error "Received bad response from Stripe #{inspect error}"
+        {:error, :stripe_error}        
+    end
+  end
 
   defp create_charge(token, customer, amount, description, metadata) do
     values = load_charge_values(token, customer, amount, description, metadata)

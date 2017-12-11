@@ -19,6 +19,41 @@ defmodule TicketAgent.State.TicketState do
     {order, [], NaiveDateTime.utc_now()}
   end
 
+  def set_tickets_processing_transaction(ticket_ids) do
+    Multi.new()
+    |> Multi.update_all(:available_tickets,
+      from(
+        t in Ticket, 
+        where: t.id in ^ticket_ids,
+        where: t.status == "locked"
+      ),
+      [
+        set: [
+          status: "processing",
+          locked_until: NaiveDateTime.add(NaiveDateTime.utc_now(), 300)
+        ]
+      ],
+      returning: true
+    )
+  end
+
+  def set_tickets_purchased_transaction(ticket_ids) do
+    Multi.new()
+    |> Multi.update_all(:available_tickets,
+      from(
+        t in Ticket, 
+        where: t.id in ^ticket_ids,
+        where: t.status == "processing"
+      ),
+      [
+        set: [
+          status: "purchased",
+          locked_until: nil
+        ]
+      ],
+      returning: true
+    )
+  end  
   defp reserve_transaction(listing_id, ticket_count, order_id, tickets) do
     fn ->
       load_query(listing_id, ticket_count)

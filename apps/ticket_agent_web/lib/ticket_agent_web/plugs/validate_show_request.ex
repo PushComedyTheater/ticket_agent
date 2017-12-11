@@ -18,6 +18,14 @@ defmodule TicketAgentWeb.ValidateShowRequest do
       |> Base.decode64!()
       |> Poison.decode!
 
+    {buyer_name, buyer_email} = case Coherence.logged_in?(conn) do
+      true ->
+        user = Coherence.current_user(conn)
+        {user.name, user.email}
+      false ->
+        {buyer_name, buyer_email}
+    end
+
     if encoded_show_id == show_id do
       conn
       |> assign(:buyer_name, buyer_name)

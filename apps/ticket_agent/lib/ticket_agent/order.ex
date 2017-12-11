@@ -10,6 +10,7 @@ defmodule TicketAgent.Order do
 
   schema "orders" do
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
+    has_one :credit_card, CreditCard
     field :slug, :string
     field :name, :string
     field :email_address, :string

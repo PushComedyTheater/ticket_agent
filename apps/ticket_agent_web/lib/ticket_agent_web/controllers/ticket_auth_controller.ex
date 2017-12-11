@@ -11,6 +11,7 @@ defmodule TicketAgentWeb.TicketAuthController do
     """
     conn
     |> assign(:message, message)
+    |> assign(:user_return_to, ticket_path(conn, :new, show_id: params["show_id"]))
     |> put_session("user_return_to", ticket_path(conn, :new, show_id: params["show_id"]))
     |> render(:new, email: "")
   end

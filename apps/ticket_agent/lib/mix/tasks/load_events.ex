@@ -10,7 +10,7 @@ defmodule Mix.Tasks.LoadEvents do
 
     non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
                 |> String.split("\n")
-    parse_current(non_words)
+    # parse_current(non_words)
     parse_history_files(non_words)
   end 
 
@@ -204,7 +204,7 @@ defmodule Mix.Tasks.LoadEvents do
     tags = load_tags(price, title, description, type)
     keywords = get_keywords(description, non_words)
 
-    {_, cover_photo} = process_images(body["images"], listing["event_photo_id"])
+    cover_photo = process_images(body["images"], listing["event_photo_id"])
 
     item = EEx.eval_file(
       "./apps/ticket_agent/lib/mix/tasks/templates/event.eex",
@@ -250,15 +250,14 @@ defmodule Mix.Tasks.LoadEvents do
   
   defp process_images(images, event_photo_id) do
     photo = Enum.find(images, fn(x) -> x["id"] == event_photo_id end)
-    %{"social_image" => social_photo, "url" => cover_photo} = photo
-
-    social_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, social_photo) |> hd) <> "/-/inline/yes/"
-    social_public_id = String.split(social_photo, "/") |> Enum.at(3)
+    %{"url" => photo_url} = photo
     
-    cover_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, cover_photo) |> hd) <> "/-/inline/yes/"
-    cover_public_id = String.split(cover_photo, "/") |> Enum.at(3)
+
+    photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, photo_url) |> hd) <> "/-/inline/yes/"
+    public_id = String.split(photo, "/") |> Enum.at(3)
    
-    {Cloudinex.Url.for(social_public_id), Cloudinex.Url.for(cover_public_id)}
+    process_image(photo, public_id)
+    Cloudinex.Url.for(public_id)
   end
 
   def load_tags(_, _, _, :class), do: ["class"]
@@ -318,24 +317,23 @@ defmodule Mix.Tasks.LoadEvents do
     end)  
   end
 
-  defp process_image do
-    # IO.puts social_public_id
-    # Logger.info "process_images -> Loading social photo with public id #{social_public_id}"
+  defp process_image(photo, public_id) do
+    Logger.info "process_images -> Loading photo #{photo} with public id #{public_id}"
 
-    # social_photo = case Cloudinex.resource(social_public_id) do
-    #   {:ok, %{"secure_url" => social_photo}} ->
-    #     Logger.info "process_images -> Social photo with public_id #{social_public_id} found"
-    #     social_photo
-    #   {:error, _} ->
-    #     Logger.warn "process_images -> Social photo with public_id #{social_public_id} not found, uploading"
-    #     case Cloudinex.Uploader.upload_url(social_photo, %{public_id: social_public_id}) do
-    #       {:ok, %{"secure_url" => uploaded_social_photo}} ->
-    #         uploaded_social_photo
-    #       {:error, reason} ->
-    #         Logger.error "#{inspect reason}"
-    #         social_photo
-    #     end
-    # end 
+    case Cloudinex.resource(public_id) do
+      {:ok, %{"secure_url" => c_photo}} ->
+        Logger.info "process_images -> Photo #{c_photo} with public_id #{public_id} found"
+        c_photo
+      {:error, _} ->
+        Logger.warn "process_images -> Photo with public_id #{public_id} not found, uploading"
+        case Cloudinex.Uploader.upload_url(photo, %{public_id: public_id}) do
+          {:ok, %{"secure_url" => uploaded_photo}} ->
+            uploaded_photo
+          {:error, reason} ->
+            Logger.error "#{inspect reason}"
+            photo
+        end
+    end
   end    
 
   defp blah do

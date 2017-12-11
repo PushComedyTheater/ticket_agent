@@ -22,6 +22,8 @@ defmodule TicketAgentWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Logger
 
+  # plug TicketAgentWeb.AuthenticateStripe
+
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],

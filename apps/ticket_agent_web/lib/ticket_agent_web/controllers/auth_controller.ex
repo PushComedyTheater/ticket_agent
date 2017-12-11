@@ -8,8 +8,8 @@ defmodule TicketAgentWeb.AuthController do
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
   based on the chosen strategy.
   """
-  def index(conn, %{"provider" => provider}) do
-    redirect conn, external: authorize_url!(provider)
+  def index(conn, %{"provider" => provider} = params) do
+    redirect conn, external: authorize_url!(provider, %{redirect_uri: params["redirect_uri"]})
   end
 
   def callback(conn, %{"provider" => provider, "denied" => denied}) do
@@ -22,7 +22,14 @@ defmodule TicketAgentWeb.AuthController do
   be used to request an access token. The access token will then be used to
   access protected resources on behalf of the user.
   """
-  def callback(conn, %{"provider" => "twitter", "oauth_token" => oauth_token, "oauth_verifier" => oauth_verifier}) do
+  def callback(conn, %{"provider" => "twitter", "oauth_token" => oauth_token, "oauth_verifier" => oauth_verifier} = params) do
+    redirect_uri = case get_session(conn, "user_return_to") do
+      nil ->
+        "/dashboard"
+      uri ->
+        uri
+    end
+    
     twitter_user =
       oauth_token
       |> Twitter.get_token!(oauth_verifier)
@@ -36,9 +43,11 @@ defmodule TicketAgentWeb.AuthController do
           twitter_user.access_token,
           twitter_user.access_token_secret
         )
+
         Config.auth_module()
         |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
-        |> redirect(to: "/dashboard")
+        |> delete_session("user_return_to")
+        |> redirect(to: redirect_uri)
       else 
         conn
         |> put_flash(:error, "There was an issue signing into Twitter. Please try again.")
@@ -46,7 +55,14 @@ defmodule TicketAgentWeb.AuthController do
       end
   end
 
-  def callback(conn, %{"provider" => provider, "code" => code}) do
+  def callback(conn, %{"provider" => provider, "code" => code} = params) do
+    redirect_uri = case get_session(conn, "user_return_to") do
+      nil ->
+        "/dashboard"
+      uri ->
+        uri
+    end
+
     client = get_token!(provider, code)
     user = get_user!(provider, client)
 
@@ -57,12 +73,16 @@ defmodule TicketAgentWeb.AuthController do
                                                 nil)
     Config.auth_module()
     |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
-    |> redirect(to: "/dashboard")
+    |> redirect(to: redirect_uri)
   end
 
-  defp authorize_url!("google"),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
-  defp authorize_url!("facebook"), do: TicketAgent.Facebook.authorize_url!(scope: "user_photos, email")
-  defp authorize_url!("twitter"), do: Twitter.authorize_url!()
+  # defp authorize_url!("google"),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
+  defp authorize_url!("facebook", params) do
+    IO.puts "authorize_url! "
+    IO.inspect params
+    TicketAgent.Facebook.authorize_url!(scope: "user_photos, email", turtle: "bing")
+  end
+  defp authorize_url!("twitter", params), do: Twitter.authorize_url!(params)
   defp authorize_url!(_), do: raise "No matching provider available"
 
   defp get_token!("google", code),   do: TicketAgent.Google.get_token!(code: code)
