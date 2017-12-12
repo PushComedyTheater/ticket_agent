@@ -6,6 +6,7 @@ defmodule TicketAgent.Clock.ResetTickets do
   alias TicketAgent.{Order, Repo, Ticket}
 
   def start_link(interval \\ 5_000) do
+    Logger.info "Starting link with interval #{interval}"
     GenServer.start_link(__MODULE__, interval, name: __MODULE__)
   end
 

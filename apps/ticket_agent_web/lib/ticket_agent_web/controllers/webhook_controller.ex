@@ -1,11 +1,15 @@
 defmodule TicketAgentWeb.WebhookController do
   require Logger
+  alias TicketAgent.{Repo, WebhookDetail}
   alias TicketAgent.Webhooks.Stripe
   use TicketAgentWeb, :controller
 
   def create(conn, %{"provider" => "stripe"} = params) do
     Logger.info "Processing Stripe Webhook"
-    
+    %WebhookDetail{}
+    |> WebhookDetail.changeset(%{request: params})
+    |> Repo.insert
+
     Stripe.process_webhook(params)
 
     conn

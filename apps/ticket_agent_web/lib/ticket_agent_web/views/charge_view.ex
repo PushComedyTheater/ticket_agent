@@ -14,6 +14,12 @@ defmodule TicketAgentWeb.ChargeView do
     }
   end
 
+  def render("error.json", %{code: code, reason: reason}) do
+    %{
+      code: code,
+      reason: reason
+    }
+  end  
 
   def render("error.json", %{reason: reason}) do
     %{

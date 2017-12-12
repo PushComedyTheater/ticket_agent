@@ -53,4 +53,18 @@ defmodule TicketAgent.Finders.OrderFinder do
 
     Repo.one(query)
   end
+
+  def find_order(order_slug, user_id) do
+    Logger.info "OrderFinder.find_order: looking for slug #{order_slug} and user_id #{user_id}" 
+    query =
+      from(
+        o in Order,
+        where: o.user_id == ^user_id,
+        where: o.slug == ^order_slug,
+        limit: 1,
+        select: o
+      )
+
+    Repo.one(query)
+  end  
 end

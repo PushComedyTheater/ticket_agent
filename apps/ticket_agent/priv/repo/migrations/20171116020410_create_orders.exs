@@ -10,8 +10,6 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
       add :credit_card_id, references(:credit_cards, on_delete: :nothing, type: :binary_id)
       add :slug, :text, null: false
       add :guest_checkout, :boolean, default: false
-      add :name, :text
-      add :email_address, :text
       add :status, :order_status, default: "started"
       add :total_price, :integer, null: false
       timestamps()
@@ -19,7 +17,7 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
 
     create unique_index(:orders, [:slug])
     create index(:orders, [:user_id])
-    create index(:orders, [:email_address])
+    create index(:orders, [:credit_card_id])
     create index(:orders, [:status])
   end
 end

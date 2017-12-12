@@ -1,25 +1,41 @@
-defmodule TicketAgentWeb.ShowLoader do
+defmodule TicketAgentWeb.Plugs.ShowLoader do
+  require Logger
   import Plug.Conn
-  alias TicketAgent.Listing
+  alias TicketAgent.Finders.ListingFinder
   def init(opts), do: opts
 
-  def call(%Plug.Conn{params: %{"show_id" => show_id}} = conn, _) do
-    case Listing.listing_with_ticket_count(show_id) do
+  def call(%Plug.Conn{params: %{"show_id" => slug}} = conn, _), do: load_listing(slug, conn)
+  def call(%Plug.Conn{params: %{"slug" => slug}} = conn, _), do: load_listing(slug, conn)
+
+  defp load_listing(slug, conn) do
+    Logger.info "ShowLoader.load_listing for slug #{slug}"
+    case ListingFinder.find_listing_by_slug(slug) do
       nil ->
+        Logger.info "ShowLoader.load_listing no listing for slug #{slug}"
         conn
         |> put_status(404)
         |> Phoenix.Controller.render(TicketAgentWeb.ErrorView, "404.html")
-      [listing, ticket_count] ->
-        ticket_cost = Listing.ticket_cost_number(listing) / 100
+      {listing, available_tickets} ->
+        available_ticket_count = cond do
+          Enum.count(available_tickets) > 20 ->
+            20
+          true ->
+            Enum.count(available_tickets)
+        end
 
+        ticket_price = Enum.at(available_tickets, 0).price / 100
+          
         conn
         |> Plug.Conn.assign(:buyer_name, Map.get(conn.assigns, :buyer_name, nil))
         |> Plug.Conn.assign(:buyer_email, Map.get(conn.assigns, :buyer_email, nil))
-        |> Plug.Conn.assign(:ticket_cost_string, :erlang.float_to_binary(ticket_cost, decimals: 2))
+        |> Plug.Conn.assign(:ticket_cost_string, :erlang.float_to_binary(ticket_price, decimals: 2))
+        |> Plug.Conn.assign(:ticket_price, ticket_price)
         |> Plug.Conn.assign(:page_title, "#{listing.title} at Push Comedy Theater")
-        |> Plug.Conn.assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(listing.description, true))
-        |> Plug.Conn.assign(:page_image, Listing.listing_image(listing))
-        |> Plug.Conn.assign(:show, listing)
-    end
+        |> Plug.Conn.assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(listing.description, true))
+        |> Plug.Conn.assign(:page_image, TicketAgentWeb.SharedView.listing_image(listing))
+        |> Plug.Conn.assign(:listing, listing)
+        |> Plug.Conn.assign(:available_ticket_count, available_ticket_count)
+        |> Plug.Conn.assign(:available_tickets, available_tickets)
+      end
   end
 end

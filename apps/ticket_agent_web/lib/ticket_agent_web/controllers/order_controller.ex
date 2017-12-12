@@ -6,7 +6,19 @@ defmodule TicketAgentWeb.OrderController do
   alias TicketAgent.State.OrderState
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.ValidateShowRequest when action in [:new]
-  plug TicketAgentWeb.ShowLoader when action in [:new]
+  plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
+
+  def show(conn, %{"id" => order_id} = params) do
+    # case Coherence.current_user(conn) do
+      # nil ->
+      #   conn
+      #   |> redirect(to: order_path(conn, :new, %{show_id: id}))
+    # end
+
+    # order = OrderFinder.find_order(order_id, current_user.id)
+    conn
+    |> render("show.html")
+  end
 
   def new(conn, %{"show_id" => show_id}) do
     [listing, available_ticket_count] = Listing.listing_with_ticket_count(show_id)
@@ -61,6 +73,6 @@ defmodule TicketAgentWeb.OrderController do
 
   defp maybe_release_tickets(order, %{"listing_id" => listing_id, "tickets" => tickets} = params) do
     order
-    |> OrderState.destroy_order(listing_id, tickets)
+    |> OrderState.release_order_tickets(listing_id, tickets)
   end  
 end

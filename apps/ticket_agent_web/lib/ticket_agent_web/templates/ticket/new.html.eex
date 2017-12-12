@@ -21,18 +21,22 @@
 </section>
 
 <script type="text/javascript">
-  window.ticket_cost = <%= event_cost(@show) %>;
-  window.show_id = "<%= @show.slug %>";
+  window.ticket_count = 1;
+  window.ticket_cost = <%= @conn.assigns.ticket_price / 100 %>;
+  window.show_id = "<%= @listing.slug %>";
+  window.buyer_name = "<%= Coherence.current_user_name(@conn, :name) %>";
+  window.buyer_email = "<%= Coherence.current_user_name(@conn, :email) %>";
   
-  window.redirect_it = function(ticket_count, name, email) {
+  window.redirect_it = function() {
     var details = {
       show_id: window.show_id,
-      buyer_name: name,
-      buyer_email: email,
-      ticket_count: ticket_count,
+      buyer_name: window.buyer_name,
+      buyer_email: window.buyer_email,
+      ticket_count: window.ticket_count,
       guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
       tickets: []
     }
+    console.log(details);
     var encodedData = window.btoa(JSON.stringify(details));
     Cookies.set("ticket_data", encodedData);
     var redirect_url = "/ticket_information/new?show_id=" + show_id;
@@ -41,40 +45,44 @@
 
   window.set_button = function() {
     var resultVal = parseInt($("#ticket_count").val());
-    var guest_name = $("#guest_name").val().trim();
-    if (guest_name.length == 0) {
-      guest_name = "Guest";
+    if (window.buyer_name.length == 0) {
+      window.buyer_name = "Guest";
     }
-    console.log(guest_name);
-    $("#guest_text").text("Reserve " + resultVal + " Ticket(s) As " + guest_name);
-    $("#logged_in_text").text("Reserve " + resultVal + " Ticket(s) As <%= Coherence.current_user_name(@conn) %>");
+    $("#guest_text").text("Reserve " + window.ticket_count + " Ticket(s) As " + window.buyer_name);
+    $("#logged_in_text").text("Reserve " + window.ticket_count + " Ticket(s) As <%= Coherence.current_user_name(@conn) %>");
   }
 
   $(document).on('ready', function () {
     $("#ticket_count").on("change", function() {
+      window.ticket_count = parseInt($("#ticket_count").val());
       window.set_button();
-      var resultVal = parseInt($("#ticket_count").val());
-      var total = (resultVal * window.ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+      var total = (window.ticket_count * window.ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
       $("#invoice_cost").html("$" + total);
     })
 
     $("#guest_name").on("change", function() {
+      window.buyer_name = $("#guest_name").val();
       window.set_button();
     });
 
+    $("#guest_email").on("change", function() {
+      window.buyer_email = $("#guest_email").val();
+      window.set_button();
+    });    
+
     $("#continue").on("click", function(e) {
-      var resultVal = parseInt($("#ticket_count").val());
+      window.ticket_count = parseInt($("#ticket_count").val());
       e.preventDefault();
-      window.redirect_it(resultVal, "", "");
+      window.redirect_it();
     })
 
     $("#continue_as_guest").on("click", function(e) {
-      var resultVal = parseInt($("#ticket_count").val());
-      var name = $("#guest_name").val().trim();
-      var email = $("#guest_email").val().trim();
+      window.ticket_count = parseInt($("#ticket_count").val());
+      window.buyer_name = $("#guest_name").val();
+      window.buyer_email = $("#guest_email").val();
       var email_valid = $("#guest_email")[0].checkValidity();
 
-      if (name.length <= 0) {
+      if (window.buyer_name.length <= 0) {
         $("#name_group").addClass("u-has-error-v1");
         $("#name_required").show();
         return false;
@@ -83,7 +91,7 @@
         $("#name_required").hide();          
       }
 
-      if ((email.length <= 0) || (!email_valid)) {
+      if ((window.buyer_email.length <= 0) || (!email_valid)) {
         if (!email_valid) {
           $("#email_required").html("Email must be a valid email address.");
         } else {
@@ -96,7 +104,7 @@
         $("#email_group").removeClass("u-has-error-v1");
         $("#email_required").hide();
       }
-      window.redirect_it(resultVal, name, email);
+      window.redirect_it();
     })    
   });
 </script>

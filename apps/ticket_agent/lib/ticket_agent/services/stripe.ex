@@ -16,8 +16,7 @@ defmodule TicketAgent.Services.Stripe do
     |> insert_order_details(order_id)
   end  
    
-  def create_customer(token, user, stripe_customer_id, metadata \\ %{})
-  def create_customer(token, user, nil, metadata) do
+  def create_customer(token, user, metadata) do
     Logger.info "Creating a customer because we don't have a key"
     values = %{
       "source" => token, 
@@ -44,18 +43,24 @@ defmodule TicketAgent.Services.Stripe do
     end
   end
 
-  def create_customer(token, user, stripe_customer_id, metadata) when not is_nil(stripe_customer_id) do
-    uri = "#{api_url()}/customers/#{stripe_customer_id}"
-    Logger.info "Getting a customer because we have a key from #{uri}"
+  # def create_customer(token, user, stripe_customer_id, metadata) when not is_nil(stripe_customer_id) do
+  #   uri = "#{api_url()}/customers/#{stripe_customer_id}"
+  #   Logger.info "Getting a customer because we have a key from #{uri}"
     
-    case request(:get, uri, [], "", hackney_opts()) do
-      {:ok, %{"id" => stripe_customer_id} = response} ->
-        {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
-      {:error, error} ->
-        Logger.error "Received bad response from Stripe #{inspect error}"
-        {:error, :stripe_error}        
-    end
-  end
+  #   case request(:get, uri, [], "", hackney_opts()) do
+  #     {:ok, %{"deleted" => true, "id" => stripe_customer_id} = response} ->
+  #       Logger.error "Stripe custom has been deleted"
+  #       User.update_stripe_customer_id(user, nil)
+  #       create_customer(token, user, nil, metadata)
+  #     {:ok, %{"id" => stripe_customer_id} = response} ->
+  #       {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
+  #     {:error, error} ->
+  #       Logger.error "Received bad response from Stripe #{inspect error}"
+  #       {:error, :stripe_error}  
+  #     anything ->
+  #       IO.inspect anything      
+  #   end
+  # end
 
   defp create_charge(token, customer, amount, description, metadata) do
     values = load_charge_values(token, customer, amount, description, metadata)

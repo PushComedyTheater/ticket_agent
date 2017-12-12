@@ -20,6 +20,7 @@ defmodule TicketAgent.State.TicketState do
   end
 
   def set_tickets_processing_transaction(ticket_ids) do
+    Logger.info "set_tickets_processing_transaction for #{Enum.count(ticket_ids)} tickets"
     Multi.new()
     |> Multi.update_all(:available_tickets,
       from(
@@ -53,7 +54,8 @@ defmodule TicketAgent.State.TicketState do
       ],
       returning: true
     )
-  end  
+  end 
+
   defp reserve_transaction(listing_id, ticket_count, order_id, tickets) do
     fn ->
       load_query(listing_id, ticket_count)

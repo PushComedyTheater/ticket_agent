@@ -2,12 +2,12 @@
   <div class="container g-py-100 g-px-10" style="margin-bottom: -70px;">
     <div class="row g-bg-white rounded">
       <div class="col-md-6">
-        <img class="img-fluid" src="<%= @conn.assigns.page_image %>" alt="<%= @show.title %>">
+        <img class="img-fluid" src="<%= @conn.assigns.page_image %>" alt="<%= @listing.title %>">
       </div>
       <div class="col-md-6">
         <div class="g-mb-30">
-          <h2 class="h3 text-uppercase g-font-weight-300 u-heading-v2__title"><%= @show.title %></h2>
-            Date: <strong><%= event_date(@show.start_at) %></strong> <strong><%= raw full_event_time(@show) %></strong> / Price: <strong>$<%= @conn.assigns.ticket_cost_string %></strong>
+          <h2 class="h3 text-uppercase g-font-weight-300 u-heading-v2__title"><%= @listing.title %></h2>
+            Date: <strong><%= event_date(@listing.start_at) %></strong> <strong><%= raw full_event_time(@listing) %></strong> / Price: <strong>$<%= @conn.assigns.ticket_cost_string %></strong>
           <br />
           <br />
           

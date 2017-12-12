@@ -154,8 +154,8 @@ window.send_token_for_charge = function (values, ev) {
     
     window.console_dir(json);
     $("#submit_button").html("Redirecting....");
-    $("#submit_button").css("disabled", "");  
     // //window.console_group_end();
+    window.location.href = "/orders/" + window.order_id;
   }).fail(function (xhr, status, errorThrown) {
     if (ev && ev.complete) {
       ev.complete("fail");

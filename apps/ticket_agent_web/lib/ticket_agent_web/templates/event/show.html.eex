@@ -4,19 +4,19 @@
   }
 </style>
 
-<div id="photoParent" style="background: url('<%= Listing.listing_image(@show) %>') no-repeat; background-size: 100%; min-height: 450px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
+<div id="photoParent" style="background: url('<%= listing_image(@listing) %>') no-repeat; background-size: 100%; min-height: 450px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
 </div>
 <section class="g-bg-blue-opacity-0_7 g-py-50 g-px-30 u-shadow-v1-5" style="margin-bottom: 5px;">
   <div class="container" style="border: 1px">
     <div class="row">
       <div class="col-md-9 align-self-center" style="margin-top: -20px;">
-        <h2 class="h1" style="color: #fff;"><%= @show.title %></h2>
+        <h2 class="h1" style="color: #fff;"><%= @listing.title %></h2>
         <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
-          <strong><%= event_date(@show.start_at) %></strong>&nbsp;
-          <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15"><i class="fa fa-dollar g-mr-3"></i><strong><%= cost(@show) %></strong></span>
+          <strong><%= event_date(@listing.start_at) %></strong>&nbsp;
+          <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15"><i class="fa fa-dollar g-mr-3"></i><strong><%= cost(@conn.assigns.ticket_price) %></strong></span>
         </p>
         <ul class="u-list-inline mb-0">
-          <%= for tag <- @show.listing_tags do %>
+          <%= for tag <- @listing.listing_tags do %>
           <li class="list-inline-item g-mb-10">
             <a class="u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><strong><%= tag.tag %></strong></a>
           </li>
@@ -24,7 +24,7 @@
         </ul>
       </div>
       <div class="col-md-3 align-self-center text-md">
-        <%= link to: ticket_path(@conn, :new, show_id: @show.slug), class: "btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15" do %>
+        <%= link to: ticket_path(@conn, :new, show_id: @listing.slug), class: "btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15" do %>
         <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
         <% end %>
         <%= if get_flash(@conn, :error) do %>
@@ -41,7 +41,7 @@
         <h4 class="g-color-black mb-1">About This Show</h4>
         <hr />
 
-        <p class="lead g-mb-20 g-mb-0--md"><%= raw @show.description %></p>
+        <p class="lead g-mb-20 g-mb-0--md"><%= raw @listing.description %></p>
       </div>
     </div>
 
@@ -56,13 +56,13 @@
         <h3 class="h5 g-color-black mb-3">Share:</h3>
         <ul class="list-inline mb-0">
           <li class="list-inline-item mr-1">
-            <a class="btn u-btn-outline-facebook g-rounded-25" href="https://www.facebook.com/sharer/sharer.php?u=<%= TicketAgentWeb.LayoutView.full_url(@conn) %>" target="_blank">
+            <a class="btn u-btn-outline-facebook g-rounded-25" href="https://www.facebook.com/sharer/sharer.php?u=<%= full_url(@conn) %>" target="_blank">
               <i class="mr-1 fa fa-facebook"></i>
               Facebook
             </a>
           </li>
           <li class="list-inline-item mx-1">
-            <a class="btn u-btn-outline-twitter g-rounded-25" href="https://twitter.com/home?status=Check%20out%20this%20show%20at%20Push%20Comedy%20Theater%20<%= TicketAgentWeb.LayoutView.full_url(@conn) %>%20via%20%40pushcomedy" target="_blank">
+            <a class="btn u-btn-outline-twitter g-rounded-25" href="https://twitter.com/home?status=Check%20out%20this%20show%20at%20Push%20Comedy%20Theater%20<%= full_url(@conn) %>%20via%20%40pushcomedy" target="_blank">
               <i class="mr-1 fa fa-twitter"></i>
               Twitter
             </a>

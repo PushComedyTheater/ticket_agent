@@ -56,21 +56,25 @@ defmodule TicketAgentWeb.EventView do
     end
   end
 
-  def cost(show) do
-    show
-    |> Listing.ticket_cost()
+  def cost(ticket_price) when is_float(ticket_price) do
+    :erlang.float_to_binary(ticket_price,decimals: 2)
   end
 
-  def event_date(date) do
+  def cost(ticket_price) when is_integer(ticket_price) do
+    ticket_price / 100
+    |> :erlang.float_to_binary(decimals: 2)
+  end
+
+  def cost(listing) when is_map(listing) do
+    
+    cost(Enum.at(listing.tickets, 0).price)
+  end
+  def event_date_long(date) do
     Calendar.Strftime.strftime!(date, "%b %d, %Y - %l:%M%p")
   end
 
   def listing_tags(show) do
     Enum.take(show.listing_tags, 5)
     |> Enum.map_join(", ", fn tag -> tag.tag end)
-  end
-
-  def listing_image(show, width \\ 1050) do
-    Listing.listing_image(show, width)
   end
 end

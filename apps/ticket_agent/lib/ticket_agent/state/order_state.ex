@@ -6,6 +6,7 @@ defmodule TicketAgent.State.OrderState do
   import Ecto.{Changeset, Query}
 
   def set_order_processing_transaction(order) do
+    Logger.info "set_order_processing_transaction for order #{order.slug}"
     Multi.new()
     |> Multi.update_all(:processing_order,
       from(
@@ -23,6 +24,7 @@ defmodule TicketAgent.State.OrderState do
   end
 
   def set_order_completed_transaction(order) do
+    IO.inspect order
     Multi.new()
     |> Multi.update_all(:processing_order,
       from(
@@ -115,22 +117,19 @@ defmodule TicketAgent.State.OrderState do
     )
   end
 
-  def destroy_order(%{id: order_id} = order, listing_id, input_tickets) do  
+  def release_order_tickets(%{id: order_id} = order, listing_id, input_tickets) do  
     ticket_count = Enum.count(input_tickets)
-    
-    to_release_count = 
-      listing_id
-      |> TicketFinder.find_by_listing_and_order(order_id)
-      |> Enum.count
+    input_ticket_ids = Enum.map(input_tickets, fn(ticket) -> ticket["id"] end)
 
-    Logger.info "There are #{to_release_count} existing tickets to be released"
+    Logger.info "There are #{ticket_count} existing tickets to be released"
 
     Repo.update_all(
       from(
         t in Ticket, 
         where: t.listing_id == ^listing_id,
         where: t.order_id == ^order_id,
-        where: t.status == "locked" or t.status == "purchased"
+        where: t.status == "locked" or t.status == "processing",
+        where: t.id in ^input_ticket_ids
       ),
       set: [
           status: "available", 
@@ -140,5 +139,6 @@ defmodule TicketAgent.State.OrderState do
           guest_email: nil
         ]
     )
+    |> IO.inspect
   end
 end

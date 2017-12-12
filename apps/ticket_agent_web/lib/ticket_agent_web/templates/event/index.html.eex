@@ -29,7 +29,7 @@
                   <% end %>
 
                   <figcaption class="g-pos-abs g-bottom-0 g-left-0">
-                    <%= link event_date(show.start_at), to: event_path(@conn, :show, show), class: "btn btn-med u-btn-primary rounded-0" %>
+                    <%= link event_date_long(show.start_at), to: event_path(@conn, :show, show), class: "btn btn-med u-btn-primary rounded-0" %>
                   </figcaption>
                   <figcaption class="g-pos-abs g-bottom-0 g-right-0">
                     <%= link "$" <> cost(show), to: event_path(@conn, :show, show), class: "btn btn-med u-btn-blue rounded-0" %>
@@ -41,7 +41,7 @@
                     <%= link show.title, to: event_path(@conn, :show, show), class: "g-color-main g-text-underline--none--hover" %>
                   </h4>
                   <div>
-                    <%= raw HtmlSanitizeEx.basic_html(TicketAgentWeb.LayoutView.truncated_description(show.description)) %>
+                    <%= raw HtmlSanitizeEx.basic_html(truncated_description(show.description)) %>
                   </div>
                 </div>
 

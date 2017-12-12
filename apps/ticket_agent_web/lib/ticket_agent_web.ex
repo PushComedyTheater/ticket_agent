@@ -23,6 +23,7 @@ defmodule TicketAgentWeb do
       import Plug.Conn
       import TicketAgentWeb.Router.Helpers
       import TicketAgentWeb.Gettext
+      require Logger
     end
   end
 
@@ -40,6 +41,7 @@ defmodule TicketAgentWeb do
       import TicketAgentWeb.Router.Helpers
       import TicketAgentWeb.ErrorHelpers
       import TicketAgentWeb.Gettext
+      import TicketAgentWeb.SharedView
     end
   end
 

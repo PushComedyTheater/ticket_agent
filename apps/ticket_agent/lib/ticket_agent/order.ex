@@ -12,8 +12,6 @@ defmodule TicketAgent.Order do
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
     has_one :credit_card, CreditCard
     field :slug, :string
-    field :name, :string
-    field :email_address, :string
     field :status, :string
     field :total_price, :integer
     timestamps

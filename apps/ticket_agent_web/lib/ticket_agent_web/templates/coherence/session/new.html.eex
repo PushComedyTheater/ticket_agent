@@ -17,33 +17,6 @@
 
                 <!-- Form -->
                 <%= form_for @conn, session_path(@conn, :create), [as: :session, class: "g-py-15"], fn f  -> %>
-                  <div class="mb-4">
-                    <% login_field = Coherence.Config.login_field %>
-                    <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email:</label>
-                    <%= text_input f, login_field, class: "form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15", required: "", type: "email", placeholder: "user@domain.com" %>
-                    <%= error_tag f, login_field %>
-                  </div>
-
-                  <div class="g-mb-35">
-                    <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Password:</label>
-                    <%= password_input f, :password, class: "form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 mb-3", type: "password", placeholder: "Password", required: "" %>
-                    <%= error_tag f, :password %>
-                    <div class="row justify-content-between">
-                      <div class="col align-self-center">
-                      </div>
-                      <div class="col align-self-center text-right">
-                        <%= coherence_links(@conn, :new_session, register: false, class: "g-font-size-12") %>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-4">
-                    <%= submit dgettext("coherence", "Sign In"), class: "btn btn-md btn-block u-btn-primary rounded g-py-13" %>
-                  </div>
-                  <div class="d-flex justify-content-center text-center g-mb-30">
-                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-                    <span class="align-self-center g-color-gray-dark-v5 mx-4">OR LOGIN WITH</span>
-                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-                  </div>
                   <div class="row text-center no-gutters g-mb-10">
                     <div class="col-4">
                       <%= link(
@@ -67,6 +40,34 @@
                       <% end %>
                     </div>
                   </div>
+                  <div class="d-flex justify-content-center text-center g-mb-30">
+                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+                    <span class="align-self-center g-color-gray-dark-v5 mx-4">OR LOGIN WITH</span>
+                    <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
+                  </div>                            
+                  <div class="mb-4">
+                    <% login_field = Coherence.Config.login_field %>
+                    <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email:</label>
+                    <%= text_input f, login_field, class: "form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15", required: "", type: "email", placeholder: "user@domain.com" %>
+                    <%= error_tag f, login_field %>
+                  </div>
+
+                  <div class="g-mb-35">
+                    <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Password:</label>
+                    <%= password_input f, :password, class: "form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 mb-3", type: "password", placeholder: "Password", required: "" %>
+                    <%= error_tag f, :password %>
+                    <div class="row justify-content-between">
+                      <div class="col align-self-center">
+                      </div>
+                      <div class="col align-self-center text-right">
+                        <%= coherence_links(@conn, :new_session, register: false, class: "g-font-size-12") %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <%= submit dgettext("coherence", "Sign In"), class: "btn btn-md btn-block u-btn-primary rounded g-py-13" %>
+                  </div>
+
 
                 <% end %>
                 <!-- End Form -->

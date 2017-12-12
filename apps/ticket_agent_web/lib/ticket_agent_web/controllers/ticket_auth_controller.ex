@@ -1,6 +1,6 @@
 defmodule TicketAgentWeb.TicketAuthController do
   use TicketAgentWeb, :controller
-  plug TicketAgentWeb.ShowLoader
+  plug TicketAgentWeb.Plugs.ShowLoader
 
   def new(conn, params) do
     message = """
