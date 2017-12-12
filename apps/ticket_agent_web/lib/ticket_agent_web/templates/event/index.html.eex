@@ -17,31 +17,31 @@
         <!-- End Sidebar -->
         <!-- Search Results -->
         <div class="col-lg-12">
-          <%= for shows <- Enum.chunk(@shows, 3) do %>
+          <%= for listings <- Enum.chunk(@listings, 3) do %>
             <div class="row">
-            <%= for show <- shows do %>
+            <%= for listing <- listings do %>
             <div class="col-lg-4 g-mb-30">
               <!-- Search Result -->
-              <article data-show="<%= show.id %>" class="g-bg-white" style="border: 1px dashed #f2f2f2;" data-tags='<%= raw show_tags(show) %>'>
+              <article data-show="<%= listing.id %>" class="g-bg-white" style="border: 1px dashed #f2f2f2;" data-tags='<%= raw show_tags(listing) %>'>
                 <figure class="g-pos-rel">
-                  <%= link to: event_path(@conn, :show, show) do %>
-                    <img class="img-fluid w-100" src="<%= listing_image(show, 400) %>" style="height: 264px;" alt="<%= show.title %>">
+                  <%= link to: event_path(@conn, :show, listing) do %>
+                    <img class="img-fluid w-100" src="<%= listing_image(listing, 400) %>" style="height: 264px;" alt="<%= listing.title %>">
                   <% end %>
 
                   <figcaption class="g-pos-abs g-bottom-0 g-left-0">
-                    <%= link event_date_long(show.start_at), to: event_path(@conn, :show, show), class: "btn btn-med u-btn-primary rounded-0" %>
+                    <%= link event_date_long(listing.start_at), to: event_path(@conn, :show, listing), class: "btn btn-med u-btn-primary rounded-0" %>
                   </figcaption>
                   <figcaption class="g-pos-abs g-bottom-0 g-right-0">
-                    <%= link "$" <> cost(show), to: event_path(@conn, :show, show), class: "btn btn-med u-btn-blue rounded-0" %>
+                    <%= link "$" <> listing_cost(listing), to: event_path(@conn, :show, listing), class: "btn btn-med u-btn-blue rounded-0" %>
                   </figcaption>
                 </figure>
 
                 <div class="g-pa-30">
                   <h4 class="g-font-weight-100 g-mb-15">
-                    <%= link show.title, to: event_path(@conn, :show, show), class: "g-color-main g-text-underline--none--hover" %>
+                    <%= link listing.title, to: event_path(@conn, :show, listing), class: "g-color-main g-text-underline--none--hover" %>
                   </h4>
                   <div>
-                    <%= raw HtmlSanitizeEx.basic_html(truncated_description(show.description)) %>
+                    <%= raw HtmlSanitizeEx.basic_html(truncated_description(listing.description)) %>
                   </div>
                 </div>
 
@@ -50,7 +50,7 @@
                   </div>
 
                   <div class="align-self-center">
-                    <%= link "More Information", to: event_path(@conn, :show, show), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
+                    <%= link "More Information", to: event_path(@conn, :show, listing), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
                   </div>
                 </div>
               </article>

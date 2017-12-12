@@ -22,7 +22,7 @@
 
 <script type="text/javascript">
   window.ticket_count = 1;
-  window.ticket_cost = <%= @conn.assigns.ticket_price / 100 %>;
+  window.ticket_cost = <%= @conn.assigns.ticket_price %>;
   window.show_id = "<%= @listing.slug %>";
   window.buyer_name = "<%= Coherence.current_user_name(@conn, :name) %>";
   window.buyer_email = "<%= Coherence.current_user_name(@conn, :email) %>";

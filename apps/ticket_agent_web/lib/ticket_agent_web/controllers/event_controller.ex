@@ -7,7 +7,7 @@ defmodule TicketAgentWeb.EventController do
   def index(conn, _params) do
     conn
     |> assign(:page_title, "Upcoming Shows at Push Comedy Theater")
-    |> render("index.html", shows: Listing.upcoming_shows)
+    |> render("index.html", listings: Listing.upcoming_shows)
   end
 
   def show(conn, %{"slug" => slug} = params) do

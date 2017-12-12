@@ -2,7 +2,7 @@ defmodule TicketAgentWeb.SharedView do
   def event_date(date), do: Calendar.Strftime.strftime!(date, "%m/%d/%Y")
   def event_time(date), do: Calendar.Strftime.strftime!(date, "%l:%M%p")
   def formatted_ticket_price(price) do
-     price / 100
+     price
      |> :erlang.float_to_binary(decimals: 2)
   end
 
