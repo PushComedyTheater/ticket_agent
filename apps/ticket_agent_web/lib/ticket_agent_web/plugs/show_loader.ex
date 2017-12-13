@@ -15,8 +15,18 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
         conn
         |> put_status(404)
         |> Phoenix.Controller.render(TicketAgentWeb.ErrorView, "404.html")
+
       {listing, available_tickets} ->
+        start_at = 
+          listing.start_at
+          |> Calendar.NaiveDateTime.to_date_time_utc
+
+        in_the_past = start_at < DateTime.utc_now 
+
         available_ticket_count = cond do
+          in_the_past ->
+            Logger.error "This listing is in the past"
+            0
           Enum.count(available_tickets) > 20 ->
             20
           true ->
@@ -30,6 +40,7 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
         |> Plug.Conn.assign(:buyer_email, Map.get(conn.assigns, :buyer_email, nil))
         |> Plug.Conn.assign(:ticket_cost_string, :erlang.float_to_binary(ticket_price, decimals: 2))
         |> Plug.Conn.assign(:ticket_price, ticket_price)
+        |> Plug.Conn.assign(:in_the_past, in_the_past)
         |> Plug.Conn.assign(:page_title, "#{listing.title} at Push Comedy Theater")
         |> Plug.Conn.assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(listing.description, true))
         |> Plug.Conn.assign(:page_image, TicketAgentWeb.SharedView.listing_image(listing))

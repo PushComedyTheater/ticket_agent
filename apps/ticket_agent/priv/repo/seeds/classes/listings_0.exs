@@ -52,8 +52,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-28T18:30:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-26T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-28 23:30:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-27 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -130,8 +130,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-18T15:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-06T18:00:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-18 20:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 23:00:00Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -204,8 +204,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-27T18:30:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-08T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-27 23:30:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-09 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -270,8 +270,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-23T18:30:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-27T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-23 23:30:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-28 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -346,8 +346,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-29T18:30:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-03T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-29 23:30:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-04 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="

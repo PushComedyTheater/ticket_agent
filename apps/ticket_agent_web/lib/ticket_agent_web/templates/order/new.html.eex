@@ -30,7 +30,7 @@
             <%= for ticket <- @conn.assigns.tickets do %>
               <tr>
                 <td class="g-color-black-opacity-0_8" scope="row">Ticket For <%= ticket["name"] %></td>
-                <td>$<%= :erlang.float_to_binary(@conn.assigns.ticket_cost / 100, decimals: 2) %></td>
+                <td>$<%= :erlang.float_to_binary(@conn.assigns.ticket_price, decimals: 2) %></td>
               </tr>
             <% end %>
             <tr>
@@ -96,7 +96,7 @@
   window.buyer_name = "<%= @conn.assigns.buyer_name %>";
   window.csrf_token = $('meta[name="csrf-token"]').attr('content');
   window.guest_checkout = <%= @conn.assigns.guest_checkout %>;
-  window.listing_id = "<%= @conn.assigns.listing_id %>";
+  window.listing_id = "<%= @conn.assigns.listing.id %>";
   window.order_id = "";
   window.show_id = "<%= @conn.assigns.show_id %>";
   window.tickets = [
@@ -108,7 +108,7 @@
       },
 <% end %>      
     ];
-  window.ticket_price = <%= @conn.assigns.ticket_cost %>;
+  window.ticket_price = <%= @conn.assigns.ticket_price %>;
   window.total_price = <%= @conn.assigns.total_price %>;  
 
    $(document).on('ready', function () {

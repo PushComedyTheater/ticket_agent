@@ -24,8 +24,20 @@
         </ul>
       </div>
       <div class="col-md-3 align-self-center text-md">
-        <%= link to: ticket_path(@conn, :new, show_id: @listing.slug), class: "btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15" do %>
-        <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
+        <%= if @conn.assigns.in_the_past do %>
+          <a href="#" class="btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
+            <i class="fa fa-ticket g-mr-3"></i> Show Ended
+          </a>        
+        <% else %>
+          <%= if @conn.assigns.available_ticket_count > 0 do %>
+            <%= link to: ticket_path(@conn, :new, show_id: @listing.slug), class: "btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15" do %>
+            <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
+            <% end %>
+          <% else %>
+            <a href="#" class="btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
+              <i class="fa fa-ticket g-mr-3"></i> No Tickets Left
+            </a>
+          <% end %>
         <% end %>
         <%= if get_flash(@conn, :error) do %>
           <p class="alert alert-danger rounded" role="alert"><%= get_flash(@conn, :error) %></p>

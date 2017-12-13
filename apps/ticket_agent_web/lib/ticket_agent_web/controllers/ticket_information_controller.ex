@@ -5,8 +5,6 @@ defmodule TicketAgentWeb.TicketInformationController do
   plug TicketAgentWeb.Plugs.ShowLoader
 
   def new(conn, params) do
-    [listing, available_ticket_count] = Listing.listing_with_ticket_count(conn.assigns.show_id)
-
     message = """
       Awesome!  
       So that we can keep everybody straight, we'd like to know a little more about our guests.
@@ -16,10 +14,6 @@ defmodule TicketAgentWeb.TicketInformationController do
     """
     conn
     |> assign(:message, message)
-    |> assign(:page_title, "#{listing.title} at Push Comedy Theater")
-    |> assign(:page_title_modal, "#{listing.title}")
-    |> assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(listing.description, true))
-    |> assign(:page_image, Listing.listing_image(listing))
-    |> render(:new, show: listing)
+    |> render(:new)
   end
 end

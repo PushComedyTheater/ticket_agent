@@ -15,8 +15,6 @@ defmodule TicketAgentWeb.EventController do
       slug
       |> ListingFinder.find_listing_by_slug()
 
-    ticket_count = Enum.count(available_tickets)
-
     ticket_price = Enum.at(available_tickets, 0).price
       
     conn = case params["msg"] do

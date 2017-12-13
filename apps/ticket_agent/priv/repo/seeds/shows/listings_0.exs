@@ -72,8 +72,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-08T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-08T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-09 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-09 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -199,8 +199,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-09T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-09T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-10 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-10 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -306,8 +306,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-15T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-15T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-16 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-16 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -453,8 +453,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-29T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-29T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-30 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-30 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -556,8 +556,8 @@ listing = SeedHelpers.create_listing(
 </p><br>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-30T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-30T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-31 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-31 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -719,8 +719,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-08T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-08T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-09 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-09 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -834,8 +834,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-10T14:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-10T15:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-10 19:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-10 20:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -989,8 +989,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-24T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-11-24T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-25 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-11-25 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1112,8 +1112,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-13T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-13T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-14 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-14 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1195,8 +1195,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-17T19:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-17T20:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-18 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-18 01:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1330,8 +1330,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-16T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-16T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-17 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-17 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1469,8 +1469,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-02T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-02T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-03 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-03 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1576,8 +1576,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-02T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-02T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-03 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-03 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1727,8 +1727,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-03T19:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-03T21:00:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-04 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-04 02:00:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -1910,8 +1910,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-31T18:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-31T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-31 23:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-01 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -2069,8 +2069,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-23T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-23T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-24 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-24 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -2196,8 +2196,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-29T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-29T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-30 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-30 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -2323,8 +2323,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-16T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-16T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-17 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-17 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -2462,8 +2462,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-16T12:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-22T14:00:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-16 17:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-22 19:00:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -2621,8 +2621,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-01T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-01T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-02 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-02 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="

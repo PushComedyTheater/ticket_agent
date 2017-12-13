@@ -108,8 +108,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-07T19:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-07T20:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-08 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-08 01:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -231,8 +231,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-09T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-09T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-10 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-10 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -346,8 +346,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-15T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-15T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-16 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-16 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -513,8 +513,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-01T20:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-01T21:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-02 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-02 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -656,8 +656,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-24T22:00:00.000-05:00"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-11-24T23:30:00.000-05:00")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-25 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-11-25 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="

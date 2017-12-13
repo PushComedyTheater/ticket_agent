@@ -21,31 +21,21 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def new(conn, %{"show_id" => show_id}) do
-    [listing, available_ticket_count] = Listing.listing_with_ticket_count(show_id)
-
-    ticket_cost = Listing.ticket_cost_number(listing)
-
-    cost = (ticket_cost * conn.assigns.ticket_count)
+    total_price = (conn.assigns.ticket_price * conn.assigns.ticket_count)
   
     message = "Please verify that your order is correct.  Then enter your credit card number or use your browser to pay below."
 
     conn
     |> assign(:message, message)
-    |> assign(:listing_id, listing.id)
-    |> assign(:page_title, "#{listing.title} at Push Comedy Theater")
-    |> assign(:page_title_modal, "#{listing.title}")
-    |> assign(:total_price_string, :erlang.float_to_binary(cost / 100, decimals: 2))
-    |> assign(:total_price, cost)
-    |> assign(:ticket_cost, ticket_cost)
-    |> assign(:page_description, TicketAgentWeb.LayoutView.open_graph_description(listing.description, true))
-    |> assign(:page_image, Listing.listing_image(listing))
-    |> render("new.html", show: listing)
+    |> assign(:total_price_string, :erlang.float_to_binary(total_price, decimals: 2))
+    |> assign(:total_price, total_price)
+    |> render("new.html")
   end
 
   def create(conn, params) do
     {order, tickets, locked_until} = 
       params
-      |> OrderFinder.find_or_create_order()
+      |> OrderFinder.find_or_create_order(Coherence.current_user(conn))
       |> maybe_reserve_tickets(params)
 
     conn

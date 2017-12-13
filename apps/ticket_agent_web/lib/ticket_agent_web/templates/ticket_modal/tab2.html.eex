@@ -222,73 +222,59 @@
     });
   });
 
-  window.validate_login = function() {
+  <%# window.validate_login = function() {
     window.load_logged_in_user();
-    var not_logged_in = $("#not_logged_in").css("display") == "block";
-    var logged_in = $("#logged_in").css("display") == "block";
-    var login_form = $("#login_form").css("display") == "block";
+    var first_name = $("#first_name").val();
+    var last_name = $("#last_name").val();
+    var email = $("#email").val();
+    var email_confirm = $("#email_confirm").val();
+    var password = $("#password").val();
+    var password_confirm = $("#password_confirm").val();
+    var checked = $("#create_account").attr("checked") == "checked";
+    var valid = true;
 
-    if (logged_in) {
-      return true;
+    if ((first_name.length == 0) || (last_name.length == 0)) {
+      $("#name_group").addClass("u-has-error-v1");
+      $("#name_group_error").html("First and last name are required fields.");
+      valid = false;
+    } else {
+      $("#name_group").removeClass("u-has-error-v1");
+      $("#name_group_error").html("");
     }
 
-    if (login_form) {
-      return false;
-    }
-
-    if (not_logged_in) {
-      var first_name = $("#first_name").val();
-      var last_name = $("#last_name").val();
-      var email = $("#email").val();
-      var email_confirm = $("#email_confirm").val();
-      var password = $("#password").val();
-      var password_confirm = $("#password_confirm").val();
-      var checked = $("#create_account").attr("checked") == "checked";
-      var valid = true;
-
-      if ((first_name.length == 0) || (last_name.length == 0)) {
-        $("#name_group").addClass("u-has-error-v1");
-        $("#name_group_error").html("First and last name are required fields.");
-        valid = false;
-      } else {
-        $("#name_group").removeClass("u-has-error-v1");
-        $("#name_group_error").html("");
-      }
-
-      if (email != email_confirm) {
+    if (email != email_confirm) {
+      $("#email_group").addClass("u-has-error-v1");
+      $("#email_group_error").html("Email addresses must match.");
+      valid = false;
+    } else {
+      if ((email.length == 0) || (email_confirm.length == 0)) {
         $("#email_group").addClass("u-has-error-v1");
-        $("#email_group_error").html("Email addresses must match.");
+        $("#email_group_error").html("Email address is a required field.");
         valid = false;
       } else {
-        if ((email.length == 0) || (email_confirm.length == 0)) {
-          $("#email_group").addClass("u-has-error-v1");
-          $("#email_group_error").html("Email address is a required field.");
-          valid = false;
-        } else {
-          $("#email_group").removeClass("u-has-error-v1");
-          $("#email_group_error").html("");
-        }
+        $("#email_group").removeClass("u-has-error-v1");
+        $("#email_group_error").html("");
       }
-
-      if (checked) {
-        if (password != password_confirm) {
-          $("#create_account_password").addClass("u-has-error-v1");
-          $("#create_account_password_error").html("Passwords must match.");
-          valid = false;
-        } else {
-          if ((password.length == 0) || (password_confirm.length == 0)) {
-            $("#create_account_password").addClass("u-has-error-v1");
-            $("#create_account_password_error").html("Password is a required field.");
-            valid = false;
-          } else {
-            $("#create_account_password").removeClass("u-has-error-v1");
-            $("#create_account_password_error").html("");
-          }
-        }
-      }
-      return valid;
     }
-  }
+
+    if (checked) {
+      if (password != password_confirm) {
+        $("#create_account_password").addClass("u-has-error-v1");
+        $("#create_account_password_error").html("Passwords must match.");
+        valid = false;
+      } else {
+        if ((password.length == 0) || (password_confirm.length == 0)) {
+          $("#create_account_password").addClass("u-has-error-v1");
+          $("#create_account_password_error").html("Password is a required field.");
+          valid = false;
+        } else {
+          $("#create_account_password").removeClass("u-has-error-v1");
+          $("#create_account_password_error").html("");
+        }
+      }
+    }
+    return valid;
+  } %>
 
   window.login_success = function() {
     window.load_logged_in_user();
