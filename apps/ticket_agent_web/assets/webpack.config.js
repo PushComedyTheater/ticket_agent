@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     application: ['./js/app.js', './js/hs.count-qty.js'],
     stripe_related: ['./js/stripe_response_parser.js', './js/stripe_related.js'],
+    ticket_related: ['./js/ticket_related.js'],
     admin: './js/admin/admin.js'
   },
   output: {

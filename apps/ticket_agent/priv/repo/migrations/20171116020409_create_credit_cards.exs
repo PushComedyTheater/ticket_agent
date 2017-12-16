@@ -7,7 +7,7 @@ defmodule TicketAgent.Repo.Migrations.CreateCreditCards do
     create table(:credit_cards, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
-      
+
       add :type, :credit_card_type
       add :stripe_id, :text
 
@@ -25,7 +25,7 @@ defmodule TicketAgent.Repo.Migrations.CreateCreditCards do
       add :address, :map
       add :metadata, :map
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create index(:credit_cards, [:user_id])

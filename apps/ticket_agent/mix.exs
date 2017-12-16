@@ -45,7 +45,8 @@ defmodule TicketAgent.Mixfile do
       {:oauth2, "~> 0.9"},
       {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-
+      {:swoosh, "~> 0.12.0"},
+      {:gen_smtp, "~> 0.12.0"},
 
       {:bypass, "~> 0.7", only: :test},
       {:credo, "~> 0.8", only: [:dev, :test]},

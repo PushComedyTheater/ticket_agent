@@ -14,7 +14,7 @@ defmodule TicketAgent.Repo.Migrations.CreateEvent do
       add :account_id, references(:accounts, on_delete: :nothing, type: :binary_id)
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create unique_index(:events, [:slug])

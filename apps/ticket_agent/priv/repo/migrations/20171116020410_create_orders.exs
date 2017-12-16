@@ -3,7 +3,7 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
 
   def change do
     execute "CREATE TYPE order_status AS ENUM ('started', 'processing', 'completed', 'failed', 'errored', 'cancelled')"
-    
+
     create table(:orders, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
@@ -12,7 +12,8 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
       add :guest_checkout, :boolean, default: false
       add :status, :order_status, default: "started"
       add :total_price, :integer, null: false
-      timestamps()
+      add :completed_at, :timestamptz, default: nil
+      timestamps(type: :timestamptz)
     end
 
     create unique_index(:orders, [:slug])

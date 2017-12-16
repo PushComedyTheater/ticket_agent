@@ -1,6 +1,22 @@
 defmodule TicketAgentWeb.SharedView do
-  def event_date(date), do: Calendar.Strftime.strftime!(date, "%m/%d/%Y")
-  def event_time(date), do: Calendar.Strftime.strftime!(date, "%l:%M%p")
+  def event_date(date) do
+    date
+    |> Calendar.DateTime.shift_zone!("America/New_York")
+    |> Calendar.Strftime.strftime!("%m/%d/%Y")
+  end
+
+  def event_time(date) do
+    date
+    |> Calendar.DateTime.shift_zone!("America/New_York")
+    |> Calendar.Strftime.strftime!("%l:%M%p")
+  end
+
+  def order_timestamp(date) do
+    date
+    |> Calendar.DateTime.shift_zone!("America/New_York")
+    |> Calendar.Strftime.strftime!("%m/%d/%Y %l:%M%p")
+  end
+
   def formatted_ticket_price(price) do
      price
      |> :erlang.float_to_binary(decimals: 2)
@@ -13,6 +29,27 @@ defmodule TicketAgentWeb.SharedView do
   end
   def full_event_time(%{start_at: start_at, end_at: end_at}) when start_at == end_at, do: event_time(start_at)
   def full_event_time(_), do: "Unknown"
+
+  def listing_image_with_dimensions(show, width, height) do
+    image =
+      show.images
+      |> hd
+
+    public_id =
+      image.url
+      |> String.split("/")
+      |> List.last()
+      |> String.split(".")
+      |> List.first()
+
+    Cloudinex.Url.for(public_id, %{
+      width: width,
+      height: height,
+      gravity: "north",
+      crop: "fill",
+      flags: 'progressive'
+    })
+  end
 
   def listing_image(show, width \\ 1050) do
     image =
@@ -53,7 +90,7 @@ defmodule TicketAgentWeb.SharedView do
   end
 
   def page_title(conn), do: og_data(conn, :page_title, "Push Comedy Theater")
-  
+
   def truncated_description(text, opts \\ []) do
     max_length  = opts[:max_length] || 300
     omission    = opts[:omission] || "..."
@@ -75,5 +112,5 @@ defmodule TicketAgentWeb.SharedView do
       nil -> default
       something -> something
     end
-  end  
+  end
 end

@@ -9,7 +9,7 @@ defmodule TicketAgent.UserCredential do
     field :provider, :string
     field :token, :string
     field :secret, :string
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

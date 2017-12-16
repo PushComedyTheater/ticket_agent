@@ -10,7 +10,7 @@ defmodule TicketAgent.Repo.Migrations.CreateAccount do
       add :enabled, :boolean
       add :logo, :text
       add :creator_id, references(:users, type: :binary_id)
-      timestamps()
+      timestamps(type: :timestamptz)
     end
     create unique_index(:accounts, [:name])
   end

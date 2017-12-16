@@ -19,7 +19,7 @@ defmodule TicketAgent.Ticket do
     field :sale_start, :naive_datetime
     field :sale_end, :naive_datetime
     field :locked_until, :naive_datetime
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

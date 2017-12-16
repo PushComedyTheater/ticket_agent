@@ -25,7 +25,7 @@ defmodule TicketAgent.CreditCard do
     field :address, :map
     field :metadata, :map
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

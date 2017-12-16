@@ -19,7 +19,7 @@ defmodule TicketAgent.OrderDetail do
     field :risk_level, :string
     field :response, :map
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

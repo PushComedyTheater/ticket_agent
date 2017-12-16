@@ -10,13 +10,13 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Listing do
       add :title, :text, null: false
       add :description, :text, null: false
       add :status, :listing_status, default: "unpublished"
-      add :start_at, :naive_datetime, default: fragment("now()")
-      add :end_at, :naive_datetime, default: fragment("now()")
+      add :start_at, :timestamptz, default: fragment("now()")
+      add :end_at, :timestamptz, default: fragment("now()")
 
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :event_id, references(:events, on_delete: :nothing, type: :binary_id)
       add :class_id, references(:classes, on_delete: :nothing, type: :binary_id)
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create unique_index(:listings, [:slug])

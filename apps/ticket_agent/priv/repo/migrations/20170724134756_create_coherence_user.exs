@@ -3,7 +3,6 @@ defmodule TicketAgent.Repo.Migrations.CreateCoherenceUser do
   def change do
     create table(:users, primary_key: false) do
       add :id, :uuid, primary_key: true
-
       add :name, :string
       add :email, :string
       # authenticatable
@@ -24,11 +23,12 @@ defmodule TicketAgent.Repo.Migrations.CreateCoherenceUser do
       add :unlock_token, :string
       add :stripe_customer_id, :string
 
-      timestamps()
+      add :one_time_token, :string
+      add :one_time_token_at, :utc_datetime
+      timestamps(type: :timestamptz)
     end
     create unique_index(:users, [:email])
     create index(:users, [:name])
     create index(:users, [:stripe_customer_id])
-
   end
 end

@@ -6,8 +6,7 @@ defmodule TicketAgent.Repo.Migrations.CreateListingTag do
       add :id, :binary_id, primary_key: true
       add :listing_id, references(:listings, on_delete: :nothing, type: :binary_id), null: false
       add :tag, :text, null: false
-      timestamps()
+      timestamps(type: :timestamptz)
     end
-
   end
 end

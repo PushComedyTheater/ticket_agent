@@ -18,7 +18,7 @@ defmodule TicketAgent.Event do
 
     has_many :event_tickets, through: [:listings, :tickets]
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

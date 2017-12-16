@@ -4,7 +4,7 @@ defmodule TicketAgent.Repo.Migrations.CreateOrderDetails do
   def change do
     create table(:order_details, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :order_id, references(:orders, on_delete: :nothing, type: :binary_id)      
+      add :order_id, references(:orders, on_delete: :nothing, type: :binary_id)
 
       # stripe specific
       add :charge_id, :text
@@ -19,12 +19,12 @@ defmodule TicketAgent.Repo.Migrations.CreateOrderDetails do
 
       add :response, :map
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create index(:order_details, [:order_id])
     create index(:order_details, [:charge_id])
-    create index(:order_details, [:status])    
+    create index(:order_details, [:status])
 
   end
 end

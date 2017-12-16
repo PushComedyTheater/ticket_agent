@@ -1,4 +1,4 @@
-defmodule TicketAgentWeb.ValidateShowRequest do
+defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
   require Logger
   import Plug.Conn
   import Phoenix.Controller
@@ -7,9 +7,9 @@ defmodule TicketAgentWeb.ValidateShowRequest do
 
   def call(%Plug.Conn{cookies: %{"ticket_data" => data}, params: %{"show_id" => show_id}} = conn, _) do
     %{
-      "buyer_name" => buyer_name, 
-      "buyer_email" => buyer_email, 
-      "ticket_count" => ticket_count, 
+      "buyer_name" => buyer_name,
+      "buyer_email" => buyer_email,
+      "ticket_count" => ticket_count,
       "show_id" => encoded_show_id,
       "guest_checkout" => guest_checkout,
       "tickets" => tickets
@@ -38,15 +38,15 @@ defmodule TicketAgentWeb.ValidateShowRequest do
       conn
       |> delete_resp_cookie("ticket_data")
       |> put_flash(:info, "Something went wrong with your request.")
-      |> redirect(to: "/")  
+      |> redirect(to: "/")
     end
-   
+
   end
 
   def call(conn, _) do
     conn
     |> delete_resp_cookie("ticket_data")
     |> put_flash(:info, "Something went wrong with your request.")
-    |> redirect(to: "/")       
+    |> redirect(to: "/")
   end
 end

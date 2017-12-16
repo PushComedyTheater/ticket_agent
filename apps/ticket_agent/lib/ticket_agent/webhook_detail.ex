@@ -7,7 +7,7 @@ defmodule TicketAgent.WebhookDetail do
 
   schema "webhook_details" do
     field :request, :map
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

@@ -4,8 +4,6 @@ defmodule TicketAgentWeb.OrderView do
   def render("create.json", %{order: order, tickets: tickets, locked_until: locked_until}) do
     %{
       slug: order.slug,
-      name: order.name,
-      email: order.email_address,
       total_price: order.total_price,
       status: order.status,
       locked_until: locked_until,

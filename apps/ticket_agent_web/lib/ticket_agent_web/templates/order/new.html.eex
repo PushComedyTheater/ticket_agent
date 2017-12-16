@@ -1,4 +1,5 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+<% total_price = (Enum.count(@conn.assigns.tickets) * @conn.assigns.ticket_price) / 1 %>
 <!-- Demo modal window -->
 <div id="modal-type-aftersometime" class="js-autonomous-popup text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;" data-modal-type="aftersometime" data-open-effect="zoomIn" data-close-effect="zoomOut" data-delay="100" data-speed="500">
   <h4 class="g-mb-20">Preparing Your Order</h4>
@@ -14,8 +15,8 @@
     <div class="row" align="center">
     <div id="ticket_countdown" class="col-md-12 alert alert-warning block" role="alert" align="center">
       Your tickets will be released if you do not complete your order in the next: <strong id="locked_until"></strong>
-    </div>    
-      
+    </div>
+
     </div>
     <div class="row">
       <div class="table-responsive col-md-6">
@@ -35,9 +36,9 @@
             <% end %>
             <tr>
               <td class="pull-right" scope="row">Total: </td>
-              <td>$<%= @conn.assigns.total_price_string %></td>
+              <td>$<%= :erlang.float_to_binary(total_price, decimals: 2) %></td>
             </tr>
-          </tbody>        
+          </tbody>
         </table>
       </div>
       <div class="col-md-6">
@@ -50,40 +51,43 @@
             <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
             <span class="align-self-center g-color-gray-dark-v5 mx-4">OR ENTER CREDIT CARD DETAILS</span>
             <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
-          </div>        
+          </div>
           <fieldset>
           <div class="form-group row g-mb-25">
             <label for="card-element" class="col-sm-4 col-form-label">Card Number</label>
             <div id="card-number" class="form-control col-md-6 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 card_class">
             </div>
-            
-          </div>  
+
+          </div>
           <div class="form-group row g-mb-25">
             <label for="card-element" class="col-sm-4 col-form-label">Expiration Date</label>
             <div id="card-expiry" class="form-control col-md-6 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 card_class">
             </div>
-          </div> 
+          </div>
           <div class="form-group row g-mb-25">
             <label for="card-element" class="col-sm-4 col-form-label">CVV Code</label>
             <div id="card-cvc" class="form-control col-md-3 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15 card_class">
             </div>
-          </div>   
+          </div>
           <div class="form-group row g-mb-25">
             <label for="card-element" class="col-sm-4 col-form-label">Zip Code</label>
-            <input type="text" id="card_zip" name="card_zip" class="form-control col-md-3 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15" placeholder="123455">
-          </div>                
+            <input type="text" id="card_zip" name="card_zip" class="form-control col-md-3 g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15" placeholder="12345">
+          </div>
           </fieldset>
           <div class="form-group row align-self-center" align="center">
             <div class="ml-sm-auto col-lg-12 align-self-center">
-              <button id="submit_button" type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= @conn.assigns.total_price_string %></button>
+              <button id="submit_button" type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= :erlang.float_to_binary(total_price, decimals: 2) %></button>
+              <br />
+              <br />
+              <button id="cancel_button" class="btn btn-sm u-btn-bluegray rounded-0">Cancel Order</button>
               <br />
               <br />
               <div id="card_error" class="alert alert-danger" role="alert" style="display: none;">
                 <strong>Oh snap!</strong> Change a few things up and try submitting again.
               </div>
             </div>
-          </div>      
-        </form> 
+          </div>
+        </form>
 
       </div>
     </div>
@@ -92,34 +96,44 @@
 <!-- JS Plugins Init. -->
 
 <script type="text/javascript">
-  window.buyer_email = "<%= @conn.assigns.buyer_email %>";
-  window.buyer_name = "<%= @conn.assigns.buyer_name %>";
-  window.csrf_token = $('meta[name="csrf-token"]').attr('content');
-  window.guest_checkout = <%= @conn.assigns.guest_checkout %>;
-  window.listing_id = "<%= @conn.assigns.listing.id %>";
-  window.order_id = "";
-  window.show_id = "<%= @conn.assigns.show_id %>";
-  window.tickets = [
-<%= for ticket <- @conn.assigns.tickets do %>
-      {
-        listing_id: window.listing_id,
-        email: "<%= ticket["email"] %>",
-        name: "<%= ticket["name"] %>",
-      },
-<% end %>      
-    ];
-  window.ticket_price = <%= @conn.assigns.ticket_price %>;
-  window.total_price = <%= @conn.assigns.total_price %>;  
+  if (<%= @conn.assigns.past_date %>) {
+    window.location.href = "/events/<%= @listing.slug %>?msg=show_expired";
+  }
 
-   $(document).on('ready', function () {
+  window.details = {
+    show_id: "<%= @conn.assigns.show_id %>",
+    buyer_name: "<%= Coherence.current_user_name(@conn, :name) %>",
+    buyer_email: "<%= Coherence.current_user_name(@conn, :email) %>",
+    listing_id: "<%= @conn.assigns.listing.id %>",
+    ticket_count: <%= Enum.count(@conn.assigns.tickets) %>,
+    ticket_price: <%= @conn.assigns.ticket_price %>,
+    ticket_price_string: "<%= @conn.assigns.ticket_price_string %>",
+    smallest_unit_price: <%= @conn.assigns.smallest_unit_price %>,
+    guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
+    total_smallest_unit_price: <%= Enum.count(@conn.assigns.tickets) * @conn.assigns.smallest_unit_price %>,
+    total_price: <%= Enum.count(@conn.assigns.tickets) * @conn.assigns.smallest_unit_price %>,
+    order_id: "",
+    tickets: [
+  <%= for ticket <- @conn.assigns.tickets do %>
+        {
+          listing_id: "<%= @conn.assigns.listing.id %>",
+          email: "<%= ticket["email"] %>",
+          name: "<%= ticket["name"] %>",
+        },
+  <% end %>
+    ]
+  }
+
+  window.csrf_token = $('meta[name="csrf-token"]').attr('content');
+  $(document).on('ready', function () {
     var modal = new Custombox.modal({
       content: {
         effect: 'fadein',
         target: '#modal-type-aftersometime'
       }
     });
-    modal.open();     
-   });
+    modal.open();
+  });
 </script>
 <script type="text/javascript" src="/js/stripe_related.js"></script>
 <script src="https://assets.pushcomedytheater.com/2.0/jquery.countdown.min.js"></script>

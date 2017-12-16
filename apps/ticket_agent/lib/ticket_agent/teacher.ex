@@ -9,9 +9,9 @@ defmodule TicketAgent.Teacher do
     field :slug, :string
     field :name, :string
     field :email, :string
-    field :biography, :string    
+    field :biography, :string
     field :social, :map
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false

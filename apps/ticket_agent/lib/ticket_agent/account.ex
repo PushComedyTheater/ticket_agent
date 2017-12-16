@@ -16,7 +16,7 @@ defmodule TicketAgent.Account do
     has_many :classes, Class
     has_many :events, Event
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc """

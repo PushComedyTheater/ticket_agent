@@ -1,13 +1,23 @@
 defmodule TicketAgentWeb.OrderController do
   require Logger
   use TicketAgentWeb, :controller
-
   alias TicketAgent.{Event, Listing, Order, Random, Repo}
   alias TicketAgent.State.OrderState
   alias TicketAgent.Finders.OrderFinder
-  plug TicketAgentWeb.ValidateShowRequest when action in [:new]
+  plug TicketAgentWeb.Plugs.ValidateShowRequest when action in [:new]
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
+  plug Coherence.Authentication.Session, [protected: true] when action in [:index, :show]
 
+  def index(conn, params) do
+    orders =
+      Coherence.current_user(conn)
+      |> OrderFinder.find_all_customer_orders()
+
+
+
+    conn
+    |> render("index.html", orders: orders)
+  end
   def show(conn, %{"id" => order_id} = params) do
     # case Coherence.current_user(conn) do
       # nil ->
@@ -21,19 +31,15 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def new(conn, %{"show_id" => show_id}) do
-    total_price = (conn.assigns.ticket_price * conn.assigns.ticket_count)
-  
     message = "Please verify that your order is correct.  Then enter your credit card number or use your browser to pay below."
 
     conn
     |> assign(:message, message)
-    |> assign(:total_price_string, :erlang.float_to_binary(total_price, decimals: 2))
-    |> assign(:total_price, total_price)
     |> render("new.html")
   end
 
   def create(conn, params) do
-    {order, tickets, locked_until} = 
+    {order, tickets, locked_until} =
       params
       |> OrderFinder.find_or_create_order(Coherence.current_user(conn))
       |> maybe_reserve_tickets(params)
@@ -44,12 +50,12 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def delete(conn, params) do
-    case OrderFinder.find_started_order(params["email"], params["total_price"]) do
+    case OrderFinder.find_started_order(Coherence.current_user(conn)) do
       nil ->
         Logger.warn("Not able to find this order")
       order ->
         order
-        |> maybe_release_tickets(params)        
+        |> maybe_release_tickets(params)
     end
 
     conn
@@ -64,5 +70,5 @@ defmodule TicketAgentWeb.OrderController do
   defp maybe_release_tickets(order, %{"listing_id" => listing_id, "tickets" => tickets} = params) do
     order
     |> OrderState.release_order_tickets(listing_id, tickets)
-  end  
+  end
 end

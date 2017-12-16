@@ -34,7 +34,7 @@
                   <!-- Submenu -->
                   <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home">
                     <li class="dropdown-item">
-                      <%= link "Your Orders", to: about_path(@conn, :show, "ed"), class: "nav-link" %>
+                      <%= link "Your Orders", to: order_path(@conn, :index), class: "nav-link" %>
                     </li>
                     <li class="dropdown-item">
                       <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "nav-link" %>

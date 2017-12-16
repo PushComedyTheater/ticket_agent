@@ -10,7 +10,7 @@ defmodule TicketAgent.State.OrderState do
     Multi.new()
     |> Multi.update_all(:processing_order,
       from(
-        o in Order, 
+        o in Order,
         where: o.id == ^order.id,
         where: o.status == "started"
       ),
@@ -20,62 +20,62 @@ defmodule TicketAgent.State.OrderState do
         ]
       ],
       returning: true
-    )    
+    )
   end
 
   def set_order_completed_transaction(order) do
-    IO.inspect order
     Multi.new()
     |> Multi.update_all(:processing_order,
       from(
-        o in Order, 
+        o in Order,
         where: o.id == ^order.id,
         where: o.status == "processing"
       ),
       [
         set: [
-          status: "completed"
+          status: "completed",
+          completed_at: NaiveDateTime.utc_now(),
         ]
       ],
       returning: true
-    )    
+    )
   end
 
   def reserve_tickets(%{id: order_id} = order, listing_id, input_tickets) do
     ticket_count = Enum.count(input_tickets)
 
-    existing_count = 
+    existing_count =
       listing_id
       |> TicketFinder.find_by_listing_and_order(order_id)
       |> Enum.count()
-    
+
     ticket_count = ticket_count - existing_count
     Logger.info "There are #{existing_count} existing tickets, meaning we have to create #{ticket_count} tickets"
 
     ticket = if ticket_count > 0 do
-      {:ok, _} = 
+      {:ok, _} =
         listing_id
         |> lock_operation(order_id, ticket_count)
         |> Repo.transaction()
 
-      available_tickets = 
+      available_tickets =
         listing_id
-        |> TicketFinder.find_by_listing_and_order(order_id)      
+        |> TicketFinder.find_by_listing_and_order(order_id)
 
-      tickets = 
+      tickets =
         input_tickets
         |> Enum.with_index()
         |> Enum.map(fn({%{"name" => name, "email" => email, "listing_id" => listing_id}, index}) ->
-          ticket = 
+          ticket =
             Enum.at(available_tickets, index)
             |> Ecto.Changeset.change([guest_name: name, guest_email: email])
             |> Repo.update!
         end)
     else
-      tickets = 
+      tickets =
         listing_id
-        |> TicketFinder.find_by_listing_and_order(order_id)  
-    end  
+        |> TicketFinder.find_by_listing_and_order(order_id)
+    end
     minium_ticket = Enum.min_by(tickets, fn(ticket) -> ticket.locked_until end)
     {order, tickets, minium_ticket.locked_until}
   end
@@ -83,9 +83,9 @@ defmodule TicketAgent.State.OrderState do
   def lock_operation(listing_id, order_id, quantity) do
     timestamp = NaiveDateTime.utc_now()
 
-    subset_query = 
+    subset_query =
       from(
-        t in Ticket, 
+        t in Ticket,
         where: t.listing_id == ^listing_id,
         where: t.status == "available",
         where: is_nil(t.locked_until),
@@ -102,13 +102,13 @@ defmodule TicketAgent.State.OrderState do
     Multi.new()
     |> Multi.update_all(:lock_tickets,
       from(
-        t in Ticket, 
+        t in Ticket,
         join: s in subquery(subset_query),
         on: s.id == t.id
       ),
       [
         set: [
-          status: "locked", 
+          status: "locked",
           order_id: order_id,
           locked_until: locked_until
         ]
@@ -117,7 +117,7 @@ defmodule TicketAgent.State.OrderState do
     )
   end
 
-  def release_order_tickets(%{id: order_id} = order, listing_id, input_tickets) do  
+  def release_order_tickets(%{id: order_id} = order, listing_id, input_tickets) do
     ticket_count = Enum.count(input_tickets)
     input_ticket_ids = Enum.map(input_tickets, fn(ticket) -> ticket["id"] end)
 
@@ -125,17 +125,17 @@ defmodule TicketAgent.State.OrderState do
 
     Repo.update_all(
       from(
-        t in Ticket, 
+        t in Ticket,
         where: t.listing_id == ^listing_id,
         where: t.order_id == ^order_id,
         where: t.status == "locked" or t.status == "processing",
         where: t.id in ^input_ticket_ids
       ),
       set: [
-          status: "available", 
+          status: "available",
           order_id: nil,
           locked_until: nil,
-          guest_name: nil, 
+          guest_name: nil,
           guest_email: nil
         ]
     )

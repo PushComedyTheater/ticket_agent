@@ -19,15 +19,28 @@ config :coherence,
 
 # config :oauth2, debug: true
 
-config :coherence,
-  email_from_name: "Push Comedy Theater",
+adapter = Swoosh.Adapters.SMTP
+
+# config :coherence, TicketAgentWeb.Coherence.Mailer,
+#   adapter: Swoosh.Adapters.Mailgun,
+#   api_key: System.get_env("MAILGUN_API_KEY"),
+#   domain: "pushcomedytheater.com",
+#   email_from_name: "Push Comedy Theater",
+#   email_from_email: "support@pushcomedytheater.com"
+
+config :ticket_agent, TicketAgent.Mailer,
+  adapter: adapter,
+  relay: "127.0.0.1", 
+  port: 1025,
+  email_from_name: "ticket agent config",
+  email_from_email: "support@pushcomedytheater.com"  
+
+config :coherence, TicketAgent.Coherence.Mailer,
+  adapter: adapter,
+  relay: "127.0.0.1", 
+  port: 1025,
+  email_from_name: "Push Comedy Theatersss",
   email_from_email: "support@pushcomedytheater.com"
-
-
-config :coherence, TicketAgentWeb.Coherence.Mailer,
-  adapter: Swoosh.Adapters.Mailgun,
-  api_key: System.get_env("MAILGUN_API_KEY"),
-  domain: "pushcomedytheater.com"
 
 config :ticket_agent, Google,
   client_id: System.get_env("GOOGLE_CLIENT_ID"),

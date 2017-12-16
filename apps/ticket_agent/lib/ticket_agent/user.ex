@@ -14,12 +14,14 @@ defmodule TicketAgent.User do
     coherence_schema()
     field :role, :string
     field :stripe_customer_id, :string
-    timestamps()
+    field :one_time_token, :string
+    field :one_time_token_at, :utc_datetime
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:name, :email, :account_id, :role, :stripe_customer_id] ++ coherence_fields())
+    |> cast(params, [:name, :email, :account_id, :role, :stripe_customer_id, :one_time_token, :one_time_token_at] ++ coherence_fields())
     |> validate_required([:name, :email])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)

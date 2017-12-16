@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.TicketInformationController do
   use TicketAgentWeb, :controller
   alias TicketAgent.Listing
-  plug TicketAgentWeb.ValidateShowRequest
+  plug TicketAgentWeb.Plugs.ValidateShowRequest
   plug TicketAgentWeb.Plugs.ShowLoader
 
   def new(conn, params) do

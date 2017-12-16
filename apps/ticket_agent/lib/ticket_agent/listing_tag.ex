@@ -8,7 +8,7 @@ defmodule TicketAgent.ListingTag do
   schema "listing_tags" do
     belongs_to :listing, Listing, references: :id, foreign_key: :listing_id, type: Ecto.UUID
     field :tag, :string
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(%ListingTag{} = listing_tag, attr \\ %{}) do

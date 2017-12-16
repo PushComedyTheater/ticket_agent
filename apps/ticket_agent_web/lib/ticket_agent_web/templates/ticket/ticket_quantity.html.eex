@@ -9,6 +9,7 @@
     </div>
     <div class="form-group col-sm-4">
       <select class="form-control rounded-0" id="ticket_count">
+        <%= assigns.available_ticket_count %>
         <%= for i <- (1..assigns.available_ticket_count) do %>
           <option><%= i %></option>
         <% end %>
@@ -17,8 +18,8 @@
     <div class="form-group col-sm-4">
       Total:&nbsp;&nbsp;<strong id="invoice_cost">$<%= formatted_ticket_price(assigns.ticket_price) %></strong>
     </div>
-  </div>   
+  </div>
       <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none; margin-top: 15px;">
         <strong>Uh oh!</strong> You must choose more than zero tickets.
-      </div>          
+      </div>
 </form>

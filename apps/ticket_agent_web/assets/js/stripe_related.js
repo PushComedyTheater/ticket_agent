@@ -1,14 +1,15 @@
+window.loading_token = false;
+
 window.reserve_tickets = function () {
   //window.console_group("reserve_tickets");
   //window.console_log("Reserving tickets");
-  var values = window.load_window_values();
   $("#ticket_bar").css("width", "60%");
 
   $.ajax({
     // The URL for the request
     url: "/orders",
     // The data to send (will be converted to a query string)
-    data: JSON.stringify(values),
+    data: JSON.stringify(window.details),
     // Whether this is a POST or GET request
     type: "POST",
     // The type of data we expect back
@@ -20,13 +21,11 @@ window.reserve_tickets = function () {
     },
   }).done(function (response) {
     $("#ticket_bar").css("width", "90%");
-
-    //window.console_log("Reserved tickets successfully with response: ");
-    //window.console_dir(response);
-    
-    window.order_id = response.slug;
-    window.tickets  = response.tickets;
-
+    // window.console_log("Reserved tickets successfully with response: ");
+    window.console_dir(response);
+    window.details.locked_until = response.locked_until;
+    window.details.order_id     = response.slug;
+    window.details.tickets      = response.tickets;
     //window.console_group("setting countdown")
     var user_time_zone = moment.tz.guess();
     //window.console_log("user_time_zone = " + user_time_zone);
@@ -54,11 +53,11 @@ window.reserve_tickets = function () {
       ).on(
         'finish.countdown',
         function (event) {
-          window.release_tickets();
+          window.release_tickets(true);
         }
         );
     } else {
-      window.release_tickets();
+      window.release_tickets(true);
     }
     //window.console_group_end();
     //window.console_group_end();
@@ -72,13 +71,13 @@ window.reserve_tickets = function () {
   });
 }
 
-window.release_tickets = function () {
-  var values = window.load_window_values();
+window.release_tickets = function (redirect) {
+
   $.ajax({
     // The URL for the request
     url: "/orders/push.json",
     // The data to send (will be converted to a query string)
-    data: JSON.stringify(values),
+    data: JSON.stringify(window.details),
     // Whether this is a POST or GET request
     type: "DELETE",
     // The type of data we expect back
@@ -94,28 +93,20 @@ window.release_tickets = function () {
     // The response is passed to the function
     //window.console_dir(json);
     ////window.console_group_end();
-    window.location.href = "/events/" + window.show_id + "?msg=released_tickets"
+    if (redirect) {
+      window.removeEventListener("beforeunload", false);
+      window.location.href = "/events/" + window.details.show_id + "?msg=released_tickets"
+    }
   }).fail(function (xhr, status, errorThrown) {
     // Code to run if the request fails; the raw request and
     // status codes are passed to the function
     window.console_error("Received error creating order: ")
     window.console_error("errorThrown: " + errorThrown);
     //window.console_group_end();
-    window.location.href = "/events/" + window.show_id + "?msg=released_tickets"
-  });  
-  
-}
+    window.removeEventListener("beforeunload", false);
+    window.location.href = "/events/" + window.details.show_id + "?msg=released_tickets"
+  });
 
-window.load_window_values = function () {
-  return {
-    email: window.buyer_email,
-    name: window.buyer_name,
-    guest_checkout: window.guest_checkout,
-    order_id: window.order_id,
-    listing_id: window.listing_id,
-    total_price: window.total_price,
-    tickets: window.tickets
-  }
 }
 
 window.stripeTokenHandler = function (result, ev) {
@@ -123,8 +114,8 @@ window.stripeTokenHandler = function (result, ev) {
   //window.console_log(result);
   var stripeValues = window.parse_stripe_response(result);
   // //window.console_log("loading window values and concating");
-  var values = $.extend({}, window.load_window_values(), stripeValues);
-  // //window.console_dir(values);
+  var values = $.extend({}, window.details, stripeValues);
+
   window.send_token_for_charge(values, ev);
 }
 
@@ -151,33 +142,35 @@ window.send_token_for_charge = function (values, ev) {
     if (ev && ev.complete) {
       ev.complete("success");
     }
-    
+
     window.console_dir(json);
     $("#submit_button").html("Redirecting....");
     // //window.console_group_end();
-    window.location.href = "/orders/" + window.order_id;
+    window.removeEventListener("beforeunload", window.unloader);
+
+    window.location.href = "/orders/" + window.details.order_id;
   }).fail(function (xhr, status, errorThrown) {
     if (ev && ev.complete) {
       ev.complete("fail");
     }
     $("#card_error").show()
-    $("#card_error").html(errorThrown);   
+    $("#card_error").html(errorThrown);
     if (xhr && xhr.responseJSON && xhr.responseJSON.reason) {
-      $("#card_error").html(xhr.responseJSON.reason);   
+      $("#card_error").html(xhr.responseJSON.reason);
     }
     window.loading_token = false;
     $("#submit_button").html(window.old_submit_text);
-    $("#submit_button").css("disabled", "");    
+    $("#submit_button").css("disabled", "");
   });
-} 
+}
 
 window.generate_payment_request_button = function() {
-  var items = $.map(window.tickets, function (val, i) {
+  var items = $.map(window.details.tickets, function (val, i) {
     return {
       label: "Ticket For " + val.name,
-      amount: window.ticket_price
+      amount: window.details.smallest_unit_price
     }
-  });  
+  });
   return window.stripe_instance.paymentRequest({
     country: 'US',
     currency: 'usd',
@@ -186,9 +179,9 @@ window.generate_payment_request_button = function() {
     requestPayerEmail: true,
     total: {
       label: "Total for ticket(s)",
-      amount: window.total_price,
+      amount: window.details.total_smallest_unit_price,
       },
-    displayItems: items,      
+    displayItems: items,
   });
 }
 
@@ -212,10 +205,10 @@ window.setup_payment_request_button = function(div_id) {
     // //window.console_log("parsing stripe response");
     var stripeValues = window.parse_stripe_response(ev);
     // //window.console_log("loading window values and concating");
-    var values = $.extend({}, window.load_window_values(), stripeValues);
+    var values = $.extend({}, window.details, stripeValues);
     // //window.console_dir(values);
     window.send_token_for_charge(values, ev);
-  });  
+  });
 }
 
 window.setup_card_number = function(div_id) {
@@ -228,8 +221,8 @@ window.setup_card_number = function(div_id) {
     }
     if (event.complete) {
       $("#card_error").hide()
-    }    
-  });  
+    }
+  });
 }
 
 window.setup_card_expiry = function(div_id) {
@@ -242,7 +235,7 @@ window.setup_card_expiry = function(div_id) {
     }
     if (event.complete) {
       $("#card_error").hide()
-    }    
+    }
   });
 }
 
@@ -278,33 +271,54 @@ window.setup_submit_button = function(div_id) {
 
     if (card_zip.length >= 5) {
       var additional_data = {
-        name: window.buyer_name,
+        name: window.details.buyer_name,
         address_zip: $("#card_zip").val()
       };
 
       window.stripe_instance.createToken(window.card_number, additional_data).then(function (result) {
+        console.log(result);
         if (result.error) {
+          $("#submit_button").html(window.old_submit_text);
           $("#card_error").show()
-          $("#card_error").html(result.error.message);          
+          $("#card_error").html(result.error.message);
+          window.loading_token = false;
         } else {
           window.stripeTokenHandler(result, ev);
         }
       });
     } else {
-      $("#card_error").show()
+      window.loading_token = false;
+      $("#card_error").show();
+      $("#submit_button").html(window.old_submit_text);
       $("#card_error").html("Please enter a valid zip code.");
     }
-  })  
+  })
 }
 
 $(document).on('ready', function () {
   window.reserve_tickets();
+
+  $("#cancel_button").on("click", function(e) {
+    e.preventDefault();
+    window.release_tickets(true);
+  });
   window.stripe_instance = Stripe(window.stripe_publishable_key);
   window.stripe_elements = window.stripe_instance.elements();
-  
+
   window.setup_payment_request_button("#payment-request-button");
   window.setup_card_number("#card-number");
   window.setup_card_expiry("#card-expiry");
   window.setup_card_cvc("#card-cvc");
   window.setup_submit_button("#payment-form");
+
 });
+
+window.unloader = function(e) {
+  window.release_tickets(false);
+  var confirmationMessage = "\o/";
+
+  e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+  return confirmationMessage;              // Gecko, WebKit, Chrome <34
+}
+
+window.addEventListener("beforeunload", window.unloader);

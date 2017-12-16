@@ -2,109 +2,100 @@
 <section class="g-bg-white">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <%= render "ticket_quantity.html", assigns %>
       </div>
-      <div class="col-md-6">
-        <%= if Coherence.logged_in?(@conn) do %>
-          <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
-            <i class="fa fa-check-circle g-mr-5"></i>
-            <span id="logged_in_text">Purchase 1 Ticket As <%= Coherence.current_user_name(@conn) %></span>
-          </button>
-        <% else %>
-          <%= render "guest_information.html", assigns %>
-        <% end %>
+    </div>
+    <div id="attendee_form" class="row">
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-12">
+        <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
+          <i class="fa fa-check-circle g-mr-5"></i>
+          <span id="logged_in_text">Reserve 1 Ticket As <%= Coherence.current_user_name(@conn) %></span>
+        </button>
       </div>
     </div>
   </div>
-
 </section>
 
+<script id="entry-template" type="text/x-handlebars-template">
+  <div class="card rounded-0 col-md-6" style="padding: 5px;">
+    <h3 class="card-header h5 rounded-0">
+      <i class="fa fa-user g-font-size-default g-mr-5"></i>
+      Guest {{count_string}} Information
+    </h3>
+    <div class="card-block ticket_div">
+      <div id="attendee_div_{{count}}">
+        <div id="name_group_{{count}}" class="form-group g-mb-20">
+          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Name</label>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_name_{{count}}" name="attendee_name_{{count}}" placeholder="Name" value="{{ticket.name}}" required>
+          <small id="name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+
+        <div id="email_group_{{count}}" class="form-group g-mb-20">
+          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
+          <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_{{count}}" name="attendee_email_{{count}}" placeholder="user@domain.com" value="{{ticket.email}}" requiredtype="email">
+          <small id="email_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/javascript" src="/js/ticket_related.js"></script>
 <script type="text/javascript">
-  window.ticket_count = 1;
-  window.ticket_cost = <%= @conn.assigns.ticket_price %>;
-  window.show_id = "<%= @listing.slug %>";
-  window.buyer_name = "<%= Coherence.current_user_name(@conn, :name) %>";
-  window.buyer_email = "<%= Coherence.current_user_name(@conn, :email) %>";
-  
-  window.redirect_it = function() {
-    var details = {
-      show_id: window.show_id,
-      buyer_name: window.buyer_name,
-      buyer_email: window.buyer_email,
-      ticket_count: window.ticket_count,
-      guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
-      tickets: []
-    }
-    console.log(details);
-    var encodedData = window.btoa(JSON.stringify(details));
-    Cookies.set("ticket_data", encodedData);
-    var redirect_url = "/ticket_information/new?show_id=" + show_id;
-    window.location.href = redirect_url;
+  window.blank_ticket = {name: null, email: null};
+  window.details = {
+    show_id: "<%= @listing.slug %>",
+    buyer_name: "<%= Coherence.current_user_name(@conn, :name) %>",
+    buyer_email: "<%= Coherence.current_user_name(@conn, :email) %>",
+    listing_id: "<%= @conn.assigns.listing.id %>",
+    ticket_count: 1,
+    ticket_price: <%= @conn.assigns.ticket_price %>,
+    ticket_price_string: "<%= @conn.assigns.ticket_price_string %>",
+    smallest_unit_price: <%= @conn.assigns.smallest_unit_price %>,
+    guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
+    tickets: [{name: "<%= Coherence.current_user_name(@conn, :name) %>", email: "<%= Coherence.current_user_name(@conn, :email) %>"}]
   }
 
-  window.set_button = function() {
-    var resultVal = parseInt($("#ticket_count").val());
-    if (window.buyer_name.length == 0) {
-      window.buyer_name = "Guest";
-    }
-    $("#guest_text").text("Reserve " + window.ticket_count + " Ticket(s) As " + window.buyer_name);
-    $("#logged_in_text").text("Reserve " + window.ticket_count + " Ticket(s) As <%= Coherence.current_user_name(@conn) %>");
+  if (<%= @conn.assigns.past_date %>) {
+    window.location.href = "/events/<%= @listing.slug %>?msg=show_expired";
   }
-
   $(document).on('ready', function () {
+    window.reload_form();
+
     $("#ticket_count").on("change", function() {
-      window.ticket_count = parseInt($("#ticket_count").val());
-      window.set_button();
-      var total = (window.ticket_count * window.ticket_cost).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-      $("#invoice_cost").html("$" + total);
+      var ticket_count = parseInt($("#ticket_count").val());
+      var current_ticket_count = window.details.tickets.length;
+
+      if (current_ticket_count > ticket_count) {
+        for (var i = ticket_count; i < current_ticket_count; i++) {
+          window.details.tickets.pop();
+        }
+      } else {
+        for (var i = current_ticket_count; i < ticket_count; i++) {
+          window.details.tickets.push(window.blank_ticket);
+        }
+      }
+
+      window.save_details_to_cookie();
+      window.reload_form();
     })
-
-    $("#guest_name").on("change", function() {
-      window.buyer_name = $("#guest_name").val();
-      window.set_button();
-    });
-
-    $("#guest_email").on("change", function() {
-      window.buyer_email = $("#guest_email").val();
-      window.set_button();
-    });    
 
     $("#continue").on("click", function(e) {
-      window.ticket_count = parseInt($("#ticket_count").val());
       e.preventDefault();
-      window.redirect_it();
-    })
-
-    $("#continue_as_guest").on("click", function(e) {
-      window.ticket_count = parseInt($("#ticket_count").val());
-      window.buyer_name = $("#guest_name").val();
-      window.buyer_email = $("#guest_email").val();
-      var email_valid = $("#guest_email")[0].checkValidity();
-
-      if (window.buyer_name.length <= 0) {
-        $("#name_group").addClass("u-has-error-v1");
-        $("#name_required").show();
-        return false;
-      } else {
-        $("#name_group").removeClass("u-has-error-v1");
-        $("#name_required").hide();          
-      }
-
-      if ((window.buyer_email.length <= 0) || (!email_valid)) {
-        if (!email_valid) {
-          $("#email_required").html("Email must be a valid email address.");
-        } else {
-          $("#email_required").html("This is a required field.");
+      var valid_tickets = true;
+      for (var i = 0; i < window.details.tickets.length; i++) {
+        if (!window.save_ticket(i)) {
+          valid_tickets = false;
         }
-        $("#email_group").addClass("u-has-error-v1");
-        $("#email_required").show();
-        return false;          
-      } else {
-        $("#email_group").removeClass("u-has-error-v1");
-        $("#email_required").hide();
       }
-      window.redirect_it();
-    })    
+      if (valid_tickets) {
+        var redirect_url = "/orders/new?show_id=" + window.details.show_id;
+        window.location.href = redirect_url;
+      }
+      return valid_tickets;
+    });
   });
 </script>

@@ -71,6 +71,7 @@ defmodule TicketAgentWeb.Router do
     resources "/tickets", TicketController
     resources "/orders", OrderController
     
+    get "/ticket_auth/:token", TicketAuthController, :show, as: :ticket_auth
     get "/ticket_auth", TicketAuthController, :new, as: :ticket_auth
     get "/ticket_information/new", TicketInformationController, :new, as: :ticket_information
     post "/custom_registration", TicketAuthController, :create, as: :custom_registration

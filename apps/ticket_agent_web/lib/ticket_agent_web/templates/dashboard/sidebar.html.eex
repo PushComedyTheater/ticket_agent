@@ -6,7 +6,7 @@
               <div class="list-group list-group-border-0 g-mb-40">
                 <!-- Overall -->
                 <%= link to: dashboard_path(@conn, :index), class: "list-group-item list-group-item-action justify-content-between" do %>
-                  <span><i class="icon-home g-pos-rel g-top-1 g-mr-8"></i> <%= Coherence.current_user_name(@conn) %></span>
+                  <span><i class="icon-home g-pos-rel g-top-1 g-mr-8"></i> <%= Coherence.current_user_name(@conn) %> (<%= Coherence.current_user_name(@conn, :email) %>)</span>
                 <% end %>
                 <!-- End Overall -->
 

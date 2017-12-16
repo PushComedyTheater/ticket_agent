@@ -26,17 +26,25 @@ config :logger, :console,
 config :ticket_agent_web, :generators,
   context_app: :ticket_agent
 
-
-config :coherence,
-  email_from_name: "Push Comedy Theater",
+config :coherence, TicketAgentWeb.Coherence.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  relay: "127.0.0.1", 
+  port: 1025,
+  email_from_name: "ticket agent web",
   email_from_email: "support@pushcomedytheater.com"
+  
 
+# config :coherence, TicketAgentWeb.Coherence.Mailer,
+#   adapter: Swoosh.Adapters.Mailgun,
+#   api_key: System.get_env("MAILGUN_API_KEY"),
+#   domain: "pushcomedytheater.com",
+  # email_from_name: "Push Comedy Theater",
+  # email_from_email: "support@pushcomedytheater.com"
 
-config :coherence, TicketAgent.Coherence.Mailer,
-  adapter: Swoosh.Adapters.Mailgun,
-  api_key: System.get_env("MAILGUN_API_KEY"),
-  domain: "pushcomedytheater.com"
-
+# config :coherence, TicketAgentWeb.Coherence.Mailer,
+#   adapter: Swoosh.Adapters.Local,
+#   email_from_name: "Push Comedy Theater",
+#   email_from_email: "support@pushcomedytheater.com"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

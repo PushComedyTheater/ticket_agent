@@ -10,8 +10,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.UserCredential do
       add :provider, :user_credential_provider, null: false
       add :token, :text, null: false
       add :secret, :text, null: true
-
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create index(:user_credentials, [:user_id])

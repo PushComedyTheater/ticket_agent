@@ -17,14 +17,14 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
         |> Phoenix.Controller.render(TicketAgentWeb.ErrorView, "404.html")
 
       {listing, available_tickets} ->
-        start_at = 
+        start_at =
           listing.start_at
           |> Calendar.NaiveDateTime.to_date_time_utc
 
-        in_the_past = start_at < DateTime.utc_now 
+        past_date = start_at < DateTime.utc_now
 
         available_ticket_count = cond do
-          in_the_past ->
+          past_date ->
             Logger.error "This listing is in the past"
             0
           Enum.count(available_tickets) > 20 ->
@@ -33,14 +33,16 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
             Enum.count(available_tickets)
         end
 
-        ticket_price = Enum.at(available_tickets, 0).price / 100
-          
+        smallest_unit_price = Enum.at(available_tickets, 0).price
+        ticket_price = smallest_unit_price / 100
+
         conn
         |> Plug.Conn.assign(:buyer_name, Map.get(conn.assigns, :buyer_name, nil))
         |> Plug.Conn.assign(:buyer_email, Map.get(conn.assigns, :buyer_email, nil))
-        |> Plug.Conn.assign(:ticket_cost_string, :erlang.float_to_binary(ticket_price, decimals: 2))
+        |> Plug.Conn.assign(:smallest_unit_price, smallest_unit_price)
         |> Plug.Conn.assign(:ticket_price, ticket_price)
-        |> Plug.Conn.assign(:in_the_past, in_the_past)
+        |> Plug.Conn.assign(:ticket_price_string, :erlang.float_to_binary((ticket_price / 1), decimals: 2))
+        |> Plug.Conn.assign(:past_date, past_date)
         |> Plug.Conn.assign(:page_title, "#{listing.title} at Push Comedy Theater")
         |> Plug.Conn.assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(listing.description, true))
         |> Plug.Conn.assign(:page_image, TicketAgentWeb.SharedView.listing_image(listing))

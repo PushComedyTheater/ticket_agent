@@ -14,7 +14,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Class do
       add :account_id, references(:accounts, type: :binary_id)
       add :prerequisite_id, references(:classes, type: :binary_id)
       add :photo_url, :text
-      timestamps()
+      timestamps(type: :timestamptz)
     end
     create unique_index(:classes, [:slug])
     create index(:classes, [:type])

@@ -68,11 +68,22 @@ defmodule TicketAgentWeb.EventView do
   end
 
   def event_date_long(date) do
-    Calendar.Strftime.strftime!(date, "%b %d, %Y - %l:%M%p")
+    date
+    |> Calendar.DateTime.shift_zone!("America/New_York")
+    |> Calendar.Strftime.strftime!("%b %d, %Y - %l:%M%p")
   end
 
   def listing_tags(show) do
     Enum.take(show.listing_tags, 5)
     |> Enum.map_join(", ", fn tag -> tag.tag end)
+  end
+
+  defp shift_zone!(nil, time_zone) do
+    nil
+  end
+
+  defp shift_zone!(timestamp, time_zone) do
+    timestamp
+    |> Calendar.DateTime.shift_zone!(time_zone)
   end
 end

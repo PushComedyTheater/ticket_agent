@@ -10,7 +10,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTeacher do
       add :biography, :text
       add :social, :map
 
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create unique_index(:teachers, [:slug])

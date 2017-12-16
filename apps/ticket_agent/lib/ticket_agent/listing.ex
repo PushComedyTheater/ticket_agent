@@ -18,9 +18,9 @@ defmodule TicketAgent.Listing do
     field :title, :string
     field :description, :string
     field :status, :string
-    field :start_at, :naive_datetime
-    field :end_at, :naive_datetime
-    timestamps()
+    field :start_at, :utc_datetime
+    field :end_at, :utc_datetime
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(%Listing{} = listing, attr \\ %{}) do
@@ -71,5 +71,5 @@ defmodule TicketAgent.Listing do
       |> String.downcase
       |> String.replace(~r/[^a-z0-9\s-]/, "")
       |> String.replace(~r/(\s|-)+/, "-")
-  end  
+  end
 end

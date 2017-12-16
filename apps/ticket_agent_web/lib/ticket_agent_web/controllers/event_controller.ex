@@ -16,11 +16,13 @@ defmodule TicketAgentWeb.EventController do
       |> ListingFinder.find_listing_by_slug()
 
     ticket_price = Enum.at(available_tickets, 0).price
-      
+
     conn = case params["msg"] do
       nil -> conn
-      "released_tickets" -> 
-        put_flash(conn, :error, "Your tickets were released due to session timeout.")
+      "show_expired" ->
+        put_flash(conn, :error, dgettext("show_expired", "This show is no longer available for purchase."))
+      "released_tickets" ->
+        put_flash(conn, :error, dgettext("released_tickets", "Your tickets were released due to session timeout."))
     end
 
     conn

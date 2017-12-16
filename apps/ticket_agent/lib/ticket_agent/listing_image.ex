@@ -8,7 +8,7 @@ defmodule TicketAgent.ListingImage do
   schema "listing_images" do
     belongs_to :listing, Listing, references: :id, foreign_key: :listing_id, type: Ecto.UUID
     field :url, :string
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   def changeset(%ListingImage{} = listing_image, attr \\ %{}) do

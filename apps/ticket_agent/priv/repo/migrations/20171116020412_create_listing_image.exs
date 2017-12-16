@@ -6,7 +6,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.ListingImage do
       add :id, :binary_id, primary_key: true
       add :listing_id, references(:listings, on_delete: :nothing, type: :binary_id), null: false
       add :url, :text, null: false
-      timestamps()
+      timestamps(type: :timestamptz)
     end
 
     create index(:listing_images, [:listing_id])

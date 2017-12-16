@@ -19,7 +19,7 @@ defmodule TicketAgent.Class do
 
     has_many :listings, Listing
     has_many :class_tickets, through: [:listings, :tickets]
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc false
