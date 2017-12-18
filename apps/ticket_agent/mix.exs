@@ -37,7 +37,7 @@ defmodule TicketAgent.Mixfile do
   defp deps do
     [
       {:calendar, "~> 0.17.0"},
-      {:coherence, github: "smpallen99/coherence"},
+      {:coherence, "~> 0.1"},
       {:cloudinex, "~> 0.1"},
       {:ecto, "~> 2.1"},
       {:extwitter, "~> 0.8"},
