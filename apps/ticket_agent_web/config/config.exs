@@ -26,13 +26,32 @@ config :logger, :console,
 config :ticket_agent_web, :generators,
   context_app: :ticket_agent
 
+{sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
+sha = String.trim(sha)
+config :ticket_agent_web, :release, sha
+
+IO.inspect "release = #{sha}"
+
+config :sentry,
+  dsn: System.get_env("SENTRY_PRIVATE_DSN"),
+  environment_name: Mix.env,
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!,
+  use_error_logger: true,
+  tags: %{
+    env: "#{Mix.env}",
+    app: "ticket_agent_web"
+  },
+  included_environments: [:dev, :prod],
+  release: sha
+
 config :coherence, TicketAgentWeb.Coherence.Mailer,
   adapter: Swoosh.Adapters.SMTP,
-  relay: "127.0.0.1", 
+  relay: "127.0.0.1",
   port: 1025,
   email_from_name: "ticket agent web",
   email_from_email: "support@pushcomedytheater.com"
-  
+
 
 # config :coherence, TicketAgentWeb.Coherence.Mailer,
 #   adapter: Swoosh.Adapters.Mailgun,
@@ -45,6 +64,8 @@ config :coherence, TicketAgentWeb.Coherence.Mailer,
 #   adapter: Swoosh.Adapters.Local,
 #   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
+
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

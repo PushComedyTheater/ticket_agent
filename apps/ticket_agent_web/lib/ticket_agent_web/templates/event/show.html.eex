@@ -13,7 +13,9 @@
         <h2 class="h1" style="color: #fff;"><%= @listing.title %></h2>
         <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
           <strong><%= event_date(@listing.start_at) %></strong>&nbsp;
-          <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15"><i class="fa fa-dollar g-mr-3"></i><strong><%= cost(@conn.assigns.ticket_price) %></strong></span>
+          <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15">
+            <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.ticket_price) %></strong>
+          </span>
         </p>
         <ul class="u-list-inline mb-0">
           <%= for tag <- @listing.listing_tags do %>

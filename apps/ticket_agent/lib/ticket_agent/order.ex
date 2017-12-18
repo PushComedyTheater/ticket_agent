@@ -4,6 +4,7 @@ defmodule TicketAgent.Order do
   use TicketAgent.Schema
 
   @required ~w(slug status total_price user_id)a
+  @fields ~w(subtotal credit_card_fee processing_fee)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -14,6 +15,9 @@ defmodule TicketAgent.Order do
     has_one :listing, through: [:tickets, :listing]
     field :slug, :string
     field :status, :string
+    field :subtotal, :integer
+    field :credit_card_fee, :integer
+    field :processing_fee, :integer
     field :total_price, :integer
     field :completed_at, :utc_datetime
     timestamps
@@ -22,7 +26,7 @@ defmodule TicketAgent.Order do
   @doc false
   def changeset(%Order{} = order, attrs) do
     order
-    |> cast(attrs, @required)
+    |> cast(attrs, @required ++ @fields)
     |> validate_required(@required)
   end
 
@@ -52,4 +56,14 @@ defmodule TicketAgent.Order do
       flags: 'progressive'
     })
   end
+
+  #
+  # window.totalAsking = function(amount, percent, fixedfee) {
+  #     var totalAsks = amount + window.totalFees(amount, percent, fixedfee);
+  #     if(amount <= 0 || totalAsks < 0) {
+  #       totalAsks = 0;
+  #     }
+  #     return totalAsks;
+  # };
+
 end

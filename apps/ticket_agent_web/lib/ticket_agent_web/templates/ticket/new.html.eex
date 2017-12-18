@@ -13,7 +13,7 @@
       <div class="col-md-12">
         <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
           <i class="fa fa-check-circle g-mr-5"></i>
-          <span id="logged_in_text">Reserve 1 Ticket As <%= Coherence.current_user_name(@conn) %></span>
+          <span id="logged_in_text">Reserve 1 Ticket</span>
         </button>
       </div>
     </div>
@@ -30,7 +30,7 @@
       <div id="attendee_div_{{count}}">
         <div id="name_group_{{count}}" class="form-group g-mb-20">
           <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Name</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_name_{{count}}" name="attendee_name_{{count}}" placeholder="Name" value="{{ticket.name}}" required>
+          <input class="form-control form-control-md rounded-0 attendee_name" type="email" id="attendee_name_{{count}}" name="attendee_name_{{count}}" placeholder="Name" value="{{ticket.name}}" required>
           <small id="name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
         </div>
 
@@ -45,23 +45,24 @@
 </script>
 <script type="text/javascript" src="/js/ticket_related.js"></script>
 <script type="text/javascript">
-  window.blank_ticket = {name: null, email: null};
   window.details = {
-    show_id: "<%= @listing.slug %>",
-    buyer_name: "<%= Coherence.current_user_name(@conn, :name) %>",
-    buyer_email: "<%= Coherence.current_user_name(@conn, :email) %>",
-    listing_id: "<%= @conn.assigns.listing.id %>",
-    ticket_count: 1,
-    ticket_price: <%= @conn.assigns.ticket_price %>,
-    ticket_price_string: "<%= @conn.assigns.ticket_price_string %>",
-    smallest_unit_price: <%= @conn.assigns.smallest_unit_price %>,
-    guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
-    tickets: [{name: "<%= Coherence.current_user_name(@conn, :name) %>", email: "<%= Coherence.current_user_name(@conn, :email) %>"}]
+    listing: {
+      id: "<%= @listing.id %>",
+      slug: "<%= @listing.slug %>"
+    },
+    tickets: [
+      {
+        name: "<%= Coherence.current_user_name(@conn, :name) %>",
+        email: "<%= Coherence.current_user_name(@conn, :email) %>",
+        price: <%= @conn.assigns.ticket_price %>,
+      }
+    ]
   }
 
   if (<%= @conn.assigns.past_date %>) {
     window.location.href = "/events/<%= @listing.slug %>?msg=show_expired";
   }
+
   $(document).on('ready', function () {
     window.reload_form();
 
@@ -75,7 +76,7 @@
         }
       } else {
         for (var i = current_ticket_count; i < ticket_count; i++) {
-          window.details.tickets.push(window.blank_ticket);
+          window.details.tickets.push({name: null, email: null, price: <%= @conn.assigns.ticket_price %>});
         }
       }
 
@@ -85,17 +86,7 @@
 
     $("#continue").on("click", function(e) {
       e.preventDefault();
-      var valid_tickets = true;
-      for (var i = 0; i < window.details.tickets.length; i++) {
-        if (!window.save_ticket(i)) {
-          valid_tickets = false;
-        }
-      }
-      if (valid_tickets) {
-        var redirect_url = "/orders/new?show_id=" + window.details.show_id;
-        window.location.href = redirect_url;
-      }
-      return valid_tickets;
+      return window.validate_form_and_redirect();
     });
   });
 </script>

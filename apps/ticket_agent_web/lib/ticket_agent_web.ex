@@ -50,6 +50,8 @@ defmodule TicketAgentWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      use Plug.ErrorHandler
+      use Sentry.Plug
     end
   end
 

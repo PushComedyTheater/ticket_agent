@@ -12,10 +12,10 @@ defmodule Mix.Tasks.LoadEvents do
                 |> String.split("\n")
     # parse_current(non_words)
     parse_history_files(non_words)
-  end 
+  end
 
   def parse_current(now_words) do
-    body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")  
+    body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")
     Enum.each(body["listings"], fn(listing) ->
       id = listing["id"]
       url = "https://www.universe.com/api/v2/listings/#{id}.json"
@@ -58,14 +58,14 @@ defmodule Mix.Tasks.LoadEvents do
     files
     |> Enum.chunk_every(10)
     |> Enum.with_index
-    |> Enum.each(fn({chunk, index}) -> 
-      Logger.info "Processing #{index+1} of class chunks"  
+    |> Enum.each(fn({chunk, index}) ->
+      Logger.info "Processing #{index+1} of class chunks"
       {:ok, pid} = StringIO.open("")
       Enum.each(chunk, fn(file) ->
         process_file(base <> file, non_words, :class, pid)
       end)
       string = StringIO.flush(pid)
-      File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)    
+      File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)
       StringIO.close(pid)
     end)
 
@@ -79,19 +79,19 @@ defmodule Mix.Tasks.LoadEvents do
     files
     |> Enum.chunk_every(20)
     |> Enum.with_index
-    |> Enum.each(fn({chunk, index}) -> 
-      Logger.info "Processing #{index+1} of show chunks"  
+    |> Enum.each(fn({chunk, index}) ->
+      Logger.info "Processing #{index+1} of show chunks"
       {:ok, pid} = StringIO.open("")
       Enum.each(chunk, fn(file) ->
         process_file(base <> file, non_words, :show, pid)
       end)
       string = StringIO.flush(pid)
-      File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)    
+      File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)
       StringIO.close(pid)
-    end)   
-    
-    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/camps")    
-    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/workshops")    
+    end)
+
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/camps")
+    clean_directory(File.cwd! <> "/apps/ticket_agent/priv/repo/seeds/workshops")
   end
 
   def load_classes(non_words) do
@@ -105,14 +105,14 @@ defmodule Mix.Tasks.LoadEvents do
     files
     |> Enum.chunk_every(10)
     |> Enum.with_index
-    |> Enum.each(fn({chunk, index}) -> 
-      Logger.info "Processing #{index+1} of class chunks"  
+    |> Enum.each(fn({chunk, index}) ->
+      Logger.info "Processing #{index+1} of class chunks"
       {:ok, pid} = StringIO.open("")
       Enum.each(chunk, fn(file) ->
         process_file(base <> file, non_words, :class, pid)
       end)
       string = StringIO.flush(pid)
-      File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)    
+      File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)
       StringIO.close(pid)
     end)
   end
@@ -127,16 +127,16 @@ defmodule Mix.Tasks.LoadEvents do
     files
     |> Enum.chunk_every(20)
     |> Enum.with_index
-    |> Enum.each(fn({chunk, index}) -> 
-      Logger.info "Processing #{index+1} of show chunks"  
+    |> Enum.each(fn({chunk, index}) ->
+      Logger.info "Processing #{index+1} of show chunks"
       {:ok, pid} = StringIO.open("")
       Enum.each(chunk, fn(file) ->
         process_file(base <> file, non_words, :show, pid)
       end)
       string = StringIO.flush(pid)
-      File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)    
+      File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)
       StringIO.close(pid)
-    end)  
+    end)
   end
 
   def load_workshops(non_words) do
@@ -148,7 +148,7 @@ defmodule Mix.Tasks.LoadEvents do
 
     preface = load_preface("workshops")
 
-    keywords = 
+    keywords =
       files
       |> Enum.with_index()
       |> Enum.reduce([], fn({file, index}, acc) ->
@@ -157,10 +157,10 @@ defmodule Mix.Tasks.LoadEvents do
       end)
       |> Enum.uniq
       |> Enum.sort
-    
+
     string = StringIO.flush(pid)
 
-    File.write("./apps/ticket_agent/priv/repo/seeds/workshops/listings_0.exs", preface <> string)    
+    File.write("./apps/ticket_agent/priv/repo/seeds/workshops/listings_0.exs", preface <> string)
   end
 
   def load_camps(non_words) do
@@ -172,7 +172,7 @@ defmodule Mix.Tasks.LoadEvents do
 
     preface = load_preface("camps")
 
-    keywords = 
+    keywords =
       files
       |> Enum.with_index()
       |> Enum.reduce([], fn({file, index}, acc) ->
@@ -181,14 +181,14 @@ defmodule Mix.Tasks.LoadEvents do
       end)
       |> Enum.uniq
       |> Enum.sort
-    
+
     string = StringIO.flush(pid)
 
-    File.write("./apps/ticket_agent/priv/repo/seeds/camps/listings_0.exs", preface <> string)    
-  end  
+    File.write("./apps/ticket_agent/priv/repo/seeds/camps/listings_0.exs", preface <> string)
+  end
 
   def process_file(file, non_words, type, pid) do
-    body = 
+    body =
       file
       |> File.read!
       |> Poison.decode!()
@@ -199,7 +199,7 @@ defmodule Mix.Tasks.LoadEvents do
     slug = listing["slug"]
     title = String.trim(listing["title"])
     class_id = load_class_id(title, type)
-    
+
     description = listing["description"]
     tags = load_tags(price, title, description, type)
     keywords = get_keywords(description, non_words)
@@ -247,15 +247,15 @@ defmodule Mix.Tasks.LoadEvents do
     end
   end
   defp load_class_id(_, _), do: nil
-  
+
   defp process_images(images, event_photo_id) do
     photo = Enum.find(images, fn(x) -> x["id"] == event_photo_id end)
     %{"url" => photo_url} = photo
-    
+
 
     photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, photo_url) |> hd) <> "/-/inline/yes/"
     public_id = String.split(photo, "/") |> Enum.at(3)
-   
+
     process_image(photo, public_id)
     Cloudinex.Url.for(public_id)
   end
@@ -308,13 +308,13 @@ defmodule Mix.Tasks.LoadEvents do
         end
       end
       acc
-    end)    
-    |> Enum.filter(fn({x,y}) -> 
+    end)
+    |> Enum.filter(fn({x,y}) ->
       y > 2 && String.length(x) > 2 && String.valid?(x)
-    end)  
-    |> Enum.map(fn({x,_}) -> 
+    end)
+    |> Enum.map(fn({x,_}) ->
       x
-    end)  
+    end)
   end
 
   defp process_image(photo, public_id) do
@@ -334,7 +334,7 @@ defmodule Mix.Tasks.LoadEvents do
             photo
         end
     end
-  end    
+  end
 
   defp blah do
     # {:ok, pid} = StringIO.open("")
@@ -345,11 +345,11 @@ defmodule Mix.Tasks.LoadEvents do
     #   "./apps/ticket_agent/lib/mix/tasks/data/camps/"
     # ]
     # |> Enum.reduce([], fn(base, acc) ->
-    #   stuff = 
+    #   stuff =
     #     base
     #     |> File.ls!()
     #     |> Enum.reduce([], fn(file, cnt) ->
-    #       body = 
+    #       body =
     #         base <> file
     #         |> File.read!
     #         |> Poison.decode!()
@@ -358,7 +358,7 @@ defmodule Mix.Tasks.LoadEvents do
     #       images = body["images"]
     #       event_photo_id = listing["event_photo_id"]
     #       photo = Enum.find(images, fn(x) -> x["id"] == event_photo_id end)
-    #       %{"social_image" => social_photo, "url" => cover_photo} = photo            
+    #       %{"social_image" => social_photo, "url" => cover_photo} = photo
     #       social_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, social_photo) |> hd) <> "/-/inline/yes/"
     #       social_public_id = String.split(social_photo, "/") |> Enum.at(3)
     #       cover_photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, cover_photo) |> hd) <> "/-/inline/yes/"
@@ -366,11 +366,11 @@ defmodule Mix.Tasks.LoadEvents do
 
     #       result = []
     #       if Enum.member?(missing, social_public_id) do
-    #         result = result ++ [social_photo] 
+    #         result = result ++ [social_photo]
     #       end
     #       if Enum.member?(missing, cover_public_id) do
-    #         result = result ++ [cover_photo]  
-    #       end          
+    #         result = result ++ [cover_photo]
+    #       end
 
     #       cnt = cnt ++ result
     #     end)
@@ -397,9 +397,9 @@ defmodule Mix.Tasks.LoadEvents do
     # end)
     # string = StringIO.flush(pid)
     # IO.inspect string
-    # File.write!("./apps/ticket_agent/priv/repo/missing.txt", string)    
+    # File.write!("./apps/ticket_agent/priv/repo/missing.txt", string)
     # |> IO.inspect
-    
+
   end
 
   defp load_preface(type) do
@@ -435,7 +435,7 @@ acting101 = SeedHelpers.create_class(%{slug: "acting101"})
   end
   preface = preface <> """
 Logger.info "Seeding #{type}"
-  """      
+  """
   preface
   end
 end

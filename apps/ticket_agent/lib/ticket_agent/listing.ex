@@ -2,6 +2,7 @@ defmodule TicketAgent.Listing do
   use TicketAgent.Schema
 
   @required ~w(slug title description status start_at end_at)a
+  @fields ~w(pass_fees_to_buyer)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -18,6 +19,7 @@ defmodule TicketAgent.Listing do
     field :title, :string
     field :description, :string
     field :status, :string
+    field :pass_fees_to_buyer, :boolean
     field :start_at, :utc_datetime
     field :end_at, :utc_datetime
     timestamps(type: :utc_datetime)
@@ -25,7 +27,7 @@ defmodule TicketAgent.Listing do
 
   def changeset(%Listing{} = listing, attr \\ %{}) do
     listing
-    |> cast(attr, @required)
+    |> cast(attr, @required ++ @fields)
     |> validate_required(@required)
     |> validate_inclusion(:status, ~w(unpublished active canceled deleted))
     |> cast_assoc(:event)

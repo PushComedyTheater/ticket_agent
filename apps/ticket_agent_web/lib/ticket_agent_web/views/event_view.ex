@@ -62,10 +62,6 @@ defmodule TicketAgentWeb.EventView do
     |> :erlang.float_to_binary(decimals: 2)
   end
 
-  def cost(ticket_price) do
-    ticket_price
-    |> :erlang.float_to_binary(decimals: 2)
-  end
 
   def event_date_long(date) do
     date

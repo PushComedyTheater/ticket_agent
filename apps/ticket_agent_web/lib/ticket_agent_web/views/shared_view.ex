@@ -17,6 +17,18 @@ defmodule TicketAgentWeb.SharedView do
     |> Calendar.Strftime.strftime!("%m/%d/%Y %l:%M%p")
   end
 
+  def cost(ticket_price) when is_integer(ticket_price), do: cost(ticket_price / 1)
+  def cost(ticket_price) when is_float(ticket_price) do
+    ticket_price
+    |> :erlang.float_to_binary(decimals: 2)
+  end
+
+  def cost_smallest_unit(ticket_price) when is_integer(ticket_price), do: cost_smallest_unit(ticket_price / 1)
+  def cost_smallest_unit(ticket_price) when is_float(ticket_price) do
+    (ticket_price / 100)
+    |> :erlang.float_to_binary(decimals: 2)
+  end
+
   def formatted_ticket_price(price) do
      price
      |> :erlang.float_to_binary(decimals: 2)

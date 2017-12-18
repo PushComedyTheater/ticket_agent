@@ -3,7 +3,7 @@ defmodule TicketAgentWeb.LoadListing do
   alias TicketAgent.{Listing, Repo}
   def init(opts), do: opts
 
-  def call(%Plug.Conn{params: %{"listing_id" => listing_id}} = conn, _) when not is_nil(listing_id) do
+  def call(%Plug.Conn{params: %{"listing" => %{"id" => listing_id}}} = conn, _) when not is_nil(listing_id) do
     listing = Repo.get(Listing, listing_id)
     conn
     |> Plug.Conn.assign(:listing, listing)

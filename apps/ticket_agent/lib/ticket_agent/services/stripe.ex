@@ -6,29 +6,35 @@ defmodule TicketAgent.Services.Stripe do
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
-  def create_charge_with_customer(customer, amount, description, order_id, metadata \\ %{}) do
-    create_charge(nil, customer, amount, description, metadata)
+  def create_charge(customer, amount, description, order_id, metadata \\ %{}) do
+    values = load_charge_values(customer, amount, description, metadata)
+
+    body =
+      metadata
+      |> Enum.reduce(values, fn({key, value}, acc) ->
+        acc = Map.put(acc, "metadata[#{key}]", value)
+      end)
+      |> URI.encode_query()
+
+    uri = api_url() <> "/charges"
+
+    request(:post, uri, [], body, hackney_opts())
     |> insert_order_details(order_id)
   end
 
-  def create_charge_with_token(token, amount, description, order_id, metadata \\ %{}) do
-    create_charge(token, nil, amount, description, metadata)
-    |> insert_order_details(order_id)
-  end  
-   
   def create_customer(token, user, metadata) do
     Logger.info "Creating a customer because we don't have a key"
     values = %{
-      "source" => token, 
-      "email" => user.email, 
+      "source" => token,
+      "email" => user.email,
       "description" => user.name
     }
-    
+
     values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
       acc = Map.put(acc, "metadata[#{key}]", value)
     end)
-    
-    body = 
+
+    body =
       values
       |> URI.encode_query()
 
@@ -37,63 +43,23 @@ defmodule TicketAgent.Services.Stripe do
     case request(:post, uri, [], body, hackney_opts()) do
       {:ok, %{"id" => stripe_customer_id} = response} ->
         {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
+      {:error, %{"error" => error}} ->
+        Logger.error "Received bad response from Stripe #{inspect error}"
+        {:error, error}
       anything ->
-        Logger.error "Received bad response from Stripe"
+        Logger.error "Received unknown bad response from Stripe #{inspect anything}"
         {:error, anything}
     end
   end
 
-  # def create_customer(token, user, stripe_customer_id, metadata) when not is_nil(stripe_customer_id) do
-  #   uri = "#{api_url()}/customers/#{stripe_customer_id}"
-  #   Logger.info "Getting a customer because we have a key from #{uri}"
-    
-  #   case request(:get, uri, [], "", hackney_opts()) do
-  #     {:ok, %{"deleted" => true, "id" => stripe_customer_id} = response} ->
-  #       Logger.error "Stripe custom has been deleted"
-  #       User.update_stripe_customer_id(user, nil)
-  #       create_customer(token, user, nil, metadata)
-  #     {:ok, %{"id" => stripe_customer_id} = response} ->
-  #       {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
-  #     {:error, error} ->
-  #       Logger.error "Received bad response from Stripe #{inspect error}"
-  #       {:error, :stripe_error}  
-  #     anything ->
-  #       IO.inspect anything      
-  #   end
-  # end
-
-  defp create_charge(token, customer, amount, description, metadata) do
-    values = load_charge_values(token, customer, amount, description, metadata)
-    values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
-      acc = Map.put(acc, "metadata[#{key}]", value)
-    end) 
-
-    body = 
-      values
-      |> URI.encode_query()
-
-    uri = api_url() <> "/charges"
-
-    request(:post, uri, [], body, hackney_opts())
-  end
-
-  defp load_charge_values(token, nil, amount, description, metadata) do
+  defp load_charge_values(customer_id, amount, description, metadata) do
     values = %{
-      "source" => token, 
-      "amount" => amount, 
+      "customer" => customer_id,
+      "amount" => amount,
       "description" => description,
       "currency" => "usd"
-    }   
+    }
   end
-
-  defp load_charge_values(nil, customer_id, amount, description, metadata) do
-    values = %{
-      "customer" => customer_id, 
-      "amount" => amount, 
-      "description" => description,
-      "currency" => "usd"
-    }   
-  end  
 
   defp insert_order_details({status, response}, order_id) do
     parsed_response = OrderDetail.parse_stripe_response(response, order_id)
@@ -120,7 +86,7 @@ defmodule TicketAgent.Services.Stripe do
 
   defp hackney_opts do
     [:with_body, basic_auth: {secret_key(), ""}, pool: false]
-  end   
+  end
 
   defp load_headers(headers, :post) do
     headers ++ [
@@ -129,8 +95,8 @@ defmodule TicketAgent.Services.Stripe do
       {"Accept-Encoding", "gzip"},
       {"Connection", "keep-alive"},
       {"User-Agent", @stripe_user_agent},
-      {"Stripe-Version", @stripe_api_version}   
-    ] 
+      {"Stripe-Version", @stripe_api_version}
+    ]
   end
 
   defp load_headers(headers, :get) do
@@ -139,16 +105,16 @@ defmodule TicketAgent.Services.Stripe do
       {"Accept-Encoding", "gzip"},
       {"Connection", "keep-alive"},
       {"User-Agent", @stripe_user_agent},
-      {"Stripe-Version", @stripe_api_version}   
-    ]     
+      {"Stripe-Version", @stripe_api_version}
+    ]
   end
 
   defp api_url, do: get_env_variable(:api_url)
-  
+
   defp secret_key, do: get_env_variable(:secret_key)
 
   defp get_env_variable(key) do
     Application.get_env(:ticket_agent, Stripe)
     |> Keyword.get(key)
-  end  
+  end
 end

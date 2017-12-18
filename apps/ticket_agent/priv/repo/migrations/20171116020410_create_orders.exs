@@ -9,9 +9,11 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :credit_card_id, references(:credit_cards, on_delete: :nothing, type: :binary_id)
       add :slug, :text, null: false
-      add :guest_checkout, :boolean, default: false
       add :status, :order_status, default: "started"
-      add :total_price, :integer, null: false
+      add :subtotal, :integer, null: false
+      add :credit_card_fee, :integer, default: 0
+      add :processing_fee, :integer, default: 0
+      add :total_price, :integer, default: 0
       add :completed_at, :timestamptz, default: nil
       timestamps(type: :timestamptz)
     end

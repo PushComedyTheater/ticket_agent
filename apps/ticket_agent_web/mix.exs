@@ -46,7 +46,8 @@ defmodule TicketAgentWeb.Mixfile do
       {:ticket_agent, in_umbrella: true},
       {:cowboy, "~> 1.0"},
       {:swoosh, "~> 0.12.0"},
-      {:gen_smtp, "~> 0.12.0"},      
+      {:gen_smtp, "~> 0.12.0"},
+      {:sentry, "~> 6.0.0"}
     ]
   end
 

@@ -27,17 +27,7 @@
               <th class="g-brd-white-opacity-0_1">Cost</th>
             </tr>
           </thead>
-          <tbody class="g-font-size-12 g-color-black-opacity-0_6 g-font-weight-600">
-            <%= for ticket <- @conn.assigns.tickets do %>
-              <tr>
-                <td class="g-color-black-opacity-0_8" scope="row">Ticket For <%= ticket["name"] %></td>
-                <td>$<%= :erlang.float_to_binary(@conn.assigns.ticket_price, decimals: 2) %></td>
-              </tr>
-            <% end %>
-            <tr>
-              <td class="pull-right" scope="row">Total: </td>
-              <td>$<%= :erlang.float_to_binary(total_price, decimals: 2) %></td>
-            </tr>
+          <tbody class="g-font-size-12 g-color-black-opacity-0_6 g-font-weight-600" id="ticket_body">
           </tbody>
         </table>
       </div>
@@ -76,7 +66,7 @@
           </fieldset>
           <div class="form-group row align-self-center" align="center">
             <div class="ml-sm-auto col-lg-12 align-self-center">
-              <button id="submit_button" type="submit" class="btn btn-xxl u-btn-primary rounded-0">Submit Payment For $<%= :erlang.float_to_binary(total_price, decimals: 2) %></button>
+              <button id="submit_button" type="submit" class="btn btn-xxl u-btn-primary rounded-0">Loading....</button>
               <br />
               <br />
               <button id="cancel_button" class="btn btn-sm u-btn-bluegray rounded-0">Cancel Order</button>
@@ -94,31 +84,39 @@
   </div>
 </section>
 <!-- JS Plugins Init. -->
-
+<script id="entry-template" type="text/x-handlebars-template">
+  <tr>
+    <td class="g-color-black-opacity-0_8" scope="row">Ticket For {{name}}</td>
+    <td>${{price}}</td>
+  </tr>
+</script>
+<script id="calculated-template" type="text/x-handlebars-template">
+  <tr>
+    <td class="g-color-black-opacity-0_8" align="right" style="text-align: right;" scope="row">{{title}}: </td>
+    <td>{{value}}</td>
+  </tr>
+</script>
 <script type="text/javascript">
   if (<%= @conn.assigns.past_date %>) {
     window.location.href = "/events/<%= @listing.slug %>?msg=show_expired";
   }
 
   window.details = {
-    show_id: "<%= @conn.assigns.show_id %>",
-    buyer_name: "<%= Coherence.current_user_name(@conn, :name) %>",
-    buyer_email: "<%= Coherence.current_user_name(@conn, :email) %>",
-    listing_id: "<%= @conn.assigns.listing.id %>",
-    ticket_count: <%= Enum.count(@conn.assigns.tickets) %>,
-    ticket_price: <%= @conn.assigns.ticket_price %>,
-    ticket_price_string: "<%= @conn.assigns.ticket_price_string %>",
-    smallest_unit_price: <%= @conn.assigns.smallest_unit_price %>,
-    guest_checkout: <%= !Coherence.logged_in?(@conn) %>,
-    total_smallest_unit_price: <%= Enum.count(@conn.assigns.tickets) * @conn.assigns.smallest_unit_price %>,
-    total_price: <%= Enum.count(@conn.assigns.tickets) * @conn.assigns.smallest_unit_price %>,
-    order_id: "",
+    listing: {
+      id: "<%= @listing.id %>",
+      slug: "<%= @listing.slug %>"
+    },
+    locked_until: null,
+    order_id: null,
+    pricing: {},
     tickets: [
   <%= for ticket <- @conn.assigns.tickets do %>
         {
+          id: "<%= ticket["id"] %>",
           listing_id: "<%= @conn.assigns.listing.id %>",
           email: "<%= ticket["email"] %>",
           name: "<%= ticket["name"] %>",
+          price: <%= @conn.assigns.ticket_price %>
         },
   <% end %>
     ]

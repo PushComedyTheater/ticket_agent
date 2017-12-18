@@ -8,4 +8,4 @@ config :ticket_agent, TicketAgent.Repo,
   ssl: true
 
 config :ticket_agent, :ticket_lock_length, 5000
-config :ticket_agent, :stripe_key, Application.get_env("STRIPE_KEY")  
+config :ticket_agent, :stripe_key, Application.get_env("STRIPE_KEY")

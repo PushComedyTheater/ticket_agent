@@ -5,7 +5,7 @@ defmodule TicketAgentWeb.TicketView do
     %{
       status: "ok"
     }
-  end  
+  end
 
   def render("show.json", %{ticket: ticket}) do
     %{
@@ -13,14 +13,15 @@ defmodule TicketAgentWeb.TicketView do
       name: ticket.guest_name,
       email: ticket.guest_email,
       status: ticket.status,
-      locked_until: ticket.locked_until
+      locked_until: ticket.locked_until,
+      price: ticket.price
     }
-  end  
+  end
 
   def event_date(date) do
     #Sat, Dec 2, 2017
     Calendar.Strftime.strftime!(date, "%a %b %d, %Y")
-  end  
+  end
 
   def full_event_time(%{start_at: start_at, end_at: end_at}) when start_at != end_at do
     "#{event_time(start_at)} - #{event_time(end_at)}"

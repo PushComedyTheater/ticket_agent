@@ -2,7 +2,7 @@ defmodule TicketAgentWeb.OrderController do
   require Logger
   use TicketAgentWeb, :controller
   alias TicketAgent.{Event, Listing, Order, Random, Repo}
-  alias TicketAgent.State.OrderState
+  alias TicketAgent.State.{OrderState, TicketState}
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.Plugs.ValidateShowRequest when action in [:new]
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
@@ -39,36 +39,48 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def create(conn, params) do
-    {order, tickets, locked_until} =
+    {order, tickets, locked_until, pricing} =
       params
       |> OrderFinder.find_or_create_order(Coherence.current_user(conn))
       |> maybe_reserve_tickets(params)
+      |> OrderState.calculate_price
 
     conn
     |> put_status(200)
-    |> render("create.json", %{order: order, tickets: tickets, locked_until: locked_until})
+    |> render(
+      "create.json",
+      %{
+        order: order,
+        tickets: tickets,
+        locked_until: locked_until,
+        pricing: pricing
+      }
+    )
   end
 
-  def delete(conn, params) do
+  def delete(conn, %{"tickets" => tickets} = params) do
+    ticket_ids = Enum.map(tickets, fn(ticket) -> ticket["id"] end)
+
     case OrderFinder.find_started_order(Coherence.current_user(conn)) do
       nil ->
         Logger.warn("Not able to find this order")
       order ->
         order
-        |> maybe_release_tickets(params)
+        |> maybe_release_tickets(ticket_ids)
     end
 
     conn
     |> render("delete.json", %{})
   end
 
-  defp maybe_reserve_tickets(order, %{"listing_id" => listing_id, "tickets" => tickets} = params) do
-    order
-    |> OrderState.reserve_tickets(listing_id, tickets)
+  defp maybe_reserve_tickets(order, %{"tickets" => tickets} = params) do
+    TicketState.reserve_tickets(order, tickets)
   end
 
-  defp maybe_release_tickets(order, %{"listing_id" => listing_id, "tickets" => tickets} = params) do
+  defp maybe_release_tickets(order, ticket_ids) do
     order
-    |> OrderState.release_order_tickets(listing_id, tickets)
+    |> TicketState.release_tickets(ticket_ids)
+    |> Ecto.Multi.append(OrderState.release_order(order))
+    |> Repo.transaction
   end
 end

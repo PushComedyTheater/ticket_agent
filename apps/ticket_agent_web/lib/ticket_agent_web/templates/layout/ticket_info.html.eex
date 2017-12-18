@@ -7,15 +7,15 @@
       <div class="col-md-6">
         <div class="g-mb-30">
           <h2 class="h3 text-uppercase g-font-weight-300 u-heading-v2__title"><%= @listing.title %></h2>
-            Date: <strong><%= event_date(@listing.start_at) %></strong> <strong><%= raw full_event_time(@listing) %></strong> / Price: <strong>$<%= @conn.assigns.ticket_price_string %></strong>
+            Date: <strong><%= event_date(@listing.start_at) %></strong> <strong><%= raw full_event_time(@listing) %></strong> / Price: <strong>$<%= cost_smallest_unit(@conn.assigns.ticket_price) %></strong>
           <br />
           <br />
 
           <div class="alert alert-info" role="alert">
             <%= raw @message %>
           </div>
-          <%= if @conn.assigns.buyer_name && @conn.assigns.buyer_email do %>
-            Customer: <span class="u-label u-label-success g-mr-10 g-mb-15"><%= @conn.assigns.buyer_name %> (<%= @conn.assigns.buyer_email %>)</span>
+          <%= if Coherence.logged_in?(@conn) do %>
+          Customer: <span class="u-label u-label-success g-mr-10 g-mb-15"><%= Coherence.current_user_name(@conn, :name) %> (<%= Coherence.current_user_name(@conn, :email) %>)</span>
           <% end %>
         </div>
       </div>

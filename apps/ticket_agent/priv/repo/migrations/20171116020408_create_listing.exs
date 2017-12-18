@@ -12,7 +12,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Listing do
       add :status, :listing_status, default: "unpublished"
       add :start_at, :timestamptz, default: fragment("now()")
       add :end_at, :timestamptz, default: fragment("now()")
-
+      add :pass_fees_to_buyer, :boolean, default: true
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :event_id, references(:events, on_delete: :nothing, type: :binary_id)
       add :class_id, references(:classes, on_delete: :nothing, type: :binary_id)

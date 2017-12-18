@@ -1,5 +1,41 @@
 window.loading_token = false;
 
+window.load_order_table = function() {
+  var tickets  = window.details.tickets;
+  var source   = $("#entry-template").html();
+  window.attendee_template = Handlebars.compile(source);
+  var source   = $("#calculated-template").html();
+  window.calculated_template = Handlebars.compile(source);
+
+  var output = "";
+
+  var subtotal = 0;
+
+  for (var i = 0; i < tickets.length; i++) {
+    var ticket = tickets[i];
+    var ticket_price = ticket.price;
+    subtotal += ticket_price;
+    var context = {
+      name: ticket.name,
+      price: (ticket_price / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+    };
+    var html    = window.attendee_template(context);
+    output += html;
+  }
+  var pricing = window.details.pricing;
+
+  var subtotal = (pricing.subtotal / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+  output += window.calculated_template({title: "Subtotal", value: "$" + subtotal})
+
+  var processing_fee = (pricing.processing_fee / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+  output += window.calculated_template({title: "Processing Fee", value: "$" + processing_fee})
+
+  var total = (pricing.total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+  $("#submit_button").html("Submit Payment For $" + total);
+  output += window.calculated_template({title: "Total", value: "$" + total})
+  $("#ticket_body").html(output);
+}
+
 window.reserve_tickets = function () {
   //window.console_group("reserve_tickets");
   //window.console_log("Reserving tickets");
@@ -22,26 +58,30 @@ window.reserve_tickets = function () {
   }).done(function (response) {
     $("#ticket_bar").css("width", "90%");
     // window.console_log("Reserved tickets successfully with response: ");
-    window.console_dir(response);
+    // window.console_log(response);
+
     window.details.locked_until = response.locked_until;
-    window.details.order_id     = response.slug;
+    window.details.order_id     = response.order_slug;
     window.details.tickets      = response.tickets;
+    window.details.pricing      = response.pricing;
+
+    window.load_order_table();
     //window.console_group("setting countdown")
     var user_time_zone = moment.tz.guess();
-    //window.console_log("user_time_zone = " + user_time_zone);
-
+    // window.console_log("user_time_zone = " + user_time_zone);
+    //
     var locked_until_utc = moment.tz(response.locked_until, "UTC");
-    //window.console_log("locked_until_utc = " + locked_until_utc.format("YYYY/MM/DD HH:mm:ss"));
-
+    // //window.console_log("locked_until_utc = " + locked_until_utc.format("YYYY/MM/DD HH:mm:ss"));
+    //
     var locked_until_user_tz = locked_until_utc.clone().tz(user_time_zone);
-    //window.console_log("locked_until_user_tz = " + locked_until_user_tz.format("YYYY/MM/DD HH:mm:ss"));
-
+    // //window.console_log("locked_until_user_tz = " + locked_until_user_tz.format("YYYY/MM/DD HH:mm:ss"));
+    //
     var now = moment().tz(user_time_zone);
-    //window.console_log("now = " + now.format("YYYY/MM/DD HH:mm:ss"));
-
+    // //window.console_log("now = " + now.format("YYYY/MM/DD HH:mm:ss"));
+    //
     var difference_from_now = locked_until_user_tz.diff(now);
-    //window.console_log("difference_from_now = " + difference_from_now);
-
+    // //window.console_log("difference_from_now = " + difference_from_now);
+    //
     if (difference_from_now > 0) {
       //window.console_log("they still have time " + difference_from_now);
       var until = locked_until_user_tz.format("YYYY/MM/DD HH:mm:ss");
@@ -59,9 +99,12 @@ window.reserve_tickets = function () {
     } else {
       window.release_tickets(true);
     }
-    //window.console_group_end();
-    //window.console_group_end();
+    // //window.console_group_end();
+    // //window.console_group_end();
+    window.setup_payment_request_button("#payment-request-button");
+
     $("#ticket_bar").css("width", "100%");
+
     window.setTimeout(function () { Custombox.modal.close(); }, 25);
   }).fail(function (xhr, status, errorThrown) {
     // Code to run if the request fails; the raw request and
@@ -72,7 +115,7 @@ window.reserve_tickets = function () {
 }
 
 window.release_tickets = function (redirect) {
-
+  window.console_dir("releasing tickets with redirect: " + redirect);
   $.ajax({
     // The URL for the request
     url: "/orders/push.json",
@@ -94,8 +137,8 @@ window.release_tickets = function (redirect) {
     //window.console_dir(json);
     ////window.console_group_end();
     if (redirect) {
-      window.removeEventListener("beforeunload", false);
-      window.location.href = "/events/" + window.details.show_id + "?msg=released_tickets"
+      window.removeEventListener("beforeunload", window.unloader);
+      window.location.href = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
     }
   }).fail(function (xhr, status, errorThrown) {
     // Code to run if the request fails; the raw request and
@@ -103,8 +146,8 @@ window.release_tickets = function (redirect) {
     window.console_error("Received error creating order: ")
     window.console_error("errorThrown: " + errorThrown);
     //window.console_group_end();
-    window.removeEventListener("beforeunload", false);
-    window.location.href = "/events/" + window.details.show_id + "?msg=released_tickets"
+    window.removeEventListener("beforeunload", window.unloader);
+    window.location.href = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
   });
 
 }
@@ -120,7 +163,7 @@ window.stripeTokenHandler = function (result, ev) {
 }
 
 window.send_token_for_charge = function (values, ev) {
-  // //window.console_group("send_token_for_charge");
+  //window.console_group("send_token_for_charge");
   $.ajax({
     // The URL for the request
     url: "/charges",
@@ -142,12 +185,9 @@ window.send_token_for_charge = function (values, ev) {
     if (ev && ev.complete) {
       ev.complete("success");
     }
-
-    window.console_dir(json);
     $("#submit_button").html("Redirecting....");
     // //window.console_group_end();
     window.removeEventListener("beforeunload", window.unloader);
-
     window.location.href = "/orders/" + window.details.order_id;
   }).fail(function (xhr, status, errorThrown) {
     if (ev && ev.complete) {
@@ -155,8 +195,15 @@ window.send_token_for_charge = function (values, ev) {
     }
     $("#card_error").show()
     $("#card_error").html(errorThrown);
-    if (xhr && xhr.responseJSON && xhr.responseJSON.reason) {
-      $("#card_error").html(xhr.responseJSON.reason);
+
+    if (xhr && xhr.responseJSON) {
+      var response = xhr.responseJSON;
+      $("#card_error").html(response.reason);
+
+      if (response.code == "reset") {
+        window.removeEventListener("beforeunload", window.unloader);
+        window.location.href = "/events/" + window.details.listing.slug + "?msg=tickets_gone"
+      }
     }
     window.loading_token = false;
     $("#submit_button").html(window.old_submit_text);
@@ -168,9 +215,15 @@ window.generate_payment_request_button = function() {
   var items = $.map(window.details.tickets, function (val, i) {
     return {
       label: "Ticket For " + val.name,
-      amount: window.details.smallest_unit_price
+      amount: val.price
     }
   });
+
+  items.push({
+    label: "Processing Fee",
+    amount: window.details.pricing.processing_fee
+  });
+
   return window.stripe_instance.paymentRequest({
     country: 'US',
     currency: 'usd',
@@ -179,7 +232,7 @@ window.generate_payment_request_button = function() {
     requestPayerEmail: true,
     total: {
       label: "Total for ticket(s)",
-      amount: window.details.total_smallest_unit_price,
+      amount: window.details.pricing.total,
       },
     displayItems: items,
   });
@@ -276,7 +329,6 @@ window.setup_submit_button = function(div_id) {
       };
 
       window.stripe_instance.createToken(window.card_number, additional_data).then(function (result) {
-        console.log(result);
         if (result.error) {
           $("#submit_button").html(window.old_submit_text);
           $("#card_error").show()
@@ -304,13 +356,10 @@ $(document).on('ready', function () {
   });
   window.stripe_instance = Stripe(window.stripe_publishable_key);
   window.stripe_elements = window.stripe_instance.elements();
-
-  window.setup_payment_request_button("#payment-request-button");
   window.setup_card_number("#card-number");
   window.setup_card_expiry("#card-expiry");
   window.setup_card_cvc("#card-cvc");
   window.setup_submit_button("#payment-form");
-
 });
 
 window.unloader = function(e) {

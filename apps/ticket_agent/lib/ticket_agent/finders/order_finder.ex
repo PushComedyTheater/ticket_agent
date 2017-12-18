@@ -18,21 +18,22 @@ defmodule TicketAgent.Finders.OrderFinder do
   end
 
   def find_or_create_order(params, current_user) when not is_nil(current_user) do
-    Logger.info "OrderFinder.find_or_create_order: No order_id but current_user"
-
     case find_started_order(current_user) do
       nil ->
         Logger.info "Creating a new order for this user"
+
         %Order{}
         |> Order.changeset(%{
           slug: Random.generate_slug(),
           user_id: current_user.id,
-          total_price: params["total_price"],
+          subtotal: 0,
+          processing_fee: 0,
+          total_price: 0,
           status: "started"
         })
         |> Repo.insert!
       order ->
-        Logger.info "Found an existing started order #{inspect order}"
+        Logger.info "Found an existing started order #{inspect order.id}"
         order
     end
   end

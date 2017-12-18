@@ -23,6 +23,10 @@ defmodule TicketAgentWeb.EventController do
         put_flash(conn, :error, dgettext("show_expired", "This show is no longer available for purchase."))
       "released_tickets" ->
         put_flash(conn, :error, dgettext("released_tickets", "Your tickets were released due to session timeout."))
+      "cancelled_order" ->
+        put_flash(conn, :error, dgettext("cancelled_order", "Your tickets were released when you cancelled your order."))
+      anything ->
+        put_flash(conn, :error, dgettext("unknown", "Your tickets were released."))
     end
 
     conn

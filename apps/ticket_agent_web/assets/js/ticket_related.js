@@ -2,7 +2,22 @@ window.reload_form = function() {
   window.load_details_from_cookie();
   window.load_attendee_forms();
   window.set_continue_button();
-  window.set_total_price();
+}
+
+window.validate_form_and_redirect = function() {
+  var valid_tickets = true;
+  for (var i = 0; i < window.details.tickets.length; i++) {
+    if (!window.save_ticket(i)) {
+      valid_tickets = false;
+    }
+  }
+  window.console_log(window.details);
+
+  if (valid_tickets) {
+    var redirect_url = "/orders/new?show_id=" + window.details.listing.slug;
+    window.location.href = redirect_url;
+  }
+  return valid_tickets;
 }
 
 window.load_details_from_cookie = function() {
@@ -27,13 +42,18 @@ window.load_attendee_forms = function() {
   window.attendee_template = Handlebars.compile(source);
 
   var output = "";
+  var total = 0;
 
   for (var i = 0; i < tickets.length; i++) {
-    var context = {count: i, count_string: i + 1, ticket: tickets[i]};
+    var ticket = tickets[i];
+    var context = {count: i, count_string: i + 1, ticket: ticket};
     var html    = window.attendee_template(context);
+    total += ticket.price;
     output += html;
   }
+  var total = (total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 
+  $("#total_price").html("$" + total);
   $("#attendee_form").html(output);
   $("#ticket_count").val(tickets.length);
 }
@@ -41,17 +61,10 @@ window.load_attendee_forms = function() {
 window.set_continue_button = function() {
   var ticket_count = window.details.tickets.length;
   if (ticket_count == 1) {
-    $("#logged_in_text").text("Reserve " + ticket_count + " Ticket As " + window.details.buyer_name);
+    $("#logged_in_text").text("Reserve 1 Ticket");
   } else {
-    $("#logged_in_text").text("Reserve " +ticket_count + " Tickets As " + window.details.buyer_name);
+    $("#logged_in_text").text("Reserve " +ticket_count + " Tickets");
   }
-}
-
-window.set_total_price = function() {
-  console.log(window.details.tickets.length);
-  console.log(window.details.ticket_price);
-  var total = (window.details.tickets.length * window.details.ticket_price).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-  $("#invoice_cost").html("$" + total);
 }
 
 window.save_ticket = function(counter) {

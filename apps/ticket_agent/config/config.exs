@@ -4,6 +4,26 @@ config :ticket_agent, ecto_repos: [TicketAgent.Repo]
 
 import_config "#{Mix.env}.exs"
 
+
+{sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
+sha = String.trim(sha)
+config :ticket_agent, :release, sha
+
+IO.inspect "release = #{sha}"
+
+config :sentry,
+  dsn: System.get_env("SENTRY_PRIVATE_DSN"),
+  environment_name: Mix.env,
+  enable_source_code_context: true,
+  root_source_code_path: File.cwd!,
+  tags: %{
+    env: "#{Mix.env}",
+    app: "ticket_agent"
+  },
+  use_error_logger: true,  
+  included_environments: [:dev, :prod],
+  release: sha
+
 # %% Coherence Configuration %%   Don't remove this line
 config :coherence,
   user_schema: TicketAgent.User,
@@ -30,14 +50,14 @@ adapter = Swoosh.Adapters.SMTP
 
 config :ticket_agent, TicketAgent.Mailer,
   adapter: adapter,
-  relay: "127.0.0.1", 
+  relay: "127.0.0.1",
   port: 1025,
   email_from_name: "ticket agent config",
-  email_from_email: "support@pushcomedytheater.com"  
+  email_from_email: "support@pushcomedytheater.com"
 
 config :coherence, TicketAgent.Coherence.Mailer,
   adapter: adapter,
-  relay: "127.0.0.1", 
+  relay: "127.0.0.1",
   port: 1025,
   email_from_name: "Push Comedy Theatersss",
   email_from_email: "support@pushcomedytheater.com"
@@ -71,7 +91,7 @@ value = case System.get_env("TICKET_LOCK_LENGTH") do
 end
 config :ticket_agent, :ticket_lock_length, value
 
-config :ticket_agent, Stripe, 
+config :ticket_agent, Stripe,
   secret_key: System.get_env("STRIPE_SECRET_KEY"),
   publishable_key: System.get_env("STRIPE_PUBLISHABLE_KEY"),
   api_url: System.get_env("STRIPE_API_URL")

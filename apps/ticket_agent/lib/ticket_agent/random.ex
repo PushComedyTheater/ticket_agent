@@ -1,7 +1,7 @@
 defmodule TicketAgent.Random do
   def generate_slug() do
     # credo:disable-for-lines:3
-    :crypto.strong_rand_bytes(6)
+    :crypto.strong_rand_bytes(10)
     |> Base.encode16(case: :lower)
   end
 
