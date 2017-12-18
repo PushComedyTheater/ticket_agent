@@ -3,8 +3,8 @@ defmodule TicketAgent.OrderDetail do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  @attrs ~w(order_id charge_id balance_transaction status failure_code failure_message 
-            amount network_status risk_level response)a
+  @attrs ~w(order_id charge_id balance_transaction status failure_code failure_message
+            amount network_status risk_level response client_ip)a
 
   schema "order_details" do
     belongs_to :order, Order, references: :id, foreign_key: :order_id, type: Ecto.UUID
@@ -29,7 +29,7 @@ defmodule TicketAgent.OrderDetail do
     |> assoc_constraint(:order)
     |> validate_required([:response])
   end
-  
+
   def parse_stripe_response(%{"error" => error} = response, order_id) do
      %{
       order_id: order_id,
@@ -42,9 +42,9 @@ defmodule TicketAgent.OrderDetail do
       network_status: nil,
       risk_level: nil,
       response: response
-    } 
+    }
   end
-  
+
   def parse_stripe_response(response, order_id) do
     outcome = response["outcome"]
     amount = response["amount"]

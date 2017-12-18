@@ -10,7 +10,7 @@ defmodule TicketAgent.Order do
 
   schema "orders" do
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
-    has_one :credit_card, CreditCard
+    belongs_to :credit_card, CreditCard, references: :id, foreign_key: :credit_card_id, type: Ecto.UUID
     has_many :tickets, Ticket
     has_one :listing, through: [:tickets, :listing]
     field :slug, :string

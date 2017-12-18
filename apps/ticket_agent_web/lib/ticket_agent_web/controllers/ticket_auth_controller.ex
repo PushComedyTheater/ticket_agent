@@ -2,7 +2,7 @@ defmodule TicketAgentWeb.TicketAuthController do
   use TicketAgentWeb, :controller
   use Coherence.Config
   alias Coherence.ControllerHelpers, as: Helpers
-  alias Coherence.{Messages, Schemas}  
+  alias Coherence.{Messages, Schemas}
   alias TicketAgent.{Repo, User}
   alias TicketAgent.Finders.UserFinder
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
@@ -15,7 +15,7 @@ defmodule TicketAgentWeb.TicketAuthController do
         |> redirect(to: "/ticket_auth?show_id=" <> params["show_id"])
         |> halt()
       user ->
-        user = 
+        user =
           user
           |> User.changeset(%{one_time_token: nil, one_time_token_at: nil})
           |> Repo.update!
@@ -23,7 +23,7 @@ defmodule TicketAgentWeb.TicketAuthController do
         conn
         |> Helpers.login_user(user, params)
         |> redirect(to: "/tickets/new?show_id=" <> params["show_id"])
-    end        
+    end
   end
 
   def new(conn, %{"show_id" => show_id} = params) do
@@ -53,16 +53,16 @@ defmodule TicketAgentWeb.TicketAuthController do
       user ->
         token = Helpers.random_string(48)
 
-        user = 
+        user =
           user
           |> User.changeset(%{one_time_token: token, one_time_token_at: NaiveDateTime.utc_now})
           |> Repo.update!
 
         url = "https://#{conn.host}/ticket_auth/#{token}?show_id=" <> params["show_id"]
 
-        TicketAgent.UserEmail.one_time_login(user, url) 
+        TicketAgent.UserEmail.one_time_login(user, url)
         |> TicketAgent.Mailer.deliver!
-        
+
         conn
         |> put_flash(:error, "Please check your email for information on how to continue your guest checkout.")
         |> redirect(to: "/ticket_auth?show_id=" <> params["show_id"])
@@ -80,12 +80,12 @@ defmodule TicketAgentWeb.TicketAuthController do
         conn
         |> Helpers.send_confirmation(user, user_schema)
         |> Helpers.login_user(user, params)
-        |> Helpers.redirect_to(:session_create, params)        
+        |> Helpers.redirect_to(:session_create, params)
       {:error, changeset} ->
         conn
         |> put_flash(:error, "There was an error with your submission.  Please try again or contact support@pushcomedytheater.com.")
         |> redirect(to: "/ticket_auth?show_id=" <> params["show_id"])
         |> halt()
-    end    
-  end  
+    end
+  end
 end

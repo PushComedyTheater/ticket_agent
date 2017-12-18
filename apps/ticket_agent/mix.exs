@@ -37,7 +37,7 @@ defmodule TicketAgent.Mixfile do
   defp deps do
     [
       {:calendar, "~> 0.17.0"},
-      {:coherence, "~> 0.1"},
+      {:coherence, github: "smpallen99/coherence"},
       {:cloudinex, "~> 0.1"},
       {:ecto, "~> 2.1"},
       {:extwitter, "~> 0.8"},
@@ -47,6 +47,7 @@ defmodule TicketAgent.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 0.12.0"},
       {:gen_smtp, "~> 0.12.0"},
+      {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode", runtime: false},
 
       {:bypass, "~> 0.7", only: :test},
       {:credo, "~> 0.8", only: [:dev, :test]},

@@ -6,7 +6,7 @@ defmodule TicketAgentWeb.AboutController do
   @theater_description """
   The Push Comedy Theater is a 90 seat venue in the heart of Norfolk\'s brand new Arts District.  Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
   The Push Comedy Theater will host live sketch, improv and stand-up comedy on Friday and Saturday nights.  During the week classes will be offered in stand-up, sketch and improv comedy as well as acting and film production.
-  Whether your a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.  
+  Whether your a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
   """
 
   def index(conn, _params) do

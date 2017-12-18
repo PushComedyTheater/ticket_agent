@@ -29,12 +29,12 @@ defmodule TicketAgentWeb.AuthController do
       uri ->
         uri
     end
-    
+
     twitter_user =
       oauth_token
       |> Twitter.get_token!(oauth_verifier)
       |> Twitter.get_user!()
-    
+
       if twitter_user do
         user = User.find_or_create_with_credentials(
           twitter_user.name,
@@ -44,11 +44,13 @@ defmodule TicketAgentWeb.AuthController do
           twitter_user.access_token_secret
         )
 
+        # Task.start(fn ->
+
         Config.auth_module()
         |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
         |> delete_session("user_return_to")
         |> redirect(to: redirect_uri)
-      else 
+      else
         conn
         |> put_flash(:error, "There was an issue signing into Twitter. Please try again.")
         |> redirect(to: session_path(conn, :new))

@@ -4,7 +4,7 @@ defmodule TicketAgentWeb.ChargeController do
   alias TicketAgent.{Listing, Order, Repo, User}
   alias TicketAgent.Finders.CardFinder
   alias TicketAgent.Services.Stripe
-  alias TicketAgent.State.{OrderState, TicketState}
+  alias TicketAgent.State.{OrderState, TicketState, UserState}
   use Coherence.Config
   import Ecto.Query
   plug TicketAgentWeb.LoadListing when action in [:create]
@@ -34,8 +34,11 @@ defmodule TicketAgentWeb.ChargeController do
 
     with {:ok, %{processing_tickets: {^ticket_count, updated_tickets}, order_processing: {1, updated_order}}} <- set_order_and_tickets_processing(order, ticket_ids),
          {:ok, stripe_customer_id} <- load_stripe_token(current_user, token_id, metadata),
-         {:ok, response} <- Stripe.create_charge(stripe_customer_id, price, description, order.id, metadata),
-         {:ok, %{purchased_tickets: {^ticket_count, updated_tickets}, completed_order: {1, updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids) do
+         {:ok, response} <- Stripe.create_charge(stripe_customer_id, price, description, order.id, token["client_ip"], metadata),
+         {:ok, %{purchased_tickets: {^ticket_count, updated_tickets}, completed_order: {1, updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids),
+         {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
+         {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
+
         conn
         |> render("create.json")
     else

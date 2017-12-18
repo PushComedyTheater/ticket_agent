@@ -1,6 +1,6 @@
 Code.ensure_loaded Phoenix.Swoosh
 
-defmodule TicketAgent.Coherence.UserEmail do
+defmodule TicketAgentWeb.Coherence.UserEmail do
   @moduledoc false
   use Phoenix.Swoosh, view: TicketAgentWeb.Coherence.EmailView, layout: {TicketAgentWeb.Coherence.LayoutView, :email}
   alias Swoosh.Email

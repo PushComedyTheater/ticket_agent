@@ -40,6 +40,11 @@ defmodule TicketAgent.State.OrderState do
     }
   end
 
+  def set_credit_card_for_order(order, credit_card) do
+    from(o in Order, where: o.id == ^order.id)
+    |> Repo.update_all(set: [credit_card_id: credit_card.id])
+  end
+
   def set_order_processing_transaction(order) do
     Logger.info "set_order_processing_transaction->slug #{order.slug}"
 

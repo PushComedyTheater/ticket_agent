@@ -6,7 +6,7 @@ defmodule TicketAgent.Services.Stripe do
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
-  def create_charge(customer, amount, description, order_id, metadata \\ %{}) do
+  def create_charge(customer, amount, description, order_id, client_ip, metadata \\ %{}) do
     values = load_charge_values(customer, amount, description, metadata)
 
     body =
@@ -19,7 +19,7 @@ defmodule TicketAgent.Services.Stripe do
     uri = api_url() <> "/charges"
 
     request(:post, uri, [], body, hackney_opts())
-    |> insert_order_details(order_id)
+    |> insert_order_details(order_id, client_ip)
   end
 
   def create_customer(token, user, metadata) do
@@ -61,8 +61,11 @@ defmodule TicketAgent.Services.Stripe do
     }
   end
 
-  defp insert_order_details({status, response}, order_id) do
-    parsed_response = OrderDetail.parse_stripe_response(response, order_id)
+  defp insert_order_details({status, response}, order_id, client_ip) do
+    parsed_response =
+      response
+      |> OrderDetail.parse_stripe_response(order_id)
+      |> Map.merge(%{client_ip: client_ip})
 
     %OrderDetail{}
     |> OrderDetail.changeset(parsed_response)
