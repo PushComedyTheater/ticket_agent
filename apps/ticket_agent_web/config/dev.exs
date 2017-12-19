@@ -40,3 +40,4 @@ config :ticket_agent_web, TicketAgentWeb.Endpoint,
       ~r{lib/ticket_agent_web/templates/.*(eex)$}
     ]
   ]
+config :ticket_agent_web, :email_base_url, "https://veverka.ngrok.io"

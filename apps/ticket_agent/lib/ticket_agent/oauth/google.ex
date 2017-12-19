@@ -29,6 +29,10 @@ defmodule TicketAgent.Google do
     OAuth2.Client.get_token!(client(), params)
   end
 
+  def get_token(params \\ [], headers \\ []) do
+    OAuth2.Client.get_token(client(), params)
+  end
+
   def authorize_url(client, params) do
     AuthCode.authorize_url(client, params)
   end

@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.EventController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Event, Listing, Repo}
-  alias TicketAgent.Finders.ListingFinder
+  alias TicketAgent.Finders.{ListingFinder, TicketFinder}
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:show]
 
   def index(conn, _params) do
@@ -14,6 +14,12 @@ defmodule TicketAgentWeb.EventController do
     {listing, available_tickets} =
       slug
       |> ListingFinder.find_listing_by_slug()
+
+    {has_purchased_tickets, order} =
+      listing.id
+      |> TicketFinder.count_by_listing_and_user(
+        Coherence.current_user(conn)
+      )
 
     ticket_price = Enum.at(available_tickets, 0).price
 
@@ -30,6 +36,6 @@ defmodule TicketAgentWeb.EventController do
     end
 
     conn
-    |> render("show.html")
+    |> render("show.html", %{has_purchased_tickets: has_purchased_tickets, purchase_order: order})
   end
 end

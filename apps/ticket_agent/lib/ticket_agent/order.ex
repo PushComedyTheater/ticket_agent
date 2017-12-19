@@ -56,14 +56,4 @@ defmodule TicketAgent.Order do
       flags: 'progressive'
     })
   end
-
-  #
-  # window.totalAsking = function(amount, percent, fixedfee) {
-  #     var totalAsks = amount + window.totalFees(amount, percent, fixedfee);
-  #     if(amount <= 0 || totalAsks < 0) {
-  #       totalAsks = 0;
-  #     }
-  #     return totalAsks;
-  # };
-
 end

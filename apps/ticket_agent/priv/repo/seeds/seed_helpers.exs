@@ -42,7 +42,7 @@ defmodule SeedHelpers do
           password: "supersecret",
           password_confirmation: "supersecret",
           account_id: account.id,
-          user_role: "admin"
+          role: "admin"
         }
 
         %User{}
@@ -56,10 +56,10 @@ defmodule SeedHelpers do
 
     account
     |> Ecto.Changeset.cast(%{creator_id: user.id}, [:creator_id])
-    |> Repo.update!()   
-    
+    |> Repo.update!()
+
     user
-  end  
+  end
 
   def create_teacher(%{slug: slug} = teacher) do
     Logger.info "Seeds->create_teacher: Checking if teacher with slug #{slug} exists"
@@ -71,11 +71,11 @@ defmodule SeedHelpers do
       nil ->
         Logger.info "Seeds->create_teacher: Creating teacher with slug #{slug}"
         struct(Teacher, teacher)
-        |> TicketAgent.Repo.insert!        
+        |> TicketAgent.Repo.insert!
       teacher ->
         Logger.info "Seeds->create_teacher: Teacher #{slug} already exists"
         teacher
-    end    
+    end
   end
 
   def create_class(%{slug: slug} = class) do
@@ -88,7 +88,7 @@ defmodule SeedHelpers do
       nil ->
         Logger.info "Seeds->create_class:   Creating class"
         struct(Class, class)
-        |> TicketAgent.Repo.insert!        
+        |> TicketAgent.Repo.insert!
       class ->
         Logger.info "Seeds->create_class:   Class with slug #{slug} already exists"
         class
@@ -106,7 +106,7 @@ defmodule SeedHelpers do
       nil ->
         Logger.info "Seeds->create_event:   Creating event"
         struct(Event, event)
-        |> TicketAgent.Repo.insert!        
+        |> TicketAgent.Repo.insert!
       event ->
         Logger.info "Seeds->create_event:   Event with slug #{slug} or title #{title} exists"
         event
@@ -123,11 +123,11 @@ defmodule SeedHelpers do
       nil ->
         Logger.info "Seeds->create_listing: Creating listing"
         struct(Listing, listing)
-        |> TicketAgent.Repo.insert!        
+        |> TicketAgent.Repo.insert!
       listing ->
         Logger.info "Seeds->create_listing: Listing #{slug} already exists"
         listing
-    end  
+    end
   end
 
   def create_tag(%{tag: tag, listing_id: listing_id} = listing_tag) do
@@ -141,11 +141,11 @@ defmodule SeedHelpers do
       nil ->
         Logger.info "Seeds->create_tag:     Creating tag"
         struct(ListingTag, listing_tag)
-        |> TicketAgent.Repo.insert!        
+        |> TicketAgent.Repo.insert!
       listing ->
         Logger.info "Seeds->create_tag:     Tag with name #{tag} already exists"
         listing
-    end  
+    end
   end
 
   def create_image(%{listing_id: listing_id} = listing_image) do
@@ -158,10 +158,10 @@ defmodule SeedHelpers do
       nil ->
         Logger.info "Seeds->create_image:   Creating image"
         struct(ListingImage, listing_image)
-        |> TicketAgent.Repo.insert!        
+        |> TicketAgent.Repo.insert!
       listing ->
         Logger.info "Seeds->create_image:   Image with type listing_id #{listing_id} exists"
         listing
-    end  
+    end
   end
 end

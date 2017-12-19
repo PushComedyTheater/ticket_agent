@@ -8,16 +8,6 @@ defmodule TicketAgentWeb.OrderController do
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
   plug Coherence.Authentication.Session, [protected: true] when action in [:index, :show]
 
-  def index(conn, params) do
-    orders =
-      Coherence.current_user(conn)
-      |> OrderFinder.find_all_customer_orders()
-
-
-
-    conn
-    |> render("index.html", orders: orders)
-  end
   def show(conn, %{"id" => order_id} = params) do
     # case Coherence.current_user(conn) do
       # nil ->
@@ -26,6 +16,7 @@ defmodule TicketAgentWeb.OrderController do
     # end
 
     # order = OrderFinder.find_order(order_id, current_user.id)
+
     conn
     |> render("show.html")
   end

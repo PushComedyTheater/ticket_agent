@@ -20,8 +20,9 @@ config :sentry,
     env: "#{Mix.env}",
     app: "ticket_agent"
   },
-  use_error_logger: true,  
-  included_environments: [:dev, :prod],
+  use_error_logger: true,
+  included_environments: [:prod],
+  # included_environments: [:dev, :prod],
   release: sha
 
 # %% Coherence Configuration %%   Don't remove this line
@@ -39,33 +40,55 @@ config :coherence,
 
 # config :oauth2, debug: true
 
-adapter = Swoosh.Adapters.SMTP
-
 # config :coherence, TicketAgentWeb.Coherence.Mailer,
 #   adapter: Swoosh.Adapters.Mailgun,
 #   api_key: System.get_env("MAILGUN_API_KEY"),
 #   domain: "pushcomedytheater.com",
 #   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
+#
+# config :coherence, TicketAgent.Coherence.Mailer,
+#   adapter: Swoosh.Adapters.Mailgun,
+#   api_key: System.get_env("MAILGUN_API_KEY"),
+#   domain: "pushcomedytheater.com",
+#   email_from_name: "Push Comedy Theater",
+#   email_from_email: "support@pushcomedytheater.com"
+#
+# config :ticket_agent, TicketAgent.Mailer,
+#   adapter: Swoosh.Adapters.Mailgun,
+#   api_key: System.get_env("MAILGUN_API_KEY"),
+#   domain: "pushcomedytheater.com",
+#   email_from_name: "Push Comedy Theater",
+#   email_from_email: "support@pushcomedytheater.com"
 
-config :ticket_agent, TicketAgent.Mailer,
-  adapter: adapter,
+config :coherence, TicketAgentWeb.Coherence.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
   relay: "127.0.0.1",
   port: 1025,
   email_from_name: "ticket agent config",
   email_from_email: "support@pushcomedytheater.com"
 
 config :coherence, TicketAgent.Coherence.Mailer,
-  adapter: adapter,
+  adapter: Swoosh.Adapters.SMTP,
   relay: "127.0.0.1",
   port: 1025,
-  email_from_name: "Push Comedy Theatersss",
+  email_from_name: "ticket agent config",
   email_from_email: "support@pushcomedytheater.com"
 
-config :ticket_agent, Google,
-  client_id: System.get_env("GOOGLE_CLIENT_ID"),
-  client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
-  redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
+config :ticket_agent, TicketAgent.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  relay: "127.0.0.1",
+  port: 1025,
+  email_from_name: "ticket agent config",
+  email_from_email: "support@pushcomedytheater.com"
+
+
+# config :ticket_agent, TicketAgent.Mailer,
+#   adapter: adapter,
+#   relay: "127.0.0.1",
+#   port: 1025,
+#   email_from_name: "ticket agent config",
+#   email_from_email: "support@pushcomedytheater.com"
 
 config :cloudinex,
   debug: false,
@@ -75,10 +98,32 @@ config :cloudinex,
   secret: System.get_env("CLOUDINEX_SECRET"),
   cloud_name: "push-comedy-theater" #no default
 
+config :oauth2, debug: true
+
+config :ticket_agent, Amazon,
+  client_id: System.get_env("AMAZON_CLIENT_ID"),
+  client_secret: System.get_env("AMAZON_CLIENT_SECRET"),
+  redirect_uri: System.get_env("AMAZON_REDIRECT_URI")
+
 config :ticket_agent, Facebook,
   client_id: System.get_env("FACEBOOK_CLIENT_ID"),
   client_secret: System.get_env("FACEBOOK_CLIENT_SECRET"),
   redirect_uri: System.get_env("FACEBOOK_REDIRECT_URI")
+
+config :ticket_agent, Google,
+  client_id: System.get_env("GOOGLE_CLIENT_ID"),
+  client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
+  redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
+
+config :ticket_agent, Instagram,
+  client_id: System.get_env("INSTAGRAM_CLIENT_ID"),
+  client_secret: System.get_env("INSTAGRAM_CLIENT_SECRET"),
+  redirect_uri: System.get_env("INSTAGRAM_REDIRECT_URI")
+
+config :ticket_agent, Microsoft,
+  client_id: System.get_env("MICROSOFT_CLIENT_ID"),
+  client_secret: System.get_env("MICROSOFT_CLIENT_SECRET"),
+  redirect_uri: System.get_env("MICROSOFT_REDIRECT_URI")
 
 config :ticket_agent, Twitter,
   consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),

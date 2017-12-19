@@ -1,21 +1,22 @@
-defmodule TicketAgent.Facebook do
+defmodule TicketAgent.Amazon do
   @moduledoc """
-  An OAuth2 strategy for Facebook.
+  An OAuth2 strategy for Amazon.
   """
   use OAuth2.Strategy
 
   alias OAuth2.Strategy.AuthCode
+# https://login.live.com/oauth20_authorize.srf?client_id=073ce2f8-e2ef-4408-b830-500bee19cdad&scope=wl.emails,wl.basic&response_type=code&redirect_uri=https://veverka.ngrok.io/auth/microsoft/callback
   defp config do
-    [strategy: TicketAgent.Facebook,
-     site: "https://graph.facebook.com",
-     authorize_url: "https://www.facebook.com/dialog/oauth",
-     token_url: "/oauth/access_token"]
+    [strategy: TicketAgent.Amazon,
+     site: "https://www.amazon.com/ap/oa",
+     authorize_url: "/oauth20_authorize.srf",
+     token_url: "/oauth20_token.srf"]
   end
 
   # Public API
   def client do
     :ticket_agent
-    |> Application.get_env(Facebook)
+    |> Application.get_env(Amazon)
     |> Keyword.merge(config())
     |> OAuth2.Client.new()
   end
@@ -24,12 +25,12 @@ defmodule TicketAgent.Facebook do
     OAuth2.Client.authorize_url!(client(), params)
   end
 
-  def get_token(params \\ [], headers \\ []) do
-    OAuth2.Client.get_token(client(), params)
-  end
-
   def get_token!(params \\ [], headers \\ []) do
     OAuth2.Client.get_token!(client(), params)
+  end
+
+  def get_token(params \\ [], headers \\ []) do
+    OAuth2.Client.get_token(client(), params)
   end
 
   def authorize_url(client, params) do

@@ -9,3 +9,5 @@ config :ticket_agent, TicketAgent.Repo,
   hostname: "localhost",
   pool_size: 10,
   log: true
+
+config :ticket_agent, :email_base_url, "https://veverka.ngrok.io"

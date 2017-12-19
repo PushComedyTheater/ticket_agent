@@ -1,21 +1,44 @@
 defmodule TicketAgent.Finders.TicketFinder do
   import Ecto.Query
-  alias TicketAgent.{Ticket, Repo}
+  alias TicketAgent.{Order, Repo, Ticket}
 
   def find_by_listing_and_order(listing_id, order_id) do
     from(
-      t in Ticket, 
+      t in Ticket,
       where: t.listing_id == ^listing_id,
       where: t.order_id == ^order_id,
       where: t.status == "locked" or t.status == "purchased",
       select: t
-    )   
+    )
     |> Repo.all
+  end
+
+  def count_by_listing_and_user(listing_id, nil), do: {false, nil}
+  def count_by_listing_and_user(listing_id, %{id: user_id} = user) do
+    orders =
+      from(
+        t in Ticket,
+        left_join: o in Order, on: o.id == t.order_id,
+        where: o.user_id == ^user_id,
+        where: t.listing_id == ^listing_id,
+        select: o
+      )
+      |> Repo.all
+
+    count = Enum.count(orders)
+
+    cond do
+      count > 0 ->
+        {true, hd(orders)}
+      true ->
+        {false, nil}
+    end
+
   end
 
   def all_available_tickets(listing_id) do
     from(
-      t in Ticket, 
+      t in Ticket,
       where: t.listing_id == ^listing_id,
       where: t.status == "available",
       where: is_nil(t.locked_until),
@@ -23,7 +46,7 @@ defmodule TicketAgent.Finders.TicketFinder do
       where: is_nil(t.guest_name),
       where: is_nil(t.guest_email),
       select: t.id
-    )   
-    |> Repo.all    
+    )
+    |> Repo.all
   end
 end

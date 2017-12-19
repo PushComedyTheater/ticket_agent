@@ -4,7 +4,7 @@ defmodule TicketAgent.Twitter do
     config = Application.get_env(:ticket_agent, Twitter)
 
     ExTwitter.configure(:process, config)
-    
+
     token = ExTwitter.request_token(config[:redirect_uri])
 
     {:ok, authenticate_url} = ExTwitter.authorize_url(token.oauth_token, params)
@@ -15,7 +15,7 @@ defmodule TicketAgent.Twitter do
     config = Application.get_env(:ticket_agent, Twitter)
 
     ExTwitter.configure(:process, config)
-    
+
     case ExTwitter.access_token(oauth_verifier, oauth_token) do
       {:ok, access_token} ->
         access_token
@@ -31,11 +31,11 @@ defmodule TicketAgent.Twitter do
     config = config
              |> Keyword.merge([access_token: oauth_token,
                                access_token_secret: oauth_token_secret])
-    
+
     ExTwitter.configure(:process, config)
 
-    user = ExTwitter.verify_credentials(include_email: true)
-    
+    user = ExTwitter.verify_credentials(include_email: true, include_entities: true)
+
     %{user: user, email: user.email, name: user.name, access_token: oauth_token,
       access_token_secret: oauth_token_secret}
   end

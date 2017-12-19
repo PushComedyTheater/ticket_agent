@@ -21,7 +21,16 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
           listing.start_at
           |> Calendar.NaiveDateTime.to_date_time_utc
 
-        past_date = start_at < DateTime.utc_now
+        utc_now =
+          DateTime.utc_now()
+          |> Calendar.NaiveDateTime.to_date_time_utc
+
+        Logger.info "start_at = #{start_at}"
+        Logger.info "utc_now = #{utc_now}"
+        Logger.info "start_at < utc_now = #{start_at < utc_now}"
+        Logger.info "DateTime.compare(start_at, utc_now) = #{DateTime.compare(start_at, utc_now)}"
+        past_date = (DateTime.compare(start_at, utc_now) == :lt)
+        Logger.info past_date
 
         available_ticket_count = Enum.count(available_tickets)
         available_ticket_count = cond do

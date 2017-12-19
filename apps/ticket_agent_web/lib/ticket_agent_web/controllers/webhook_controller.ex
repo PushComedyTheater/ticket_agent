@@ -17,6 +17,17 @@ defmodule TicketAgentWeb.WebhookController do
     |> render("create.json", %{})
   end
 
+  def create(conn, %{"provider" => "mailgun"} = params) do
+    Logger.info "Processing MailGun Webhook"
+    %WebhookDetail{}
+    |> WebhookDetail.changeset(%{request: params})
+    |> Repo.insert
+
+    conn
+    |> put_status(200)
+    |> render("create.json", %{})
+  end
+
   def create(conn, params) do
    conn
     |> put_status(200)

@@ -10,6 +10,8 @@ config :ticket_agent_web,
   namespace: TicketAgentWeb,
   ecto_repos: [TicketAgent.Repo]
 
+config :oauth2, debug: true
+
 # Configures the endpoint
 config :ticket_agent_web, TicketAgentWeb.Endpoint,
   url: [host: "localhost"],
@@ -42,7 +44,8 @@ config :sentry,
     env: "#{Mix.env}",
     app: "ticket_agent_web"
   },
-  included_environments: [:dev, :prod],
+  included_environments: [:prod],
+  # included_environments: [:dev, :prod],
   release: sha
 
 config :coherence, TicketAgentWeb.Coherence.Mailer,

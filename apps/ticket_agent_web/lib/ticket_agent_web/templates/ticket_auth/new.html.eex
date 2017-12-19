@@ -1,17 +1,17 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
 <section class="g-bg-gray-light-v5">
   <div class="container">
-    
+
       <%= if get_flash(@conn, :info) do %>
         <div class="row justify-content-center">
           <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
         </div>
       <% end %>
-      <%= if get_flash(@conn, :error) do %> 
+      <%= if get_flash(@conn, :error) do %>
         <div class="row justify-content-center ">
           <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
         </div>
-      <% end %> 
+      <% end %>
     <div class="row justify-content-center">
       <div class="col-md-6 flex-md-first align-self-center g-mb-80">
       <br />
@@ -29,7 +29,16 @@
             <div class="col-4">
               <%= link to: auth_path(@conn, :index, "google", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-google-plus g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-google-plus"></i></span><% end %>
             </div>
-          </div>             
+            <div class="col-4">
+              <%= link to: auth_path(@conn, :index, "instagram", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-instagram g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-instagram"></i></span><% end %>
+            </div>
+            <div class="col-4">
+              <%= link to: auth_path(@conn, :index, "microsoft", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-black g-rounded-50x g-mr-15 g-mb-20", alt: "Live.com" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-windows"></i></span><% end %>
+            </div>
+            <div class="col-4">
+              <%= link to: auth_path(@conn, :index, "amazon", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-yellow g-rounded-50x g-mr-15 g-mb-20", alt: "Amazon.com" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-amazon"></i></span><% end %>
+            </div>
+          </div>
           <div class="d-flex justify-content-center text-center g-mb-30">
             <div class="d-inline-block align-self-center g-width-50 g-height-1 g-bg-gray-light-v1"></div>
             <span class="align-self-center g-color-gray-dark-v5 mx-4">OR USE YOUR PUSHCOMEDYTHEATER ACCOUNT</span>
@@ -58,12 +67,12 @@
 
             <div class="mb-4">
               <%= submit dgettext("coherence", "Sign In"), class: "btn btn-md btn-block u-btn-primary rounded g-py-13" %>
-            </div>          
-          <% end %>          
+            </div>
+          <% end %>
         </div>
       </div>
       <div class="col-md-6 flex-md-first align-self-center g-mb-80">
-        
+
         <div class="u-shadow-v21 g-bg-white rounded g-py-40 g-px-30">
           <header class="text-center mb-4">
             <h2 class="h2 g-color-black g-font-weight-600">Create Account</h2>
@@ -100,12 +109,12 @@
                   </div>
                 </div>
               </label>
-            </div>            
+            </div>
             <div class="mb-4">
               <%= submit dgettext("coherence", "Sign Up"), class: "btn btn-md btn-block u-btn-primary rounded g-py-13" %>
             </div>
           <% end %>
-        </div>      
+        </div>
       </div>
     </div>
   </div>

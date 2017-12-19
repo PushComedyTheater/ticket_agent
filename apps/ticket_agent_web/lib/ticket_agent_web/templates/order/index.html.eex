@@ -34,7 +34,7 @@
         </h3>
 
         <div class="card-block g-pa-15">
-          <p class="card-text">Below are your <%= Enum.count(@orders) %> most recent orders.  For more information on an individual order, click on the link in the row.
+          <p class="card-text">Below are your most recent orders.  For more information on an individual order, click on the link in the row.
           </p>
         </div>
 

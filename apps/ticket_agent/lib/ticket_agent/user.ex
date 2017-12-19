@@ -9,6 +9,7 @@ defmodule TicketAgent.User do
 
   schema "users" do
     belongs_to :account, Account
+    has_many :orders, Order
     field :name, :string
     field :email, :string
     coherence_schema()
@@ -34,17 +35,22 @@ defmodule TicketAgent.User do
     |> validate_coherence_password_reset(params)
   end
 
-  def find_or_create_with_credentials(name, email, provider, token, token_secret) do
+  def find_or_create_with_credentials(name, email, provider, token, token_secret, extra_details \\ %{}) do
     # create/update user in db
     user = case Repo.get_by(User, email: email) do
       nil ->
         Logger.info "User: could not find user with email #{email}"
-        %User{}
-        |> User.changeset(%{name: name,
-                            email: email,
-                            password: token,
-                            password_confirmation: token})
-        |> Repo.insert!
+
+        user =
+          %User{}
+          |> User.changeset(%{name: name,
+                              email: email,
+                              password: token,
+                              password_confirmation: token,
+                              role: "oauth_customer"})
+          |> Repo.insert!
+          send_welcome_email(name, email)
+          user
       user ->
         Logger.info "User: found user with email #{email}"
         user
@@ -59,16 +65,23 @@ defmodule TicketAgent.User do
         |> UserCredential.changeset(%{user_id: user.id,
                                       provider: provider,
                                       token: token,
-                                      secret: token_secret})
+                                      secret: token_secret,
+                                      extra_details: extra_details})
         |> Repo.insert!
       credential ->
         Logger.info "User: found credentials for user with #{provider}"
         credential
-        |> UserCredential.changeset(%{token: token, token_secret: token_secret})
+        |> UserCredential.changeset(%{token: token, secret: token_secret, extra_details: extra_details})
         |> Repo.update!
     end
-
     user
+  end
+
+  def send_welcome_email(name, email) do
+    Task.start(fn ->
+      TicketAgent.UserEmail.welcome_email(name, email)
+      |> TicketAgent.Mailer.deliver!
+    end)
   end
 
   def get_stripe_customer_id(nil), do: nil

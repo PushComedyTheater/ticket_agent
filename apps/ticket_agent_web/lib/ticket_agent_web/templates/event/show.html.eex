@@ -52,6 +52,11 @@
   <div class="row g-mb-70">
     <div class="col-md-8 g-mb-30">
       <div class="mb-5">
+        <%= if @conn.assigns.has_purchased_tickets do %>
+          <p class="alert alert-info rounded" role="alert">
+            You purchased tickets to this event on <%= link event_date(@conn.assigns.purchase_order.completed_at), to: order_path(@conn, :show, @conn.assigns.purchase_order), target: "_blank" %>
+          </p>
+        <% end %>
         <h4 class="g-color-black mb-1">About This Show</h4>
         <hr />
 
