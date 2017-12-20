@@ -115,10 +115,10 @@ config :ticket_agent, Google,
   client_secret: System.get_env("GOOGLE_CLIENT_SECRET"),
   redirect_uri: System.get_env("GOOGLE_REDIRECT_URI")
 
-config :ticket_agent, Instagram,
-  client_id: System.get_env("INSTAGRAM_CLIENT_ID"),
-  client_secret: System.get_env("INSTAGRAM_CLIENT_SECRET"),
-  redirect_uri: System.get_env("INSTAGRAM_REDIRECT_URI")
+config :ticket_agent, LinkedIn,
+  client_id: System.get_env("LINKEDIN_CLIENT_ID"),
+  client_secret: System.get_env("LINKEDIN_CLIENT_SECRET"),
+  redirect_uri: System.get_env("LINKEDIN_REDIRECT_URI")
 
 config :ticket_agent, Microsoft,
   client_id: System.get_env("MICROSOFT_CLIENT_ID"),

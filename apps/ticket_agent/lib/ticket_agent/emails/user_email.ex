@@ -9,14 +9,24 @@ defmodule TicketAgent.UserEmail do
     one_time_login_html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/one_time_login.html.eex",
                                        [name: user.name, url: url])
 
+    one_time_login_html = one_time_login_html <> """
+    <img src="cid:image.png">
+    """
+
     html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex",
                         [body: one_time_login_html])
+
+  attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
+
+  IO.inspect attachment
 
     %Email{}
     |> to({user.name, user.email})
     |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
     |> subject("Verify Your Email Address")
     |> html_body(html)
+    |> attachment(attachment)
+    |> IO.inspect
   end
 
   def welcome_email(name, email) do
@@ -43,5 +53,14 @@ defmodule TicketAgent.UserEmail do
     |> subject("Welcome to Push Comedy Theater!")
     |> text_body("Thanks so much for joining us at PushComedyTheater.com.  We hope you enjoy our shows and classes and look forward to seeing you at the Push!.")
     |> html_body(html)
+  end
+
+  def order_email(user, order) do
+    %Email{}
+    |> to({user.name, user.email})
+    |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
+    |> subject("Here are your tickets")
+    |> text_body("Thanks so much for joining us at PushComedyTheater.com.  We hope you enjoy our shows and classes and look forward to seeing you at the Push!.")
+    |> html_body("")
   end
 end

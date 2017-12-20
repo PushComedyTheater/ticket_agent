@@ -10,7 +10,8 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, '../priv/static/js/')
+    path: path.resolve(__dirname, '../priv/static/js/'),
+    sourceMapFilename: "[name].js.map",
   },
   context: path.join(__dirname, ''),
   plugins: [

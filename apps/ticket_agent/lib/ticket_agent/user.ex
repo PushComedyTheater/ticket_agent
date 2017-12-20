@@ -49,7 +49,9 @@ defmodule TicketAgent.User do
                               password_confirmation: token,
                               role: "oauth_customer"})
           |> Repo.insert!
-          send_welcome_email(name, email)
+          Task.start(fn ->
+            send_welcome_email(name, email)
+          end)
           user
       user ->
         Logger.info "User: found user with email #{email}"
@@ -78,10 +80,8 @@ defmodule TicketAgent.User do
   end
 
   def send_welcome_email(name, email) do
-    Task.start(fn ->
-      TicketAgent.UserEmail.welcome_email(name, email)
-      |> TicketAgent.Mailer.deliver!
-    end)
+    TicketAgent.UserEmail.welcome_email(name, email)
+    |> TicketAgent.Mailer.deliver!
   end
 
   def get_stripe_customer_id(nil), do: nil

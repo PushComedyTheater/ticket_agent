@@ -80,6 +80,7 @@
         }
       }
 
+      window.save_all_tickets();
       window.save_details_to_cookie();
       window.reload_form();
     })

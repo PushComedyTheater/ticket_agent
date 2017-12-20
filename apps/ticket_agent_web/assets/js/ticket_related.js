@@ -11,7 +11,6 @@ window.validate_form_and_redirect = function() {
       valid_tickets = false;
     }
   }
-  window.console_log(window.details);
 
   if (valid_tickets) {
     var redirect_url = "/orders/new?show_id=" + window.details.listing.slug;
@@ -23,10 +22,10 @@ window.validate_form_and_redirect = function() {
 window.load_details_from_cookie = function() {
   var cookie_data = Cookies.get("ticket_data");
   if (cookie_data) {
-    window.console_log("Resetting to cookie");
+    // window.console_log("Resetting to cookie");
     window.details = JSON.parse(window.atob(cookie_data));
   } else {
-    window.console_log("No cookie to reset to");
+    // window.console_log("No cookie to reset to");
   }
 }
 
@@ -64,6 +63,24 @@ window.set_continue_button = function() {
     $("#logged_in_text").text("Reserve 1 Ticket");
   } else {
     $("#logged_in_text").text("Reserve " +ticket_count + " Tickets");
+  }
+}
+
+window.save_all_tickets = function() {
+  for (var i = 0; i < window.details.tickets.length; i++) {
+    var name = $("#attendee_name_" + i).val();
+    var email = $("#attendee_email_" + i).val();
+
+    if (typeof name == "undefined") {
+      name = "";
+    }
+    if (typeof email == "undefined") {
+      email = "";
+    }
+    window.details.tickets[i] = {
+      name: name,
+      email: email
+    }
   }
 }
 

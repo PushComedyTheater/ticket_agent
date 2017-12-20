@@ -96,16 +96,64 @@ defmodule TicketAgentWeb.AuthController do
     end
   end
 
-  defp authorize_url!("google", params),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/plus.profile.emails.read")
+  defp authorize_url!("amazon", params), do: TicketAgent.Amazon.authorize_url!(scope: "profile")
   defp authorize_url!("facebook", params), do: TicketAgent.Facebook.authorize_url!(scope: "user_photos,user_about_me,user_birthday,user_website,user_location,email")
-  defp authorize_url!("twitter", params), do: Twitter.authorize_url!(params)
+  defp authorize_url!("google", params),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/plus.profile.emails.read")
+  defp authorize_url!("linkedin", params), do: TicketAgent.LinkedIn.authorize_url!(scope: "r_basicprofile r_emailaddress")
   defp authorize_url!("microsoft", params), do: TicketAgent.Microsoft.authorize_url!(scope: "wl.emails,wl.basic,wl.postal_addresses,wl.phone_numbers")
+  defp authorize_url!("twitter", params), do: Twitter.authorize_url!(params)
   defp authorize_url!(_), do: raise "No matching provider available"
 
-  defp get_token!("google", code),   do: TicketAgent.Google.get_token(code: code)
+  defp get_token!("amazon", code), do: TicketAgent.Amazon.get_token(code: code)
   defp get_token!("facebook", code), do: TicketAgent.Facebook.get_token(code: code)
+  defp get_token!("google", code),   do: TicketAgent.Google.get_token(code: code)
+  defp get_token!("linkedin", code),   do: TicketAgent.LinkedIn.get_token(code: code)
   defp get_token!("microsoft", code), do: TicketAgent.Microsoft.get_token(code: code)
   defp get_token!(_, _),             do: raise "No matching provider available"
+
+  defp get_user("amazon", client) do
+    with {:ok, %{body: %{"email" => email, "name" => name} = result}} <- OAuth2.Client.get(client, "https://api.amazon.com/user/profile?access_token") do
+      {:ok, %{name: name, email: email, avatar: nil, extra_details: result}}
+    else
+      {:error, response} ->
+        message = get_in(response.body, ["error", "message"])
+        Logger.error message
+        {:user_error, message}
+      other ->
+        Logger.error "Unmatched error: #{inspect other}"
+        {:user_error, "Unknown error, contact support"}
+    end
+  end
+
+  defp get_user("facebook", client) do
+    case OAuth2.Client.get(client, "/me?fields=about,id,birthday,devices,email,first_name,gender,is_verified,last_name,location,name,timezone,verified,website") do
+      {:ok, %{body: user}} ->
+        {:ok, %{name: user["name"], avatar: "https://graph.facebook.com/#{user["id"]}/picture", email: user["email"], extra_details: user}}
+      {:error, response} ->
+        message = get_in(response.body, ["error", "message"])
+        {:user_error, message}
+    end
+  end
+
+  defp get_user("linkedin", client) do
+    scopes = ~w(current-share email-address formatted-name headline id industry location
+                maiden-name num-connections num-connections-capped picture-url positions
+                public-profile-url specialties summary)
+    scopes_url = Enum.join(scopes, ",")
+    user_query = "/v1/people/~:(#{scopes_url})?format=json"
+
+    with {:ok, %{body: %{"formattedName" => name, "pictureUrl" => avatar, "emailAddress" => email} = body}} <- OAuth2.Client.get(client, user_query, [], skip_url_encode_option) do
+      {:ok, %{name: name, email: email, avatar: avatar, extra_details: body}}
+    else
+      {:error, response} ->
+        message = get_in(response.body, ["error", "message"])
+        Logger.error message
+        {:user_error, message}
+      other ->
+        Logger.error "Unmatched error: #{inspect other}"
+        {:user_error, "Unknown error, contact support"}
+    end
+  end
 
   defp get_user("google", client) do
     with {:ok, %{body: %{"id" => id} = result}} <- OAuth2.Client.get(client, "https://www.googleapis.com/oauth2/v1/userinfo?alt=json"),
@@ -161,13 +209,5 @@ defmodule TicketAgentWeb.AuthController do
     end
   end
 
-  defp get_user("facebook", client) do
-    case OAuth2.Client.get(client, "/me?fields=about,id,birthday,devices,email,first_name,gender,is_verified,last_name,location,name,timezone,verified,website") do
-      {:ok, %{body: user}} ->
-        {:ok, %{name: user["name"], avatar: "https://graph.facebook.com/#{user["id"]}/picture", email: user["email"], extra_details: user}}
-      {:error, response} ->
-        message = get_in(response.body, ["error", "message"])
-        {:user_error, message}
-    end
-  end
+  defp skip_url_encode_option, do: [path_encode_fun: fn(a) -> a end]
 end

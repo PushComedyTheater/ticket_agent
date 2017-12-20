@@ -2,7 +2,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.UserCredential do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE user_credential_provider AS ENUM ('facebook', 'google', 'twitter', 'microsoft', 'instagram')"
+    execute "CREATE TYPE user_credential_provider AS ENUM ('facebook', 'google', 'linkedin', 'twitter', 'microsoft', 'amazon')"
 
     create table(:user_credentials, primary_key: false) do
       add :id, :binary_id, primary_key: true

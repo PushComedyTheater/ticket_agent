@@ -20,23 +20,23 @@
             <h2 class="h2 g-color-black g-font-weight-600">Login</h2>
           </header>
           <div class="row text-center no-gutters g-mb-10">
-            <div class="col-4">
+            <div class="col-2">
               <%= link to: auth_path(@conn, :index, "facebook", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-facebook g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-facebook"></i></span><% end %>
             </div>
-            <div class="col-4">
+            <div class="col-2">
               <%= link to: auth_path(@conn, :index, "twitter", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-twitter g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-twitter"></i></span><% end %>
             </div>
-            <div class="col-4">
+            <div class="col-2">
               <%= link to: auth_path(@conn, :index, "google", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-google-plus g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-google-plus"></i></span><% end %>
             </div>
-            <div class="col-4">
-              <%= link to: auth_path(@conn, :index, "instagram", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-instagram g-rounded-50x g-mr-15 g-mb-20" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-instagram"></i></span><% end %>
-            </div>
-            <div class="col-4">
+            <div class="col-2">
               <%= link to: auth_path(@conn, :index, "microsoft", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-black g-rounded-50x g-mr-15 g-mb-20", alt: "Live.com" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-windows"></i></span><% end %>
             </div>
-            <div class="col-4">
+            <div class="col-2">
               <%= link to: auth_path(@conn, :index, "amazon", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-yellow g-rounded-50x g-mr-15 g-mb-20", alt: "Amazon.com" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-amazon"></i></span><% end %>
+            </div>
+            <div class="col-2">
+              <%= link to: auth_path(@conn, :index, "linkedin", %{redirect_uri: @conn.assigns.user_return_to}), class: "u-icon-v4 u-icon-v4-rounded-50x u-icon-v4-bg-linkedin g-rounded-50x g-mr-15 g-mb-20", alt: "Amazon.com" do %><span class="u-icon-v4-inner g-color-white g-color-white--hover"><i class="fa fa-linkedin"></i></span><% end %>
             </div>
           </div>
           <div class="d-flex justify-content-center text-center g-mb-30">
