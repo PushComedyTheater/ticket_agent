@@ -24,7 +24,8 @@ window.load_details_from_cookie = function() {
   if (cookie_data) {
     // window.console_log("Resetting to cookie");
     window.details = JSON.parse(window.atob(cookie_data));
-  } else {
+    // window.console_log(window.details);
+  // } else {
     // window.console_log("No cookie to reset to");
   }
 }
@@ -45,13 +46,14 @@ window.load_attendee_forms = function() {
 
   for (var i = 0; i < tickets.length; i++) {
     var ticket = tickets[i];
+    // window.console_log(ticket.price);
     var context = {count: i, count_string: i + 1, ticket: ticket};
     var html    = window.attendee_template(context);
     total += ticket.price;
     output += html;
   }
   var total = (total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-
+  // window.console_log(total);
   $("#total_price").html("$" + total);
   $("#attendee_form").html(output);
   $("#ticket_count").val(tickets.length);
@@ -68,6 +70,7 @@ window.set_continue_button = function() {
 
 window.save_all_tickets = function() {
   for (var i = 0; i < window.details.tickets.length; i++) {
+    var price = window
     var name = $("#attendee_name_" + i).val();
     var email = $("#attendee_email_" + i).val();
 
@@ -79,7 +82,8 @@ window.save_all_tickets = function() {
     }
     window.details.tickets[i] = {
       name: name,
-      email: email
+      email: email,
+      price: window.details.listing.ticket_price
     }
   }
 }

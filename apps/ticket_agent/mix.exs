@@ -57,7 +57,8 @@ defmodule TicketAgent.Mixfile do
       {:junit_formatter, "~> 1.1", only: :test},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:pdf_generator, ">= 0.3.6"},
-      {:curtail, "~> 0.1"}
+      {:curtail, "~> 0.1"},
+      {:icalendar, "~> 0.6.0"}
     ]
   end
 

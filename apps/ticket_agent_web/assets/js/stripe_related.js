@@ -115,7 +115,7 @@ window.reserve_tickets = function () {
 }
 
 window.release_tickets = function (redirect) {
-  window.console_dir("releasing tickets with redirect: " + redirect);
+  // window.console_dir("releasing tickets with redirect: " + redirect);
   $.ajax({
     // The URL for the request
     url: "/orders/push.json",
@@ -363,7 +363,6 @@ $(document).on('ready', function () {
 });
 
 window.unloader = function(e) {
-  window.release_tickets(false);
   var confirmationMessage = "\o/";
 
   e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+

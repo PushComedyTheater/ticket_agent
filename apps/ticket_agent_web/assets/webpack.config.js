@@ -1,4 +1,5 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const SentryPlugin = require('@sentry/webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -22,6 +23,13 @@ module.exports = {
         from: './static/apple-developer-merchantid-domain-association',
         to: '../.well-known/'
       }
-    ])
+    ]),
+    new SentryPlugin({
+        release: function (hash) {
+          return hash.slice(0, 5)
+        },
+        include: './dist',
+        ignore: ['node_modules', 'webpack.config.js'],
+    })
   ]
 };

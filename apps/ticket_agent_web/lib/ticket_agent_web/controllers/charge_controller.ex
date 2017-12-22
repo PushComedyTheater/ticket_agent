@@ -34,7 +34,7 @@ defmodule TicketAgentWeb.ChargeController do
 
     with {:ok, %{processing_tickets: {^ticket_count, updated_tickets}, order_processing: {1, updated_order}}} <- set_order_and_tickets_processing(order, ticket_ids),
          {:ok, stripe_customer_id} <- load_stripe_token(current_user, token_id, metadata),
-         {:ok, response} <- Stripe.create_charge(stripe_customer_id, price, description, order.id, token["client_ip"], metadata),
+         {:ok, response} <- Stripe.create_charge(stripe_customer_id, price, description, order.id, token["client_ip"], current_user, metadata),
          {:ok, %{purchased_tickets: {^ticket_count, updated_tickets}, completed_order: {1, updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids),
          {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
          {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
@@ -95,10 +95,6 @@ defmodule TicketAgentWeb.ChargeController do
     |> Ecto.Multi.append(OrderState.set_order_started_transaction(order))
     |> Repo.transaction
   end
-
-
-
-
 
   defp load_stripe_token(user, token_id, metadata) do
     Logger.info "load_stripe_token -> #{token_id}"

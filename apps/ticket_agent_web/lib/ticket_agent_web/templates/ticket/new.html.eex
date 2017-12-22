@@ -48,7 +48,8 @@
   window.details = {
     listing: {
       id: "<%= @listing.id %>",
-      slug: "<%= @listing.slug %>"
+      slug: "<%= @listing.slug %>",
+      ticket_price: <%= @conn.assigns.ticket_price %>
     },
     tickets: [
       {

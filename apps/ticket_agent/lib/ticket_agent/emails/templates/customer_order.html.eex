@@ -1,0 +1,121 @@
+<% import TicketAgent.OrderHelpers %>
+<img src="<%= listing_image_with_dimensions(listing, 590, 200) %>" style="border-radius: 5px;" />
+<br />
+<p>NICE WORK! You scored <%= ticket_word(ticket_count) %> to <em><%= listing.title %></em>!</p>
+<p>We'll see you on <%= event_date(listing.start_at) %> and we plan on starting the show around <%= event_time(listing.start_at) %>.</p>
+<br />
+<table style="width: 100%">
+<tr>
+<td><center><h4 style="text-decoration: underline;">Directions to the Push</h4></td>
+</tr>
+<tr>
+<td align="center"><img src="https://cdn.pushcomedytheater.com/small_map.jpg"></td>
+</tr>
+<tr>
+<td style="padding: 5px; padding-top: 10px;">
+<p>
+The Push Comedy Theater is located at <a href="https://goo.gl/maps/jdQnFrxh8UJ2"><img src="https://cdn.pushcomedytheater.com/mappoint.png" style="height: 20px; padding: 8px;" align="left"></a> <a href="https://goo.gl/maps/jdQnFrxh8UJ2">763 Granby Street</a> in the heart of Norfolk's brand new Arts District.
+</p>
+Free parking available at Slone Chiropractic (111 West Virginia Beach Blvd) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.</td>
+</tr>
+</table>
+<table class="spacer"><tbody><tr><td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td></tr></tbody></table>
+<h4 style="text-decoration: underline;">Order Details</h4>
+<table style="width: 100%; padding: 5px;">
+<tr style="border-bottom: 1px solid #000; margin-bottom: 10px;"><th style="margin-bottom: 5px;">Item</th><th>Price</th></tr>
+<%= ticket_table(order) %>
+<tr>
+<td colspan="2">&nbsp;<br /></td>
+</tr>
+<tr>
+<td><b>Subtotal:</b></td>
+<td><%= money(order.subtotal) %></td>
+</tr>
+<tr>
+<td><b>Processing Fee:</b></td>
+<td><%= money(order.total_price - order.subtotal) %></td>
+</tr>
+<tr>
+<td><b>Total:</b></td>
+<td><%= money(order.total_price) %></td>
+</tr>
+</table>
+<br />
+<table class="callout">
+  <tr>
+    <th class="callout-inner secondary">
+      <table class="row">
+        <tbody>
+          <tr>
+            <th class="small-12 large-6 columns first">
+              <table>
+                <tr>
+                  <th>
+                    <p>
+                    <strong>Payment Method</strong><br>
+                    <%= order.credit_card.type %> ending in <%= order.credit_card.last_4 %>
+                    </p>
+                    <p>
+                    <strong>Order ID</strong><br>
+                    <a href="<%= host <> "/orders/" <> order.slug %>"><%= order.slug %></a>
+                    </p>
+                  </th>
+                </tr>
+              </table>
+            </th>
+            <th class="small-12 large-6 columns last">
+              <table>
+                <tr>
+                  <th>
+                    <p>
+                    <strong>Email Address</strong><br>
+                    <%= order.user.email %>
+                    </p>
+                    <p>
+                    <a href="<%= google_calendar_link(listing) %>" style="display: inline-block; color: #ffffff; background-color: rgb(66, 133, 244); border: solid 1px rgb(66, 133, 244); border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #f7f7f7;">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACiElEQVRYR+2XTWgTQRSA32x3zdYkJgFTGmxSqDZVrOghmBRK28TcDCUXoUXBS5XiRU960KN46Ekv1kMvKsWL0CiaUwgl1kYkJ1vB/imSxqhRmiZtkmY3+2Q3Fqz5aZYkhELnNux887557y07S6DBg5SKHwqFmESau4sASPGZO3a7nZfj6vV6Faxac08gTTktS9+2WCxcMb6kgH8mOIgIL0SIEHLe0WvzyhHwBWbdhJApiUfK5eizvpYl4Au8GyIEn4kQIrng7LM9lydQGV+Qge8TD7phfs4fVyj1EdeQFLPN8xQOLXyQEx/WT5yByODFPP9yEjRcJgbdpxytI9fn/92oUODGyE9c/qRf6zoNUfclaa1h6gnoFudkCRTjybHjsdb7Ey1lBaLuAQSeh8+mTsgMX5XWspOPoGN1RZbAiskMW8NXdvI0DQbP9I5DF2Qg6upFkVrgBMiN3gKCAlDjY9ClaJIlsJjNQW70JiAC0ONjYGbzvOHVTGUCPzZTEM9sSZCOZaFF2SxLoBRfsYAYLc2Lry6BZpqWFXx7cTF+V4Gla5elEtRrdD58XL4E0z0n6yowEPxYXuBXfL2uAoe1mj0ikOU4SG2mpVZQKg8CAlY1Z5h8I1ecgXg8AV/DqxLUbjKKH4Sq5lqNeo8JcBwPm6ntErAASKqaMzQjLwP7PdDwJtzvgYaXoGECsbU4EkKgHj2AiKDXact/jL6EI6hWq+pyHUgkk9BhbNvlPjD7frndeOSoSqUUf0hqIiKePLmxAeHIt6V+21lz2Vux703QSQA9AERZk+h/NxEESFJAuc/1W/1lBcSHgUBAz1NMjyCQA7WQoCjMCgz11mm1/v5/v9rkuArLhgv8ASKNMD/vSWbsAAAAAElFTkSuQmCC" align="left" style="padding-right: 5px;">Add To Google Calendar</a>
+
+                    </p>
+                  </th>
+                </tr>
+              </table>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </th>
+    <th class="expander"></th>
+  </tr>
+</table>
+<br />
+<br />
+<h4 style="text-decoration: underline;">Your Tickets</h4>
+<%= for ticket <- order.tickets do %>
+  <%
+    link = "#{host}/concierge/checkin/#{ticket.id}"
+    url = "https://chart.googleapis.com/chart?cht=qr&chl=#{link}/&chs=400x400"
+  %>
+  <table style="width: 100%; border: 1px solid #000;">
+  <tr>
+    <th style="padding: 9px; padding-bottom: 5px; background-color: #f7f7f7;" align="center"><strong>Guest Name:</strong></th>
+    <th style="padding: 9px; padding-bottom: 5px; background-color: #f7f7f7;" align="center"><%= ticket.guest_name %></th>
+  </tr>
+  <tr >
+    <th style="padding: 9px; padding-top: 5px; padding-bottom: 5px; background-color: #f7f7f7;" align="center"><strong>Show:</strong></th>
+    <th style="padding: 9px; padding-top: 5px; padding-bottom: 5px;  background-color: #f7f7f7;" align="center"><%= ticket.listing.title %></th>
+  </tr>
+  <tr style="border-bottom: 1px solid #000;">
+    <th style="padding: 9px; padding-top: 5px; padding-bottom: 5px; background-color: #f7f7f7;" align="center"><strong>Date:</strong></th>
+    <th style="padding: 9px; padding-top: 5px; padding-bottom: 5px;  background-color: #f7f7f7;" align="center"><%= event_date(listing.start_at) %> at <%= event_time(listing.start_at) %></th>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <center>
+        <img src="<%= url %>" />
+        <%= ticket.slug %>
+      </center>
+    </td>
+  </tr>
+  </table>
+  <br />
+<% end %>

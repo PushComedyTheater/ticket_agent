@@ -1,7 +1,7 @@
 defmodule TicketAgent.UserEmail do
   import Swoosh.Email
   alias Swoosh.Email
-  alias TicketAgent.Listing
+  alias TicketAgent.{Listing, Order, Repo}
 
   def one_time_login(user, url) do
     host = Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
@@ -16,9 +16,7 @@ defmodule TicketAgent.UserEmail do
     html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex",
                         [body: one_time_login_html])
 
-  attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
-
-  IO.inspect attachment
+    attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
 
     %Email{}
     |> to({user.name, user.email})
@@ -55,12 +53,33 @@ defmodule TicketAgent.UserEmail do
     |> html_body(html)
   end
 
-  def order_email(user, order) do
-    %Email{}
-    |> to({user.name, user.email})
-    |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
-    |> subject("Here are your tickets")
-    |> text_body("Thanks so much for joining us at PushComedyTheater.com.  We hope you enjoy our shows and classes and look forward to seeing you at the Push!.")
-    |> html_body("")
+  def order_email(user, order_id) do
+    order =
+      Repo.get(Order, order_id)
+      |> Repo.preload([:user, :credit_card, :tickets, :listing])
+
+      ticket = Enum.at(order.tickets, 0)
+
+      ticket_count = Enum.count(order.tickets)
+
+      listing = ticket.listing |> Repo.preload([:images])
+
+      TicketAgent.OrderHelpers.generate_ical(listing)
+
+      attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
+      customer_order = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/customer_order.html.eex",
+                                         [listing: listing, ticket_count: ticket_count, order: order, host: host])
+      html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex",
+                         [body: customer_order])
+      %Email{}
+      |> to({user.name, user.email})
+      |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
+      |> subject("Here are your tickets")
+      |> text_body("")
+      |> html_body(html)
+  end
+
+  def host do
+    Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
   end
 end

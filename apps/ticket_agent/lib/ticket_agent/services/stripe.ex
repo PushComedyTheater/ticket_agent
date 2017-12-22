@@ -6,7 +6,7 @@ defmodule TicketAgent.Services.Stripe do
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
-  def create_charge(customer, amount, description, order_id, client_ip, metadata \\ %{}) do
+  def create_charge(customer, amount, description, order_id, client_ip, user, metadata \\ %{}) do
     values = load_charge_values(customer, amount, description, metadata)
 
     body =
@@ -18,8 +18,23 @@ defmodule TicketAgent.Services.Stripe do
 
     uri = api_url() <> "/charges"
 
-    request(:post, uri, [], body, hackney_opts())
-    |> insert_order_details(order_id, client_ip)
+    {status, response} =
+      request(:post, uri, [], body, hackney_opts())
+      |> insert_order_details(order_id, client_ip)
+
+    case status do
+      :error ->
+        Logger.error "There was an error submitting the post"
+        message = get_in(response, ["error", "message"])
+        if String.match?(message, ~r/^No such customer/i) do
+          Logger.error "Customer ID is stale"
+          User.update_stripe_customer_id(user, nil)
+        end
+        {:error, response}
+      :ok ->
+        Logger.info "Everything is ok"
+        {:ok, response}
+    end
   end
 
   def create_customer(token, user, metadata) do

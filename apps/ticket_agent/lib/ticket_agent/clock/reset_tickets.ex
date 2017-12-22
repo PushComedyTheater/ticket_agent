@@ -35,14 +35,14 @@ defmodule TicketAgent.Clock.ResetTickets do
     ticket
     |> Ecto.Changeset.cast(
       %{
-        status: "available", 
+        status: "available",
         locked_until: nil,
         order_id: nil,
         guest_name: nil,
         guest_email: nil
-      }, 
+      },
       [
-        :status, 
+        :status,
         :locked_until,
         :order_id,
         :guest_name,
@@ -56,11 +56,11 @@ defmodule TicketAgent.Clock.ResetTickets do
     threshold = NaiveDateTime.add(NaiveDateTime.utc_now(), -10)
 
     from(
-      t in Ticket, 
+      t in Ticket,
       where: t.status == "locked",
       where: fragment("? <= (NOW() AT TIME ZONE 'UTC')", t.locked_until),
       select: t
-    )  
+    )
   end
 
   defp tick(interval) do
