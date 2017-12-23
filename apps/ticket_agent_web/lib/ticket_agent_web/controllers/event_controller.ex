@@ -11,31 +11,7 @@ defmodule TicketAgentWeb.EventController do
   end
 
   def show(conn, %{"slug" => slug} = params) do
-    {listing, available_tickets} =
-      slug
-      |> ListingFinder.find_listing_by_slug()
-
-    {has_purchased_tickets, order} =
-      listing.id
-      |> TicketFinder.count_by_listing_and_user(
-        Coherence.current_user(conn)
-      )
-
-    ticket_price = Enum.at(available_tickets, 0).price
-
-    conn = case params["msg"] do
-      nil -> conn
-      "show_expired" ->
-        put_flash(conn, :error, dgettext("show_expired", "This show is no longer available for purchase."))
-      "released_tickets" ->
-        put_flash(conn, :error, dgettext("released_tickets", "Your tickets were released due to session timeout."))
-      "cancelled_order" ->
-        put_flash(conn, :error, dgettext("cancelled_order", "Your tickets were released when you cancelled your order."))
-      anything ->
-        put_flash(conn, :error, dgettext("unknown", "Your tickets were released."))
-    end
-
     conn
-    |> render("show.html", %{has_purchased_tickets: has_purchased_tickets, purchase_order: order})
+    |> render("show.html")
   end
 end

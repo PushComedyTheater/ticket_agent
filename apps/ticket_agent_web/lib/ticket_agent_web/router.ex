@@ -54,13 +54,9 @@ defmodule TicketAgentWeb.Router do
     resources "/charges", ChargeController, only: [:create]
     resources "/events", EventController, only: [:index, :show], param: "slug"
     resources "/tickets", TicketController
-    resources "/orders", OrderController
-
-    get "/order_pdf/:order_id", OrderPdfController, :show, as: :order_pdf_path
 
     get "/ticket_auth/:token", TicketAuthController, :show, as: :ticket_auth
     get "/ticket_auth", TicketAuthController, :new, as: :ticket_auth
-    get "/ticket_information/new", TicketInformationController, :new, as: :ticket_information
     post "/custom_registration", TicketAuthController, :create, as: :custom_registration
 
     get "/workshops", WorkshopController, :index, as: :workshop
@@ -86,11 +82,13 @@ defmodule TicketAgentWeb.Router do
     get "/", DashboardController, :index
     get "/tickets", Dashboard.TicketsController, :index, as: :dashboard_tickets
     get "/classes", Dashboard.TicketsController, :index, as: :dashboard_classes
+    get "/order_pdf/:order_id", OrderPdfController, :show, as: :order_pdf
   end
 
   scope "/admin", TicketAgentWeb.Admin do
     pipe_through [:protected, :ensure_admin, :admin_layout]
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
+
     resources "/classes", ClassController, as: :admin_class
     resources "/events", EventController, as: :admin_event, param: "titled_slug"
     resources "/images", ImageController, as: :admin_image
@@ -102,6 +100,7 @@ defmodule TicketAgentWeb.Router do
 
   scope "/", TicketAgentWeb do
     pipe_through :protected
+    resources "/orders", OrderController
   end
 
   def ensure_admin(conn, params) do

@@ -75,7 +75,8 @@
     <!-- MENU INCLUDE -->
     <%= render TicketAgentWeb.MenuView, "menu.html", assigns %>
     <!-- END MENU INCLUDE -->
-    <!-- VIEW MODULE INCLUDE -->
+    <!-- VIEW MODULE INCLUDE <%= @view_module %> -->
+    <!-- VIEW TEMPLATE <%= @view_template %> -->
     <%= render @view_module, @view_template, assigns %>
     <!-- END VIEW MODULE INCLUDE -->
     <!-- NEWSLETTER INCLUDE -->

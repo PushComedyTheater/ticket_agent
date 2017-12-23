@@ -1,0 +1,16 @@
+<main class="g-height-100x g-min-height-100vh g-flex-centered g-pa-15">
+  <div class="text-center g-flex-centered-item g-position-rel">
+    <div class="g-absolute-centered">
+      <h1 class="g-font-weight-200 g-mb-20">Page&nbsp;Not&nbsp;Found</h1>
+      <p class="g-color-black-opacity-0_6 g-font-size-18">Oops! Looks like you followed a&nbsp;bad&nbsp;link.</p>
+      <p class="g-color-black-opacity-0_6 g-font-size-18">If you think this is a problem with us, please&nbsp;<a id="support_link" href="#" class="g-color-black g-color-primary--hover g-text-no-underline--hover">tell us</a>.</p>
+      <p class="g-color-black-opacity-0_6 g-font-size-18 mb-0">Here is a link to the <a href="/" class="g-color-black g-color-primary--hover g-text-no-underline--hover">home page</a>.</p>
+    </div>
+  </div>
+</main>
+<script type="text/javascript">
+  $(document).on('ready', function () {
+    var current_page = encodeURIComponent("I think you are missing a page at " + window.location.href);
+    $("#support_link").attr("href", "mailto:support@pushcomedytheater.com?subject=Missing%20Page&body=" + current_page);
+  });
+</script>

@@ -1,0 +1,77 @@
+<br />
+<br />
+<br />
+<br />
+  <section class="g-bg-gray-light-v5 g-py-20">
+    <div class="container">
+      <div class="d-sm-flex text-center">
+
+        <div class="align-self-center ml-auto">
+          <ul class="u-list-inline">
+            <li class="list-inline-item g-mr-5">
+              <%= link "Home", to: root_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+              <i class="g-color-gray-light-v2 g-ml-5">/</i>
+            </li>
+            <li class="list-inline-item g-mr-5">
+              <%= link "Your Orders", to: dashboard_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+              <i class="g-color-gray-light-v2 g-ml-5">/</i>
+            </li>
+            <li class="list-inline-item g-color-primary">
+              <span>Order Details</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+      <!-- End Breadcrumb -->
+  <section class="g-py-20">
+
+  <div class="container">
+    <%= if get_flash(@conn, :info) do %>
+     <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+   <% end %>
+    <div class="pull-right">
+    <i class="fa fa-cc-<%= cc_icon(@order.credit_card.type) %>"></i> <%= @order.credit_card.type %> ending in <%= @order.credit_card.last_4 %><br /><small>Ordered on <%= order_timestamp(@order.completed_at) %> | Order #<span class="text-uppercase"><%= @order.slug %></span></small></div>
+    <h2>Order Details</h2>
+    <table class="table" style="width: 100%;">
+      <thead class="thead-default">
+        <tr>
+          <th colspan="2">
+            Order Summary
+          </th>
+        </tr>
+      </thead>
+      <tr style="border-bottom: 1px solid #000; margin-bottom: 10px;">
+        <th style="padding: 5px;">Item</th>
+        <th style="padding: 5px;">Price</th>
+      </tr>
+      <%= for ticket <- @order.tickets do %>
+        <tr>
+          <td style="padding: 5px;"><%= ticket.description %> (<%= ticket.guest_name %>)</td>
+          <td style="padding: 5px;">$<%= :erlang.float_to_binary(ticket.price / 100,decimals: 2) %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan="2">&nbsp;<br /></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px; text-align: right;"><b>Subtotal:</b></td>
+        <td style="padding: 5px;"><%= money(@order.subtotal) %></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px; text-align: right;"><b>Processing Fee:</b></td>
+        <td style="padding: 5px;"><%= money(@order.total_price - @order.subtotal) %></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px; text-align: right;"><b>Total:</b></td>
+        <td style="padding: 5px;"><%= money(@order.total_price) %></td>
+      </tr>
+    </table>
+
+    <%= link to: order_pdf_path(@conn, :show, @order.slug), class: "btn btn-lg u-btn-primary g-mr-10 g-mb-15" do %>
+      <i class="fa fa-cloud-download g-mr-5"></i>Download Tickets
+    <% end %>
+
+  </div>
+</section>

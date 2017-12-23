@@ -1,4 +1,12 @@
 defmodule TicketAgentWeb.SharedView do
+  def cc_icon("Visa"), do: "visa"
+  def cc_icon("American Express"), do: "amex"
+  def cc_icon("MasterCard"), do: "mastercard"
+  def cc_icon("Discover"), do: "discover"
+  def cc_icon("JCB"), do: "jcb"
+  def cc_icon("Diners Club"), do: "diners-club"
+  def cc_icon("Unknown"), do: "stripe"
+
   def event_date(date) do
     date
     |> Calendar.DateTime.shift_zone!("America/New_York")
@@ -21,6 +29,10 @@ defmodule TicketAgentWeb.SharedView do
   def cost(ticket_price) when is_float(ticket_price) do
     ticket_price
     |> :erlang.float_to_binary(decimals: 2)
+  end
+
+  def money(price) do
+    "$" <> :erlang.float_to_binary(price / 100, decimals: 2)
   end
 
   def cost_smallest_unit(ticket_price) when is_integer(ticket_price), do: cost_smallest_unit(ticket_price / 1)

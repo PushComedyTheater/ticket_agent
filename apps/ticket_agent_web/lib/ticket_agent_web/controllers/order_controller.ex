@@ -6,9 +6,17 @@ defmodule TicketAgentWeb.OrderController do
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.Plugs.ValidateShowRequest when action in [:new]
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
-  plug Coherence.Authentication.Session, [protected: true] when action in [:index, :show]
+
+  @host Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
+
+  def index(conn, params) do
+    conn
+    |> redirect(to: dashboard_path(conn, :index))
+  end
 
   def show(conn, %{"id" => order_id} = params) do
+    order = Repo.get_by(Order, slug: order_id)
+            |> Repo.preload([:user, :credit_card, :tickets, :listing])
     # case Coherence.current_user(conn) do
       # nil ->
       #   conn
@@ -17,8 +25,15 @@ defmodule TicketAgentWeb.OrderController do
 
     # order = OrderFinder.find_order(order_id, current_user.id)
 
+    conn = case params["msg"] do
+      nil -> conn
+      anything ->
+        conn
+        |> put_flash(:info, "Thank you so much for your order.  You can find details about your order below.  Please check your email to receive your tickets.")
+    end
+
     conn
-    |> render("show.html")
+    |> render("show.html", order: order, host: @host)
   end
 
   def new(conn, %{"show_id" => show_id}) do

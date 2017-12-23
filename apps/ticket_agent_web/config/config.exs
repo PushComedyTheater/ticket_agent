@@ -32,7 +32,7 @@ config :ticket_agent_web, :generators,
 sha = String.trim(sha)
 config :ticket_agent_web, :release, sha
 
-IO.inspect "release = #{sha}"
+# IO.inspect "release = #{sha}"
 
 config :sentry,
   dsn: System.get_env("SENTRY_PRIVATE_DSN"),

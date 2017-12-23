@@ -4,7 +4,7 @@ defmodule TicketAgent.Finders.ListingFinder do
   alias TicketAgent.{Listing, Random, Repo, Ticket}
 
   def find_listing_by_slug(slug) do
-    slug = 
+    slug =
       slug
       |> String.split("-")
       |> hd
@@ -14,17 +14,20 @@ defmodule TicketAgent.Finders.ListingFinder do
             preload: [:images, :listing_tags],
             select: listing
 
-    listing = Repo.one(query)
+    case Repo.one(query) do
+      nil ->
+        nil
+      listing ->
+        query = from ticket in Ticket,
+                where: ticket.listing_id == ^listing.id,
+                where: ticket.status == "available",
+                where: is_nil(ticket.locked_until),
+                where: fragment("? <= NOW()", ticket.sale_start),
+                select: ticket
 
-    query = from ticket in Ticket,
-            where: ticket.listing_id == ^listing.id,
-            where: ticket.status == "available",
-            where: is_nil(ticket.locked_until),
-            where: fragment("? <= NOW()", ticket.sale_start),
-            select: ticket
+        available_tickets = Repo.all(query)
 
-    available_tickets = Repo.all(query)
-    
-    {listing, available_tickets}
+        {listing, available_tickets}
+    end
   end
 end

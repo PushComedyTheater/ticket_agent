@@ -8,17 +8,17 @@ defmodule TicketAgent.Ticket do
   schema "tickets" do
     field :slug, :string
     belongs_to :listing, Listing, references: :id, foreign_key: :listing_id, type: Ecto.UUID
-    belongs_to :order, Order, references: :id, foreign_key: :order_id, type: Ecto.UUID    
-    
+    belongs_to :order, Order, references: :id, foreign_key: :order_id, type: Ecto.UUID
+
     field :name, :string
     field :status, :string
     field :description, :string
     field :price, :integer
     field :guest_name, :string
     field :guest_email, :string
-    field :sale_start, :naive_datetime
-    field :sale_end, :naive_datetime
-    field :locked_until, :naive_datetime
+    field :sale_start, :utc_datetime
+    field :sale_end, :utc_datetime
+    field :locked_until, :utc_datetime
     timestamps(type: :utc_datetime)
   end
 

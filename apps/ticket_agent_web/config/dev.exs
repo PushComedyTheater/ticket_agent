@@ -9,6 +9,7 @@ use Mix.Config
 config :ticket_agent_web, TicketAgentWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
+  # catch_errors: true,
   code_reloader: true,
   check_origin: false,
   # watchers: [npm: ["run", "watch"]]

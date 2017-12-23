@@ -42,55 +42,37 @@
                 </div>
 
                 <div class="card-block g-pa-0">
-                  <!-- Product Table -->
-                  <div class="table-responsive">
-                    <table class="table table-bordered u-table--v2">
-                      <thead class="text-uppercase g-letter-spacing-1">
+                  <%= for order <- @orders do %>
+                  <%
+                    ticket = Enum.at(order.tickets, 0)
+                    listing = ticket.listing |> TicketAgent.Repo.preload(:images)
+                  %>
+                      <table style="background-color: #fff; width: 100%; padding: 5px; border: 2px solid #f7f7f7; border-radius: 15px;">
                         <tr>
-                          <th class="g-font-weight-300 g-color-black">Order</th>
-                          <th class="g-font-weight-300 g-color-black"></th>
-                          <th class="g-font-weight-300 g-color-black g-min-width-200">Description</th>
-                          <th class="g-font-weight-300 g-color-black">Contacts</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <%= for order <- @orders do %>
-                        <%
-                          ticket = Enum.at(order.tickets, 0)
-                          listing = ticket.listing |> TicketAgent.Repo.preload(:images)
-                        %>
-                        <tr>
-                          <td class="align-middle text-nowrap">
-                            <h4 class="h6 g-mb-2 text-uppercase"><%= link "View", to: order_path(@conn, :show, order.slug) %></h4>
-                            <div class="js-rating g-font-size-12 g-color-primary" data-rating="3.5"></div>
+                          <td style="background-color: #f7f7f7; padding: 10px;">
+                            ORDER PLACED:<br /><%= order_timestamp(order.completed_at) %>
                           </td>
-                          <td class="align-middle">
-                            <img class="img-fluid rounded-0" src="<%= listing_image_with_dimensions(listing, 150, 150) %>">
+                          <td style="background-color: #f7f7f7; padding: 10px; text-align: right;">
+                            TOTAL:<br />$<%= cost_smallest_unit(order.total_price) %>
                           </td>
-                          <td class="align-middle">
-
-                              <%= Enum.count(order.tickets) %> Ticket(s) to <%= link to: event_path(@conn, :show, listing) do %>
-                                <%= listing.title %>
-                              <% end %>
-
-                          </td>
-
-                          <td class="align-middle text-nowrap">
-                            <span class="d-block g-mb-5">
-                              <a href="#">
-                                <i class="icon-printer g-font-size-16 g-color-gray-dark-v5 g-pos-rel g-top-2 g-mr-5"></i> Download Tickets
-                              </a>
-                            </span>
-                            <span class="d-block">
-                              <i class="icon-emotsmile g-font-size-16 g-color-gray-dark-v5 g-pos-rel g-top-2 g-mr-5"></i> Leave Review
-                            </span>
+                          <td style="background-color: #f7f7f7; padding: 10px; text-align: right;" class="text-uppercase">
+                            Order #<%= order.slug %><br />
+                            <%= link "Order Details", to: order_path(@conn, :show, order.slug) %>
                           </td>
                         </tr>
-                        <% end %>
-
-                      </tbody>
-                    </table>
+                      <tr>
+                        <td style="width: 200px; text-align: center;">
+                          <img src="<%= listing_image_with_dimensions(listing, 150, 150) %>" style="border-radius: 5px;" />
+                        </td>
+                        <td colspan="2" style="padding: 10px;">
+                          <%= link listing.title, to: event_path(@conn, :show, listing) %>
+                          <br />
+                          <%= event_date(listing.start_at) %> <%= full_event_time(listing) %>
+                        </td>
+                      </tr>
+                      </table>
+                        <br />
+<% end %>
                   </div>
                   <!-- End Product Table -->
                 </div>

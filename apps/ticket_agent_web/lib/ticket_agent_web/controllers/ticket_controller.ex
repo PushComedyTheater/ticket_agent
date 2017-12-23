@@ -18,7 +18,7 @@ defmodule TicketAgentWeb.TicketController do
       Please choose how many tickets you would like to purchase for this show.
       <br />
       <br />
-      We only allow a maximum of #{conn.assigns.available_ticket_count} tickets per purchase.
+      Supplies are limited and we can only allow a maximum of #{conn.assigns.available_ticket_count} tickets per purchase.
     """
     conn
     |> assign(:message, message)

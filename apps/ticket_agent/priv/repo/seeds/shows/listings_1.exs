@@ -6,6 +6,320 @@ Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 account = SeedHelpers.create_account("Push Comedy Theater")
 user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
 Logger.info "Seeding shows"
+Logger.info "=========== BEGIN Processing Universe Event Stories With Santa ==========="
+
+Logger.info "=========== Writing Event Stories With Santa ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "ZTHQFL",
+    title: "Stories With Santa",
+    description: """
+    <p><strong>Santa Claus is coming to the Push Comedy Theater!</strong>
+</p>
+<p>Come visit with Santa and take part in interactive holiday stories. There will be stories, some improv and Santa.
+</p>
+<p>Enjoy seasonal treats including cookies, hot cocoa, juice and coffee or tea for the adults.
+</p>
+<p>Children will have a chance to chat with Santa and receive a goodie bag.
+</p>
+<p>There is limited seating and reservations are recommended.
+</p>
+<p>Parents, make sure to bring your cameras!
+</p>
+<p><strong><br></strong>
+</p>
+<p><strong>Stories with Santa</strong>
+</p>
+<p>Saturday, December 16th
+</p>
+<p>Sunday, December 17th
+</p>
+<p>Friday, December 22nd.<br>
+</p>
+<p>The show starts at noon.
+</p>
+<p>Tickets are $5.
+</p>
+<p>This show is fun for the whole family.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p><br>
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Stories With Santa ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "ZTHQFL",
+    title: "Stories With Santa",
+    description: """
+    <p><strong>Santa Claus is coming to the Push Comedy Theater!</strong>
+</p>
+<p>Come visit with Santa and take part in interactive holiday stories. There will be stories, some improv and Santa.
+</p>
+<p>Enjoy seasonal treats including cookies, hot cocoa, juice and coffee or tea for the adults.
+</p>
+<p>Children will have a chance to chat with Santa and receive a goodie bag.
+</p>
+<p>There is limited seating and reservations are recommended.
+</p>
+<p>Parents, make sure to bring your cameras!
+</p>
+<p><strong><br></strong>
+</p>
+<p><strong>Stories with Santa</strong>
+</p>
+<p>Saturday, December 16th
+</p>
+<p>Sunday, December 17th
+</p>
+<p>Friday, December 22nd.<br>
+</p>
+<p>The show starts at noon.
+</p>
+<p>Tickets are $5.
+</p>
+<p>This show is fun for the whole family.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p><br>
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-16 17:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-22 19:00:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bbdfb86d-39d8-465c-8f0e-9b5d33a8b4ec"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert christmas
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "christmas"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert santa
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "santa"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert stories
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "stories"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for Stories With Santa",
+    status: "available",
+    description: "Ticket for Stories With Santa",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-11-10T01:42:21.104Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+Logger.info "=========== END Processing Universe Event Stories With Santa ==========="
+Logger.info "=========== BEGIN Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
+
+Logger.info "=========== Writing Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "CFM4YG",
+    title: "SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
+    description: """
+    <p><strong>Don't miss this epic sketch comedy showdown, where truly anything can happen.</strong><br>
+</p>
+<p>And we do mean anything!!!  Sometimes it's funny, sometimes it's weird, it's always entertaining.
+</p>
+<p>SKETCHMAGEDDON
+</p>
+<p>Last month... we crowned an unexpected new champ, A Lone.  But know they'll be going up against 2 powerhouse teams... Sk3l3ton Cr3w and the Pre Madonnas.  Can the rookie champ keep their crown? <br>
+</p>
+<p>--
+</p>
+<p>Get ready for a sketch comedy show like no other!!!
+</p>
+<p><strong>SKETCHMAGEDDON</strong> takes three groups and forces them to compete in an all-out comedy deathmatch!
+</p>
+<p>Each team will be given 15 minutes to dazzle you with their comedy prowess. It's Saturday Night Live meets Thunderdome!!!!
+</p>
+<p>Unlike its improvised sister show IMPROVAGEDDON, SKETCHMAGEDDON features all written and rehearsed material.  Props, costumes, and special effects are all legal in SKETCHMAGEDDON.
+</p>
+<p>This is a completely experimental show.  You never know what you are going to see.
+</p>
+<p><strong>SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition</strong>
+</p>
+<p>Friday, December 1st at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p>------------
+</p>
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "CFM4YG",
+    title: "SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
+    description: """
+    <p><strong>Don't miss this epic sketch comedy showdown, where truly anything can happen.</strong><br>
+</p>
+<p>And we do mean anything!!!  Sometimes it's funny, sometimes it's weird, it's always entertaining.
+</p>
+<p>SKETCHMAGEDDON
+</p>
+<p>Last month... we crowned an unexpected new champ, A Lone.  But know they'll be going up against 2 powerhouse teams... Sk3l3ton Cr3w and the Pre Madonnas.  Can the rookie champ keep their crown? <br>
+</p>
+<p>--
+</p>
+<p>Get ready for a sketch comedy show like no other!!!
+</p>
+<p><strong>SKETCHMAGEDDON</strong> takes three groups and forces them to compete in an all-out comedy deathmatch!
+</p>
+<p>Each team will be given 15 minutes to dazzle you with their comedy prowess. It's Saturday Night Live meets Thunderdome!!!!
+</p>
+<p>Unlike its improvised sister show IMPROVAGEDDON, SKETCHMAGEDDON features all written and rehearsed material.  Props, costumes, and special effects are all legal in SKETCHMAGEDDON.
+</p>
+<p>This is a completely experimental show.  You never know what you are going to see.
+</p>
+<p><strong>SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition</strong>
+</p>
+<p>Friday, December 1st at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p>------------
+</p>
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-02 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-02 04:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/83a0c1e9-fd2e-4b82-9e5b-a1edaf6416c9"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketch
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "sketch"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketchmageddon
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "sketchmageddon"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
+    status: "available",
+    description: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-11-21T05:07:00.374Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+Logger.info "=========== END Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 Logger.info "=========== BEGIN Processing Universe Event Good Talk: The Brad McMurran Show ==========="
 
 Logger.info "=========== Writing Event Good Talk: The Brad McMurran Show ==========="

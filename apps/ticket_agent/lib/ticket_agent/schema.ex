@@ -28,6 +28,7 @@ defmodule TicketAgent.Schema do
         TicketRegistration,
         User,
         UserCredential,
+        Waitlist,
         WebhookDetail
       }
     end

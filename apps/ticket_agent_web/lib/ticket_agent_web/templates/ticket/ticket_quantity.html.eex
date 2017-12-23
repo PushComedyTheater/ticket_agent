@@ -13,6 +13,19 @@
           <option><%= i %></option>
         <% end %>
       </select>
+
+      <a class="btn u-btn-default" style="margin-left: 10px;" href="#modal2" data-modal-target="#modal2" data-modal-effect="slide">Need More?</a>
+
+      <!-- Demo modal window -->
+      <div id="modal2" class="text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;">
+        <button type="button" class="close" onclick="Custombox.modal.close();">
+          <i class="hs-icon hs-icon-close"></i>
+        </button>
+        <h4 class="g-mb-20">Waitlist</h4>
+        <p>Currently this event only has a few tickets left.</p>
+        <p>You can purchase up to <%= assigns.available_ticket_count %> ticket(s) now.</p>
+      </div>
+      <!-- End Demo modal window -->
     </div>
     <div class="form-group col-sm-4">
       Total:&nbsp;&nbsp;<strong id="total_price">$</strong>

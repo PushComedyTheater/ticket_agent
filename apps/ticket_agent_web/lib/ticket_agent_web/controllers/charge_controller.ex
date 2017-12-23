@@ -39,6 +39,8 @@ defmodule TicketAgentWeb.ChargeController do
          {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
          {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
 
+        # Task.start(fn ->
+        # end)
         conn
         |> render("create.json")
     else

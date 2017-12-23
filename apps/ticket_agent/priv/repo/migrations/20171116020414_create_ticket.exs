@@ -2,7 +2,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE ticket_status AS ENUM ('available', 'locked', 'purchased', 'processing')"
+    execute "CREATE TYPE ticket_status AS ENUM ('available', 'locked', 'processing', 'purchased', 'emailed')"
 
     create table(:tickets, primary_key: false) do
       add :id, :binary_id, primary_key: true

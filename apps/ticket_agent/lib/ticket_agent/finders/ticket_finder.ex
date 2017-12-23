@@ -36,6 +36,16 @@ defmodule TicketAgent.Finders.TicketFinder do
 
   end
 
+  def listing_price(listing_id) do
+    from(
+      t in Ticket,
+      where: t.listing_id == ^listing_id,
+      limit: 1,
+      select: t.price
+    )
+    |> Repo.all
+  end
+
   def all_available_tickets(listing_id) do
     from(
       t in Ticket,
