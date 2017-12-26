@@ -32,7 +32,7 @@
      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
    <% end %>
     <div class="pull-right">
-    <i class="fa fa-cc-<%= cc_icon(@order.credit_card.type) %>"></i> <%= @order.credit_card.type %> ending in <%= @order.credit_card.last_4 %><br /><small>Ordered on <%= order_timestamp(@order.completed_at) %> | Order #<span class="text-uppercase"><%= @order.slug %></span></small></div>
+    <%= credit_card_details(@order.credit_card) %><small>Ordered on <%= order_timestamp(@order.completed_at) %> | Order #<span class="text-uppercase"><%= @order.slug %></span></small></div>
     <h2>Order Details</h2>
     <table class="table" style="width: 100%;">
       <thead class="thead-default">
@@ -48,7 +48,7 @@
       </tr>
       <%= for ticket <- @order.tickets do %>
         <tr>
-          <td style="padding: 5px;"><%= ticket.description %> (<%= ticket.guest_name %>)</td>
+          <td style="padding: 5px;"><%= ticket_details(ticket) %></td>
           <td style="padding: 5px;">$<%= :erlang.float_to_binary(ticket.price / 100,decimals: 2) %></td>
         </tr>
       <% end %>

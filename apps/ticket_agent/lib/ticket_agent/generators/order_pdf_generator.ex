@@ -14,13 +14,6 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
 
     customer_order = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/tickets_pdf.html.eex",
                                        [tickets: order.tickets, listing: listing, ticket_count: ticket_count, host: @host])
-
-   html = customer_order
-   # # be aware, this may take a while...
-   # { :ok, filename }    = PdfGenerator.generate html, page_size: "A5", shell_params: [ "-O", "landscape"]
-   # IO.inspect filename
-
-
-   PdfGenerator.generate_binary!(html, delete_temporary: true)
+    PdfGenerator.generate_binary!(customer_order, delete_temporary: true)
   end
 end

@@ -58,6 +58,7 @@ defmodule TicketAgentWeb.Router do
     get "/ticket_auth/:token", TicketAuthController, :show, as: :ticket_auth
     get "/ticket_auth", TicketAuthController, :new, as: :ticket_auth
     post "/custom_registration", TicketAuthController, :create, as: :custom_registration
+    post "/waitlist", WaitlistController, :create, as: :waitlist
 
     get "/workshops", WorkshopController, :index, as: :workshop
     get "/classes", ClassController, :index, as: :classes
@@ -85,6 +86,11 @@ defmodule TicketAgentWeb.Router do
     get "/order_pdf/:order_id", OrderPdfController, :show, as: :order_pdf
   end
 
+  scope "/concierge", TicketAgentWeb.Concierge do
+    pipe_through [:protected, :ensure_concierge]
+    resources "checkin", CheckinController
+  end
+
   scope "/admin", TicketAgentWeb.Admin do
     pipe_through [:protected, :ensure_admin, :admin_layout]
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
@@ -110,6 +116,17 @@ defmodule TicketAgentWeb.Router do
         conn
         |> put_flash(:error, "You can't access that page!")
         |> redirect(to: "/")
+        |> halt
+    end
+  end
+
+  def ensure_concierge(conn, params) do
+    case conn.assigns.current_user.role do
+      "concierge" -> conn
+      _ ->
+        conn
+        |> put_flash(:error, "You can't access that page!")
+        |> redirect(to: "/access_denied")
         |> halt
     end
   end

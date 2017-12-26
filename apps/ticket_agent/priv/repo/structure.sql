@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 9.6.3
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -43,23 +43,27 @@ CREATE TYPE class_type AS ENUM (
 
 
 --
+-- Name: credit_card_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE credit_card_type AS ENUM (
+    'Visa',
+    'American Express',
+    'MasterCard',
+    'Discover',
+    'JCB',
+    'Diners Club',
+    'Unknown'
+);
+
+
+--
 -- Name: event_status; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE event_status AS ENUM (
     'hidden',
     'normal'
-);
-
-
---
--- Name: listing_image_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE listing_image_type AS ENUM (
-    'cover',
-    'social',
-    'additional'
 );
 
 
@@ -76,13 +80,29 @@ CREATE TYPE listing_status AS ENUM (
 
 
 --
+-- Name: order_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE order_status AS ENUM (
+    'started',
+    'processing',
+    'completed',
+    'failed',
+    'errored',
+    'cancelled'
+);
+
+
+--
 -- Name: ticket_status; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE ticket_status AS ENUM (
     'available',
     'locked',
-    'purchased'
+    'processing',
+    'purchased',
+    'emailed'
 );
 
 
@@ -93,7 +113,10 @@ CREATE TYPE ticket_status AS ENUM (
 CREATE TYPE user_credential_provider AS ENUM (
     'facebook',
     'google',
-    'twitter'
+    'linkedin',
+    'twitter',
+    'microsoft',
+    'amazon'
 );
 
 
@@ -104,7 +127,9 @@ CREATE TYPE user_credential_provider AS ENUM (
 CREATE TYPE user_role AS ENUM (
     'admin',
     'agent',
-    'customer'
+    'customer',
+    'oauth_customer',
+    'guest'
 );
 
 
@@ -124,8 +149,8 @@ CREATE TABLE accounts (
     enabled boolean,
     logo text,
     creator_id uuid,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -143,8 +168,34 @@ CREATE TABLE classes (
     account_id uuid,
     prerequisite_id uuid,
     photo_url text,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: credit_cards; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE credit_cards (
+    id uuid NOT NULL,
+    user_id uuid,
+    type credit_card_type,
+    stripe_id text,
+    name text,
+    line_1_check text,
+    zip_check text,
+    cvc_check text,
+    exp_month integer,
+    exp_year integer,
+    fingerprint text,
+    funding text,
+    last_4 text,
+    address jsonb,
+    metadata jsonb,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    order_id uuid
 );
 
 
@@ -160,8 +211,8 @@ CREATE TABLE events (
     status event_status DEFAULT 'normal'::event_status,
     account_id uuid,
     user_id uuid,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -173,9 +224,8 @@ CREATE TABLE listing_images (
     id uuid NOT NULL,
     listing_id uuid NOT NULL,
     url text NOT NULL,
-    type listing_image_type NOT NULL,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -187,8 +237,8 @@ CREATE TABLE listing_tags (
     id uuid NOT NULL,
     listing_id uuid NOT NULL,
     tag text NOT NULL,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -202,13 +252,56 @@ CREATE TABLE listings (
     title text NOT NULL,
     description text NOT NULL,
     status listing_status DEFAULT 'unpublished'::listing_status,
-    start_at timestamp without time zone DEFAULT now(),
-    end_at timestamp without time zone DEFAULT now(),
+    start_at timestamp with time zone DEFAULT now(),
+    end_at timestamp with time zone DEFAULT now(),
+    pass_fees_to_buyer boolean DEFAULT true,
     user_id uuid,
     event_id uuid,
     class_id uuid,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: order_details; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE order_details (
+    id uuid NOT NULL,
+    order_id uuid,
+    charge_id text,
+    balance_transaction text,
+    client_ip text,
+    status text,
+    failure_code text,
+    failure_message text,
+    amount text,
+    network_status text,
+    risk_level text,
+    response jsonb,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE orders (
+    id uuid NOT NULL,
+    user_id uuid,
+    credit_card_id uuid,
+    slug text NOT NULL,
+    status order_status DEFAULT 'started'::order_status,
+    subtotal integer NOT NULL,
+    credit_card_fee integer DEFAULT 0,
+    processing_fee integer DEFAULT 0,
+    total_price integer DEFAULT 0,
+    completed_at timestamp with time zone,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -233,23 +326,8 @@ CREATE TABLE teachers (
     email character varying(255),
     biography text,
     social jsonb,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: ticket_registrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE ticket_registrations (
-    id uuid NOT NULL,
-    first_name character varying(255),
-    last_name character varying(255),
-    email character varying(255),
-    ticket_id uuid NOT NULL,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -259,17 +337,20 @@ CREATE TABLE ticket_registrations (
 
 CREATE TABLE tickets (
     id uuid NOT NULL,
+    slug text NOT NULL,
     listing_id uuid NOT NULL,
-    user_id uuid,
+    order_id uuid,
     name text NOT NULL,
     status ticket_status DEFAULT 'available'::ticket_status,
     description text,
     price integer NOT NULL,
-    sale_start timestamp without time zone,
-    sale_end timestamp without time zone,
-    locked_until timestamp without time zone,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    guest_name text,
+    guest_email text,
+    sale_start timestamp with time zone,
+    sale_end timestamp with time zone,
+    locked_until timestamp with time zone,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -283,8 +364,9 @@ CREATE TABLE user_credentials (
     provider user_credential_provider NOT NULL,
     token text NOT NULL,
     secret text,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    extra_details jsonb,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -307,10 +389,40 @@ CREATE TABLE users (
     current_sign_in_ip character varying(255),
     last_sign_in_ip character varying(255),
     unlock_token character varying(255),
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
+    stripe_customer_id character varying(255),
+    one_time_token character varying(255),
+    one_time_token_at timestamp without time zone,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
     account_id uuid,
     role user_role DEFAULT 'customer'::user_role
+);
+
+
+--
+-- Name: waitlists; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE waitlists (
+    id uuid NOT NULL,
+    listing_id uuid NOT NULL,
+    name character varying(255),
+    email_address character varying(255),
+    message_sent_at timestamp with time zone,
+    inserted_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: webhook_details; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE webhook_details (
+    id uuid NOT NULL,
+    request jsonb,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -328,6 +440,14 @@ ALTER TABLE ONLY accounts
 
 ALTER TABLE ONLY classes
     ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: credit_cards credit_cards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY credit_cards
+    ADD CONSTRAINT credit_cards_pkey PRIMARY KEY (id);
 
 
 --
@@ -363,6 +483,22 @@ ALTER TABLE ONLY listings
 
 
 --
+-- Name: order_details order_details_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY order_details
+    ADD CONSTRAINT order_details_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -376,14 +512,6 @@ ALTER TABLE ONLY schema_migrations
 
 ALTER TABLE ONLY teachers
     ADD CONSTRAINT teachers_pkey PRIMARY KEY (id);
-
-
---
--- Name: ticket_registrations ticket_registrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY ticket_registrations
-    ADD CONSTRAINT ticket_registrations_pkey PRIMARY KEY (id);
 
 
 --
@@ -411,10 +539,40 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: waitlists waitlists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY waitlists
+    ADD CONSTRAINT waitlists_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: webhook_details webhook_details_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY webhook_details
+    ADD CONSTRAINT webhook_details_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: accounts_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX accounts_name_index ON accounts USING btree (name);
+
+
+--
+-- Name: available_tickets; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX available_tickets ON tickets USING btree (listing_id, sale_start) WHERE ((status = 'available'::ticket_status) AND (locked_until IS NULL));
+
+
+--
+-- Name: classes_prerequisite_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX classes_prerequisite_id_index ON classes USING btree (prerequisite_id);
 
 
 --
@@ -429,6 +587,34 @@ CREATE UNIQUE INDEX classes_slug_index ON classes USING btree (slug);
 --
 
 CREATE INDEX classes_type_index ON classes USING btree (type);
+
+
+--
+-- Name: credit_cards_order_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX credit_cards_order_id_index ON credit_cards USING btree (order_id);
+
+
+--
+-- Name: credit_cards_stripe_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX credit_cards_stripe_id_index ON credit_cards USING btree (stripe_id);
+
+
+--
+-- Name: credit_cards_type_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX credit_cards_type_index ON credit_cards USING btree (type);
+
+
+--
+-- Name: credit_cards_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX credit_cards_user_id_index ON credit_cards USING btree (user_id);
 
 
 --
@@ -450,6 +636,13 @@ CREATE UNIQUE INDEX events_slug_index ON events USING btree (slug);
 --
 
 CREATE INDEX events_user_id_index ON events USING btree (user_id);
+
+
+--
+-- Name: index_locked_tickets_by_locked_until; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_locked_tickets_by_locked_until ON tickets USING btree (locked_until) WHERE (status = 'locked'::ticket_status);
 
 
 --
@@ -502,10 +695,101 @@ CREATE INDEX listings_user_id_index ON listings USING btree (user_id);
 
 
 --
+-- Name: order_details_charge_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_details_charge_id_index ON order_details USING btree (charge_id);
+
+
+--
+-- Name: order_details_order_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_details_order_id_index ON order_details USING btree (order_id);
+
+
+--
+-- Name: order_details_status_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_details_status_index ON order_details USING btree (status);
+
+
+--
+-- Name: orders_credit_card_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX orders_credit_card_id_index ON orders USING btree (credit_card_id);
+
+
+--
+-- Name: orders_slug_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX orders_slug_index ON orders USING btree (slug);
+
+
+--
+-- Name: orders_status_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX orders_status_index ON orders USING btree (status);
+
+
+--
+-- Name: orders_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX orders_user_id_index ON orders USING btree (user_id);
+
+
+--
 -- Name: teachers_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX teachers_slug_index ON teachers USING btree (slug);
+CREATE UNIQUE INDEX teachers_slug_index ON teachers USING btree (slug);
+
+
+--
+-- Name: tickets_listing_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tickets_listing_id_index ON tickets USING btree (listing_id);
+
+
+--
+-- Name: tickets_locked_until_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tickets_locked_until_index ON tickets USING btree (locked_until);
+
+
+--
+-- Name: tickets_order_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tickets_order_id_index ON tickets USING btree (order_id);
+
+
+--
+-- Name: tickets_slug_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX tickets_slug_index ON tickets USING btree (slug);
+
+
+--
+-- Name: tickets_status_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tickets_status_index ON tickets USING btree (status);
+
+
+--
+-- Name: user_credentials_provider_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_credentials_provider_index ON user_credentials USING btree (provider);
 
 
 --
@@ -530,6 +814,34 @@ CREATE INDEX users_name_index ON users USING btree (name);
 
 
 --
+-- Name: users_stripe_customer_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_stripe_customer_id_index ON users USING btree (stripe_customer_id);
+
+
+--
+-- Name: waitlists_email_address_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX waitlists_email_address_index ON waitlists USING btree (email_address);
+
+
+--
+-- Name: waitlists_listing_id_email_address_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX waitlists_listing_id_email_address_index ON waitlists USING btree (listing_id, email_address);
+
+
+--
+-- Name: waitlists_listing_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX waitlists_listing_id_index ON waitlists USING btree (listing_id);
+
+
+--
 -- Name: accounts accounts_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -551,6 +863,22 @@ ALTER TABLE ONLY classes
 
 ALTER TABLE ONLY classes
     ADD CONSTRAINT classes_prerequisite_id_fkey FOREIGN KEY (prerequisite_id) REFERENCES classes(id);
+
+
+--
+-- Name: credit_cards credit_cards_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY credit_cards
+    ADD CONSTRAINT credit_cards_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id);
+
+
+--
+-- Name: credit_cards credit_cards_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY credit_cards
+    ADD CONSTRAINT credit_cards_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
 
 
 --
@@ -610,11 +938,27 @@ ALTER TABLE ONLY listings
 
 
 --
--- Name: ticket_registrations ticket_registrations_ticket_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: order_details order_details_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ticket_registrations
-    ADD CONSTRAINT ticket_registrations_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE;
+ALTER TABLE ONLY order_details
+    ADD CONSTRAINT order_details_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id);
+
+
+--
+-- Name: orders orders_credit_card_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT orders_credit_card_id_fkey FOREIGN KEY (credit_card_id) REFERENCES credit_cards(id);
+
+
+--
+-- Name: orders orders_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY orders
+    ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
 
 
 --
@@ -626,11 +970,11 @@ ALTER TABLE ONLY tickets
 
 
 --
--- Name: tickets tickets_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: tickets tickets_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tickets
-    ADD CONSTRAINT tickets_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+    ADD CONSTRAINT tickets_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id);
 
 
 --
@@ -650,8 +994,16 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: waitlists waitlists_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY waitlists
+    ADD CONSTRAINT waitlists_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES listings(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020408), (20171116020410), (20171116020411), (20171116020412), (20171116020413), (20171116020414);
+INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020411), (20171116020412), (20171116020413), (20171116020414), (20171208181236), (20171211141945), (20171223212910);
 

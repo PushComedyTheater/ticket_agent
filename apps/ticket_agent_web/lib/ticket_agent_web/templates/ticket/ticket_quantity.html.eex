@@ -14,6 +14,7 @@
         <% end %>
       </select>
 
+      <%= if assigns.available_ticket_count < 8 do %>
       <a class="btn u-btn-default" style="margin-left: 10px;" href="#modal2" data-modal-target="#modal2" data-modal-effect="slide">Need More?</a>
 
       <!-- Demo modal window -->
@@ -24,7 +25,25 @@
         <h4 class="g-mb-20">Waitlist</h4>
         <p>Currently this event only has a few tickets left.</p>
         <p>You can purchase up to <%= assigns.available_ticket_count %> ticket(s) now.</p>
+        <p>If you need more tickets, you are welcome to join our waitlist and we will send you an email if any tickets become available.</p>
+        <br />
+        <div class="form-group g-mb-20">
+          <div class="u-input-group-v2">
+            <input id="name" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn) %>">
+            <label for="name">Full Name</label>
+          </div>
+          <small id="name_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
+        </div>
+        <div class="form-group g-mb-20">
+          <div class="u-input-group-v2">
+            <input id="email" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn, :email) %>">
+            <label for="email">Email Address</label>
+          </div>
+          <small id="email_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
+        </div>
+        <a href="#!" id="add_waitlist_btn" class="btn btn-md u-btn-outline-primary g-mr-10 g-mb-15">Add Me To Waitlist</a>
       </div>
+      <% end %>
       <!-- End Demo modal window -->
     </div>
     <div class="form-group col-sm-4">
@@ -32,3 +51,62 @@
     </div>
   </div>
 </form>
+<script type="text/javascript">
+window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
+window.join_waitlist = function (details) {
+  $.ajax({
+    // The URL for the request
+    url: "/waitlist",
+    // The data to send (will be converted to a query string)
+    data: JSON.stringify(details),
+    // Whether this is a POST or GET request
+    type: "POST",
+    // The type of data we expect back
+    contentType: "application/json",
+    dataType: "json",
+    // add in csrf_token
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+    },
+  }).done(function (response) {
+    $("#name").val("");
+    $("#email").val("");
+    window.setTimeout(function () { Custombox.modal.close(); }, 125);
+  }).fail(function (xhr, status, errorThrown) {
+    window.setTimeout(function () { Custombox.modal.close(); }, 25);
+  });
+}
+
+$(document).on('ready', function () {
+  $("#add_waitlist_btn").on("click", function(e) {
+    e.preventDefault();
+
+    var name = $("#name").val().trim();
+    var email = $("#email").val().trim();
+    var listing_id = "<%= @conn.assigns.listing.id %>";
+
+    if (name.length == 0) {
+      $("#name_required").show();
+    } else {
+      $("#name_required").hide();
+    }
+
+    if (email.length == 0) {
+      $("#email_required").show();
+    } else {
+      $("#email_required").hide();
+    }
+
+    if ((name.length > 0) && (email.length > 0)) {
+      var details = {
+        name: name,
+        email: email,
+        listing_id: listing_id
+      }
+      window.join_waitlist(details);
+    }
+
+  });
+
+});
+</script>

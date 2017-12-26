@@ -9,8 +9,6 @@ import_config "#{Mix.env}.exs"
 sha = String.trim(sha)
 config :ticket_agent, :release, sha
 
-IO.inspect "release = #{sha}"
-
 config :sentry,
   dsn: System.get_env("SENTRY_PRIVATE_DSN"),
   environment_name: Mix.env,

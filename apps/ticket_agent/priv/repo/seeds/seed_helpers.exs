@@ -1,7 +1,7 @@
 require Logger
 import Ecto.Query
 use Coherence.Config
-alias TicketAgent.{Account, Class, Event, Listing, ListingImage, ListingTag, Repo, Teacher, User}
+alias TicketAgent.{Account, Class, Event, Listing, ListingImage, ListingTag, Order, Repo, Teacher, User}
 
 defmodule SeedHelpers do
   def create_account(name) do
@@ -163,5 +163,11 @@ defmodule SeedHelpers do
         Logger.info "Seeds->create_image:   Image with type listing_id #{listing_id} exists"
         listing
     end
+  end
+
+  def create_order(order) do
+    Logger.info "Seeds->create_order:   Creating order"
+    struct(Order, order)
+    |> TicketAgent.Repo.insert!
   end
 end

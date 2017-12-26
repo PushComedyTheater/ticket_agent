@@ -25,7 +25,7 @@
       <section class="g-mb-100">
         <div class="container">
           <div class="row">
-<%= render "sidebar.html", assigns %>
+          <%= render "sidebar.html", assigns %>
 
             <!-- Profile Content -->
             <div class="col-lg-9">
@@ -42,6 +42,9 @@
                 </div>
 
                 <div class="card-block g-pa-0">
+                  <%= if Enum.count(@orders) == 0 do %>
+                  You have no orders at this time.
+                  <% end %>
                   <%= for order <- @orders do %>
                   <%
                     ticket = Enum.at(order.tickets, 0)
@@ -52,7 +55,7 @@
                           <td style="background-color: #f7f7f7; padding: 10px;">
                             ORDER PLACED:<br /><%= order_timestamp(order.completed_at) %>
                           </td>
-                          <td style="background-color: #f7f7f7; padding: 10px; text-align: right;">
+                          <td style="background-color: #f7f7f7; padding: 10px; text-align: center;">
                             TOTAL:<br />$<%= cost_smallest_unit(order.total_price) %>
                           </td>
                           <td style="background-color: #f7f7f7; padding: 10px; text-align: right;" class="text-uppercase">
@@ -61,13 +64,19 @@
                           </td>
                         </tr>
                       <tr>
-                        <td style="width: 200px; text-align: center;">
+                        <td style="width: 200px; padding: 5px; text-align: center;">
                           <img src="<%= listing_image_with_dimensions(listing, 150, 150) %>" style="border-radius: 5px;" />
                         </td>
-                        <td colspan="2" style="padding: 10px;">
+                        <td style="padding: 10px;">
+                          <%= Enum.count(order.tickets) %> ticket(s) to
                           <%= link listing.title, to: event_path(@conn, :show, listing) %>
                           <br />
                           <%= event_date(listing.start_at) %> <%= full_event_time(listing) %>
+                        </td>
+                        <td style="text-align: right;">
+                          <%= link to: order_pdf_path(@conn, :show, order.slug), class: "btn btn-lg u-btn-primary g-mr-10 g-mb-15" do %>
+                            <i class="fa fa-cloud-download g-mr-5"></i>Download Tickets
+                          <% end %>
                         </td>
                       </tr>
                       </table>

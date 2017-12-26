@@ -263,6 +263,66 @@ Enum.each(1..80, fn(x) ->
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 Logger.info "=========== END Processing Universe Event Musical Improv 201 ==========="
+Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Musical Improv 201 Graduation Show ==========="
+
+Logger.info "=========== Writing Class Listing Class Dismissed: The Musical Improv 201 Graduation Show ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: nil,
+    class_id: improv201.id,
+    slug: "GCJS74",
+    title: "Class Dismissed: The Musical Improv 201 Graduation Show",
+    description: """
+    <p>Check out the Musical Improv 201 Class as they create 2 full length musicals right before your very eyes!
+</p>
+<p>These melodic and masterful improvisers have been honing their skills for 6 weeks in the arts of song, rap, and even dance! So come out and see what happens when Music and Improv collide!!!
+</p>
+<p>Class Dismissed: The Musical Improv 201 Graduation Show
+</p>
+<p>Sunday, January 14th at 4pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-14 21:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-14 22:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b04b05c0-95bd-401c-b55a-87812d9ab7cd"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert class
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "class"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for Class Dismissed: The Musical Improv 201 Graduation Show",
+    status: "available",
+    description: "Ticket for Class Dismissed: The Musical Improv 201 Graduation Show",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-12-22T19:12:24.370Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+Logger.info "=========== END Processing Universe Event Class Dismissed: The Musical Improv 201 Graduation Show ==========="
 Logger.info "=========== BEGIN Processing Universe Event KidProv Studio at the Push Comedy Theater ==========="
 
 Logger.info "=========== Writing Class Listing KidProv Studio at the Push Comedy Theater ==========="

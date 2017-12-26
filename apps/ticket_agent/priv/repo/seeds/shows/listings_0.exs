@@ -2435,14 +2435,29 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
+order = SeedHelpers.create_order(%{
+  user_id: user.id,
+  slug: Random.generate_slug(),
+  status: "completed",
+  subtotal: 500,
+  credit_card_fee: 100,
+  processing_fee: 50,
+  total_price: 650,
+  completed_at: NaiveDateTime.utc_now()})
+
+IO.inspect order
+
 Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{
+    order_id: order.id,
     listing_id: listing.id,
     slug: Random.generate_slug(),
     name: "Ticket for Harold Night",
-    status: "available",
+    status: "purchased",
     description: "Ticket for Harold Night",
+    guest_name: "",
+    guest_email: "",
     price: 500,
     sale_start:  NaiveDateTime.from_iso8601!("2017-12-11T22:48:15.968Z")
   }

@@ -7,6 +7,20 @@ defmodule TicketAgentWeb.SharedView do
   def cc_icon("Diners Club"), do: "diners-club"
   def cc_icon("Unknown"), do: "stripe"
 
+  def credit_card_details(nil), do: ""
+  def credit_card_details(card) do
+    "<i class=\"fa fa-cc-#{cc_icon(card.type)}\"></i> #{card.type} ending in #{card.last_4}<br />"
+  end
+
+  def ticket_details(ticket) do
+    cond do
+      String.length(ticket.guest_name) > 0 ->
+        "#{ticket.description} (#{ticket.guest_name})"
+      true ->
+        ticket.description
+    end
+  end
+
   def event_date(date) do
     date
     |> Calendar.DateTime.shift_zone!("America/New_York")
