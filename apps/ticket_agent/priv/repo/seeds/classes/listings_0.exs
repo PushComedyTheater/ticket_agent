@@ -81,8 +81,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -169,8 +169,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -247,8 +247,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -307,8 +307,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -401,8 +401,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -493,8 +493,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -559,8 +559,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
@@ -633,17 +633,59 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
-  %TicketAgent.Ticket{
-    listing_id: listing.id,
-    slug: Random.generate_slug(),
-    name: "Ticket for Improv 101 with Brad McMurran",
-    status: "available",
-    description: "Ticket for Improv 101 with Brad McMurran",
-    price: 19000,
-    sale_start:  NaiveDateTime.from_iso8601!("2017-11-24T05:44:08.919Z")
-  }
+order = SeedHelpers.create_order(%{
+  user_id: user.id,
+  slug: Random.generate_slug(),
+  status: "completed",
+  subtotal: 500,
+  credit_card_fee: 100,
+  processing_fee: 50,
+  total_price: 650,
+  completed_at: NaiveDateTime.utc_now()})
+
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
+  ticket = case Random.sample([true, true, false, true, true, false, false, true])  do
+    false ->
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Improv 101 with Brad McMurran",
+        status: "available",
+        description: "Ticket for Improv 101 with Brad McMurran",
+        price: 19000,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-11-24T05:44:08.919Z")
+      }
+    true ->
+      name = FakerElixir.Name.name
+      date = FakerElixir.Date.backward(1..32)
+             |> NaiveDateTime.from_iso8601!()
+      IO.inspect date
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        order_id: order.id,
+        name: "Ticket for Improv 101 with Brad McMurran",
+        status: "available",
+        description: "Ticket for Improv 101 with Brad McMurran",
+        price: 19000,
+        status: "purchased",
+        guest_name: name,
+        guest_email: FakerElixir.Internet.email(:popular, name),
+        purchased_at: date,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-11-24T05:44:08.919Z")
+      }
+  end
+  # %TicketAgent.Ticket{
+  #   listing_id: listing.id,
+  #   slug: Random.generate_slug(),
+  #   name: "Ticket for Improv 101 with Brad McMurran",
+  #   status: "available",
+  #   description: "Ticket for Improv 101 with Brad McMurran",
+  #   price: 19000,
+  #   sale_start:  NaiveDateTime.from_iso8601!("2017-11-24T05:44:08.919Z")
+  # }
+  ticket
   |> TicketAgent.Repo.insert!
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
@@ -717,8 +759,8 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
+Enum.each(1..12, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),

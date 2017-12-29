@@ -96,7 +96,7 @@ defmodule TicketAgentWeb.Router do
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
 
     resources "/classes", ClassController, as: :admin_class
-    resources "/events", EventController, as: :admin_event, param: "titled_slug"
+    resources "/listings", ListingController, as: :admin_event, param: "titled_slug"
     resources "/images", ImageController, as: :admin_image
     resources "/teachers", TeacherController, as: :admin_teacher
     resources "/tickets", TicketController, as: :admin_ticket

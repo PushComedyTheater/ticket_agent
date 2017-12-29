@@ -1,5 +1,5 @@
 defmodule TicketAgentWeb.Admin.ListingController do
-  alias TicketAgent.{Class, Listing, Random, Repo}
+  alias TicketAgent.{Class, Listing, Random, Repo, Ticket}
   import Ecto.Query
   use TicketAgentWeb, :controller
 
@@ -17,9 +17,81 @@ defmodule TicketAgentWeb.Admin.ListingController do
 
   def show(conn, %{"titled_slug" => titled_slug}) do
     show = load_show(titled_slug)
-    render(conn, "show.html", show: show)
+
+    ticket_query =
+      from(
+        t in Ticket,
+        where: t.listing_id == ^show.id,
+        where: t.status == "purchased"
+      )
+
+    sold_ticket_count = Repo.aggregate(ticket_query, :count, :id)
+    sold_ticket_price = Repo.aggregate(ticket_query, :sum, :price)
+
+    weeks =
+      ticket_query
+      |> count_by_day(:purchased_at)
+      |> Repo.all
+
+    IO.inspect weeks
+    labels = Enum.map(weeks, fn([k,v]) ->
+      k
+    end)
+
+    data = Enum.map(weeks, fn([k,v]) ->
+      v
+    end)
+
+    IO.inspect labels
+    render(conn, "show.html", show: show, sold_ticket_count: sold_ticket_count, labels: labels, data: data, sold_ticket_price: sold_ticket_price)
   end
 
+  def count_by_day(query, date_field) do
+    query
+    |> group_by(
+      [r],
+      (
+        fragment(
+          "CONCAT(date_part('month', ?), '/', date_part('day', ?), '/', date_part('year', ?))",
+          (
+            field(r, ^date_field)
+          ),
+          (
+            field(r, ^date_field)
+          ),
+          (
+            field(r, ^date_field)
+          )
+        )
+      )
+    )
+    |> select(
+      [r],
+      [
+        (
+          fragment(
+            "CONCAT(date_part('month', ?), '/', date_part('day', ?), '/', date_part('year', ?))",
+            (field(r, ^date_field)),
+            (field(r, ^date_field)),
+            (field(r, ^date_field))
+          )
+        ),
+        count("*")
+      ]
+    )
+  end
+
+
+
+
+  # SELECT
+  # CONCAT(date_part('month', t0."purchased_at"), '/', date_part('day', t0."purchased_at"), '/', date_part('year', t0."purchased_at")) as date,
+  # count('*')
+  # FROM "tickets" AS t0 WHERE (t0."listing_id" = '0a6da2f9-e925-4a37-ac11-a3500b6d6b6d') AND (t0."status" = 'purchased')
+  # GROUP BY
+  # CONCAT(date_part('month', t0."purchased_at"), '/', date_part('day', t0."purchased_at"), '/', date_part('year', t0."purchased_at"))
+  # ORDER BY CONCAT(date_part('month', t0."purchased_at"), '/', date_part('day', t0."purchased_at"), '/', date_part('year', t0."purchased_at"))
+  #
   def new(conn, _params) do
     changeset = Listing.changeset(
       %Listing{
@@ -41,6 +113,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
 
     Repo.get_by!(Listing, slug: slug)
     |> Repo.preload(:class)
+    |> Repo.preload(:event)
     |> Repo.preload(:images)
     |> Repo.preload(:tickets)
   end

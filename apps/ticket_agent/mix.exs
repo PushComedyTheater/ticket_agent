@@ -49,6 +49,9 @@ defmodule TicketAgent.Mixfile do
       {:gen_smtp, "~> 0.12.0"},
       # {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode", runtime: false},
       {:qrcode, github: "sunboshan/qrcode"},
+      {:pdf_generator, ">= 0.3.6"},
+      {:curtail, "~> 0.1"},
+      {:icalendar, "~> 0.6.0"},
 
       {:bypass, "~> 0.7", only: :test},
       {:credo, "~> 0.8", only: [:dev, :test]},
@@ -56,9 +59,8 @@ defmodule TicketAgent.Mixfile do
       {:ex_machina, "~> 2.0", only: :test},
       {:junit_formatter, "~> 1.1", only: :test},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:pdf_generator, ">= 0.3.6"},
-      {:curtail, "~> 0.1"},
-      {:icalendar, "~> 0.6.0"}
+      {:faker_elixir_octopus, "~> 1.0.0",  only: [:dev, :test]}
+
     ]
   end
 

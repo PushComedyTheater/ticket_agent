@@ -16,10 +16,11 @@
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
+
         <li class="header">CLASSES</li>
-        <li>
+        <li class="active">
           <%= link to: admin_class_path(@conn, :index) do %>
-            <i class="fa fa-link"></i> <span>View</span>
+            <i class="fa fa-link"></i> <span>List</span>
           <% end %>
         </li>
         <li>
@@ -30,7 +31,7 @@
         <li class="header">SHOWS</li>
         <li>
           <%= link to: admin_event_path(@conn, :index) do %>
-            <i class="fa fa-link"></i> <span>View</span>
+            <i class="fa fa-link"></i> <span>View Current</span>
           <% end %>
           </a>
         </li>

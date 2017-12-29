@@ -59,7 +59,7 @@ defmodule TicketAgentWeb.Admin.ClassController do
   end
 
   def load_class(id) do
-    Repo.get!(Class, id)
+    Repo.get_by!(Class, [slug: id])
     |> Repo.preload(:prerequisite)
   end
 end

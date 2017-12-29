@@ -33,6 +33,7 @@ defmodule TicketAgentWeb.SharedView do
     |> Calendar.Strftime.strftime!("%l:%M%p")
   end
 
+  def order_timestamp(nil), do: ""
   def order_timestamp(date) do
     date
     |> Calendar.DateTime.shift_zone!("America/New_York")

@@ -2445,8 +2445,6 @@ order = SeedHelpers.create_order(%{
   total_price: 650,
   completed_at: NaiveDateTime.utc_now()})
 
-IO.inspect order
-
 Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 Enum.each(1..80, fn(x) ->
   %TicketAgent.Ticket{

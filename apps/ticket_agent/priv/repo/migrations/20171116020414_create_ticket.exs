@@ -23,6 +23,10 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
       add :sale_end, :timestamptz, null: true
 
       add :locked_until, :timestamptz, null: true
+      add :purchased_at, :timestamptz, null: true
+      add :emailed_at, :timestamptz, null: true
+      add :checked_in_at, :timestamptz, null: true
+      add :checked_in_by, references(:users, on_delete: :nothing, type: :binary_id), null: true
 
       timestamps(type: :timestamptz)
     end
