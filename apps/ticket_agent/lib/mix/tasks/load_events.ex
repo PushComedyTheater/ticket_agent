@@ -193,6 +193,12 @@ defmodule Mix.Tasks.LoadEvents do
       |> File.read!
       |> Poison.decode!()
 
+    ticket_count = case type do
+      :class ->
+        12
+      _ ->
+        80
+    end
     event = body["events"] |> hd
     listing = body["listing"]
     price = listing["price"]
@@ -213,6 +219,7 @@ defmodule Mix.Tasks.LoadEvents do
         title: title,
         class_id: class_id,
         type: type,
+        ticket_count: ticket_count,
         description: listing["description_html"],
         start_time: Calendar.DateTime.Parse.unix!(event["start_stamp"]),
         end_time: Calendar.DateTime.Parse.unix!(event["end_stamp"]),

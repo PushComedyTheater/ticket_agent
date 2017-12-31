@@ -132,7 +132,156 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Teacher's Pet ==========="
+Logger.info "=========== BEGIN Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+
+Logger.info "=========== Writing Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "J2QWBK",
+    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    description: """
+    <p>Prepare for Glory!!
+</p>
+<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
+</p>
+<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
+</p>
+<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
+</p>
+<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
+</p>
+<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
+</p>
+<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
+</p>
+<p><br>Let the final war for comedic supremacy begin!
+</p>
+<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
+</p>
+<p>The show starts at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "J2QWBK",
+    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    description: """
+    <p>Prepare for Glory!!
+</p>
+<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
+</p>
+<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
+</p>
+<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
+</p>
+<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
+</p>
+<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
+</p>
+<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
+</p>
+<p><br>Let the final war for comedic supremacy begin!
+</p>
+<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
+</p>
+<p>The show starts at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2017-12-31 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-12-31 04:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6a654ad0-cfee-43a6-9c35-dc86dfd97340"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert improvageddon
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "improvageddon"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert contest
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "contest"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert final
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "final"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    status: "available",
+    description: "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T19:44:41.700Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
 Logger.info "=========== BEGIN Processing Universe Event Second Saturday Stand-Up ==========="
 
 Logger.info "=========== Writing Event Second Saturday Stand-Up ==========="
@@ -251,7 +400,124 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Second Saturday Stand-Up ==========="
+Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
+
+Logger.info "=========== Writing Event Tales from the Campfire: The Improvised Ghost Story ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "9M3XN0",
+    title: "Tales from the Campfire: The Improvised Ghost Story",
+    description: """
+    <p>I ain't afraid of no ghost!<br>
+</p>
+<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
+</p>
+<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
+</p>
+<p><strong><br></strong>
+</p>
+<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
+</p>
+<p><br>
+</p>
+<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
+</p>
+<p>Saturday, January 6th at 8pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Tales from the Campfire: The Improvised Ghost Story ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "9M3XN0",
+    title: "Tales from the Campfire: The Improvised Ghost Story",
+    description: """
+    <p>I ain't afraid of no ghost!<br>
+</p>
+<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
+</p>
+<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
+</p>
+<p><strong><br></strong>
+</p>
+<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
+</p>
+<p><br>
+</p>
+<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
+</p>
+<p>Saturday, January 6th at 8pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-07 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-07 02:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert ghost
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "ghost"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
+    status: "available",
+    description: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T23:26:03.768Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 Logger.info "=========== BEGIN Processing Universe Event A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
 
 Logger.info "=========== Writing Event A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
@@ -382,6 +648,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
 Logger.info "=========== BEGIN Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
 
@@ -497,6 +764,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
 Logger.info "=========== BEGIN Processing Universe Event Couples Therapy ==========="
 
@@ -624,6 +892,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Couples Therapy ==========="
 Logger.info "=========== BEGIN Processing Universe Event Girl-Prov: The Girls' Night of Improv ==========="
 
@@ -779,6 +1048,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Girl-Prov: The Girls' Night of Improv ==========="
 Logger.info "=========== BEGIN Processing Universe Event The Pushers ==========="
 
@@ -874,7 +1144,176 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event The Pushers ==========="
+Logger.info "=========== BEGIN Processing Universe Event Date Night ==========="
+
+Logger.info "=========== Writing Event Date Night ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "W4SZ35",
+    title: "Date Night",
+    description: """
+    <p><strong>Get ready as we improvise your relationship.</strong>
+</p>
+<p>It's the most fun you'll ever have on date night!
+</p>
+<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
+</p>
+<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
+</p>
+<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
+</p>
+<p><br>
+</p>
+<p><strong>Date Night: With Brad and Alba</strong>
+</p>
+<p>Friday, January 5th at 8pm
+</p>
+<p>Tickets are $5
+</p>
+<p>---
+</p>
+<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
+</p>
+<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
+</p>
+<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
+</p>
+<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
+</p>
+<p>---
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Date Night ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "W4SZ35",
+    title: "Date Night",
+    description: """
+    <p><strong>Get ready as we improvise your relationship.</strong>
+</p>
+<p>It's the most fun you'll ever have on date night!
+</p>
+<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
+</p>
+<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
+</p>
+<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
+</p>
+<p><br>
+</p>
+<p><strong>Date Night: With Brad and Alba</strong>
+</p>
+<p>Friday, January 5th at 8pm
+</p>
+<p>Tickets are $5
+</p>
+<p>---
+</p>
+<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
+</p>
+<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
+</p>
+<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
+</p>
+<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
+</p>
+<p>---
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-06 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 02:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert date-night
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "date-night"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketch
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "sketch"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert couples
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "couples"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for Date Night",
+    status: "available",
+    description: "Ticket for Date Night",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T22:59:44.452Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Date Night ==========="
 Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Musical Improv Studio Grad Show ==========="
 
 Logger.info "=========== Writing Event Class Dismissed: The Musical Improv Studio Grad Show ==========="
@@ -997,6 +1436,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Class Dismissed: The Musical Improv Studio Grad Show ==========="
 Logger.info "=========== BEGIN Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
 
@@ -1136,6 +1576,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
 Logger.info "=========== BEGIN Processing Universe Event Who Dunnit? ...The Improvised Murder Mystery (January) ==========="
 
@@ -1259,7 +1700,128 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Who Dunnit? ...The Improvised Murder Mystery (January) ==========="
+Logger.info "=========== BEGIN Processing Universe Event Second Saturday Stand-Up ==========="
+
+Logger.info "=========== Writing Event Second Saturday Stand-Up ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "S6PH8X",
+    title: "Second Saturday Stand-Up",
+    description: """
+    <p><strong>Second Saturday Stand-Up</strong>
+</p>
+<p>This once-a-month show is brought to you by almost-jaded veteran comic, <strong>Hatton Jordan </strong>who sets the lineup with proven comedians delivering road-tested jokes while they squeeze in new material.
+</p>
+<p>This is NOT a "open mic" .....it's selected talent working on their craft. Every month is a new seasoned lineup.
+</p>
+<p><br>
+</p>
+<p>Host: Hatton Jordan
+</p>
+<p>Line-Up TBA
+</p>
+<p><strong><br></strong>
+</p>
+<p><strong>Second Saturday Stand-Up</strong>
+</p>
+<p>Saturday, January 13th at 10pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Second Saturday Stand-Up ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "S6PH8X",
+    title: "Second Saturday Stand-Up",
+    description: """
+    <p><strong>Second Saturday Stand-Up</strong>
+</p>
+<p>This once-a-month show is brought to you by almost-jaded veteran comic, <strong>Hatton Jordan </strong>who sets the lineup with proven comedians delivering road-tested jokes while they squeeze in new material.
+</p>
+<p>This is NOT a "open mic" .....it's selected talent working on their craft. Every month is a new seasoned lineup.
+</p>
+<p><br>
+</p>
+<p>Host: Hatton Jordan
+</p>
+<p>Line-Up TBA
+</p>
+<p><strong><br></strong>
+</p>
+<p><strong>Second Saturday Stand-Up</strong>
+</p>
+<p>Saturday, January 13th at 10pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-14 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-14 04:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9bd8303c-a46b-4654-8fc9-c7eb6b68a587"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert standup
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "standup"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for Second Saturday Stand-Up",
+    status: "available",
+    description: "Ticket for Second Saturday Stand-Up",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T23:33:46.012Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Second Saturday Stand-Up ==========="
 Logger.info "=========== BEGIN Processing Universe Event Tell Me More Storytelling ==========="
 
 Logger.info "=========== Writing Event Tell Me More Storytelling ==========="
@@ -1350,6 +1912,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Tell Me More Storytelling ==========="
 Logger.info "=========== BEGIN Processing Universe Event Musical Improv with Double Treble ==========="
 
@@ -1485,7 +2048,128 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Musical Improv with Double Treble ==========="
+Logger.info "=========== BEGIN Processing Universe Event The Pre Madonnas Present: All Groan Up ==========="
+
+Logger.info "=========== Writing Event The Pre Madonnas Present: All Groan Up ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "X2DL0R",
+    title: "The Pre Madonnas Present: All Groan Up",
+    description: """
+    <p>The Pre Madonnas are kicking off the new year at The Push Comedy Theater with a fun-filled night of sketch comedy! Whether you like your comedy dirty or silly, slapstick or satirical, The Pre Madonnas will have something for everyone in their new sketch comedy show "All Groan Up" featuring a touring set of their favorite sketches and all new material written for the new year.
+</p>
+<p><br>Tickets are $10 and can be bought ahead of time or at the door. We highly recommend buying tickets in advance, and arriving at the theater early to get a great seat!
+</p>
+<p><br>The Pre Madonnas will also be accepting donations to help fund their travel expenses to Charlotte, NC to be part of the North Carolina Comedy Festival.
+</p>
+<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
+</p>
+<p><br>Contact: thepremadonnas@gmail.com<br>Twitter: @ Pre_Madonnas<br>Instagram: @ thepremadonnas
+</p>
+<p><br>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="https://l.facebook.com/l.php?u=http%3A%2F%2FPushcomedytheater.com%2F&amp;h=ATMKCtsh4tn6h28aVHkegkm0gNpd6C9_6dgMS2lBiNhuRWuzECQJ7H2VUY51UUXaEJNVDBNznBJ9xN5T0Fhe3HO7NA2f3-PT0vjusOgvikgQDwQrktpsfM3mXCHvx7-6VLr3X5mD62an3enPoyDbRbMhaLvuu55ORPUT-P324UGCKQ" rel="nofollow" target="_blank">Pushcomedytheater.com</a>
+</p>
+<p><br>About The Push Comedy Theater
+</p>
+<p><br>
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing The Pre Madonnas Present: All Groan Up ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "X2DL0R",
+    title: "The Pre Madonnas Present: All Groan Up",
+    description: """
+    <p>The Pre Madonnas are kicking off the new year at The Push Comedy Theater with a fun-filled night of sketch comedy! Whether you like your comedy dirty or silly, slapstick or satirical, The Pre Madonnas will have something for everyone in their new sketch comedy show "All Groan Up" featuring a touring set of their favorite sketches and all new material written for the new year.
+</p>
+<p><br>Tickets are $10 and can be bought ahead of time or at the door. We highly recommend buying tickets in advance, and arriving at the theater early to get a great seat!
+</p>
+<p><br>The Pre Madonnas will also be accepting donations to help fund their travel expenses to Charlotte, NC to be part of the North Carolina Comedy Festival.
+</p>
+<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
+</p>
+<p><br>Contact: thepremadonnas@gmail.com<br>Twitter: @ Pre_Madonnas<br>Instagram: @ thepremadonnas
+</p>
+<p><br>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="https://l.facebook.com/l.php?u=http%3A%2F%2FPushcomedytheater.com%2F&amp;h=ATMKCtsh4tn6h28aVHkegkm0gNpd6C9_6dgMS2lBiNhuRWuzECQJ7H2VUY51UUXaEJNVDBNznBJ9xN5T0Fhe3HO7NA2f3-PT0vjusOgvikgQDwQrktpsfM3mXCHvx7-6VLr3X5mD62an3enPoyDbRbMhaLvuu55ORPUT-P324UGCKQ" rel="nofollow" target="_blank">Pushcomedytheater.com</a>
+</p>
+<p><br>About The Push Comedy Theater
+</p>
+<p><br>
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-07 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-07 04:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/8d9b9282-9a23-4993-b5b9-66dd813faf02"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert pre-maddonas
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "pre-maddonas"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+Enum.each(1..80, fn(x) ->
+  %TicketAgent.Ticket{
+    listing_id: listing.id,
+    slug: Random.generate_slug(),
+    name: "Ticket for The Pre Madonnas Present: All Groan Up",
+    status: "available",
+    description: "Ticket for The Pre Madonnas Present: All Groan Up",
+    price: 500,
+    sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T19:58:15.164Z")
+  }
+  |> TicketAgent.Repo.insert!
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event The Pre Madonnas Present: All Groan Up ==========="
 Logger.info "=========== BEGIN Processing Universe Event Monocle: Style Glamour Sophistication Comedy ==========="
 
 Logger.info "=========== Writing Event Monocle: Style Glamour Sophistication Comedy ==========="
@@ -1608,6 +2292,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Monocle: Style Glamour Sophistication Comedy ==========="
 Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 
@@ -1723,6 +2408,7 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 Logger.info "=========== BEGIN Processing Universe Event Good Talk: The Brad McMurran Show ==========="
 
@@ -1866,720 +2552,5 @@ Enum.each(1..80, fn(x) ->
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
 Logger.info "=========== END Processing Universe Event Good Talk: The Brad McMurran Show ==========="
-Logger.info "=========== BEGIN Processing Universe Event The Pushie Awards Show ==========="
-
-Logger.info "=========== Writing Event The Pushie Awards Show ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "C2ZSMG",
-    title: "The Pushie Awards Show",
-    description: """
-    <p>Imagine the Oscars, the Emmys, the Tonys and Nickelodeon Kid's Choice Awards all rolled into one!
-</p>
-<p>Well imagine no more... because the Push Comedy Theater is proud to announce The Second Annual Pushie Awards!!!
-</p>
-<p>The Pushie Awards are our chance to honor some of the funniest performers, shows and moments of 2017.
-</p>
-<p>Stay tuned for the full list of awards and nominees.
-</p>
-<p>Like all award shows, this night will be full of pomp and circumstance, surprise guest stars, wonderful food and amazing performances.
-</p>
-<p>The Pushie Awards will be held on Sunday, December 31st from 6 to 9pm.
-</p>
-<p>Don't miss on of the biggest comedy events of the year!!!
-</p>
-<p>*********************************
-</p>
-<p>The Pushie Awards Show
-</p>
-<p>Sunday, December 31st at 6pm
-</p>
-<p>Tickets are $20 in advance, $25 the night of the show.
-</p>
-<p>Free buffet will be provided
-</p>
-<p>Push Comedy Theater
-</p>
-<p>763 Granby Street
-</p>
-<p>Norfolk, VA
-</p>
-<p>757-333-7442
-</p>
-<p>pushcomedytheater.com
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, the NorVa, and the Virginia Beach Funny Bone.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing The Pushie Awards Show ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "C2ZSMG",
-    title: "The Pushie Awards Show",
-    description: """
-    <p>Imagine the Oscars, the Emmys, the Tonys and Nickelodeon Kid's Choice Awards all rolled into one!
-</p>
-<p>Well imagine no more... because the Push Comedy Theater is proud to announce The Second Annual Pushie Awards!!!
-</p>
-<p>The Pushie Awards are our chance to honor some of the funniest performers, shows and moments of 2017.
-</p>
-<p>Stay tuned for the full list of awards and nominees.
-</p>
-<p>Like all award shows, this night will be full of pomp and circumstance, surprise guest stars, wonderful food and amazing performances.
-</p>
-<p>The Pushie Awards will be held on Sunday, December 31st from 6 to 9pm.
-</p>
-<p>Don't miss on of the biggest comedy events of the year!!!
-</p>
-<p>*********************************
-</p>
-<p>The Pushie Awards Show
-</p>
-<p>Sunday, December 31st at 6pm
-</p>
-<p>Tickets are $20 in advance, $25 the night of the show.
-</p>
-<p>Free buffet will be provided
-</p>
-<p>Push Comedy Theater
-</p>
-<p>763 Granby Street
-</p>
-<p>Norfolk, VA
-</p>
-<p>757-333-7442
-</p>
-<p>pushcomedytheater.com
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, the NorVa, and the Virginia Beach Funny Bone.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-31 23:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-01 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/818fdbf4-f518-4ddb-8ef8-965046822e9d"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert sketch
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "sketch"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert pushie
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "pushie"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert awards
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "awards"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
-  %TicketAgent.Ticket{
-    listing_id: listing.id,
-    slug: Random.generate_slug(),
-    name: "Ticket for The Pushie Awards Show",
-    status: "available",
-    description: "Ticket for The Pushie Awards Show",
-    price: 2000,
-    sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T03:42:15.845Z")
-  }
-  |> TicketAgent.Repo.insert!
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-Logger.info "=========== END Processing Universe Event The Pushie Awards Show ==========="
-Logger.info "=========== BEGIN Processing Universe Event Holiday Grab Bag ==========="
-
-Logger.info "=========== Writing Event Holiday Grab Bag ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "P82ZK1",
-    title: "Holiday Grab Bag",
-    description: """
-    <p>The Holidays are here!!! To celebrate this festive time of year... we are giving you the gift of laughter.
-</p>
-<p>Join the Push Comedy Theater's hottest groups for a night of improv comedy.
-</p>
-<p>We've assembled The Bright Side, The Pre Madonnas, Monocle and The Dudes to bring you the improv show of all improv shows.
-</p>
-<p>This is going to be a night to remember.
-</p>
-<p><br>
-</p>
-<p>Holiday Grab Bag featuring:
-</p>
-<p>The Dudes, Monocle, Pre Madonnas and The Bright Side
-</p>
-<p>Friday, December 22nd at 10pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Holiday Grab Bag ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "P82ZK1",
-    title: "Holiday Grab Bag",
-    description: """
-    <p>The Holidays are here!!! To celebrate this festive time of year... we are giving you the gift of laughter.
-</p>
-<p>Join the Push Comedy Theater's hottest groups for a night of improv comedy.
-</p>
-<p>We've assembled The Bright Side, The Pre Madonnas, Monocle and The Dudes to bring you the improv show of all improv shows.
-</p>
-<p>This is going to be a night to remember.
-</p>
-<p><br>
-</p>
-<p>Holiday Grab Bag featuring:
-</p>
-<p>The Dudes, Monocle, Pre Madonnas and The Bright Side
-</p>
-<p>Friday, December 22nd at 10pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-23 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-23 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/ac649081-1db1-4e01-abd3-fc154de084c4"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
-  %TicketAgent.Ticket{
-    listing_id: listing.id,
-    slug: Random.generate_slug(),
-    name: "Ticket for Holiday Grab Bag",
-    status: "available",
-    description: "Ticket for Holiday Grab Bag",
-    price: 500,
-    sale_start:  NaiveDateTime.from_iso8601!("2017-12-21T03:46:40.231Z")
-  }
-  |> TicketAgent.Repo.insert!
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-Logger.info "=========== END Processing Universe Event Holiday Grab Bag ==========="
-Logger.info "=========== BEGIN Processing Universe Event A Very Pushers Christmas ==========="
-
-Logger.info "=========== Writing Event A Very Pushers Christmas ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "L21J3D",
-    title: "A Very Pushers Christmas",
-    description: """
-    <p>Remember all those wonderful Christmas Specials you loved as a kid?
-</p>
-<p>Remember the singing and the dancing and the loads of holiday cheer?
-</p>
-<p>We sure do!
-</p>
-<p>That's why we're proud to present our very own warped version of those timeless, holiday classics...<br><strong>A Very Pushers Christmas: An Inappropriate Comedy Show.</strong>
-</p>
-<p><strong>The Pushers are back with their 9th Annual Christmas Special!!!</strong>
-</p>
-<p><strong></strong>Don't miss what's become one of Hampton Roads' greatest holiday traditions.
-</p>
-<p><br><strong>A Very Pushers Christmas: An Inappropriate Comedy Show</strong><br>Saturday, December 23rd<br>Tickets are $12
-</p>
-<p>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="http://l.facebook.com/l.php?u=http%3A%2F%2Fpushcomedytheater.com%2F&amp;h=6AQEk5VLi&amp;enc=AZNxuSnjbnZAxlayq4FpgXYzgUwKCdaNVlw3C7xbRXOp-3jN3m9Ra9Eg6C-fslI5WkE&amp;s=1" rel="nofollow" target="_blank">pushcomedytheater.com</a>
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. This fall they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing A Very Pushers Christmas ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "L21J3D",
-    title: "A Very Pushers Christmas",
-    description: """
-    <p>Remember all those wonderful Christmas Specials you loved as a kid?
-</p>
-<p>Remember the singing and the dancing and the loads of holiday cheer?
-</p>
-<p>We sure do!
-</p>
-<p>That's why we're proud to present our very own warped version of those timeless, holiday classics...<br><strong>A Very Pushers Christmas: An Inappropriate Comedy Show.</strong>
-</p>
-<p><strong>The Pushers are back with their 9th Annual Christmas Special!!!</strong>
-</p>
-<p><strong></strong>Don't miss what's become one of Hampton Roads' greatest holiday traditions.
-</p>
-<p><br><strong>A Very Pushers Christmas: An Inappropriate Comedy Show</strong><br>Saturday, December 23rd<br>Tickets are $12
-</p>
-<p>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="http://l.facebook.com/l.php?u=http%3A%2F%2Fpushcomedytheater.com%2F&amp;h=6AQEk5VLi&amp;enc=AZNxuSnjbnZAxlayq4FpgXYzgUwKCdaNVlw3C7xbRXOp-3jN3m9Ra9Eg6C-fslI5WkE&amp;s=1" rel="nofollow" target="_blank">pushcomedytheater.com</a>
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. This fall they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-24 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-24 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b5bd4b74-ec38-471b-b92f-d2bd16e1eccd"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert christmas
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "christmas"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert sketch
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "sketch"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
-  %TicketAgent.Ticket{
-    listing_id: listing.id,
-    slug: Random.generate_slug(),
-    name: "Ticket for A Very Pushers Christmas",
-    status: "available",
-    description: "Ticket for A Very Pushers Christmas",
-    price: 1200,
-    sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T03:31:53.902Z")
-  }
-  |> TicketAgent.Repo.insert!
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-Logger.info "=========== END Processing Universe Event A Very Pushers Christmas ==========="
-Logger.info "=========== BEGIN Processing Universe Event Harold Night ==========="
-
-Logger.info "=========== Writing Event Harold Night ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "Q9D7LF",
-    title: "Harold Night",
-    description: """
-    <p>It's Harold Night at the Push Comedy Theater!
-</p>
-<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
-</p>
-<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
-</p>
-<p>Harold Night
-</p>
-<p>Friday, December 29th at 10:00pm
-</p>
-<p>Tickets are $5
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Harold Night ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "Q9D7LF",
-    title: "Harold Night",
-    description: """
-    <p>It's Harold Night at the Push Comedy Theater!
-</p>
-<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
-</p>
-<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
-</p>
-<p>Harold Night
-</p>
-<p>Friday, December 29th at 10:00pm
-</p>
-<p>Tickets are $5
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-30 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-30 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert harold
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "harold"
-})
-Logger.info "=========== Wrote tag ==========="
-
-order = SeedHelpers.create_order(%{
-  user_id: user.id,
-  slug: Random.generate_slug(),
-  status: "completed",
-  subtotal: 500,
-  credit_card_fee: 100,
-  processing_fee: 50,
-  total_price: 650,
-  completed_at: NaiveDateTime.utc_now()})
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
-  %TicketAgent.Ticket{
-    order_id: order.id,
-    listing_id: listing.id,
-    slug: Random.generate_slug(),
-    name: "Ticket for Harold Night",
-    status: "purchased",
-    description: "Ticket for Harold Night",
-    guest_name: "",
-    guest_email: "",
-    price: 500,
-    sale_start:  NaiveDateTime.from_iso8601!("2017-12-11T22:48:15.968Z")
-  }
-  |> TicketAgent.Repo.insert!
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-Logger.info "=========== END Processing Universe Event Harold Night ==========="
-Logger.info "=========== BEGIN Processing Universe Event TOO FAR: The Dirty, Inappropriate Comedy Show ==========="
-
-Logger.info "=========== Writing Event TOO FAR: The Dirty, Inappropriate Comedy Show ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "9VWCK4",
-    title: "TOO FAR: The Dirty, Inappropriate Comedy Show",
-    description: """
-    <p><strong></strong><strong>Are you ready to get dirty!?!</strong>
-</p>
-<p>Brad and Sean of the Pushers have assembled a twisted team of writers and actors to bring you the dirtiest, most offensive show Hampton Roads has ever seen.
-</p>
-<p>It's a show we call Too Far!
-</p>
-<p>WARNING: This show isn't for everyone. If you're not a fan of foul, sophomoric, potty humor... then this is not the show for you.
-</p>
-<p>Join The Pushers and the Too Far crew... and let's get dirty!!!
-</p>
-<p><strong>TOO FAR: The Dirtiest, Most Inappropriate Comedy Show... EVER!</strong><br>Saturday, December 16th <br>Tickets are $10, Show starts at 10:00pm
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing TOO FAR: The Dirty, Inappropriate Comedy Show ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "9VWCK4",
-    title: "TOO FAR: The Dirty, Inappropriate Comedy Show",
-    description: """
-    <p><strong></strong><strong>Are you ready to get dirty!?!</strong>
-</p>
-<p>Brad and Sean of the Pushers have assembled a twisted team of writers and actors to bring you the dirtiest, most offensive show Hampton Roads has ever seen.
-</p>
-<p>It's a show we call Too Far!
-</p>
-<p>WARNING: This show isn't for everyone. If you're not a fan of foul, sophomoric, potty humor... then this is not the show for you.
-</p>
-<p>Join The Pushers and the Too Far crew... and let's get dirty!!!
-</p>
-<p><strong>TOO FAR: The Dirtiest, Most Inappropriate Comedy Show... EVER!</strong><br>Saturday, December 16th <br>Tickets are $10, Show starts at 10:00pm
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-17 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-17 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b7859a45-0317-4f90-8f27-146deca5bd64"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert too-far
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "too-far"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
-  %TicketAgent.Ticket{
-    listing_id: listing.id,
-    slug: Random.generate_slug(),
-    name: "Ticket for TOO FAR: The Dirty, Inappropriate Comedy Show",
-    status: "available",
-    description: "Ticket for TOO FAR: The Dirty, Inappropriate Comedy Show",
-    price: 1000,
-    sale_start:  NaiveDateTime.from_iso8601!("2017-11-14T01:51:58.430Z")
-  }
-  |> TicketAgent.Repo.insert!
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-Logger.info "=========== END Processing Universe Event TOO FAR: The Dirty, Inappropriate Comedy Show ==========="

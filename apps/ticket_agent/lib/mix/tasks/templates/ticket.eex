@@ -1,5 +1,5 @@
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-Enum.each(1..80, fn(x) ->
+Logger.info "=========== Writing <%= @ticket_count %> tickets for #{listing.id} ==========="
+Enum.each(1..<%= @ticket_count %>, fn(x) ->
   %TicketAgent.Ticket{
     listing_id: listing.id,
     slug: Random.generate_slug(),
