@@ -1,12 +1,11 @@
 defmodule TicketAgentWeb.Concierge.DashboardController do
   require Logger
   import Ecto.Query
-  alias TicketAgent.{Listing, Repo, Ticket}
-  alias TicketAgent.State.TicketState
+  alias TicketAgent.Finders.ListingFinder
   use TicketAgentWeb, :controller
 
   def index(conn, params) do
-
-    render conn, "index.html"
+    listings = ListingFinder.active_show_listings
+    render conn, "index.html", listings: listings
   end
 end

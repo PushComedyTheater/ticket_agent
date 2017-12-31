@@ -69,6 +69,7 @@
 
   <!-- CSS Customization -->
   <link rel="stylesheet" href="https://assets.pushcomedytheater.com/2.0/css/custom.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha256-R91pD48xW+oHbpJYGn5xR0Q7tMhH4xOrWn1QqMRINtA=" crossorigin="anonymous" />
 </head>
 
 <body>
@@ -177,6 +178,7 @@
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.step-form.js"></script>
 
   <script src="https://assets.pushcomedytheater.com/2.0/js/components/hs.countdown.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha256-yNbKY1y6h2rbVcQtf0b8lq4a+xpktyFc3pSYoGAY1qQ=" crossorigin="anonymous"></script>
   <!-- JS Custom -->
   <script src="https://assets.pushcomedytheater.com/2.0/js/custom.js"></script>
     <script src="<%= static_path(@conn, "/js/application.js") %>"></script>
@@ -184,6 +186,24 @@
   <!-- JS Plugins Init. -->
   <script>
     $(document).on('ready', function () {
+
+      toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }
 
         // Header
         $.HSCore.components.HSHeader.init($('#js-header'));

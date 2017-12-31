@@ -17,3 +17,5 @@
     UserCredential,
     WebhookDetail
   }
+  require Logger
+  import Ecto.Query

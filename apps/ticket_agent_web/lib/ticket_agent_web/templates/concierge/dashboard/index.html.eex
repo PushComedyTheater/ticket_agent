@@ -2,8 +2,54 @@
 <br />
 <br />
 <br />
-<section class="g-bg-gray-light-v5 g-py-20">
+<section class="g-bg-white-v5 g-py-20">
   <div class="container">
-  HELLO
+
+    <div class="table-responsive">
+      <table class="table table-bordered u-table--v2">
+        <thead class="text-uppercase g-letter-spacing-1">
+          <tr>
+            <th class="g-font-weight-300 g-color-black">Listing</th>
+            <th class="g-font-weight-300 g-color-black">Start At</th>
+            <th class="g-font-weight-300 g-color-black">End At</th>
+            <th class="g-font-weight-300 g-color-black">Sold Tickets</th>
+            <th class="g-font-weight-300 g-color-black">Checked In</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <%= for listing <- @listings do %>
+          <%
+            sold_tickets = Enum.count(listing.tickets, fn(ticket) ->
+              ticket.status == "purchased" ||
+              ticket.status == "emailed" ||
+              ticket.status == "checkedin"
+            end)
+            checkedin_tickets = Enum.count(listing.tickets, fn(ticket) ->
+              ticket.status == "checkedin"
+            end)
+          %>
+          <tr id="<%= listing.id %>">
+            <td class="align-middle text-nowrap">
+              <%= listing.title %>
+            </td>
+            <td class="align-middle">
+              <%= order_timestamp(listing.start_at) %>
+            </td>
+            <td class="align-middle">
+              <%= order_timestamp(listing.end_at) %>
+            </td>
+            <td class="align-middle">
+              <%= sold_tickets %>
+            </td>
+            <td class="align-middle text-nowrap">
+              <%= checkedin_tickets %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </section>
