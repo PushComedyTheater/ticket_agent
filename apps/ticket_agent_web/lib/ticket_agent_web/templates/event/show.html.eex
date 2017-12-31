@@ -138,7 +138,6 @@
 <!-- End Portfolio Single Item -->
 <br />
 <script type="text/javascript">
-window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
 window.join_waitlist = function (details) {
   $.ajax({
     // The URL for the request

@@ -26,14 +26,22 @@ defmodule TicketAgentWeb.Admin.ListingController do
       )
 
     sold_ticket_count = Repo.aggregate(ticket_query, :count, :id)
-    sold_ticket_price = Repo.aggregate(ticket_query, :sum, :price)
+    sold_ticket_price = case Repo.aggregate(ticket_query, :sum, :price) do
+      nil ->
+        0
+      other ->
+        other
+    end
+
+    IO.inspect sold_ticket_price
+
+
 
     weeks =
       ticket_query
       |> count_by_day(:purchased_at)
       |> Repo.all
 
-    IO.inspect weeks
     labels = Enum.map(weeks, fn([k,v]) ->
       k
     end)
@@ -42,7 +50,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
       v
     end)
 
-    IO.inspect labels
     render(conn, "show.html", show: show, sold_ticket_count: sold_ticket_count, labels: labels, data: data, sold_ticket_price: sold_ticket_price)
   end
 

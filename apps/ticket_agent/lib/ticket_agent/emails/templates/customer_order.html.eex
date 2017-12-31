@@ -51,10 +51,12 @@ Free parking available at Slone Chiropractic (111 West Virginia Beach Blvd) just
               <table>
                 <tr>
                   <th>
+                    <%= if order.credit_card do %>
                     <p>
                     <strong>Payment Method</strong><br>
-                    <%= order.credit_card.type %> ending in <%= order.credit_card.last_4 %>
+                      <%= order.credit_card.type %> ending in <%= order.credit_card.last_4 %>
                     </p>
+                    <% end %>
                     <p>
                     <strong>Order ID</strong><br>
                     <a href="<%= host <> "/orders/" <> order.slug %>"><%= order.slug %></a>
@@ -92,7 +94,7 @@ Free parking available at Slone Chiropractic (111 West Virginia Beach Blvd) just
 <h4 style="text-decoration: underline;">Your Tickets</h4>
 <%= for ticket <- order.tickets do %>
   <%
-    link = "#{host}/concierge/checkin/#{ticket.id}"
+    link = "#{host}/concierge/single_checkin/#{ticket.id}"
     url = "https://chart.googleapis.com/chart?cht=qr&chl=#{link}/&chs=400x400"
   %>
   <table style="width: 100%; border: 1px solid #000;">

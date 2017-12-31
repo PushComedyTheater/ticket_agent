@@ -59,4 +59,15 @@ defmodule TicketAgent.Finders.TicketFinder do
     )
     |> Repo.all
   end
+
+  def all_tickets_for_checkin(listing_id) do
+    from(
+      t in Ticket,
+      where: t.listing_id == ^listing_id,
+      where: t.status in ["purchased", "emailed", "checkedin"],
+      order_by: t.slug,
+      select: t
+    )
+    |> Repo.all
+  end
 end

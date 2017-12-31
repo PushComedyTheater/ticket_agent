@@ -121,7 +121,6 @@
 </section>
 <script type="text/javascript">
   window.guest_account = true;
-  window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
 
   $(document).on('ready', function () {
     $("#registration_password").val(window.csrf_token);

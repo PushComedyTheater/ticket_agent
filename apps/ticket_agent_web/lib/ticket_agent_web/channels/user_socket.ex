@@ -3,6 +3,7 @@ defmodule TicketAgentWeb.UserSocket do
 
   ## Channels
   channel "game:*", TicketAgentWeb.RoomChannel
+  channel "listing:*", TicketAgentWeb.ListingChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket,timeout: 45_000
@@ -19,10 +20,11 @@ defmodule TicketAgentWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    id = TicketAgent.Random.random(50000)
-    socket = assign(socket, :current_user, %{id: id, username: "patrick#{id}"})
-    {:ok, socket}    
+  def connect(%{"token" => token}, socket) do
+    case Coherence.verify_user_token(socket, token, &assign/3) do
+      {:error, _} -> :error
+      {:ok, socket} -> {:ok, socket}
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

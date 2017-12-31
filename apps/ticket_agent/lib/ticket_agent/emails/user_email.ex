@@ -59,14 +59,17 @@ defmodule TicketAgent.UserEmail do
       |> Repo.preload([:user, :credit_card, :tickets, :listing])
 
       ticket = Enum.at(order.tickets, 0)
+      IO.inspect ticket
 
       ticket_count = Enum.count(order.tickets)
 
+      IO.inspect ticket_count
       listing = ticket.listing |> Repo.preload([:images])
 
-      TicketAgent.OrderHelpers.generate_ical(listing)
-
-      attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
+      IO.inspect listing
+      TicketAgent.OrderHelpers.generate_ical(listing) |> IO.inspect
+      #
+      # # attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
       customer_order = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/customer_order.html.eex",
                                          [listing: listing, ticket_count: ticket_count, order: order, host: host])
       html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex",

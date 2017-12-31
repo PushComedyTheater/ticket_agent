@@ -88,6 +88,8 @@ defmodule TicketAgentWeb.Router do
 
   scope "/concierge", TicketAgentWeb.Concierge do
     pipe_through [:protected, :ensure_concierge]
+    get "/single_checkin/:ticket_id", CheckinController, :show
+    get "/listing_checkin/:listing_id", CheckinController, :show
     resources "checkin", CheckinController
   end
 
@@ -122,6 +124,7 @@ defmodule TicketAgentWeb.Router do
 
   def ensure_concierge(conn, params) do
     case conn.assigns.current_user.role do
+      "admin" -> conn
       "concierge" -> conn
       _ ->
         conn

@@ -19,7 +19,7 @@
   <body>
 <%= for {ticket, index} <- Enum.with_index(tickets) do %>
   <%
-    link = "#{host}/concierge/checkin/#{ticket.id}"
+    link = "#{host}/concierge/single_checkin/#{ticket.id}"
     url = "https://chart.googleapis.com/chart?cht=qr&chl=#{link}/&chs=500x500"
   %>
   <%= if index + 1 == ticket_count do %>

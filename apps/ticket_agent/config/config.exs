@@ -32,6 +32,7 @@ config :coherence,
   router: TicketAgentWeb.Router,
   messages_backend: TicketAgentWeb.Coherence.Messages,
   logged_out_url: "/",
+  user_token: true,
   email_from_name: "Push Comedy Theater",
   email_from_email: "support@pushcomedytheater.com",
   opts: [:registerable, :authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token]
@@ -41,21 +42,21 @@ config :coherence,
 # config :coherence, TicketAgentWeb.Coherence.Mailer,
 #   adapter: Swoosh.Adapters.Mailgun,
 #   api_key: System.get_env("MAILGUN_API_KEY"),
-#   domain: "pushcomedytheater.com",
+#   domain: "mail.pushcomedytheater.com",
 #   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
 #
 # config :coherence, TicketAgent.Coherence.Mailer,
 #   adapter: Swoosh.Adapters.Mailgun,
 #   api_key: System.get_env("MAILGUN_API_KEY"),
-#   domain: "pushcomedytheater.com",
+#   domain: "mail.pushcomedytheater.com",
 #   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
 #
 # config :ticket_agent, TicketAgent.Mailer,
 #   adapter: Swoosh.Adapters.Mailgun,
 #   api_key: System.get_env("MAILGUN_API_KEY"),
-#   domain: "pushcomedytheater.com",
+#   domain: "mail.pushcomedytheater.com",
 #   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
 
@@ -79,14 +80,6 @@ config :ticket_agent, TicketAgent.Mailer,
   port: 1025,
   email_from_name: "ticket agent config",
   email_from_email: "support@pushcomedytheater.com"
-
-
-# config :ticket_agent, TicketAgent.Mailer,
-#   adapter: adapter,
-#   relay: "127.0.0.1",
-#   port: 1025,
-#   email_from_name: "ticket agent config",
-#   email_from_email: "support@pushcomedytheater.com"
 
 config :cloudinex,
   debug: false,

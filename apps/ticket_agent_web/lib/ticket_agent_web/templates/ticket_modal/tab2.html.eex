@@ -43,7 +43,7 @@
     <br />
     <br />
     <br />
-    
+
     <div id="loggedin_group" class="form-group g-mb-35">
       <a id="tab2_logged_in_continue_button" href="#" class="btn u-btn-primary btn-lg btn-notice btn-block g-mr-10 g-mb-15">Continue</a>
     </div>
@@ -131,7 +131,6 @@
 </div>
 
 <script type="text/javascript">
-  window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
   $(document).on('ready', function () {
     window.load_logged_in_user();
 

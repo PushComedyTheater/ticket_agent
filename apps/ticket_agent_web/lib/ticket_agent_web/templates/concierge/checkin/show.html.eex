@@ -1,0 +1,44 @@
+<br />
+<br />
+<br />
+<br />
+  <section class="g-bg-gray-light-v5 g-py-20">
+    <div class="container">
+      <div class="d-sm-flex text-center block">
+        <!-- Unify Primary Outline Panel-->
+        <div class="card g-brd-primary rounded-0 block">
+          <%= if @ticket.status == "checkedin" do %>
+          <h3 class="card-header h5 text-white g-bg-primary g-brd-transparent rounded-0">
+          <%= @ticket.guest_name %> (<%= @ticket.guest_email %>)
+          </h3>
+
+          <div class="card-block">
+            <p class="card-text">This guest is already checked in.
+              <h4><%= @ticket.guest_name %></h4>
+            </p>
+          </div>
+          <% else %>
+          <h3 class="card-header h5 text-white g-bg-primary g-brd-transparent rounded-0">
+            Check In <%= @ticket.guest_name %> (<%= @ticket.guest_email %>)
+          </h3>
+
+          <div class="card-block">
+            <p class="card-text">Please verify the name on the identification matches this name
+              <h4><%= @ticket.guest_name %></h4>
+            </p>
+
+              <%= form_for @conn, checkin_path(@conn, :create), [], fn f -> %>
+                <%= hidden_input(f, :ticket_id, value: @ticket.id) %>
+                <button class="btn btn-xl u-btn-primary g-mr-10 g-mb-15">
+                  <i class="fa fa-check-circle g-mr-5"></i>
+                  Check In
+                </button>
+              <% end %>
+
+          </div>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </section>

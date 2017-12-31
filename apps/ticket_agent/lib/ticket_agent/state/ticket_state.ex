@@ -79,6 +79,27 @@ defmodule TicketAgent.State.TicketState do
     )
   end
 
+  def set_ticket_checkedin_transaction(ticket_id, user_id) do
+    Logger.info "set_ticket_checkedin_transaction->ticket_id = #{inspect ticket_id}"
+
+    Multi.new()
+    |> Multi.update_all(:available_tickets,
+      from(
+        t in Ticket,
+        where: t.id == ^ticket_id,
+        where: t.status in ["emailed", "purchased"]
+      ),
+      [
+        set: [
+          status: "checkedin",
+          checked_in_at: NaiveDateTime.utc_now(),
+          checked_in_by: user_id
+        ]
+      ],
+      returning: true
+    )
+  end
+
   def reserve_tickets(%{id: order_id} = order, input_tickets) do
     listing_id = Enum.at(input_tickets, 0)["listing_id"]
 
@@ -131,7 +152,7 @@ defmodule TicketAgent.State.TicketState do
   end
 
   def release_tickets(%{id: order_id} = order, input_ticket_ids) do
-    
+
     ticket_count = Enum.count(input_ticket_ids)
 
     Logger.info "There are #{ticket_count} existing tickets to be released"

@@ -15,6 +15,7 @@
 <!-- JS Global Compulsory -->
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
   <script type="text/javascript">
+  window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
   window.stripe_publishable_key = "<%= TicketAgent.Services.Stripe.publishable_key %>";
   </script>
   <script src="https://js.stripe.com/v3/"></script>

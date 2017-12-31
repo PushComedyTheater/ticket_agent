@@ -7,7 +7,8 @@ module.exports = {
     application: ['./js/app.js', './js/hs.count-qty.js'],
     stripe_related: ['./js/stripe_response_parser.js', './js/stripe_related.js'],
     ticket_related: ['./js/ticket_related.js'],
-    admin: './js/admin/admin.js'
+    admin: './js/admin/admin.js',
+    concierge: './js/concierge/checkin.js'
   },
   output: {
     filename: '[name].js',
