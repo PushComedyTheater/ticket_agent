@@ -15,7 +15,8 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
     token = Coherence.SessionService.sign_user_token(conn, user)
     render(
       conn, "show_all.html",
-      session_token: Coherence.SessionService.sign_user_token(conn, user)
+      session_token: Coherence.SessionService.sign_user_token(conn, user),
+      listing_id: listing_id
     )
   end
 

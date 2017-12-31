@@ -4,7 +4,7 @@ import { Socket } from "phoenix";
 let socket = new Socket("/socket", {params: {token: window.session_token}})
 socket.connect()
 
-let channel = socket.channel("listing:29ef90ea-d24f-4b67-b12d-ae5ab8bcf1e9", {token: window.session_token})
+let channel = socket.channel("listing:" + window.listing_id, {token: window.session_token})
 channel.on("new_msg", msg => console.log("Got message", msg) )
 
 channel.join()

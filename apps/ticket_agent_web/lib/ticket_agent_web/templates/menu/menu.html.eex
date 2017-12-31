@@ -33,6 +33,12 @@
                   <%= link "Dashboard", to: dashboard_path(@conn, :index), class: "btn u-btn-outline-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
                   <!-- Submenu -->
                   <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home">
+                    <%= if is_concierge(@conn.assigns) do %>
+                      <li class="dropdown-item">
+                        <%= link "Concierge Dashboard", to: concierge_dashboard_path(@conn, :index), class: "nav-link btn btn-md u-btn-primary g-brd-2 rounded-0" %>
+                      </li>
+                    <% end %>
+
                     <li class="dropdown-item">
                       <%= link "Your Orders", to: dashboard_path(@conn, :index), class: "nav-link" %>
                     </li>

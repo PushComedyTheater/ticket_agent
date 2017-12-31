@@ -4,6 +4,10 @@ defmodule TicketAgentWeb.MenuView do
   alias TicketAgent.Class
   import Ecto.Query
 
+  def is_concierge(%{current_user: %{role: "admin"}}), do: true
+  def is_concierge(%{current_user: %{role: "concierge"}}), do: true
+  def is_concierge(_), do: false
+
   def is_admin(%{current_user: %{role: "admin"}}), do: true
   def is_admin(_), do: false
 

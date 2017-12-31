@@ -26,7 +26,7 @@ defmodule SeedHelpers do
     end
   end
 
-  def create_user(email, account) do
+  def create_user(email, account, role \\ "admin") do
     Logger.info "Seeds->create_user:    Checking if user with email #{email} exists"
     query = from u in User,
             where: u.email == ^email,
@@ -38,16 +38,14 @@ defmodule SeedHelpers do
 
         changes = %{
           name: "Patrick Veverka",
-          email: "patrick@pushcomedytheater.com",
+          email: email,
           password: "supersecret",
           password_confirmation: "supersecret",
           account_id: account.id,
-          role: "admin"
+          role: role
         }
 
-        %User{}
-        |> User.changeset(changes)
-        |> Repo.insert!
+        %User{} |> User.changeset(changes) |> Repo.insert!
 
       user ->
         Logger.info "Seeds->create_user:    User with email #{email} already exists"

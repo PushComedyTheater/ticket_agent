@@ -32,7 +32,7 @@
      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
    <% end %>
     <div class="pull-right">
-    <%= credit_card_details(@order.credit_card) %><small>Ordered on <%= order_timestamp(@order.completed_at) %> | Order #<span class="text-uppercase"><%= @order.slug %></span></small></div>
+    <%= raw credit_card_details(@order.credit_card) %><small>Ordered on <%= order_timestamp(@order.completed_at) %> | Order #<span class="text-uppercase"><%= @order.slug %></span></small></div>
     <h2>Order Details</h2>
     <table class="table" style="width: 100%;">
       <thead class="thead-default">
