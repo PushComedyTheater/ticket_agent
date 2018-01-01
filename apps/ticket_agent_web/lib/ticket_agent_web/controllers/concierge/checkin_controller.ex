@@ -2,6 +2,7 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
   require Logger
   import Ecto.Query
   alias TicketAgent.{Listing, Repo, Ticket}
+  alias TicketAgent.Finders.ListingFinder
   alias TicketAgent.State.TicketState
   use TicketAgentWeb, :controller
 
@@ -10,13 +11,16 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
     render conn, "show.html", ticket: ticket
   end
 
-  def show(conn, %{"listing_id" => listing_id} = params) do
+  def show(conn, %{"listing_slug" => listing_slug} = params) do
+    # lisitn
+    listing = ListingFinder.find_listing_by_slug(listing_slug) |> IO.inspect
     user = Coherence.current_user(conn)
     token = Coherence.SessionService.sign_user_token(conn, user)
     render(
       conn, "show_all.html",
       session_token: Coherence.SessionService.sign_user_token(conn, user),
-      listing_id: listing_id
+      listing_slug: listing_slug,
+      listing_id: listing.id
     )
   end
 

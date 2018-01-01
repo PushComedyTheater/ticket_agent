@@ -31,7 +31,7 @@
           %>
           <tr id="<%= listing.id %>">
             <td class="align-middle text-nowrap">
-              <%= listing.title %>
+              <%= link listing.title, to: concierge_checkin_path(@conn, :show, listing.slug) %>
             </td>
             <td class="align-middle">
               <%= order_timestamp(listing.start_at) %>

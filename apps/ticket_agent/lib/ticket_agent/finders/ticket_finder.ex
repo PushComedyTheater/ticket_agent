@@ -65,7 +65,7 @@ defmodule TicketAgent.Finders.TicketFinder do
       t in Ticket,
       where: t.listing_id == ^listing_id,
       where: t.status in ["purchased", "emailed", "checkedin"],
-      order_by: t.slug,
+      order_by: fragment("substring(? from '[a-zA-Z]*$') ASC", t.guest_name),
       select: t
     )
     |> Repo.all

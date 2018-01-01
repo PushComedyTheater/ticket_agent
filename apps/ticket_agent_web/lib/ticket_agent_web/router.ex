@@ -89,8 +89,8 @@ defmodule TicketAgentWeb.Router do
   scope "/concierge", TicketAgentWeb.Concierge do
     pipe_through [:protected, :ensure_concierge]
     get "/", DashboardController, :index, as: :concierge_dashboard
-    get "/single_checkin/:ticket_id", CheckinController, :show
-    get "/listing_checkin/:listing_id", CheckinController, :show
+    get "/single_checkin/:ticket_id", CheckinController, :show, as: :concierge_single_checkin
+    get "/listing_checkin/:listing_slug", CheckinController, :show, as: :concierge_checkin
     resources "checkin", CheckinController
   end
 

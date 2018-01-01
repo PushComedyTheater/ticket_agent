@@ -10,7 +10,7 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
   defp load_listing(slug, conn) do
     Logger.info "ShowLoader.load_listing for slug #{slug}"
 
-    ListingFinder.find_listing_by_slug(slug)
+    ListingFinder.find_listing_and_tickets_by_slug(slug)
     |> setup_conn_with_listing(conn)
   end
 

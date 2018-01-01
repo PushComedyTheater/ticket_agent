@@ -5,7 +5,6 @@ defmodule TicketAgentWeb.ListingChannel do
   alias TicketAgent.Finders.TicketFinder
 
   def join("listing:" <> listing_id, payload, socket) do
-
     if authorized?(payload, socket) do
       {:ok, load_tickets(listing_id), socket}
     else
@@ -44,7 +43,6 @@ defmodule TicketAgentWeb.ListingChannel do
 
   defp load_tickets(listing_id) do
     TicketFinder.all_tickets_for_checkin(listing_id)
-    |> IO.inspect
     |> Enum.map(fn(ticket) ->
       %{
         "checkedin" => (ticket.status == "checkedin"),
@@ -53,6 +51,5 @@ defmodule TicketAgentWeb.ListingChannel do
         "id" => ticket.id
       }
     end)
-    |> IO.inspect
   end
 end

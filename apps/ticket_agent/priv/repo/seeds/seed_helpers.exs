@@ -1,7 +1,24 @@
 require Logger
 import Ecto.Query
 use Coherence.Config
-alias TicketAgent.{Account, Class, Event, Listing, ListingImage, ListingTag, Order, Repo, Teacher, User}
+alias TicketAgent.{
+  Account, 
+  Class, 
+  CreditCard,
+  Event, 
+  Listing, 
+  ListingImage, 
+  ListingTag, 
+  Order,
+  OrderDetail, 
+  Random,
+  Repo, 
+  Teacher, 
+  Ticket,
+  User,
+  UserCredential,
+  Waitlist
+}
 
 defmodule SeedHelpers do
   def create_account(name) do
@@ -23,6 +40,38 @@ defmodule SeedHelpers do
       account ->
         Logger.info "Seeds->create_account: Account already exists"
         account
+    end
+  end
+
+  def create_credit_card(%{id: user_id} = user) do
+    Logger.info "Seeds->create_credit_card: Checking if credit card with user_id #{user_id} exists"
+    query = from c in CreditCard,
+            where: c.user_id == ^user_id,
+            select: c
+
+    case Repo.one(query) do
+      nil ->
+        Logger.info "Seeds->create_credit_card: Creating card"
+        %CreditCard{
+          user_id: user_id,
+          stripe_id: FakerElixir.Commerce.coupon(),
+          type: "Visa",
+          name: user.name,
+          line_1_check: "pass",
+          zip_check: "pass",
+          cvc_check: "pass",
+          exp_month: 12,
+          exp_year: 2018,
+          fingerprint: nil,
+          funding: "credit",
+          last_4: "1004",
+          address: nil,
+          metadata: nil
+        }
+        |> Repo.insert!
+      card ->
+        Logger.info "Seeds->create_credit_card: Card already exists"
+        card
     end
   end
 
