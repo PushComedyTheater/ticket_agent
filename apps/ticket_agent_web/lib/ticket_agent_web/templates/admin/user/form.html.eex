@@ -13,7 +13,7 @@
 
   <div class="form-group">
     <%= label f, :email, class: "control-label" %>
-    <%= text_input f, :email, class: "form-control" %>
+    <%= text_input f, :email, class: "form-control", disabled: true %>
     <%= error_tag f, :email %>
   </div>
 
@@ -25,9 +25,17 @@
 
   <div class="form-group">
     <%= label f, :role, class: "control-label" %>
-    <%= text_input f, :role, class: "form-control" %>
+    <%= select f, :role, [
+      "Admin": "admin",
+      "Concierge": "concierge",
+      "Customer": "customer",
+      "3rd Party Customer": "oauth_customer",
+      "Guest": "guest"
+    ], selected: f.data.role, prompt: "None" %>    
     <%= error_tag f, :role %>
   </div>
+
+    
 
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
