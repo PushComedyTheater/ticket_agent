@@ -91,7 +91,7 @@ defmodule TicketAgentWeb.Router do
     get "/", DashboardController, :index, as: :concierge_dashboard
     get "/single_checkin/:ticket_id", CheckinController, :show, as: :concierge_single_checkin
     get "/listing_checkin/:listing_slug", CheckinController, :show, as: :concierge_checkin
-    resources "checkin", CheckinController
+    resources "/checkin", CheckinController
   end
 
   scope "/admin", TicketAgentWeb.Admin do
@@ -103,6 +103,7 @@ defmodule TicketAgentWeb.Router do
     resources "/images", ImageController, as: :admin_image
     resources "/teachers", TeacherController, as: :admin_teacher
     resources "/tickets", TicketController, as: :admin_ticket
+    resources "/users", UserController, as: :admin_user
 
     get "/", Redirect, to: "/admin/dashboard"
   end

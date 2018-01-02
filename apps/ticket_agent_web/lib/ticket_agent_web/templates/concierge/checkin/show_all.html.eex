@@ -5,12 +5,32 @@
 <script type="text/javascript">
 window.session_token = "<%= @session_token %>";
 window.listing_slug = "<%= @listing_slug %>";
-window.listing_id = "<%= @listing_id %>";
+window.listing_id = "<%= @listing.id %>";
 </script>
   <section class="g-bg-gray-light-v5 g-py-20">
     <div class="container">
+      <div class="d-sm-flex text-center">
+
+        <div class="align-self-center ml-auto">
+          <ul class="u-list-inline">
+            <li class="list-inline-item g-mr-5">
+            
+              <%= link "Dashboard", to: concierge_dashboard_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+              <i class="g-color-gray-light-v2 g-ml-5">/</i>
+            </li>
+            <li class="list-inline-item g-color-primary">
+              <span>Check In Guests For <%= @listing.title %> (<%= order_timestamp(@listing.start_at) %>)</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br />
+  <section class="g-bg-white-v5 g-py-20">
+    <div class="container">
       <!-- Hoverable Rows -->
-      <h2 class="title"></h2>
+      <h2 class="title">Check In Guests For <%= @listing.title %> (<%= order_timestamp(@listing.start_at) %>)</h2>
       <div class="table-responsive">
         <table class="table table-hover">
           <thead>
@@ -28,20 +48,21 @@ window.listing_id = "<%= @listing_id %>";
   </section>
 
 <script id="ticket_template" type="text/x-handlebars-template">
-  <tr>
+
     <td>{{guest_name}}</td>
     <td>
-      <label class="form-check-inline u-check g-mr-20 mx-0 mb-0">
-        {{#if checkedin}}
-          <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" id="{{id}}" name="item" type="checkbox" checked="checked">
-        {{else}}
-          <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" id="{{id}}" name="item" type="checkbox">
-        {{/if}}
-        <div data-ticket-id="{{id}}" class="u-check-icon-radio-v7 checkin">
-          <i class="fa" data-check-icon=""></i>
-        </div>
-      </label>
+      {{#if checkedin}}
+      <a href="#!" id="link_{{id}}" data-ticket-id="{{id}}" class="btn u-btn-outline-primary g-mr-10 g-mb-15 checkin">
+        <i id="check_{{id}}" class="fa fa-check-circle g-mr-5"></i>
+        <span id="text_{{id}}">Checked In</span>
+      </a>
+      {{else}}
+      <a href="#!" id="link_{{id}}" data-ticket-id="{{id}}" class="btn u-btn-outline-bluegray g-mr-10 g-mb-15 checkin">
+        <i id="check_{{id}}" class="fa fa-check-circle g-mr-5" style="display: none;"></i>
+        <span id="text_{{id}}">Check In</span>
+      </a>      
+      {{/if}}
     </td>
-  </tr>
+
 </script>
 <script type="text/javascript" src="/js/concierge.js"></script>

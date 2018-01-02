@@ -20,7 +20,7 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
       conn, "show_all.html",
       session_token: Coherence.SessionService.sign_user_token(conn, user),
       listing_slug: listing_slug,
-      listing_id: listing.id
+      listing: listing
     )
   end
 

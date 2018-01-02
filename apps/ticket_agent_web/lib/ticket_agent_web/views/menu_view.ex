@@ -4,6 +4,15 @@ defmodule TicketAgentWeb.MenuView do
   alias TicketAgent.Class
   import Ecto.Query
 
+  def load_dashboard_path(conn) do
+    case is_concierge(conn.assigns) do
+      true ->
+        concierge_dashboard_path(conn, :index)
+      false ->
+        dashboard_path(conn, :index)
+    end
+  end
+
   def is_concierge(%{current_user: %{role: "admin"}}), do: true
   def is_concierge(%{current_user: %{role: "concierge"}}), do: true
   def is_concierge(_), do: false

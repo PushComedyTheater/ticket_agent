@@ -4,11 +4,12 @@
 <br />
 <section class="g-bg-white-v5 g-py-20">
   <div class="container">
-
+  <h2>Upcoming Shows</h2>
     <div class="table-responsive">
       <table class="table table-bordered u-table--v2">
         <thead class="text-uppercase g-letter-spacing-1">
           <tr>
+            <th></th>
             <th class="g-font-weight-300 g-color-black">Listing</th>
             <th class="g-font-weight-300 g-color-black">Start At</th>
             <th class="g-font-weight-300 g-color-black">End At</th>
@@ -30,6 +31,9 @@
             end)
           %>
           <tr id="<%= listing.id %>">
+            <td class="align-middle text-nowrap">
+              <%= link "CHECKIN", to: concierge_checkin_path(@conn, :show, listing.slug), class: "btn btn-med u-btn-primary g-mr-10 g-mb-15" %>
+            </td>
             <td class="align-middle text-nowrap">
               <%= link listing.title, to: concierge_checkin_path(@conn, :show, listing.slug) %>
             </td>

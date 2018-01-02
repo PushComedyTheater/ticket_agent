@@ -16,11 +16,14 @@ channel.join()
 
 channel.on("change", ticket => {
   $("#" + ticket.id).attr("checked", "checked");
-  console.log("Change:", ticket);
+  $("#link_" + ticket.id).removeClass("u-btn-outline-bluegray").addClass("u-btn-outline-primary");
+  $("#check_" + ticket.id).show();
+  $("#text_" + ticket.id).html("Checked In");
 });
 
 function setupOnload() {
   $(".checkin").on("click", function(e) {
+    e.preventDefault();
     var details = {
       ticket_id: $(this).data("ticket-id")
     }
@@ -57,12 +60,16 @@ function setupOnload() {
 function load_items(tickets) {
   let ticket_template = $("#ticket_template").html();
   let source = Handlebars.compile(ticket_template);
-  var output = "";
+  var output = "<tr>";
   //
   for (var i = 0; i < tickets.length; i++) {
     var ticket = tickets[i];
     var html    = source(ticket);
     output += html;
+    if (i % 2 == 1) {
+      output += "</tr><tr>";
+    }
+    
   }
   $("#ticket_body").html(output);
   setupOnload();
