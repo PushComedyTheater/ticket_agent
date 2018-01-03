@@ -16,39 +16,10 @@
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-
-        <li class="header">CLASSES</li>
-        <li class="active">
-          <%= link to: admin_class_path(@conn, :index) do %>
-            <i class="fa fa-link"></i> <span>List</span>
-          <% end %>
-        </li>
-        <li>
-          <%= link to: admin_class_path(@conn, :new) do %>
-            <i class="fa fa-plus"></i> <span>New</span>
-          <% end %>
-        </li>
-        <li class="header">SHOWS</li>
-        <li>
-          <%= link to: admin_event_path(@conn, :index) do %>
-            <i class="fa fa-link"></i> <span>View Current</span>
-          <% end %>
-          </a>
-        </li>
-        <li>
-          <%= link to: admin_event_path(@conn, :index) do %>
-            <i class="fa fa-plus"></i> <span>New</span>
-          <% end %>
-          </a>
-        </li>
-        <li class="header">TEACHERS</li>
-        <li>
-          <%= link to: admin_teacher_path(@conn, :index) do %>
-            <span class="glyphicon glyphicon-user"></span>
-            <span>View</span>
-          <% end %>
-          </a>
-        </li>
+        <%= render "sidebar_teachers.html", assigns %>
+        <%= render "sidebar_classes.html", assigns %>
+        <%= render "sidebar_shows.html", assigns %>
+        <%= render "sidebar_users.html", assigns %>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

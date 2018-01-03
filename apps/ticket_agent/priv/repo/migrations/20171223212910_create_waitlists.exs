@@ -10,7 +10,7 @@ defmodule TicketAgent.Repo.Migrations.CreateWaitlists do
       add :email_address, :string
       add :admin_notified, :boolean
       add :message_sent_at, :timestamptz, null: true
-      timestamps()
+      timestamps(type: :timestamptz)
     end
     create index(:waitlists, [:user_id])
     create index(:waitlists, [:email_address])

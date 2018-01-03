@@ -1,6 +1,12 @@
 use Mix.Config
 
 config :ticket_agent, ecto_repos: [TicketAgent.Repo]
+config :ticket_agent, TicketAgent.Repo, migration_timestamps: [type: :timestampz]
+
+config :paper_trail, repo: TicketAgent.Repo,
+                     item_type: Ecto.UUID,
+                     originator_type: Ecto.UUID,
+                     originator: [name: :user, model: TicketAgent.User]
 
 import_config "#{Mix.env}.exs"
 

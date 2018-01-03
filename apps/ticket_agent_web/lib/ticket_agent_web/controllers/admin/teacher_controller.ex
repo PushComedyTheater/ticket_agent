@@ -1,16 +1,22 @@
 defmodule TicketAgentWeb.Admin.TeacherController do
   use TicketAgentWeb, :controller
-
   alias TicketAgent.{Repo, Teacher}
+  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "teachers"}
 
   def index(conn, _params) do
     teachers = Repo.all(Teacher)
-    render(conn, "index.html", teachers: teachers)
+    
+    conn
+    |> assign(:teachers, teachers)
+    |> render("index.html")
   end
 
   def new(conn, _params) do
     changeset = Teacher.changeset(%Teacher{}, %{})
-    render(conn, "new.html", changeset: changeset)
+
+    conn
+    |> assign(:changeset, changeset)
+    |> render("new.html")
   end
 
   def create(conn, %{"teacher" => teacher_params}) do
@@ -22,19 +28,28 @@ defmodule TicketAgentWeb.Admin.TeacherController do
         |> put_flash(:info, "Teacher created successfully.")
         |> redirect(to: admin_teacher_path(conn, :show, teacher))
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        conn
+        |> assign(:changeset, changeset)        
+        |> render("new.html")
     end
   end
 
   def show(conn, %{"id" => id}) do
     teacher = Repo.get!(Teacher, id)
-    render(conn, "show.html", teacher: teacher)
+
+    conn
+    |> assign(:teacher, teacher)
+    |> render("show.html")
   end
 
   def edit(conn, %{"id" => id}) do
     teacher = Repo.get!(Teacher, id)
     changeset = Teacher.changeset(teacher, %{})
-    render(conn, "edit.html", teacher: teacher, changeset: changeset)
+
+    conn
+    |> assign(:teacher, teacher)
+    |> assign(:changeset, changeset)
+    |> render("edit.html")
   end
 
   def update(conn, %{"id" => id, "teacher" => teacher_params}) do
@@ -47,7 +62,10 @@ defmodule TicketAgentWeb.Admin.TeacherController do
         |> put_flash(:info, "Teacher updated successfully.")
         |> redirect(to: admin_teacher_path(conn, :show, teacher))
       {:error, changeset} ->
-        render(conn, "edit.html", teacher: teacher, changeset: changeset)
+        conn
+        |> assign(:teacher, teacher)
+        |> assign(:changeset, changeset)
+        |> render("edit.html")
     end
   end
 

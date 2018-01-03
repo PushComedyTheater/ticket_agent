@@ -35,7 +35,9 @@ defmodule TicketAgent.User do
     |> validate_coherence_password_reset(params)
   end
 
-  def list_users, do: Repo.all(User)
+  def list_users(params) do
+    Repo.paginate(User, params)
+  end
   def get_user!(id), do: Repo.get!(User, id)
 
   def create_user(attrs \\ %{}) do
@@ -44,10 +46,10 @@ defmodule TicketAgent.User do
     |> Repo.insert()
   end
 
-  def update_user(%User{} = user, attrs) do
+  def update_user(%User{} = user, attrs, originator) do
     user
     |> User.changeset(attrs)
-    |> Repo.update()
+    |> PaperTrail.update(originator: originator)
   end
 
   def delete_user(%User{} = user) do

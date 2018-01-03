@@ -1,0 +1,21 @@
+<li class="<%= treeview_root(@conn, "classes") %>">
+  <a href="#">
+    <i class="fa fa-university"></i>
+    <span>Classes</span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+    <li<%= raw treeview_action(@conn, "classes_index") %>>
+      <%= link to: admin_class_path(@conn, :index) do %>
+        <i class="fa fa-list"></i> <span>List</span>
+      <% end %>
+    </li>
+    <li<%= raw treeview_action(@conn, "classes_new") %>>
+      <%= link to: admin_class_path(@conn, :new) do %>
+        <i class="fa fa-plus"></i> <span>New</span>
+      <% end %>
+    </li>
+  </ul>
+</li>

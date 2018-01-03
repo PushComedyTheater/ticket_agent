@@ -10,7 +10,17 @@ config :ticket_agent_web,
   namespace: TicketAgentWeb,
   ecto_repos: [TicketAgent.Repo]
 
+config :paper_trail, repo: TicketAgent.Repo,
+                     item_type: Ecto.UUID,
+                     originator_type: Ecto.UUID,
+                     originator: [name: :user, model: TicketAgent.User]  
+
 config :oauth2, debug: true
+
+config :scrivener_html,
+  routes_helper: TicketAgentWeb.Router.Helpers,
+  # If you use a single view style everywhere, you can configure it here. See View Styles below for more info.
+  view_style: :bootstrap_v4
 
 # Configures the endpoint
 config :ticket_agent_web, TicketAgentWeb.Endpoint,

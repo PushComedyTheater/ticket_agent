@@ -1,6 +1,7 @@
 defmodule TicketAgentWeb.Admin.ListingView do
   alias TicketAgent.{Listing, ListingImage}
   use TicketAgentWeb, :view
+  import Scrivener.HTML
 
   def listing_type(true) do
     ["Class": "class", "Show": "show", "Workshop": "workshop"]

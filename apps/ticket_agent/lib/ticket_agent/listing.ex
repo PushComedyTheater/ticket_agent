@@ -35,6 +35,33 @@ defmodule TicketAgent.Listing do
     |> unique_constraint(:slug)
   end
 
+  def list_listings(params) do
+    Listing
+    |> order_by(asc: :start_at)
+    |> Repo.paginate(params)
+  end
+  def get_listing!(id), do: Repo.get!(Listing, id)
+
+  def create_listing(attrs \\ %{}) do
+    %Listing{}
+    |> Listing.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_listing(%Listing{} = listing, attrs, originator) do
+    listing
+    |> Listing.changeset(attrs)
+    |> PaperTrail.update(originator: originator)
+  end
+
+  def delete_listing(%Listing{} = listing) do
+    Repo.delete(listing)
+  end
+
+  def change_listing(%Listing{} = listing) do
+    Listing.changeset(listing, %{})
+  end  
+
   def from_class(current_user, %Class{} = class) do
     listing_image = %ListingImage{url: class.photo_url}
 

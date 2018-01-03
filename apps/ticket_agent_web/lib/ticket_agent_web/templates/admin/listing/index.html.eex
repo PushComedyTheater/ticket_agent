@@ -20,12 +20,17 @@
                   <span><%= link "Delete", to: admin_event_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
                 </td>
                 <td><%= listing.title %></td>
-                <td>
-                </td>
+                <td><%= order_timestamp(listing.start_at) %></td>
               </tr>
             <% end %>
           </tbody></table>
         </div>
+<div class="box-footer clearfix">
+<div class="pull-right">
+  <%= pagination_links @listings %>
+  </div>
+            </div>        
+        
         <!-- /.box-body -->
       </div>
       <!-- /.box -->

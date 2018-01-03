@@ -2,10 +2,15 @@ defmodule TicketAgentWeb.Admin.UserController do
   require Logger
   use TicketAgentWeb, :controller
   alias TicketAgent.User
+  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "teachers"}
 
-  def index(conn, _params) do
-    users = User.list_users()
-    render(conn, "index.html", users: users)
+  def index(conn, params) do
+    page = User.list_users(params)
+    render(
+      conn, 
+      "index.html", 
+      users: page    
+    )
   end
 
   def new(conn, _params) do
@@ -42,11 +47,11 @@ defmodule TicketAgentWeb.Admin.UserController do
       Logger.warn "Role for user #{user.id} is changing from #{user.role} to #{user_params["role"]}"
     end
 
-    case User.update_user(user, user_params) do
+    case User.update_user(user, user_params, Coherence.current_user(conn)) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: admin_user_path(conn, :show, user))
+        |> redirect(to: admin_user_path(conn, :show, user.model.id))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)
     end

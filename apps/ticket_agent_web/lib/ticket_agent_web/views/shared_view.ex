@@ -1,4 +1,27 @@
 defmodule TicketAgentWeb.SharedView do
+  require Logger
+  import Scrivener.HTML
+
+  def treeview_root(conn, path_combined) do
+    treeview_root = Map.get(conn.assigns, :treeview_root, "unknown")
+    cond do
+      treeview_root == path_combined ->
+        "active treeview menu-open"
+      true ->
+        "treeview"
+    end
+  end
+
+  def treeview_action(conn, path_combined) do
+    treeview_action = Map.get(conn.assigns, :treeview_action, "unknown")
+    cond do
+      treeview_action == path_combined ->
+        " class=\"active\""
+      true ->
+        ""
+    end    
+  end
+
   def cc_icon("Visa"), do: "visa"
   def cc_icon("American Express"), do: "amex"
   def cc_icon("MasterCard"), do: "mastercard"

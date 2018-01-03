@@ -52,6 +52,8 @@ defmodule TicketAgent.Mixfile do
       {:pdf_generator, ">= 0.3.6"},
       {:curtail, "~> 0.1"},
       {:icalendar, "~> 0.6.0"},
+      {:paper_trail, "~> 0.7.7"},
+      {:scrivener_ecto, "~> 1.0"},
 
       {:bypass, "~> 0.7", only: :test},
       {:credo, "~> 0.8", only: [:dev, :test]},

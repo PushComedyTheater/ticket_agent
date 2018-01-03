@@ -2,9 +2,19 @@ defmodule TicketAgentWeb.Admin.ListingController do
   alias TicketAgent.{Class, Listing, Random, Repo, Ticket}
   import Ecto.Query
   use TicketAgentWeb, :controller
+  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "listings"}
 
-  def index(conn, _params) do
-    listings = Repo.all(Listing)
+  def index(conn, params) do
+    params = cond do
+      Map.has_key?(params, "status") ->
+        IO.inspect "yay"
+        params
+      true ->
+        params
+        
+    end
+    
+    listings = Listing.list_listings(params)
     render conn, "index.html", listings: listings
   end
 

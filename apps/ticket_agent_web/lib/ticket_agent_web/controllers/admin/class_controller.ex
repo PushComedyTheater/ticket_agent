@@ -3,6 +3,7 @@ defmodule TicketAgentWeb.Admin.ClassController do
   alias TicketAgent.Class
   import Ecto.Query
   use TicketAgentWeb, :controller
+  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "classes"}
 
   def index(conn, _params) do
     query = from c in Class,
@@ -11,7 +12,10 @@ defmodule TicketAgentWeb.Admin.ClassController do
 
     classes = Repo.all(query)
 
-    render conn, "index.html", classes: classes
+    conn
+    |> assign(:menu_root_path, "classes_index")
+    |> assign(:classes, classes)
+    |> render("index.html")
   end
 
   def show(conn, %{"id" => id}) do
