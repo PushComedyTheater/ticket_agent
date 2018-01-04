@@ -2,7 +2,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Listing do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE listing_status AS ENUM ('unpublished', 'active', 'canceled', 'deleted')"
+    execute "CREATE TYPE listing_status AS ENUM ('unpublished', 'active', 'completed', 'canceled', 'deleted')"
 
     create table(:listings, primary_key: false) do
       add :id, :binary_id, primary_key: true

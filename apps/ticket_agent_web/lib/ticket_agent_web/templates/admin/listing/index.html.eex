@@ -11,6 +11,8 @@
             <tbody><tr>
               <th width="250px;">Actions</th>
               <th>Title</th>
+              <th>Start Time</th>
+              <th>End Time</th>
             </tr>
             <%= for listing <- @listings do %>
               <tr>
@@ -21,6 +23,7 @@
                 </td>
                 <td><%= listing.title %></td>
                 <td><%= order_timestamp(listing.start_at) %></td>
+                <td><%= order_timestamp(listing.end_at) %></td>
               </tr>
             <% end %>
           </tbody></table>

@@ -1,7 +1,6 @@
 defmodule TicketAgentWeb.ClassView do
   use TicketAgentWeb, :view
-  alias TicketAgent.Repo
-  alias TicketAgent.Class
+  alias TicketAgent.{Class, Listing, Repo}
   import Ecto.Query
 
   def classes_by_type(conn, type) do
@@ -11,4 +10,6 @@ defmodule TicketAgentWeb.ClassView do
             select: c
     Repo.all(query)
   end
+
+  def current_class_listing(class), do: Listing.current_class_listing(class)  
 end

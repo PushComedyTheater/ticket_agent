@@ -18,20 +18,28 @@ defmodule Mix.Tasks.LoadEvents do
     body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")
     Enum.each(body["listings"], fn(listing) ->
       id = listing["id"]
+      
       url = "https://www.universe.com/api/v2/listings/#{id}.json"
       item = load_json_no_decode(url)
       title = String.trim(listing["title"])
       base = "/Users/patrickveverka/Code/ticket_agent/apps/ticket_agent/lib/mix/tasks/data"
+      IO.inspect title
       uri = if title == "Workshop: Tales from the Campfire" do
+        raise "FUCk"
         "#{base}/workshops/#{id}.json"
       else
-        case Enum.find(Mappings.mappings, fn({reg, _}) -> String.match?(title, reg) end) do
-          {h, class_id} ->
-            IO.puts "class"
-            "#{base}/newstuff/classes/#{id}.json"
-          n ->
+        if String.contains?(title, "Class Dismissed") do
             IO.puts "show"
-            "#{base}/newstuff/shows/#{id}.json"
+            "#{base}/newstuff/shows/#{id}.json"          
+        else
+          case Enum.find(Mappings.mappings, fn({reg, _}) -> String.match?(title, reg) end) do
+            {h, class_id} ->
+              IO.puts "class"
+              "#{base}/newstuff/classes/#{id}.json"
+            n ->
+              IO.puts "show"
+              "#{base}/newstuff/shows/#{id}.json"
+          end
         end
       end
       IO.inspect uri

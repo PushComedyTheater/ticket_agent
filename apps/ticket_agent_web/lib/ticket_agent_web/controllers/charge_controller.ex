@@ -31,6 +31,7 @@ defmodule TicketAgentWeb.ChargeController do
     # get token from user or stripe
     # send to stripe
     # complete order
+    # send ticket email
 
     with {:ok, %{processing_tickets: {^ticket_count, updated_tickets}, order_processing: {1, updated_order}}} <- set_order_and_tickets_processing(order, ticket_ids),
          {:ok, stripe_customer_id} <- load_stripe_token(current_user, token_id, metadata),

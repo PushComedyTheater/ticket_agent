@@ -8,495 +8,6 @@ user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
 card = SeedHelpers.create_credit_card(user)
 user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
 Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Teacher's Pet ==========="
-
-Logger.info "=========== Writing Event Teacher's Pet ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "RP290T",
-    title: "Teacher's Pet",
-    description: """
-    <p><strong>The Students Become The Masters!!!</strong>
-</p>
-<p>Teachers and students will join forces for a good old fashioned improv jam!!!
-</p>
-<p>Don't miss it! Some of the Push Comedy's Theater's funniest students share the stage with their teachers, The Pushers. Ordinarily we frown upon fraternization between teachers and students (Brad we're looking at you)... but for one night only all bets are off!!!
-</p>
-<p><strong>Teachers Pet</strong><br>Friday, December 8th, 10pm<br>Tickets are $5
-</p>
-<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>--<br>
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater will host live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes will be offered in stand-up, sketch and improv comedy as well as acting and film production.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Teacher's Pet ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "RP290T",
-    title: "Teacher's Pet",
-    description: """
-    <p><strong>The Students Become The Masters!!!</strong>
-</p>
-<p>Teachers and students will join forces for a good old fashioned improv jam!!!
-</p>
-<p>Don't miss it! Some of the Push Comedy's Theater's funniest students share the stage with their teachers, The Pushers. Ordinarily we frown upon fraternization between teachers and students (Brad we're looking at you)... but for one night only all bets are off!!!
-</p>
-<p><strong>Teachers Pet</strong><br>Friday, December 8th, 10pm<br>Tickets are $5
-</p>
-<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>--<br>
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater will host live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes will be offered in stand-up, sketch and improv comedy as well as acting and film production.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-09 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-09 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bc96f7b9-01c2-4ac8-9566-5bfdfa7f658d"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert graduation-show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "graduation-show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert students
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "students"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Teacher's Pet",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Teacher's Pet",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T20:50:00.510Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Teacher's Pet",
-        status: "available",
-        description: "Ticket for Teacher's Pet",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T20:50:00.510Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Teacher's Pet ==========="
-Logger.info "=========== BEGIN Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
-
-Logger.info "=========== Writing Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "J2QWBK",
-    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-    description: """
-    <p>Prepare for Glory!!
-</p>
-<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
-</p>
-<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
-</p>
-<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
-</p>
-<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
-</p>
-<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
-</p>
-<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
-</p>
-<p><br>Let the final war for comedic supremacy begin!
-</p>
-<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
-</p>
-<p>The show starts at 10pm
-</p>
-<p>Tickets are $5
-</p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "J2QWBK",
-    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-    description: """
-    <p>Prepare for Glory!!
-</p>
-<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
-</p>
-<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
-</p>
-<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
-</p>
-<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
-</p>
-<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
-</p>
-<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
-</p>
-<p><br>Let the final war for comedic supremacy begin!
-</p>
-<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
-</p>
-<p>The show starts at 10pm
-</p>
-<p>Tickets are $5
-</p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-31 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-31 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6a654ad0-cfee-43a6-9c35-dc86dfd97340"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert improvageddon
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "improvageddon"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert contest
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "contest"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert final
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "final"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T19:44:41.700Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-        status: "available",
-        description: "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T19:44:41.700Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
-Logger.info "=========== BEGIN Processing Universe Event Second Saturday Stand-Up ==========="
-
-Logger.info "=========== Writing Event Second Saturday Stand-Up ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "QB06SK",
-    title: "Second Saturday Stand-Up",
-    description: """
-    <p><strong>Second Saturday Stand-Up</strong>
-</p>
-<p>This once-a-month show is brought to you by almost-jaded veteran comic, <strong>Hatton Jordan </strong>who sets the lineup with proven comedians delivering road-tested jokes while they squeeze in new material.
-</p>
-<p>This is NOT a "open mic" .....it's selected talent working on their craft. Every month is a new seasoned lineup.
-</p>
-<p><br>
-</p>
-<p>Host: Hatton Jordan
-</p>
-<p>Line-Up TBA
-</p>
-<p><strong><br></strong>
-</p>
-<p><strong>Second Saturday Stand-Up</strong>
-</p>
-<p>Saturday, December 9th at 10pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Second Saturday Stand-Up ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "QB06SK",
-    title: "Second Saturday Stand-Up",
-    description: """
-    <p><strong>Second Saturday Stand-Up</strong>
-</p>
-<p>This once-a-month show is brought to you by almost-jaded veteran comic, <strong>Hatton Jordan </strong>who sets the lineup with proven comedians delivering road-tested jokes while they squeeze in new material.
-</p>
-<p>This is NOT a "open mic" .....it's selected talent working on their craft. Every month is a new seasoned lineup.
-</p>
-<p><br>
-</p>
-<p>Host: Hatton Jordan
-</p>
-<p>Line-Up TBA
-</p>
-<p><strong><br></strong>
-</p>
-<p><strong>Second Saturday Stand-Up</strong>
-</p>
-<p>Saturday, December 9th at 10pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-10 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-10 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9bd8303c-a46b-4654-8fc9-c7eb6b68a587"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert standup
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "standup"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Second Saturday Stand-Up",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Second Saturday Stand-Up",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T20:58:50.586Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Second Saturday Stand-Up",
-        status: "available",
-        description: "Ticket for Second Saturday Stand-Up",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T20:58:50.586Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Second Saturday Stand-Up ==========="
 Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 
 Logger.info "=========== Writing Event Tales from the Campfire: The Improvised Ghost Story ==========="
@@ -644,789 +155,6 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
-Logger.info "=========== BEGIN Processing Universe Event A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
-
-Logger.info "=========== Writing Event A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "WJVZK7",
-    title: "A Sk3l3ton Cr3w Xmas: Bones Down the Chimney!",
-    description: """
-    <p>Bones down!
-</p>
-<p>That's right folks, perennial Sketchmageddon 3rd place finishers, The Sk3l3ton Cr3w are back with a full length show all about that holiday of holidays, Xmas! Most likely?
-</p>
-<p>You see, The Sk3l3ton Cr3w is a sketch comedy outfit that uses rough outlines that are then improvised around to create hastily rehearsed scenes in short order. We never quite know what we're going to get, and this show will be no exception!
-</p>
-<p>The Sk3l3ton Cr3w is Ed Carden, Matt Cole, Brian Garraty, Rafael Henriquez, Angel Sanchez, Sandy Carden, and Erin Lindstrom, plus sometimes Kerry Kruk, Heather Paine, Adam Paine, and James Roach. This show will also feature special guests Andy Poindexter, Brad McMurran, and possibly more! Get ready for some high quality, low effort comedy that get your holiday bells a'jangling! Bones down!
-</p>
-<p>A Sk3l3ton Cr3w Xmas: Bones Down the Chimney
-</p>
-<p>Friday, December 15th at 10pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "WJVZK7",
-    title: "A Sk3l3ton Cr3w Xmas: Bones Down the Chimney!",
-    description: """
-    <p>Bones down!
-</p>
-<p>That's right folks, perennial Sketchmageddon 3rd place finishers, The Sk3l3ton Cr3w are back with a full length show all about that holiday of holidays, Xmas! Most likely?
-</p>
-<p>You see, The Sk3l3ton Cr3w is a sketch comedy outfit that uses rough outlines that are then improvised around to create hastily rehearsed scenes in short order. We never quite know what we're going to get, and this show will be no exception!
-</p>
-<p>The Sk3l3ton Cr3w is Ed Carden, Matt Cole, Brian Garraty, Rafael Henriquez, Angel Sanchez, Sandy Carden, and Erin Lindstrom, plus sometimes Kerry Kruk, Heather Paine, Adam Paine, and James Roach. This show will also feature special guests Andy Poindexter, Brad McMurran, and possibly more! Get ready for some high quality, low effort comedy that get your holiday bells a'jangling! Bones down!
-</p>
-<p>A Sk3l3ton Cr3w Xmas: Bones Down the Chimney
-</p>
-<p>Friday, December 15th at 10pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-16 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-16 04:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49c661b5-90ae-4e94-bff5-8ad26b7b26a6"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert cr3w
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "cr3w"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert bones
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "bones"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert down
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "down"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert sk3l3ton
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "sk3l3ton"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for A Sk3l3ton Cr3w Xmas: Bones Down the Chimney!",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for A Sk3l3ton Cr3w Xmas: Bones Down the Chimney!",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-06T21:24:55.971Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for A Sk3l3ton Cr3w Xmas: Bones Down the Chimney!",
-        status: "available",
-        description: "Ticket for A Sk3l3ton Cr3w Xmas: Bones Down the Chimney!",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-06T21:24:55.971Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event A Sk3l3ton Cr3w Xmas: Bones Down the Chimney! ==========="
-Logger.info "=========== BEGIN Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
-
-Logger.info "=========== Writing Event The Improv Riot: The Short Form Improv Show ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "2RX0SD",
-    title: "The Improv Riot: The Short Form Improv Show",
-    description: """
-    <p>Get ready for short form (Whose Line is it Anyway?) improv at the Push Comedy Theater.
-</p>
-<p>You demanded it! So now it's here!!! Our very own short form improv show. All the fun of Whose Line is it Anyway... right here in Downtown Norfolk.
-</p>
-<p><strong>The Improv Riot: The Short Form Improv Show</strong>
-</p>
-<p>Friday, December 29th, 8pm
-</p>
-<p>Tickets are $5
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the parking lot directly across from the theater.
-</p>
-<p>---<br>
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing The Improv Riot: The Short Form Improv Show ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "2RX0SD",
-    title: "The Improv Riot: The Short Form Improv Show",
-    description: """
-    <p>Get ready for short form (Whose Line is it Anyway?) improv at the Push Comedy Theater.
-</p>
-<p>You demanded it! So now it's here!!! Our very own short form improv show. All the fun of Whose Line is it Anyway... right here in Downtown Norfolk.
-</p>
-<p><strong>The Improv Riot: The Short Form Improv Show</strong>
-</p>
-<p>Friday, December 29th, 8pm
-</p>
-<p>Tickets are $5
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the parking lot directly across from the theater.
-</p>
-<p>---<br>
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-30 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-30 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bdd1ac16-4eaa-4a83-87eb-eb7d4aadbd35"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for The Improv Riot: The Short Form Improv Show",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for The Improv Riot: The Short Form Improv Show",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-11T22:41:16.542Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for The Improv Riot: The Short Form Improv Show",
-        status: "available",
-        description: "Ticket for The Improv Riot: The Short Form Improv Show",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-11T22:41:16.542Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
-Logger.info "=========== BEGIN Processing Universe Event Couples Therapy ==========="
-
-Logger.info "=========== Writing Event Couples Therapy ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "41PNX5",
-    title: "Couples Therapy",
-    description: """
-    <p>You think your relationship has problems?!?
-</p>
-<p>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, Sean and Heather take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
-</p>
-<p>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
-</p>
-<p>Two Improvisers... One Scene!!!
-</p>
-<p>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
-</p>
-<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, December 30th at 8pm<br>Tickets are $5
-</p>
-<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p><br>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Couples Therapy ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "41PNX5",
-    title: "Couples Therapy",
-    description: """
-    <p>You think your relationship has problems?!?
-</p>
-<p>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, Sean and Heather take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
-</p>
-<p>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
-</p>
-<p>Two Improvisers... One Scene!!!
-</p>
-<p>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
-</p>
-<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, December 30th at 8pm<br>Tickets are $5
-</p>
-<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p><br>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-31 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-31 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/496fbc13-a69a-41cb-82ca-5d4cbcc3e5a2"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert couple
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "couple"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert therapy
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "therapy"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert couples
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "couples"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Couples Therapy",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Couples Therapy",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-11T23:23:59.245Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Couples Therapy",
-        status: "available",
-        description: "Ticket for Couples Therapy",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-11T23:23:59.245Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Couples Therapy ==========="
-Logger.info "=========== BEGIN Processing Universe Event Girl-Prov: The Girls' Night of Improv ==========="
-
-Logger.info "=========== Writing Event Girl-Prov: The Girls' Night of Improv ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "YSNCMW",
-    title: "Girl-Prov: The Girls' Night of Improv",
-    description: """
-    <p><strong></strong><strong>GET READY FOR GIRL'S NIGHT!</strong>
-</p>
-<p>Move over, gentleman! <br>The ladies are taking over for a girls' night!
-</p>
-<p>GirlProv is an all-female improv show, making audiences lose it with laughter at the Push Comedy Theater.
-</p>
-<p>It's slumber party meets night out on the town meet sorority house party!
-</p>
-<p>Don't miss this night of comedy- all made up on the spot from the audience's suggestion!
-</p>
-<p><strong>Girl-Prov: The Girls' Night of Improv</strong><br>Friday, December 8th at the Push Comedy Theater<br>The show starts at 8, tickets are $5
-</p>
-<p>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="http://pushcomedytheater.com/" rel="nofollow" target="_blank">pushcomedytheater.com</a>
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. This fall they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Girl-Prov: The Girls' Night of Improv ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "YSNCMW",
-    title: "Girl-Prov: The Girls' Night of Improv",
-    description: """
-    <p><strong></strong><strong>GET READY FOR GIRL'S NIGHT!</strong>
-</p>
-<p>Move over, gentleman! <br>The ladies are taking over for a girls' night!
-</p>
-<p>GirlProv is an all-female improv show, making audiences lose it with laughter at the Push Comedy Theater.
-</p>
-<p>It's slumber party meets night out on the town meet sorority house party!
-</p>
-<p>Don't miss this night of comedy- all made up on the spot from the audience's suggestion!
-</p>
-<p><strong>Girl-Prov: The Girls' Night of Improv</strong><br>Friday, December 8th at the Push Comedy Theater<br>The show starts at 8, tickets are $5
-</p>
-<p>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="http://pushcomedytheater.com/" rel="nofollow" target="_blank">pushcomedytheater.com</a>
-</p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. This fall they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-09 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-09 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/2818bca8-8162-47b8-999f-625527ad42d0"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert girl-prov
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "girl-prov"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert sketch
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "sketch"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Girl-Prov: The Girls' Night of Improv",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Girl-Prov: The Girls' Night of Improv",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-10-15T16:43:07.317Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Girl-Prov: The Girls' Night of Improv",
-        status: "available",
-        description: "Ticket for Girl-Prov: The Girls' Night of Improv",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-10-15T16:43:07.317Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Girl-Prov: The Girls' Night of Improv ==========="
-Logger.info "=========== BEGIN Processing Universe Event The Pushers ==========="
-
-Logger.info "=========== Writing Event The Pushers ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "NX0L7B",
-    title: "The Pushers",
-    description: """
-    <p>Get ready for a night of improv with The Pushers.
-</p>
-<p>Brad, Sean, Alba, Ed and Adam are back.  Don't miss Hampton Roads' kings (and queen) of comedy.  You give them the suggestions, they do the rest.
-</p>
-<p>This show is guaranteed to be full of surprises as well as an unexpected guest or two.  ...And it's only 5 bucks.
-</p>
-<p>A Night of Improv with The Pushers
-</p>
-<p>Friday, December 22nd
-</p>
-<p>The show starts at 8, tickets are $5.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing The Pushers ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "NX0L7B",
-    title: "The Pushers",
-    description: """
-    <p>Get ready for a night of improv with The Pushers.
-</p>
-<p>Brad, Sean, Alba, Ed and Adam are back.  Don't miss Hampton Roads' kings (and queen) of comedy.  You give them the suggestions, they do the rest.
-</p>
-<p>This show is guaranteed to be full of surprises as well as an unexpected guest or two.  ...And it's only 5 bucks.
-</p>
-<p>A Night of Improv with The Pushers
-</p>
-<p>Friday, December 22nd
-</p>
-<p>The show starts at 8, tickets are $5.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-23 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-23 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/f998df29-5355-4468-8ea0-88a40836ee13"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for The Pushers",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for The Pushers",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-21T02:57:14.610Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for The Pushers",
-        status: "available",
-        description: "Ticket for The Pushers",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-21T02:57:14.610Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event The Pushers ==========="
 Logger.info "=========== BEGIN Processing Universe Event Date Night ==========="
 
 Logger.info "=========== Writing Event Date Night ==========="
@@ -1626,161 +354,6 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event Date Night ==========="
-Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Musical Improv Studio Grad Show ==========="
-
-Logger.info "=========== Writing Event Class Dismissed: The Musical Improv Studio Grad Show ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "BMJSTQ",
-    title: "Class Dismissed: The Musical Improv Studio Grad Show",
-    description: """
-    <p>Check out the Musical Improv Studio Class in their graduation show!
-</p>
-<p>They will be mixing some "Whose Line" style musical improv, as well as creating a full musical piece off of a single audience suggestion!
-</p>
-<p>These are the upper classmen of Musical Improv, and they are ready to show off their melodic and masterful skills!
-</p>
-<p>Come out and see what happens when Music and Improv collide!!!
-</p>
-<p>Class Dismissed: The Musical Improv Studio Grad Show
-</p>
-<p>Sunday, December 10th at 2pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Class Dismissed: The Musical Improv Studio Grad Show ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "BMJSTQ",
-    title: "Class Dismissed: The Musical Improv Studio Grad Show",
-    description: """
-    <p>Check out the Musical Improv Studio Class in their graduation show!
-</p>
-<p>They will be mixing some "Whose Line" style musical improv, as well as creating a full musical piece off of a single audience suggestion!
-</p>
-<p>These are the upper classmen of Musical Improv, and they are ready to show off their melodic and masterful skills!
-</p>
-<p>Come out and see what happens when Music and Improv collide!!!
-</p>
-<p>Class Dismissed: The Musical Improv Studio Grad Show
-</p>
-<p>Sunday, December 10th at 2pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-10 19:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-10 20:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b04b05c0-95bd-401c-b55a-87812d9ab7cd"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert graduation
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "graduation"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert students
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "students"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert musical
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "musical"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Class Dismissed: The Musical Improv Studio Grad Show",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Class Dismissed: The Musical Improv Studio Grad Show",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-06T17:59:21.451Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Class Dismissed: The Musical Improv Studio Grad Show",
-        status: "available",
-        description: "Ticket for Class Dismissed: The Musical Improv Studio Grad Show",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-06T17:59:21.451Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Class Dismissed: The Musical Improv Studio Grad Show ==========="
 Logger.info "=========== BEGIN Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
 
 Logger.info "=========== Writing Event The Improv Riot: The Short Form Improv Show ==========="
@@ -1952,6 +525,145 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
+Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Musical Improv 201 Graduation Show ==========="
+
+Logger.info "=========== Writing Event Class Dismissed: The Musical Improv 201 Graduation Show ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "GCJS74",
+    title: "Class Dismissed: The Musical Improv 201 Graduation Show",
+    description: """
+    <p>Check out the Musical Improv 201 Class as they create 2 full length musicals right before your very eyes!
+</p>
+<p>These melodic and masterful improvisers have been honing their skills for 6 weeks in the arts of song, rap, and even dance! So come out and see what happens when Music and Improv collide!!!
+</p>
+<p>Class Dismissed: The Musical Improv 201 Graduation Show
+</p>
+<p>Sunday, January 14th at 4pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Class Dismissed: The Musical Improv 201 Graduation Show ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "GCJS74",
+    title: "Class Dismissed: The Musical Improv 201 Graduation Show",
+    description: """
+    <p>Check out the Musical Improv 201 Class as they create 2 full length musicals right before your very eyes!
+</p>
+<p>These melodic and masterful improvisers have been honing their skills for 6 weeks in the arts of song, rap, and even dance! So come out and see what happens when Music and Improv collide!!!
+</p>
+<p>Class Dismissed: The Musical Improv 201 Graduation Show
+</p>
+<p>Sunday, January 14th at 4pm
+</p>
+<p>Tickets are $5
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-14 21:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-14 22:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/b04b05c0-95bd-401c-b55a-87812d9ab7cd"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert graduation
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "graduation"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert students
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "students"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+order = SeedHelpers.create_order(
+  %{
+    user_id: user.id, 
+    credit_card_id: card.id,
+    slug: Random.generate_slug(),
+    status: "completed", 
+    subtotal: 5000,
+    credit_card_fee: 500,
+    processing_fee: 500,
+    total_price: 6000,
+    completed_at: NaiveDateTime.utc_now()
+  }
+)
+
+Enum.each(1..80, fn(x) ->
+  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      name = FakerElixir.Name.name()
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Class Dismissed: The Musical Improv 201 Graduation Show",
+        status: TicketAgent.Random.sample(["purchased", "emailed"]),
+        guest_name: FakerElixir.Name.name(),
+        guest_email: FakerElixir.Internet.email(:popular, name),
+        order_id: order.id,
+        description: "Ticket for Class Dismissed: The Musical Improv 201 Graduation Show",
+        price: 500,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-22T19:12:24.370Z")
+      }   
+    false -> 
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Class Dismissed: The Musical Improv 201 Graduation Show",
+        status: "available",
+        description: "Ticket for Class Dismissed: The Musical Improv 201 Graduation Show",
+        price: 500,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-22T19:12:24.370Z")
+      }
+  end
+  TicketAgent.Repo.insert!(ticket)
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Class Dismissed: The Musical Improv 201 Graduation Show ==========="
 Logger.info "=========== BEGIN Processing Universe Event Who Dunnit? ...The Improvised Murder Mystery (January) ==========="
 
 Logger.info "=========== Writing Event Who Dunnit? ...The Improvised Murder Mystery (January) ==========="
@@ -2258,296 +970,6 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event Second Saturday Stand-Up ==========="
-Logger.info "=========== BEGIN Processing Universe Event Tell Me More Storytelling ==========="
-
-Logger.info "=========== Writing Event Tell Me More Storytelling ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "SJ0VF4",
-    title: "Tell Me More Storytelling",
-    description: """
-    <p>Suggested theme: Destiny <br><br>Join us 7 p.m. Dec. 17 at the Push Comedy Theater for a night of stories. This month the theme is "destiny." Storytellers to be announced. Admission: $5.<br><br>Want to tell a story? Visit <a href="https://l.facebook.com/l.php?u=http%3A%2F%2Fwww.tellmemorelive.org%2Fpitch&amp;h=ATM8uKh5nwl4N69YVVQcgfhmXbyIqJ9-qdiBHnVpduAeOmAjz3xD871ArFwkw934424WfZ2a4g84y1k1rZTVTRk499fyK0bjmtQOw4hRuThkTGhdX9FJlvZ4v4P1cWdEveFskkNFp46qZ0HUqo-qJPjCWg&amp;enc=AZMUEFm0cXrM5DbqWWyXul5gE-gMcpnAn1uNpQoCtjY2_BLzEOg5v4uJpUbtQ5cegoY&amp;s=1" rel="nofollow" target="_blank">www.tellmemorelive.org/<wbr>pitch</wbr></a>. Call (757) 785-5590. Or email submit@tellmemorelive.org.<br><br>Time: 7 p.m.<br>Date: Sunday, December 17th, 2017<br>Location: Push Comedy Theater, 763 Granby Street, Norfolk<br>Admission: $5
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Tell Me More Storytelling ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "SJ0VF4",
-    title: "Tell Me More Storytelling",
-    description: """
-    <p>Suggested theme: Destiny <br><br>Join us 7 p.m. Dec. 17 at the Push Comedy Theater for a night of stories. This month the theme is "destiny." Storytellers to be announced. Admission: $5.<br><br>Want to tell a story? Visit <a href="https://l.facebook.com/l.php?u=http%3A%2F%2Fwww.tellmemorelive.org%2Fpitch&amp;h=ATM8uKh5nwl4N69YVVQcgfhmXbyIqJ9-qdiBHnVpduAeOmAjz3xD871ArFwkw934424WfZ2a4g84y1k1rZTVTRk499fyK0bjmtQOw4hRuThkTGhdX9FJlvZ4v4P1cWdEveFskkNFp46qZ0HUqo-qJPjCWg&amp;enc=AZMUEFm0cXrM5DbqWWyXul5gE-gMcpnAn1uNpQoCtjY2_BLzEOg5v4uJpUbtQ5cegoY&amp;s=1" rel="nofollow" target="_blank">www.tellmemorelive.org/<wbr>pitch</wbr></a>. Call (757) 785-5590. Or email submit@tellmemorelive.org.<br><br>Time: 7 p.m.<br>Date: Sunday, December 17th, 2017<br>Location: Push Comedy Theater, 763 Granby Street, Norfolk<br>Admission: $5
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-18 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-18 01:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/1305be23-540f-4426-8833-a6afc75cf3a8"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert tell-me-more
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "tell-me-more"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert storytelling
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "storytelling"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Tell Me More Storytelling",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Tell Me More Storytelling",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-06T20:57:07.090Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Tell Me More Storytelling",
-        status: "available",
-        description: "Ticket for Tell Me More Storytelling",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-06T20:57:07.090Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Tell Me More Storytelling ==========="
-Logger.info "=========== BEGIN Processing Universe Event Musical Improv with Double Treble ==========="
-
-Logger.info "=========== Writing Event Musical Improv with Double Treble ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "36KJG2",
-    title: "Musical Improv with Double Treble",
-    description: """
-    <p>Double Treble is back for more musical improv fun!<br>
-</p>
-<p>Get ready for the musical stylings of Hampton Roads' new Musical Improv Duo: Double Treble!!!
-</p>
-<p>You read right: MUSICAL IMPROV!
-</p>
-<p>Sit back in amazement as Kate Baldwin and Alba Woolard dazzle you as they create 2 completely improvised musicals before your very eyes!
-</p>
-<p>The duo are joined by the amazing and talented Andy Poindexter on the keyboard! Don't miss this spectacular event!
-</p>
-<p>Double Treble: 2 Women, 2 Musicals, All Improv
-</p>
-<p>Saturday, December 16th at 8pm
-</p>
-<p>Tickets are $5
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Musical Improv with Double Treble ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "36KJG2",
-    title: "Musical Improv with Double Treble",
-    description: """
-    <p>Double Treble is back for more musical improv fun!<br>
-</p>
-<p>Get ready for the musical stylings of Hampton Roads' new Musical Improv Duo: Double Treble!!!
-</p>
-<p>You read right: MUSICAL IMPROV!
-</p>
-<p>Sit back in amazement as Kate Baldwin and Alba Woolard dazzle you as they create 2 completely improvised musicals before your very eyes!
-</p>
-<p>The duo are joined by the amazing and talented Andy Poindexter on the keyboard! Don't miss this spectacular event!
-</p>
-<p>Double Treble: 2 Women, 2 Musicals, All Improv
-</p>
-<p>Saturday, December 16th at 8pm
-</p>
-<p>Tickets are $5
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-17 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-17 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/27884f84-c5fe-414b-ad7c-2ed7b10519e8"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert music
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "music"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert musical
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "musical"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Musical Improv with Double Treble",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Musical Improv with Double Treble",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T21:16:40.138Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Musical Improv with Double Treble",
-        status: "available",
-        description: "Ticket for Musical Improv with Double Treble",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-22T21:16:40.138Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Musical Improv with Double Treble ==========="
 Logger.info "=========== BEGIN Processing Universe Event The Pre Madonnas Present: All Groan Up ==========="
 
 Logger.info "=========== Writing Event The Pre Madonnas Present: All Groan Up ==========="
@@ -2635,14 +1057,6 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
 # Insert pre-maddonas
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
@@ -2679,7 +1093,7 @@ Enum.each(1..80, fn(x) ->
         guest_email: FakerElixir.Internet.email(:popular, name),
         order_id: order.id,
         description: "Ticket for The Pre Madonnas Present: All Groan Up",
-        price: 500,
+        price: 1000,
         sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T19:58:15.164Z")
       }   
     false -> 
@@ -2689,7 +1103,7 @@ Enum.each(1..80, fn(x) ->
         name: "Ticket for The Pre Madonnas Present: All Groan Up",
         status: "available",
         description: "Ticket for The Pre Madonnas Present: All Groan Up",
-        price: 500,
+        price: 1000,
         sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T19:58:15.164Z")
       }
   end
@@ -2699,39 +1113,45 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event The Pre Madonnas Present: All Groan Up ==========="
-Logger.info "=========== BEGIN Processing Universe Event Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== BEGIN Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 
-Logger.info "=========== Writing Event Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== Writing Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "9DJKZ4",
-    title: "Monocle: Style Glamour Sophistication Comedy",
+    slug: "N0VHXG",
+    title: "SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
     description: """
-    <p><strong>Monocle</strong>
+    <p><strong>Don't miss this epic sketch comedy showdown, where truly anything can happen.</strong><br>
 </p>
-<p><strong>Style. Glamour. Sophistication. Comedy.</strong>
+<p>And we do mean anything!!!  Sometimes it's funny, sometimes it's weird, it's always entertaining.
 </p>
-<p>With a single one word suggestion, this team of elegant improvisers will fill each act with a single 25 minute long scene of profound characters under spectacular circumstances. All made up on the spot before your very eyes!
+<p>SKETCHMAGEDDON
 </p>
 <p><br>
 </p>
-<p><strong>Monocle</strong>
+<p>--
 </p>
-<p><strong>Saturday, December 2nd at the Push Comedy Theater</strong>
+<p>Get ready for a sketch comedy show like no other!!!
 </p>
-<p>The show starts at 10pm, tickets are $5
+<p><strong>SKETCHMAGEDDON</strong> takes three groups and forces them to compete in an all-out comedy deathmatch!
+</p>
+<p>Each team will be given 15 minutes to dazzle you with their comedy prowess. It's Saturday Night Live meets Thunderdome!!!!
+</p>
+<p>Unlike its improvised sister show IMPROVAGEDDON, SKETCHMAGEDDON features all written and rehearsed material.  Props, costumes, and special effects are all legal in SKETCHMAGEDDON.
+</p>
+<p>This is a completely experimental show.  You never know what you are going to see.
+</p>
+<p><strong>SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition</strong>
+</p>
+<p>Friday, January 5th at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p>------------
 </p>
 <p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
     """,
     status: "normal",
@@ -2740,45 +1160,51 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== Writing Event Listing SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "9DJKZ4",
-    title: "Monocle: Style Glamour Sophistication Comedy",
+    slug: "N0VHXG",
+    title: "SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
     description: """
-    <p><strong>Monocle</strong>
+    <p><strong>Don't miss this epic sketch comedy showdown, where truly anything can happen.</strong><br>
 </p>
-<p><strong>Style. Glamour. Sophistication. Comedy.</strong>
+<p>And we do mean anything!!!  Sometimes it's funny, sometimes it's weird, it's always entertaining.
 </p>
-<p>With a single one word suggestion, this team of elegant improvisers will fill each act with a single 25 minute long scene of profound characters under spectacular circumstances. All made up on the spot before your very eyes!
+<p>SKETCHMAGEDDON
 </p>
 <p><br>
 </p>
-<p><strong>Monocle</strong>
+<p>--
 </p>
-<p><strong>Saturday, December 2nd at the Push Comedy Theater</strong>
+<p>Get ready for a sketch comedy show like no other!!!
 </p>
-<p>The show starts at 10pm, tickets are $5
+<p><strong>SKETCHMAGEDDON</strong> takes three groups and forces them to compete in an all-out comedy deathmatch!
+</p>
+<p>Each team will be given 15 minutes to dazzle you with their comedy prowess. It's Saturday Night Live meets Thunderdome!!!!
+</p>
+<p>Unlike its improvised sister show IMPROVAGEDDON, SKETCHMAGEDDON features all written and rehearsed material.  Props, costumes, and special effects are all legal in SKETCHMAGEDDON.
+</p>
+<p>This is a completely experimental show.  You never know what you are going to see.
+</p>
+<p><strong>SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition</strong>
+</p>
+<p>Friday, January 5th at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p>------------
 </p>
 <p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-03 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-03 04:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-06 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -2786,7 +1212,7 @@ Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
 Logger.info "=========== Writing cover photo for #{listing.id} ==========="
 SeedHelpers.create_image(%{
   listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6d12e202-9751-4905-b307-1f75327c98bf"
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/83a0c1e9-fd2e-4b82-9e5b-a1edaf6416c9"
 })
 Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
@@ -2803,6 +1229,22 @@ Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   listing_id: listing.id,
   tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketch
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "sketch"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketchmageddon
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "sketchmageddon"
 })
 Logger.info "=========== Wrote tag ==========="
 
@@ -2828,24 +1270,24 @@ Enum.each(1..80, fn(x) ->
       %TicketAgent.Ticket{
         listing_id: listing.id,
         slug: Random.generate_slug(),
-        name: "Ticket for Monocle: Style Glamour Sophistication Comedy",
+        name: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
         status: TicketAgent.Random.sample(["purchased", "emailed"]),
         guest_name: FakerElixir.Name.name(),
         guest_email: FakerElixir.Internet.email(:popular, name),
         order_id: order.id,
-        description: "Ticket for Monocle: Style Glamour Sophistication Comedy",
+        description: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
         price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-21T20:48:10.090Z")
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T23:17:47.622Z")
       }   
     false -> 
       %TicketAgent.Ticket{
         listing_id: listing.id,
         slug: Random.generate_slug(),
-        name: "Ticket for Monocle: Style Glamour Sophistication Comedy",
+        name: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
         status: "available",
-        description: "Ticket for Monocle: Style Glamour Sophistication Comedy",
+        description: "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
         price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-21T20:48:10.090Z")
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T23:17:47.622Z")
       }
   end
   TicketAgent.Repo.insert!(ticket)
@@ -2853,171 +1295,28 @@ Enum.each(1..80, fn(x) ->
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
-Logger.info "=========== END Processing Universe Event Monocle: Style Glamour Sophistication Comedy ==========="
-Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
-
-Logger.info "=========== Writing Event Tales from the Campfire: The Improvised Ghost Story ==========="
-event = SeedHelpers.create_event(
-  %{
-    slug: "VNL8CP",
-    title: "Tales from the Campfire: The Improvised Ghost Story",
-    description: """
-    <p>I ain't afraid of no ghost!<br>
-</p>
-<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
-</p>
-<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
-</p>
-<p><strong><br></strong>
-</p>
-<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
-</p>
-<p><br>
-</p>
-<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
-</p>
-<p>Saturday, December 2nd at 8pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "normal",
-    account_id: account.id,
-    user_id: user.id
-  }
-)
-Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Tales from the Campfire: The Improvised Ghost Story ==========="
-listing = SeedHelpers.create_listing(
-  %{
-    user_id: user.id,
-    event_id: event.id,
-    class_id: nil,
-    slug: "VNL8CP",
-    title: "Tales from the Campfire: The Improvised Ghost Story",
-    description: """
-    <p>I ain't afraid of no ghost!<br>
-</p>
-<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
-</p>
-<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
-</p>
-<p><strong><br></strong>
-</p>
-<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
-</p>
-<p><br>
-</p>
-<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
-</p>
-<p>Saturday, December 2nd at 8pm
-</p>
-<p>Tickets are $5
-</p>
-    """,
-    status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-03 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-03 02:30:00Z")
-  }
-)
-Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
-
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
-
-# Insert show
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "show"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert deal
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "deal"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert ghost
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "ghost"
-})
-Logger.info "=========== Wrote tag ==========="
-
-Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
-
-Enum.each(1..80, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-20T23:31:41.338Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
-        status: "available",
-        description: "Ticket for Tales from the Campfire: The Improvised Ghost Story",
-        price: 500,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-20T23:31:41.338Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
-
-Logger.info "=========== END Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
+Logger.info "=========== END Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 Logger.info "=========== BEGIN Processing Universe Event Good Talk: The Brad McMurran Show ==========="
 
 Logger.info "=========== Writing Event Good Talk: The Brad McMurran Show ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "JXTVZ0",
+    slug: "JN8VR3",
     title: "Good Talk: The Brad McMurran Show",
     description: """
     <p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
 </p>
-<p style="text-align: center;"><br>
+<p style="text-align: center;">New Years Resolutions and Regrets
+</p>
+<p style="text-align: center;">This month's show is all about growth, regret, change, remorse, reinvention, and most importantly, New Years Resolutions... or at least attempts at those things.
+</p>
+<p style="text-align: center;">Brad has made repeated efforts to change into a new man, and year after year, he finds himself meeting regret with a commitment to self-evolution. And year after year, it's a wild ride!
 </p>
 <p style="text-align: center;"><strong>Good Talk: The Brad McMurran Show</strong>
 </p>
-<p style="text-align: center;">Christmas Talks
+<p style="text-align: center;">New Years Resolutions and Regrets
 </p>
-<p style="text-align: center;">Sunday, December 3rd at 7pm
+<p style="text-align: center;">Sunday, January 7th at 7pm
 </p>
 <p style="text-align: center;">Tickets are $12
 </p>
@@ -3030,8 +1329,6 @@ event = SeedHelpers.create_event(
 <p style="text-align: center;">The show is going to be an unpredictable, wild and borderline-insane ride... just like Brad's life.
 </p>
 <p style="text-align: center;">Upcoming episodes of Good Talk: The Brad McMurran Show will include -
-</p>
-<p style="text-align: center;">New Years Resolutions<br>
 </p>
 <p style="text-align: center;">Crazy for Love
 </p>
@@ -3058,18 +1355,22 @@ listing = SeedHelpers.create_listing(
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "JXTVZ0",
+    slug: "JN8VR3",
     title: "Good Talk: The Brad McMurran Show",
     description: """
     <p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
 </p>
-<p style="text-align: center;"><br>
+<p style="text-align: center;">New Years Resolutions and Regrets
+</p>
+<p style="text-align: center;">This month's show is all about growth, regret, change, remorse, reinvention, and most importantly, New Years Resolutions... or at least attempts at those things.
+</p>
+<p style="text-align: center;">Brad has made repeated efforts to change into a new man, and year after year, he finds himself meeting regret with a commitment to self-evolution. And year after year, it's a wild ride!
 </p>
 <p style="text-align: center;"><strong>Good Talk: The Brad McMurran Show</strong>
 </p>
-<p style="text-align: center;">Christmas Talks
+<p style="text-align: center;">New Years Resolutions and Regrets
 </p>
-<p style="text-align: center;">Sunday, December 3rd at 7pm
+<p style="text-align: center;">Sunday, January 7th at 7pm
 </p>
 <p style="text-align: center;">Tickets are $12
 </p>
@@ -3082,8 +1383,6 @@ listing = SeedHelpers.create_listing(
 <p style="text-align: center;">The show is going to be an unpredictable, wild and borderline-insane ride... just like Brad's life.
 </p>
 <p style="text-align: center;">Upcoming episodes of Good Talk: The Brad McMurran Show will include -
-</p>
-<p style="text-align: center;">New Years Resolutions<br>
 </p>
 <p style="text-align: center;">Crazy for Love
 </p>
@@ -3099,8 +1398,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-12-04 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-12-04 02:00:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-08 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-08 01:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -3128,6 +1427,14 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
+# Insert resolutions
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "resolutions"
+})
+Logger.info "=========== Wrote tag ==========="
+
 Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
 order = SeedHelpers.create_order(
   %{
@@ -3157,7 +1464,7 @@ Enum.each(1..80, fn(x) ->
         order_id: order.id,
         description: "Ticket for Good Talk: The Brad McMurran Show",
         price: 1200,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-06T01:15:59.748Z")
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-05T23:12:14.017Z")
       }   
     false -> 
       %TicketAgent.Ticket{
@@ -3167,7 +1474,7 @@ Enum.each(1..80, fn(x) ->
         status: "available",
         description: "Ticket for Good Talk: The Brad McMurran Show",
         price: 1200,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-06T01:15:59.748Z")
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-05T23:12:14.017Z")
       }
   end
   TicketAgent.Repo.insert!(ticket)
@@ -3176,3 +1483,349 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event Good Talk: The Brad McMurran Show ==========="
+Logger.info "=========== BEGIN Processing Universe Event Girl-Prov Presents: Here Kitty Kitty! ==========="
+
+Logger.info "=========== Writing Event Girl-Prov Presents: Here Kitty Kitty! ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "QVC5G6",
+    title: "Girl-Prov Presents: Here Kitty Kitty!",
+    description: """
+    <p><strong></strong><strong>GET READY FOR GIRL'S NIGHT!</strong>
+</p>
+<p>Move over, gentleman! <br>The ladies are taking over for a girls' night!
+</p>
+<p>GirlProv is an all-female improv show, making audiences lose it with laughter at the Push Comedy Theater.
+</p>
+<p>It's slumber party meets night out on the town meet sorority house party!
+</p>
+<p>Don't miss this night of comedy- all made up on the spot from the audience's suggestion!
+</p>
+<p><strong>Girl-Prov: The Girls' Night of Improv</strong><br>Friday, January 12th at the Push Comedy Theater<br>The show starts at 8, tickets are $5
+</p>
+<p>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="http://pushcomedytheater.com/" rel="nofollow" target="_blank">pushcomedytheater.com</a>
+</p>
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
+</p>
+<p>---
+</p>
+<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. This fall they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
+</p>
+<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
+</p>
+<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
+</p>
+<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Girl-Prov Presents: Here Kitty Kitty! ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "QVC5G6",
+    title: "Girl-Prov Presents: Here Kitty Kitty!",
+    description: """
+    <p><strong></strong><strong>GET READY FOR GIRL'S NIGHT!</strong>
+</p>
+<p>Move over, gentleman! <br>The ladies are taking over for a girls' night!
+</p>
+<p>GirlProv is an all-female improv show, making audiences lose it with laughter at the Push Comedy Theater.
+</p>
+<p>It's slumber party meets night out on the town meet sorority house party!
+</p>
+<p>Don't miss this night of comedy- all made up on the spot from the audience's suggestion!
+</p>
+<p><strong>Girl-Prov: The Girls' Night of Improv</strong><br>Friday, January 12th at the Push Comedy Theater<br>The show starts at 8, tickets are $5
+</p>
+<p>Push Comedy Theater<br>763 Granby Street <br>Norfolk, VA<br>757-333-7442<br><a href="http://pushcomedytheater.com/" rel="nofollow" target="_blank">pushcomedytheater.com</a>
+</p>
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the lot directly behind the theater.
+</p>
+<p>---
+</p>
+<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. This fall they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
+</p>
+<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
+</p>
+<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
+</p>
+<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-13 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-13 02:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/2818bca8-8162-47b8-999f-625527ad42d0"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert girl-prov
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "girl-prov"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketch
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "sketch"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+order = SeedHelpers.create_order(
+  %{
+    user_id: user.id, 
+    credit_card_id: card.id,
+    slug: Random.generate_slug(),
+    status: "completed", 
+    subtotal: 5000,
+    credit_card_fee: 500,
+    processing_fee: 500,
+    total_price: 6000,
+    completed_at: NaiveDateTime.utc_now()
+  }
+)
+
+Enum.each(1..80, fn(x) ->
+  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      name = FakerElixir.Name.name()
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Girl-Prov Presents: Here Kitty Kitty!",
+        status: TicketAgent.Random.sample(["purchased", "emailed"]),
+        guest_name: FakerElixir.Name.name(),
+        guest_email: FakerElixir.Internet.email(:popular, name),
+        order_id: order.id,
+        description: "Ticket for Girl-Prov Presents: Here Kitty Kitty!",
+        price: 500,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T23:47:35.710Z")
+      }   
+    false -> 
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Girl-Prov Presents: Here Kitty Kitty!",
+        status: "available",
+        description: "Ticket for Girl-Prov Presents: Here Kitty Kitty!",
+        price: 500,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-12-28T23:47:35.710Z")
+      }
+  end
+  TicketAgent.Repo.insert!(ticket)
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Girl-Prov Presents: Here Kitty Kitty! ==========="
+Logger.info "=========== BEGIN Processing Universe Event Harold Night ==========="
+
+Logger.info "=========== Writing Event Harold Night ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "RPB6JG",
+    title: "Harold Night",
+    description: """
+    <p>It's Harold Night at the Push Comedy Theater!
+</p>
+<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+</p>
+<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+</p>
+<p>Harold Night
+</p>
+<p>Friday, November 24th at 10:00pm
+</p>
+<p>Tickets are $5
+</p>
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Harold Night ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "RPB6JG",
+    title: "Harold Night",
+    description: """
+    <p>It's Harold Night at the Push Comedy Theater!
+</p>
+<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+</p>
+<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+</p>
+<p>Harold Night
+</p>
+<p>Friday, November 24th at 10:00pm
+</p>
+<p>Tickets are $5
+</p>
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-25 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-11-25 04:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert deal
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "deal"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert harold
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "harold"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+order = SeedHelpers.create_order(
+  %{
+    user_id: user.id, 
+    credit_card_id: card.id,
+    slug: Random.generate_slug(),
+    status: "completed", 
+    subtotal: 5000,
+    credit_card_fee: 500,
+    processing_fee: 500,
+    total_price: 6000,
+    completed_at: NaiveDateTime.utc_now()
+  }
+)
+
+Enum.each(1..80, fn(x) ->
+  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      name = FakerElixir.Name.name()
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Harold Night",
+        status: TicketAgent.Random.sample(["purchased", "emailed"]),
+        guest_name: FakerElixir.Name.name(),
+        guest_email: FakerElixir.Internet.email(:popular, name),
+        order_id: order.id,
+        description: "Ticket for Harold Night",
+        price: 500,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-11-20T23:37:53.219Z")
+      }   
+    false -> 
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Harold Night",
+        status: "available",
+        description: "Ticket for Harold Night",
+        price: 500,
+        sale_start:  NaiveDateTime.from_iso8601!("2017-11-20T23:37:53.219Z")
+      }
+  end
+  TicketAgent.Repo.insert!(ticket)
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Harold Night ==========="
