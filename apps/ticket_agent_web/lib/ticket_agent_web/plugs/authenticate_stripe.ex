@@ -128,15 +128,9 @@ defmodule TicketAgentWeb.AuthenticateStripe do
     |> Stripe.Converter.convert_result()
   end
 
-
-
-
-
-
-
-
-
-
+  def convert_result(json) do
+    
+  end
 
   defp compute_signature(payload, secret) do
     :crypto.hmac(:sha256, secret, payload)

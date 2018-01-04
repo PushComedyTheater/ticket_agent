@@ -25,7 +25,6 @@
               <%= render "shows.html", assigns %>
               <%= render "classes.html", assigns %>
               <%= render "workshops.html", assigns %>
-              <%= render "camps.html", assigns %>
               <%= render "about.html", assigns %>
 
               <%= if Coherence.logged_in?(@conn) do %>
