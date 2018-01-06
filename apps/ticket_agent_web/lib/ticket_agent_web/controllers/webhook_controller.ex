@@ -28,7 +28,7 @@ defmodule TicketAgentWeb.WebhookController do
     |> render("create.json", %{})
   end
 
-  def create(conn, params) do
+  def create(conn, _params) do
    conn
     |> put_status(200)
     |> render("create.json", %{})

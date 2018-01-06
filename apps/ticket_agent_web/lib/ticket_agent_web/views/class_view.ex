@@ -3,7 +3,7 @@ defmodule TicketAgentWeb.ClassView do
   alias TicketAgent.{Class, Listing, Repo}
   import Ecto.Query
 
-  def classes_by_type(conn, type) do
+  def classes_by_type(type) do
     query = from c in Class,
             where: c.type == ^type,
             order_by: c.menu_order,

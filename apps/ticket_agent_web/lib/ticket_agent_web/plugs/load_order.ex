@@ -1,6 +1,5 @@
 defmodule TicketAgentWeb.LoadOrder do
-  import Plug.Conn
-  alias TicketAgent.{Order, Repo}
+    alias TicketAgent.{Order, Repo}
   def init(opts), do: opts
 
   def call(%Plug.Conn{params: %{"order_id" => order_id}} = conn, _) when not is_nil(order_id) do

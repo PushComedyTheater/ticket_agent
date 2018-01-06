@@ -3,7 +3,7 @@ defmodule TicketAgentWeb.Plugs.Admin.MenuLoader do
   import Plug.Conn
   def init(opts), do: opts
 
-  def call(%{private: %{phoenix_action: action, phoenix_controller: controller}} = conn, opts) do
+  def call(%{private: %{phoenix_action: action, phoenix_controller: controller}} = conn, _) do
     controller = 
       controller
       |> Atom.to_string()

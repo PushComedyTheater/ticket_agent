@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.OrderController do
   require Logger
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Event, Listing, Order, Random, Repo}
+  alias TicketAgent.{Order, Repo}
   alias TicketAgent.State.{OrderState, TicketState}
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.Plugs.ValidateShowRequest when action in [:new]
@@ -9,7 +9,7 @@ defmodule TicketAgentWeb.OrderController do
 
   @host Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
 
-  def index(conn, params) do
+  def index(conn, _) do
     conn
     |> redirect(to: dashboard_path(conn, :index))
   end
@@ -27,7 +27,7 @@ defmodule TicketAgentWeb.OrderController do
 
     conn = case params["msg"] do
       nil -> conn
-      anything ->
+      _ ->
         conn
         |> put_flash(:info, "Thank you so much for your order.  You can find details about your order below.  Please check your email to receive your tickets.")
     end
@@ -36,7 +36,7 @@ defmodule TicketAgentWeb.OrderController do
     |> render("show.html", order: order, host: @host)
   end
 
-  def new(conn, %{"show_id" => show_id}) do
+  def new(conn, %{"show_id" => _}) do
     message = "Please verify that your order is correct.  Then enter your credit card number or use your browser to pay below."
 
     conn
@@ -64,7 +64,7 @@ defmodule TicketAgentWeb.OrderController do
     )
   end
 
-  def delete(conn, %{"tickets" => tickets} = params) do
+  def delete(conn, %{"tickets" => tickets}) do
     ticket_ids = Enum.map(tickets, fn(ticket) -> ticket["id"] end)
 
     case OrderFinder.find_started_order(Coherence.current_user(conn)) do
@@ -79,7 +79,7 @@ defmodule TicketAgentWeb.OrderController do
     |> render("delete.json", %{})
   end
 
-  defp maybe_reserve_tickets(order, %{"tickets" => tickets} = params) do
+  defp maybe_reserve_tickets(order, %{"tickets" => tickets}) do
     TicketState.reserve_tickets(order, tickets)
   end
 

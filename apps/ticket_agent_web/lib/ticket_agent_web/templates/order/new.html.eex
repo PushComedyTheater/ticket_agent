@@ -1,5 +1,4 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
-<% total_price = (Enum.count(@conn.assigns.tickets) * @conn.assigns.ticket_price) / 1 %>
 <!-- Demo modal window -->
 <div id="modal-type-aftersometime" class="js-autonomous-popup text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;" data-modal-type="aftersometime" data-open-effect="zoomIn" data-close-effect="zoomOut" data-delay="100" data-speed="500">
   <h4 class="g-mb-20">Preparing Your Order</h4>

@@ -1,5 +1,4 @@
 defmodule TicketAgentWeb.TicketView do
-  alias TicketAgent.Listing
   use TicketAgentWeb, :view
   def render("create.json", %{}) do
     %{

@@ -24,7 +24,7 @@ defmodule TicketAgentWeb.ListingChannel do
   end
 
   # Add authorization logic here as required.
-  defp authorized?(%{"token" => token} = payload, socket) do
+  defp authorized?(%{"token" => token}, socket) do
     case Coherence.verify_user_token(socket, token, &assign/3) do
       {:error, _} ->
         false

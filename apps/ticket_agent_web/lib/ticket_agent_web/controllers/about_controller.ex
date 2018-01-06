@@ -1,7 +1,6 @@
 defmodule TicketAgentWeb.AboutController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Teacher}
-  import Ecto.Query
 
   @theater_description """
   The Push Comedy Theater is a 90 seat venue in the heart of Norfolk\'s brand new Arts District.  Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.

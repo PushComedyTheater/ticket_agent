@@ -1,5 +1,4 @@
 defmodule TicketAgentWeb.LoadListing do
-  import Plug.Conn
   alias TicketAgent.{Listing, Repo}
   def init(opts), do: opts
 

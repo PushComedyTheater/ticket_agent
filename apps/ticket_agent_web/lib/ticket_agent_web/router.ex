@@ -113,7 +113,7 @@ defmodule TicketAgentWeb.Router do
     resources "/orders", OrderController
   end
 
-  def ensure_admin(conn, params) do
+  def ensure_admin(conn, _params) do
     case conn.assigns.current_user.role do
       "admin" -> conn
       _ ->
@@ -124,7 +124,7 @@ defmodule TicketAgentWeb.Router do
     end
   end
 
-  def ensure_concierge(conn, params) do
+  def ensure_concierge(conn, _params) do
     case conn.assigns.current_user.role do
       "admin" -> conn
       "concierge" -> conn

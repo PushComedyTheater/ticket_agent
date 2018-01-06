@@ -1,12 +1,10 @@
 defmodule TicketAgentWeb.ChargeController do
   require Logger
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Listing, Order, Repo, User}
-  alias TicketAgent.Finders.CardFinder
+  alias TicketAgent.{Repo, User}
   alias TicketAgent.Services.Stripe
   alias TicketAgent.State.{OrderState, TicketState, UserState}
   use Coherence.Config
-  import Ecto.Query
   plug TicketAgentWeb.LoadListing when action in [:create]
   plug TicketAgentWeb.LoadOrder when action in [:create]
 
@@ -33,10 +31,10 @@ defmodule TicketAgentWeb.ChargeController do
     # complete order
     # send ticket email
 
-    with {:ok, %{processing_tickets: {^ticket_count, updated_tickets}, order_processing: {1, updated_order}}} <- set_order_and_tickets_processing(order, ticket_ids),
+    with {:ok, %{processing_tickets: {^ticket_count, _updated_tickets}, order_processing: {1, _updated_order}}} <- set_order_and_tickets_processing(order, ticket_ids),
          {:ok, stripe_customer_id} <- load_stripe_token(current_user, token_id, metadata),
-         {:ok, response} <- Stripe.create_charge(stripe_customer_id, price, description, order.id, token["client_ip"], current_user, metadata),
-         {:ok, %{purchased_tickets: {^ticket_count, updated_tickets}, completed_order: {1, updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids),
+         {:ok, _response} <- Stripe.create_charge(stripe_customer_id, price, description, order.id, token["client_ip"], current_user, metadata),
+         {:ok, %{purchased_tickets: {^ticket_count, _updated_tickets}, completed_order: {1, _updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids),
          {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
          {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
 

@@ -2,13 +2,11 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
   require Logger
   import Plug.Conn
   import Phoenix.Controller
-  alias TicketAgent.Listing
   def init(opts), do: opts
 
   def call(%Plug.Conn{cookies: %{"ticket_data" => data}, params: %{"show_id" => show_id}} = conn, _) do
     %{
       "listing" => %{
-        "id" => listing_id,
         "slug" => slug
       },
       "tickets" => tickets

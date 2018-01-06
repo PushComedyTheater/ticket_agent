@@ -59,7 +59,7 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
         put_flash(conn, :error, dgettext("released_tickets", "Your tickets were released due to session timeout."))
       "cancelled_order" ->
         put_flash(conn, :error, dgettext("cancelled_order", "Your tickets were released when you cancelled your order."))
-      anything ->
+      _ ->
         put_flash(conn, :error, dgettext("unknown", "Your tickets were released."))
     end
   end

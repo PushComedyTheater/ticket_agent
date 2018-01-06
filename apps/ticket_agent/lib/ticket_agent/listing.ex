@@ -35,7 +35,7 @@ defmodule TicketAgent.Listing do
     |> unique_constraint(:slug)
   end
 
-  def current_class_listing(%{id: class_id} = class) do
+  def current_class_listing(%{id: class_id}) do
     query = from listing in Listing,
             where: listing.class_id == ^class_id,
             where: fragment("? >= NOW()", listing.start_at),

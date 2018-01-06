@@ -1,12 +1,9 @@
 defmodule TicketAgentWeb.EventView do
   use TicketAgentWeb, :view
-  @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
-  @helpers TicketAgentWeb.Router.Helpers
-
   def aggregated_tags(shows) do
     Enum.reduce(shows, [], fn([show, _], acc) ->
       tags = Enum.map(show.listing_tags, fn(x) -> x.tag end)
-      acc = acc ++ tags
+      acc ++ tags
     end)
     |> Enum.uniq
     |> Enum.sort
@@ -34,14 +31,5 @@ defmodule TicketAgentWeb.EventView do
   def listing_tags(show) do
     Enum.take(show.listing_tags, 5)
     |> Enum.map_join(", ", fn tag -> tag.tag end)
-  end
-
-  defp shift_zone!(nil, time_zone) do
-    nil
-  end
-
-  defp shift_zone!(timestamp, time_zone) do
-    timestamp
-    |> Calendar.DateTime.shift_zone!(time_zone)
   end
 end

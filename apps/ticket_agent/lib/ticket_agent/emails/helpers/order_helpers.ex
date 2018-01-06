@@ -1,6 +1,4 @@
 defmodule TicketAgent.OrderHelpers do
-  alias TicketAgent.Random
-
   def google_calendar_link(listing) do
     url = "http://www.google.com/calendar/render?action=TEMPLATE"
     url = url <> "&dates=#{calendar_timestamp(listing.start_at)}/#{calendar_timestamp(listing.end_at)}"

@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.EventController do
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Event, Listing, Repo}
-  alias TicketAgent.Finders.{ListingFinder, TicketFinder, WaitlistFinder}
+  alias TicketAgent.Listing
+  alias TicketAgent.Finders.WaitlistFinder
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:show]
 
   def index(conn, _params) do
@@ -10,7 +10,7 @@ defmodule TicketAgentWeb.EventController do
     |> render("index.html", listings: Listing.upcoming_shows)
   end
 
-  def show(conn, params) do
+  def show(conn, _) do
     email_address = case Coherence.current_user(conn) do
       nil -> nil
       user -> user.email

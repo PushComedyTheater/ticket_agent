@@ -1,7 +1,6 @@
 defmodule TicketAgentWeb.SharedView do
   require Logger
-  import Scrivener.HTML
-
+  
   def treeview_root(conn, path_combined) do
     treeview_root = Map.get(conn.assigns, :treeview_root, "unknown")
     cond do

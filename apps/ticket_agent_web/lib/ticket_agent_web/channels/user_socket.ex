@@ -2,7 +2,6 @@ defmodule TicketAgentWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "game:*", TicketAgentWeb.RoomChannel
   channel "listing:*", TicketAgentWeb.ListingChannel
 
   ## Transports

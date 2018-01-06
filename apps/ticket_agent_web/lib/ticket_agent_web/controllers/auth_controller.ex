@@ -1,8 +1,9 @@
 defmodule TicketAgentWeb.AuthController do
+  require Logger
   use TicketAgentWeb, :controller
   use Coherence.Config
-  alias TicketAgent.{Repo, User, UserCredential}
-  alias TicketAgent.{Facebook, Google, Microsoft, Twitter}
+  alias TicketAgent.User
+  alias TicketAgent.Twitter
 
   @doc """
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
@@ -13,7 +14,8 @@ defmodule TicketAgentWeb.AuthController do
   end
 
   def callback(conn, %{"provider" => provider, "denied" => denied}) do
-    redirect(conn, to: "/")
+    Logger.info "Denied to provider: #{inspect provider} with message: #{inspect denied}"
+    redirect(conn, to: "/?provmsg=#{denied}")
   end
 
   @doc """
@@ -22,7 +24,7 @@ defmodule TicketAgentWeb.AuthController do
   be used to request an access token. The access token will then be used to
   access protected resources on behalf of the user.
   """
-  def callback(conn, %{"provider" => "twitter", "oauth_token" => oauth_token, "oauth_verifier" => oauth_verifier} = params) do
+  def callback(conn, %{"provider" => "twitter", "oauth_token" => oauth_token, "oauth_verifier" => oauth_verifier}) do
     redirect_uri = case get_session(conn, "user_return_to") do
       nil ->
         "/dashboard"
@@ -56,7 +58,7 @@ defmodule TicketAgentWeb.AuthController do
       end
   end
 
-  def callback(conn, %{"provider" => provider, "code" => code} = params) do
+  def callback(conn, %{"provider" => provider, "code" => code}) do
     redirect_uri = case get_session(conn, "user_return_to") do
       nil ->
         "/dashboard"
@@ -67,7 +69,7 @@ defmodule TicketAgentWeb.AuthController do
     Logger.info "provider = #{provider}"
 
     with {:ok, client} <- get_token!(provider, code),
-         {:ok, %{name: name, avatar: avatar, email: email, extra_details: extra_details}} <- get_user(provider, client) do
+         {:ok, %{name: name, email: email, extra_details: extra_details}} <- get_user(provider, client) do
 
       user = User.find_or_create_with_credentials(
         name,
@@ -96,13 +98,13 @@ defmodule TicketAgentWeb.AuthController do
     end
   end
 
-  defp authorize_url!("amazon", params), do: TicketAgent.Amazon.authorize_url!(scope: "profile")
-  defp authorize_url!("facebook", params), do: TicketAgent.Facebook.authorize_url!(scope: "user_photos,user_about_me,user_birthday,user_website,user_location,email")
-  defp authorize_url!("google", params),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/plus.profile.emails.read")
-  defp authorize_url!("linkedin", params), do: TicketAgent.LinkedIn.authorize_url!(scope: "r_basicprofile r_emailaddress")
-  defp authorize_url!("microsoft", params), do: TicketAgent.Microsoft.authorize_url!(scope: "wl.emails,wl.basic,wl.postal_addresses,wl.phone_numbers")
+  defp authorize_url!("amazon", _params), do: TicketAgent.Amazon.authorize_url!(scope: "profile")
+  defp authorize_url!("facebook", _params), do: TicketAgent.Facebook.authorize_url!(scope: "user_photos,user_about_me,user_birthday,user_website,user_location,email")
+  defp authorize_url!("google", _params),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/plus.profile.emails.read")
+  defp authorize_url!("linkedin", _params), do: TicketAgent.LinkedIn.authorize_url!(scope: "r_basicprofile r_emailaddress")
+  defp authorize_url!("microsoft", _params), do: TicketAgent.Microsoft.authorize_url!(scope: "wl.emails,wl.basic,wl.postal_addresses,wl.phone_numbers")
   defp authorize_url!("twitter", params), do: Twitter.authorize_url!(params)
-  defp authorize_url!(_), do: raise "No matching provider available"
+  defp authorize_url!(_, _), do: raise "No matching provider available"
 
   defp get_token!("amazon", code), do: TicketAgent.Amazon.get_token(code: code)
   defp get_token!("facebook", code), do: TicketAgent.Facebook.get_token(code: code)
@@ -142,7 +144,7 @@ defmodule TicketAgentWeb.AuthController do
     scopes_url = Enum.join(scopes, ",")
     user_query = "/v1/people/~:(#{scopes_url})?format=json"
 
-    with {:ok, %{body: %{"formattedName" => name, "pictureUrl" => avatar, "emailAddress" => email} = body}} <- OAuth2.Client.get(client, user_query, [], skip_url_encode_option) do
+    with {:ok, %{body: %{"formattedName" => name, "pictureUrl" => avatar, "emailAddress" => email} = body}} <- OAuth2.Client.get(client, user_query, [], skip_url_encode_option()) do
       {:ok, %{name: name, email: email, avatar: avatar, extra_details: body}}
     else
       {:error, response} ->
@@ -197,7 +199,7 @@ defmodule TicketAgentWeb.AuthController do
   defp get_user("microsoft", client) do
     with {:ok, %{body: %{"name" => name, "emails" => %{"account" => email}} = body}} <- OAuth2.Client.get(client, "https://apis.live.net/v5.0/me"),
          {:ok, %{headers: headers, status_code: 302}} <- OAuth2.Client.get(client, "https://apis.live.net/v5.0/me/picture"),
-         {_, avatar} <- Enum.find(headers, fn({first, last}) -> first == "location" end) do
+         {_, avatar} <- Enum.find(headers, fn({first, _}) -> first == "location" end) do
             {:ok, %{name: name, avatar: avatar, email: email, extra_details: body}}
     else
       {:error, response} ->

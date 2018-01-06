@@ -1,6 +1,5 @@
 defmodule TicketAgentWeb.Admin.ClassView do
-  alias TicketAgent.{Listing, Repo}
-  import Ecto.Query
+  alias TicketAgent.Listing
   use TicketAgentWeb, :view
 
   def current_class_listing(class), do: Listing.current_class_listing(class)

@@ -1,7 +1,5 @@
 defmodule Mix.Tasks.LoadEvents do
-  alias TicketAgent.{Account, Event, EventTag, Listing, Mappings, Random, Repo, User}
-  import Ecto.Query
-
+  alias TicketAgent.Mappings
   require Logger
   use Mix.Task
 
@@ -14,7 +12,7 @@ defmodule Mix.Tasks.LoadEvents do
     parse_history_files(non_words)
   end
 
-  def parse_current(now_words) do
+  def parse_current(_now_words) do
     body = load_json("https://www.universe.com/api/v2/listings?limit=50&offset=0&order=desc&sort=created_at&states=posted&user_id=55fba3caaed6b30fa80859c0")
     Enum.each(body["listings"], fn(listing) ->
       id = listing["id"]
@@ -33,10 +31,10 @@ defmodule Mix.Tasks.LoadEvents do
             "#{base}/newstuff/shows/#{id}.json"          
         else
           case Enum.find(Mappings.mappings, fn({reg, _}) -> String.match?(title, reg) end) do
-            {h, class_id} ->
+            {_h, _class_id} ->
               IO.puts "class"
               "#{base}/newstuff/classes/#{id}.json"
-            n ->
+            _n ->
               IO.puts "show"
               "#{base}/newstuff/shows/#{id}.json"
           end
@@ -60,7 +58,6 @@ defmodule Mix.Tasks.LoadEvents do
     base = "./apps/ticket_agent/lib/mix/tasks/data/newstuff/classes/"
 
     files = File.ls!(base)
-    counter = Enum.count(files)
     preface = load_preface("classes")
 
     files
@@ -81,7 +78,6 @@ defmodule Mix.Tasks.LoadEvents do
     base = "./apps/ticket_agent/lib/mix/tasks/data/newstuff/shows/"
 
     files = File.ls!(base)
-    counter = Enum.count(files)
     preface = load_preface("shows")
 
     files
@@ -107,7 +103,6 @@ defmodule Mix.Tasks.LoadEvents do
     base = "./apps/ticket_agent/lib/mix/tasks/data/classes/"
 
     files = File.ls!(base)
-    counter = Enum.count(files)
     preface = load_preface("classes")
 
     files
@@ -129,7 +124,6 @@ defmodule Mix.Tasks.LoadEvents do
     base = "./apps/ticket_agent/lib/mix/tasks/data/shows/"
 
     files = File.ls!(base)
-    counter = Enum.count(files)
     preface = load_preface("shows")
 
     files
@@ -156,15 +150,14 @@ defmodule Mix.Tasks.LoadEvents do
 
     preface = load_preface("workshops")
 
-    keywords =
-      files
-      |> Enum.with_index()
-      |> Enum.reduce([], fn({file, index}, acc) ->
-        Logger.info "Processing #{index + 1} of #{counter} workshops"
-        acc ++ process_file(base <> file, non_words, :workshop, pid)
-      end)
-      |> Enum.uniq
-      |> Enum.sort
+    files
+    |> Enum.with_index()
+    |> Enum.reduce([], fn({file, index}, acc) ->
+      Logger.info "Processing #{index + 1} of #{counter} workshops"
+      acc ++ process_file(base <> file, non_words, :workshop, pid)
+    end)
+    |> Enum.uniq
+    |> Enum.sort
 
     string = StringIO.flush(pid)
 
@@ -180,15 +173,14 @@ defmodule Mix.Tasks.LoadEvents do
 
     preface = load_preface("camps")
 
-    keywords =
-      files
-      |> Enum.with_index()
-      |> Enum.reduce([], fn({file, index}, acc) ->
-        Logger.info "Processing #{index + 1} of #{counter} camps"
-        acc ++ process_file(base <> file, non_words, :workshop, pid)
-      end)
-      |> Enum.uniq
-      |> Enum.sort
+    files
+    |> Enum.with_index()
+    |> Enum.reduce([], fn({file, index}, acc) ->
+      Logger.info "Processing #{index + 1} of #{counter} camps"
+      acc ++ process_file(base <> file, non_words, :workshop, pid)
+    end)
+    |> Enum.uniq
+    |> Enum.sort
 
     string = StringIO.flush(pid)
 
@@ -276,20 +268,24 @@ defmodule Mix.Tasks.LoadEvents do
   end
 
   def load_tags(_, _, _, :class), do: ["class"]
-  def load_tags(price, title, description, type) do
+  def load_tags(price, title, _description, type) do
     title = String.downcase(title)
     tags = [Atom.to_string(type)]
-    if price == 0 do
+    tags = if price == 0 do
       tags = tags ++ ["free"]
+      tags
     else
-      if price <= 5 do
+      tags = if price <= 5 do
         tags = tags ++ ["deal"]
+        tags
       end
+      tags
     end
 
     Enum.reduce(Mappings.regex_mappings, tags, fn({reg, val}, acc) ->
-      if String.match?(title, reg) do
+      acc = if String.match?(title, reg) do
         acc = acc ++ val
+        acc
       end
       acc
     end)
@@ -315,11 +311,13 @@ defmodule Mix.Tasks.LoadEvents do
       String.downcase(word)
     end)
     |> Enum.reduce(%{}, fn(word, acc) ->
-      if String.length(word) > 0 && !Enum.member?(non_words, String.downcase(word)) do
+      acc = if String.length(word) > 0 && !Enum.member?(non_words, String.downcase(word)) do
         if Map.has_key?(acc, word) do
           {_, acc} = Map.get_and_update(acc, word, fn current_value -> {current_value, current_value + 1} end)
+          acc
         else
           acc = Map.put(acc, word, 1)
+          acc
         end
       end
       acc
@@ -351,7 +349,7 @@ defmodule Mix.Tasks.LoadEvents do
     end
   end
 
-  defp blah do
+  # defp blah do
     # {:ok, pid} = StringIO.open("")
     # [
     #   "./apps/ticket_agent/lib/mix/tasks/data/classes/",
@@ -415,7 +413,7 @@ defmodule Mix.Tasks.LoadEvents do
     # File.write!("./apps/ticket_agent/priv/repo/missing.txt", string)
     # |> IO.inspect
 
-  end
+  # end
 
   defp load_preface(type) do
     preface = """
@@ -429,7 +427,7 @@ user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
 card = SeedHelpers.create_credit_card(user)
 user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
 """
-if type == "classes" do
+preface = if type == "classes" do
   preface = preface <> """
 Logger.info "Loading classes"
 improv101 = SeedHelpers.create_class(%{slug: "improv101"})
@@ -449,6 +447,7 @@ sketch201 = SeedHelpers.create_class(%{slug: "sketch201"})
 standup101 = SeedHelpers.create_class(%{slug: "standup101"})
 acting101 = SeedHelpers.create_class(%{slug: "acting101"})
 """
+  preface
   end
   preface = preface <> """
 Logger.info "Seeding #{type}"

@@ -20,7 +20,7 @@ defmodule TicketAgentWeb.MenuView do
   def is_admin(%{current_user: %{role: "admin"}}), do: true
   def is_admin(_), do: false
 
-  def class_types(conn) do
+  def class_types do
     query = from c in Class,
             group_by: c.type,
             order_by: c.type,
@@ -28,7 +28,7 @@ defmodule TicketAgentWeb.MenuView do
     Repo.all(query)
   end
 
-  def classes_by_type(conn, type) do
+  def classes_by_type(type) do
     query = from c in Class,
             where: c.type == ^type,
             order_by: c.menu_order,
@@ -39,7 +39,4 @@ defmodule TicketAgentWeb.MenuView do
   def menu_class([], "/"), do: "nav-link g-py-7 active g-px-0"
   def menu_class(path_info, path) when hd(path_info) == path, do: "nav-link g-py-7 active g-px-0"
   def menu_class(_, _), do: "nav-link g-py-7 g-px-0"
-  def show_breadcrumb(conn) do
-    false
-  end
 end

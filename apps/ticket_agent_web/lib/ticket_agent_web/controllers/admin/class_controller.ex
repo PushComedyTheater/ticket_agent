@@ -37,7 +37,7 @@ defmodule TicketAgentWeb.Admin.ClassController do
         conn
         |> put_flash(:info, "Class updated successfully.")
         |> redirect(to: admin_class_path(conn, :show, class))
-      {:error, changeset} ->
+      {:error, _} ->
         render(conn, "edit.html", load_form_details(class))
     end
   end
