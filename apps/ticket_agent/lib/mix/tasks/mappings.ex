@@ -6,7 +6,6 @@ defmodule TicketAgent.Mappings do
       "Improv 101 with Brad McMurran",
       "Improv 501: Improv Studio",
       "Improv 501: Improv Studio (Advanced Harold Study)",
-      "Improv Studio: Lunchbreak Workshop",
       "Improv for Teens at the Push Comedy Theater",
       "KidProv 201 at the Push Comedy Theater",
       "KidProv at the Push Comedy Theater",

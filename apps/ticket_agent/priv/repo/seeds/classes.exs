@@ -70,19 +70,6 @@ improv501 = SeedHelpers.create_class(
   }
 )
 
-improv_studio = SeedHelpers.create_class(
-  %{
-    title: "Improv Studio: Lunchbreak Workshop",
-    type: "improvisation",
-    slug: "improv_studio",
-    description: "Null",
-    photo_url: "",
-    menu_order: 5,
-    account_id: account.id,
-    prerequisite_id: improv401.id
-  }
-)
-
 kidprov101 = SeedHelpers.create_class(
   %{
     title: "Kidprov 101",
