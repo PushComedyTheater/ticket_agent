@@ -25,11 +25,11 @@ defmodule TicketAgent.Amazon do
     OAuth2.Client.authorize_url!(client(), params)
   end
 
-  def get_token!(params \\ [], headers \\ []) do
+  def get_token!(params \\ [], _) do
     OAuth2.Client.get_token!(client(), params)
   end
 
-  def get_token(params \\ [], headers \\ []) do
+  def get_token(params \\ [], _) do
     OAuth2.Client.get_token(client(), params)
   end
 

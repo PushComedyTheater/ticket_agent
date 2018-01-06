@@ -1,9 +1,8 @@
 defmodule TicketAgent.State.OrderState do
   require Logger
   alias Ecto.Multi
-  alias TicketAgent.{Listing, Order, Repo, Ticket}
-  alias TicketAgent.Finders.TicketFinder
-  import Ecto.{Changeset, Query}
+  alias TicketAgent.{Order, Repo}
+  import Ecto.{Query}
   @stripe_fixed_fee 30
   @processing_fixed_fee 50
   @percentage_fee 0.029
@@ -12,7 +11,7 @@ defmodule TicketAgent.State.OrderState do
     subtotal =
       tickets
       |> Enum.reduce(0, fn(ticket, acc) ->
-        acc = acc + ticket.price
+        acc + ticket.price
       end)
 
     credit_card_fee = calculate_credit_card_fees(subtotal)

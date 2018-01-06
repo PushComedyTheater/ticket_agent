@@ -1,6 +1,6 @@
 defmodule TicketAgent.Generators.OrderPdfGenerator do
   require Logger
-  alias TicketAgent.{Order, Repo, User}
+  alias TicketAgent.Repo
 
   @host Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
 

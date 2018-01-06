@@ -4,8 +4,6 @@ defmodule TicketAgent.UserEmail do
   alias TicketAgent.{Listing, Order, Repo}
 
   def one_time_login(user, url) do
-    host = Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
-
     one_time_login_html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/one_time_login.html.eex",
                                        [name: user.name, url: url])
 
@@ -71,7 +69,7 @@ defmodule TicketAgent.UserEmail do
       #
       # # attachment = Swoosh.Attachment.new("/Users/patrickveverka/Downloads/logo.png", filename: "logo.png", content_type: "image/png", type: :inline)
       customer_order = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/customer_order.html.eex",
-                                         [listing: listing, ticket_count: ticket_count, order: order, host: host])
+                                         [listing: listing, ticket_count: ticket_count, order: order, host: host()])
       html = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex",
                          [body: customer_order])
       %Email{}
@@ -91,12 +89,11 @@ defmodule TicketAgent.UserEmail do
     listing = ticket.listing |> Repo.preload([:images])
 
     customer_order = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/tickets_pdf.html.eex",
-                                       [tickets: order.tickets, listing: listing, ticket_count: ticket_count, host: host])
+                                       [tickets: order.tickets, listing: listing, ticket_count: ticket_count, host: host()])
 
    html = customer_order
    # # be aware, this may take a while...
    { :ok, filename }    = PdfGenerator.generate html, page_size: "A5", shell_params: [ "-O", "landscape"]
-   filename
 
    # PdfGenerator.generate_binary!(html, delete_temporary: true)
 

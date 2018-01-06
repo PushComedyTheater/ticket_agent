@@ -3,7 +3,7 @@ defmodule TicketAgent.Clock.ResetTickets do
   require Logger
   import Process, only: [send_after: 3]
   import Ecto.Query, only: [from: 2]
-  alias TicketAgent.{Order, Repo, Ticket}
+  alias TicketAgent.{Repo, Ticket}
 
   def start_link(interval \\ 5_000) do
     Logger.info "Starting ResetTickets link with interval #{interval}"
@@ -53,8 +53,6 @@ defmodule TicketAgent.Clock.ResetTickets do
   end
 
   def expired_tickets_query() do
-    threshold = NaiveDateTime.add(NaiveDateTime.utc_now(), -10)
-
     from(
       t in Ticket,
       where: t.status == "locked",

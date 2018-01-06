@@ -46,8 +46,8 @@ defmodule TicketAgentWeb.OrderController do
 
   def create(conn, params) do
     {order, tickets, locked_until, pricing} =
-      params
-      |> OrderFinder.find_or_create_order(Coherence.current_user(conn))
+      Coherence.current_user(conn)
+      |> OrderFinder.find_or_create_order()
       |> maybe_reserve_tickets(params)
       |> OrderState.calculate_price
 

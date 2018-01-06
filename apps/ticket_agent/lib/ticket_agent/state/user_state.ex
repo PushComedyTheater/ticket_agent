@@ -1,8 +1,6 @@
 defmodule TicketAgent.State.UserState do
   require Logger
-  alias Ecto.Multi
   alias TicketAgent.{CreditCard, Repo}
-  import Ecto.{Changeset, Query}
 
   def store_card_details(user, order, card) do
     %CreditCard{}

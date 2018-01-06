@@ -85,7 +85,7 @@ defmodule TicketAgent.User do
         |> Repo.update!
     end
 
-    credential = case Repo.get_by(UserCredential, provider: provider, user_id: user.id) do
+    case Repo.get_by(UserCredential, provider: provider, user_id: user.id) do
       nil ->
         Logger.info "User: could not find credentials for user with #{provider}"
         %UserCredential{}
@@ -110,7 +110,7 @@ defmodule TicketAgent.User do
   end
 
   def get_stripe_customer_id(nil), do: nil
-  def get_stripe_customer_id(%{id: user_id} = user) do
+  def get_stripe_customer_id(%{id: user_id}) do
     from(
       u in User,
       where: u.id == ^user_id,

@@ -12,42 +12,6 @@ defmodule TicketAgent.Random do
   """
 
   @doc """
-  Seeds random number generation with default (fixed) values
-  in the process dictionary, and returns the old state.
-  """
-  def seed do
-    :random.seed
-  end
-
-  @doc """
-  Seeds random number generation with integer values in the
-  process dictionary, and returns the old state.
-
-  ## Examples
-
-      iex> { x, y, z } = :erlang.now
-      iex> Random.seed(x, y, z)
-
-  """
-  def seed(x, y, z) do
-    :random.seed(x, y, z)
-  end
-
-  @doc """
-  `Random.seed({x, y, z) is equivalent to `Random.seed(z, y, y)`.
-  """
-  def seed({x, y, z}) do
-    :random.seed(x, y, z)
-  end
-
-  @doc """
-  Returns the default seed.
-  """
-  def default_seed do
-    :random.seed0
-  end
-
-  @doc """
   Returns a random float uniformly distributed  between `0.0`
   and `1.0`, updating the state in the process dictionary.
 
@@ -58,7 +22,8 @@ defmodule TicketAgent.Random do
 
   """
   def random do
-    :random.uniform
+    :rand.seed(:exs64, :os.timestamp)
+    :rand.uniform
   end
 
   @doc """
@@ -73,7 +38,7 @@ defmodule TicketAgent.Random do
 
   """
   def random(n) when is_integer(n) and n > 0 do
-    :random.uniform(n) - 1
+    :rand.uniform(n) - 1
   end
 
   def random(n) when is_integer(n) do
@@ -81,7 +46,7 @@ defmodule TicketAgent.Random do
   end
 
   def random(n) when is_float(n) do
-    random trunc(n)
+    random(trunc(n))
   end
 
   @doc """
@@ -100,7 +65,7 @@ defmodule TicketAgent.Random do
   end
 
   def sample(list) when is_list(list) do
-    :lists.nth(:random.uniform(length(list)), list)
+    :lists.nth(:rand.uniform(length(list)), list)
   end
 
   def sample(%Range{} = range) do
@@ -119,7 +84,7 @@ defmodule TicketAgent.Random do
 
   """
   def sample(list, n) when is_list(list) and is_integer(n) and n >= 0 do
-    list = for x <- list, do: {:random.uniform, x}
+    list = for x <- list, do: {:rand.uniform, x}
     for {_, x} <- (list |> :lists.sort |> :lists.sublist(n)), do: x
   end
 
@@ -139,7 +104,7 @@ defmodule TicketAgent.Random do
 
   """
   def shuffle(list) when is_list(list) do
-    list = for x <- list, do: {:random.uniform, x}
+    list = for x <- list, do: {:rand.uniform, x}
     for {_, x} <- (list |> :lists.sort), do: x
   end
 

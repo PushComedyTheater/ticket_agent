@@ -23,7 +23,7 @@ defmodule TicketAgent.Clock.EndListings do
         if count > 0 do
           Logger.info "Completed #{count} listings"
         end
-      anything ->
+      _ ->
         #no op      
     end
 

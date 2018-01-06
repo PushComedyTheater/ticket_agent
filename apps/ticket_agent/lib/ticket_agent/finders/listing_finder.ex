@@ -1,7 +1,7 @@
 defmodule TicketAgent.Finders.ListingFinder do
   require Logger
   import Ecto.Query
-  alias TicketAgent.{Listing, Random, Repo, Ticket}
+  alias TicketAgent.{Listing, Repo, Ticket}
 
   def active_show_listings do
     query = from listing in Listing,

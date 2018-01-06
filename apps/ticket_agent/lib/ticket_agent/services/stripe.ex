@@ -7,12 +7,12 @@ defmodule TicketAgent.Services.Stripe do
   def publishable_key, do: get_env_variable(:publishable_key)
 
   def create_charge(customer, amount, description, order_id, client_ip, user, metadata \\ %{}) do
-    values = load_charge_values(customer, amount, description, metadata)
+    values = load_charge_values(customer, amount, description)
 
     body =
       metadata
       |> Enum.reduce(values, fn({key, value}, acc) ->
-        acc = Map.put(acc, "metadata[#{key}]", value)
+        Map.put(acc, "metadata[#{key}]", value)
       end)
       |> URI.encode_query()
 
@@ -46,7 +46,7 @@ defmodule TicketAgent.Services.Stripe do
     }
 
     values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
-      acc = Map.put(acc, "metadata[#{key}]", value)
+      Map.put(acc, "metadata[#{key}]", value)
     end)
 
     body =
@@ -56,7 +56,7 @@ defmodule TicketAgent.Services.Stripe do
     uri = "#{api_url()}/customers"
 
     case request(:post, uri, [], body, hackney_opts()) do
-      {:ok, %{"id" => stripe_customer_id} = response} ->
+      {:ok, %{"id" => stripe_customer_id}} ->
         {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
       {:error, %{"error" => error}} ->
         Logger.error "Received bad response from Stripe #{inspect error}"
@@ -67,8 +67,8 @@ defmodule TicketAgent.Services.Stripe do
     end
   end
 
-  defp load_charge_values(customer_id, amount, description, metadata) do
-    values = %{
+  defp load_charge_values(customer_id, amount, description) do
+    %{
       "customer" => customer_id,
       "amount" => amount,
       "description" => description,

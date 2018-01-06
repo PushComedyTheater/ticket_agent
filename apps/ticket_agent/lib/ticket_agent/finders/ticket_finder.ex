@@ -13,8 +13,8 @@ defmodule TicketAgent.Finders.TicketFinder do
     |> Repo.all
   end
 
-  def count_by_listing_and_user(listing_id, nil), do: {false, nil}
-  def count_by_listing_and_user(listing_id, %{id: user_id} = user) do
+  def count_by_listing_and_user(_, nil), do: {false, nil}
+  def count_by_listing_and_user(listing_id, %{id: user_id}) do
     orders =
       from(
         t in Ticket,

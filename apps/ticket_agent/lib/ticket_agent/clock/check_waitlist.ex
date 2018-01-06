@@ -4,7 +4,6 @@ defmodule TicketAgent.Clock.CheckWaitlist do
   import Process, only: [send_after: 3]
   import Ecto.Query, only: [from: 2]
   alias TicketAgent.{Repo, Waitlist}
-  alias TicketAgent.Emails.AdminEmail
 
   def start_link(interval \\ 5_000) do
     Logger.info "Starting link with interval #{interval}"

@@ -3,7 +3,7 @@ defmodule TicketAgent.Finders.WaitlistFinder do
   import Ecto.Query
   alias TicketAgent.{Repo, Waitlist}
 
-  def find_by_email_and_listing_id(nil, listing_id), do: nil
+  def find_by_email_and_listing_id(nil, _), do: nil
   def find_by_email_and_listing_id(email_address, listing_id) do
     query = from(
       w in Waitlist,

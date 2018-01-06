@@ -17,7 +17,7 @@ defmodule TicketAgent.Finders.OrderFinder do
     Repo.all(query)
   end
 
-  def find_or_create_order(params, current_user) when not is_nil(current_user) do
+  def find_or_create_order(current_user) when not is_nil(current_user) do
     case find_started_order(current_user) do
       nil ->
         Logger.info "Creating a new order for this user"

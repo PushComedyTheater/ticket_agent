@@ -1,6 +1,6 @@
 defmodule TicketAgent.Webhooks.Stripe do
   require Logger
-  alias TicketAgent.{Repo, User}
+  alias TicketAgent.{User}
   alias TicketAgent.Finders.UserFinder
 
   def process_webhook(%{"type" => "customer.deleted"} = webhook) do

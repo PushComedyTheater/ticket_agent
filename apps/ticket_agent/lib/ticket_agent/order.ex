@@ -20,7 +20,7 @@ defmodule TicketAgent.Order do
     field :processing_fee, :integer
     field :total_price, :integer
     field :completed_at, :utc_datetime
-    timestamps
+    timestamps(type: :utc_datetime)
   end
 
   @doc false
