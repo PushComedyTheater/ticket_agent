@@ -4,9 +4,9 @@ defmodule TicketAgent.State.OrderState do
   alias TicketAgent.{Order, Repo}
   import Ecto.{Query}
   @stripe_fixed_fee 30
+  @stripe_percentage_fee 0.029
   @processing_fixed_fee 50
-  @percentage_fee 0.029
-
+  
   def calculate_price({order, tickets, locked_until}) do
     subtotal =
       tickets
@@ -14,14 +14,12 @@ defmodule TicketAgent.State.OrderState do
         acc + ticket.price
       end)
 
-    credit_card_fee = calculate_credit_card_fees(subtotal)
-
-    total = subtotal + credit_card_fee + @processing_fixed_fee
+    {total, credit_card_fee, processing_fee} = calculate_fees(subtotal)
 
     order
     |> Order.changeset(%{
       subtotal: subtotal,
-      processing_fee: @processing_fixed_fee,
+      processing_fee: processing_fee,
       credit_card_fee: credit_card_fee,
       total_price: total
     })
@@ -121,13 +119,20 @@ defmodule TicketAgent.State.OrderState do
     )
   end
 
-  defp calculate_credit_card_fees(price) do
-    Logger.info "calculate_credit_card_fees->price = #{price}"
-    Logger.info "calculate_credit_card_fees->percentage_fee = #{@percentage_fee}"
-    Logger.info "calculate_credit_card_fees->fixed_fee = #{@stripe_fixed_fee}"
-    value = Float.ceil(price * @percentage_fee) + @stripe_fixed_fee
-    Logger.info "calculate_credit_card_fees->value = #{value}"
-    round(value)
+  def calculate_fees(price) do
+    total_with_processing = price + @processing_fixed_fee
+    total_to_charge = Float.ceil((total_with_processing + @stripe_fixed_fee) / (1 - @stripe_percentage_fee))
+    stripe_fees = total_to_charge - total_with_processing
+
+    Logger.info "calculate_fees->price                     = #{price}"
+    Logger.info "calculate_fees->processing_fixed_fee      = #{@processing_fixed_fee}"
+    Logger.info "calculate_fees->total_with_processing     = #{total_with_processing}"
+    Logger.info "calculate_fees->stripe_percentage_fee     = #{@stripe_percentage_fee}"
+    Logger.info "calculate_fees->stripe_fixed_fee          = #{@stripe_fixed_fee}"    
+    Logger.info "calculate_fees->total_to_charge           = #{total_to_charge}"
+    Logger.info "calculate_fees->stripe_fees               = #{stripe_fees}"
+
+    {round(total_to_charge), round(stripe_fees), @processing_fixed_fee}
   end
 
 end

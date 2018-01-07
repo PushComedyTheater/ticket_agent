@@ -28,7 +28,6 @@ defmodule TicketAgent.Factory do
 
   def listing_factory do
     %TicketAgent.Listing{
-      type: "show",
       slug: TicketAgent.Listing.generate_slug(),
       title: ExMachina.Sequence.next("title"),
       description: @lorem,
@@ -41,8 +40,7 @@ defmodule TicketAgent.Factory do
   def listing_image_factory do
     %TicketAgent.ListingImage{
       listing: build(:listing),
-      url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png",
-      type: "cover"
+      url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png"
     }
   end
 

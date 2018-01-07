@@ -6,8 +6,8 @@ defmodule TicketAgent.Services.Stripe do
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
-  def create_charge(customer, amount, description, order_id, client_ip, user, metadata \\ %{}) do
-    values = load_charge_values(customer, amount, description)
+  def create_charge(customer, amount, description, order, client_ip, user, metadata \\ %{}) do
+    values = load_charge_values(order, customer, amount, description)
 
     body =
       metadata
@@ -20,7 +20,7 @@ defmodule TicketAgent.Services.Stripe do
 
     {status, response} =
       request(:post, uri, [], body, hackney_opts())
-      |> insert_order_details(order_id, client_ip)
+      |> insert_order_details(order.id, client_ip)
 
     case status do
       :error ->
@@ -67,12 +67,13 @@ defmodule TicketAgent.Services.Stripe do
     end
   end
 
-  defp load_charge_values(customer_id, amount, description) do
+  defp load_charge_values(order, customer_id, amount, description) do
     %{
       "customer" => customer_id,
       "amount" => amount,
       "description" => description,
-      "currency" => "usd"
+      "currency" => "usd",
+      "application_fee" => order.processing_fee
     }
   end
 
@@ -113,7 +114,8 @@ defmodule TicketAgent.Services.Stripe do
       {"Accept-Encoding", "gzip"},
       {"Connection", "keep-alive"},
       {"User-Agent", @stripe_user_agent},
-      {"Stripe-Version", @stripe_api_version}
+      {"Stripe-Version", @stripe_api_version},
+      {"Stripe-Account", "acct_14e3TwHtx4T3dZy7"}
     ]
   end
 
@@ -123,7 +125,8 @@ defmodule TicketAgent.Services.Stripe do
       {"Accept-Encoding", "gzip"},
       {"Connection", "keep-alive"},
       {"User-Agent", @stripe_user_agent},
-      {"Stripe-Version", @stripe_api_version}
+      {"Stripe-Version", @stripe_api_version},
+      {"Stripe-Account", "acct_14e3TwHtx4T3dZy7"}
     ]
   end
 

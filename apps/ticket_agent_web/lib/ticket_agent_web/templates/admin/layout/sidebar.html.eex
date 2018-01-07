@@ -19,7 +19,12 @@
         <%= render "sidebar_teachers.html", assigns %>
         <%= render "sidebar_classes.html", assigns %>
         <%= render "sidebar_shows.html", assigns %>
+        <%= render "sidebar_orders.html", assigns %>
         <%= render "sidebar_users.html", assigns %>
+        <li></li>
+        <li>
+        <a href="/">Return To Site</a>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

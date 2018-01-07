@@ -30,6 +30,30 @@ defmodule TicketAgent.Order do
     |> validate_required(@required)
   end
 
+  def list_orders(params) do
+    Order
+    |> order_by([:status, :inserted_at])
+    |> preload([:user, :credit_card])
+    |> Repo.paginate(params)
+  end
+
+  def get_order!(id), do: Repo.get!(Order, id)
+  def get_by_slug!(slug) do
+    Order
+    |> Repo.get_by!([slug: slug])
+    |> Repo.preload([:user, :credit_card, :tickets])
+  end
+
+  def update_order(%Order{} = order, attrs, originator) do
+    order
+    |> Order.changeset(attrs)
+    |> PaperTrail.update(originator: originator)
+  end
+
+  def change_user(%Order{} = order) do
+    Order.changeset(order, %{})
+  end
+
   def listing_image(order, width \\ 1050) do
     ticket = Enum.at(order.tickets, 0)
 

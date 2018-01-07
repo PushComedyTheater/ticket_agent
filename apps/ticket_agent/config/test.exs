@@ -8,3 +8,6 @@ config :ticket_agent, TicketAgent.Repo,
   database: "ticket_agent_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+
+config :logger, level: :debug

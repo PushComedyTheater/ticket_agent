@@ -101,6 +101,7 @@ defmodule TicketAgentWeb.Router do
     resources "/classes", ClassController, as: :admin_class
     resources "/listings", ListingController, as: :admin_event, param: "titled_slug"
     resources "/images", ImageController, as: :admin_image
+    resources "/orders", OrderController, as: :admin_order
     resources "/teachers", TeacherController, as: :admin_teacher
     resources "/tickets", TicketController, as: :admin_ticket
     resources "/users", UserController, as: :admin_user

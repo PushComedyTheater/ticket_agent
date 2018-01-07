@@ -36,8 +36,11 @@ defmodule TicketAgent.User do
   end
 
   def list_users(params) do
-    Repo.paginate(User, params)
+    User
+    |> order_by([:role, :name, :email])
+    |> Repo.paginate(params)
   end
+
   def get_user!(id), do: Repo.get!(User, id)
 
   def create_user(attrs \\ %{}) do

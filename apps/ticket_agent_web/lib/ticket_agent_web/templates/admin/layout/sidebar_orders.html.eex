@@ -1,0 +1,16 @@
+<li class="<%= treeview_root(@conn, "orders") %>">
+  <a href="#">
+    <i class="fa fa-shopping-cart"></i>
+    <span>Orders</span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+    <li<%= raw treeview_action(@conn, "orders_index") %>>
+      <%= link to: admin_order_path(@conn, :index) do %>
+        <i class="fa fa-list"></i> <span>List</span>
+      <% end %>
+    </li>
+  </ul>
+</li>

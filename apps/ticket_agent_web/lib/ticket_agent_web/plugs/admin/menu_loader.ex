@@ -19,6 +19,7 @@ defmodule TicketAgentWeb.Plugs.Admin.MenuLoader do
 
   defp match_controller("Elixir.TicketAgentWeb.Admin.ClassController"), do: "classes"
   defp match_controller("Elixir.TicketAgentWeb.Admin.ListingController"), do: "listings"
+  defp match_controller("Elixir.TicketAgentWeb.Admin.OrderController"), do: "orders"
   defp match_controller("Elixir.TicketAgentWeb.Admin.TeacherController"), do: "teachers"
   defp match_controller("Elixir.TicketAgentWeb.Admin.UserController"), do: "users"
 end

@@ -29,7 +29,9 @@
                   </td>
                   <td><%= user.name %></td>
                   <td><%= user.email %></td>
-                  <td><%= link "View On Stripe", to: "https://dashboard.stripe.com/customers/#{user.stripe_customer_id}", target: "_blank" %></td>
+                  <td>
+                    <%= stripe_customer_link(user) %>
+                  </td>
                   <td><%= role_name(user.role) %></td>
                 </tr>
             <% end %>

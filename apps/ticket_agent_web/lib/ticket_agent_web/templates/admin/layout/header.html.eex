@@ -35,7 +35,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="<%= static_path(@conn, "/js/admin.js") %>"></script>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition layout-boxed skin-blue sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -55,6 +55,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
+      
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
@@ -69,9 +70,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </a>
             <ul class="dropdown-menu">
               <li class="user-footer">
-                <div class="pull-left">
-                  <a href="/" class="btn btn-default btn-flat">Return to Site</a>
-                </div>
                 <div class="pull-right">
                   <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "btn btn-default btn-flat" %>
                 </div>
