@@ -443,7 +443,6 @@ defmodule Mix.Tasks.LoadEvents do
         improv301 = SeedHelpers.create_class(%{slug: "improv301"})
         improv401 = SeedHelpers.create_class(%{slug: "improv401"})
         improv501 = SeedHelpers.create_class(%{slug: "improv501"})
-        improv_studio = SeedHelpers.create_class(%{slug: "improv_studio"})
         kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
         kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
         music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})

@@ -63,7 +63,6 @@ defmodule TicketAgent.Mappings do
       ~r/^Improv 401/i => "improv401",
       ~r/^Improv 501/i => "improv501",
       ~r/^Improv For Teens/i => "teen_improv",
-      ~r/^Improv Studio/i => "improv_studio",
       ~r/^KidProv 201/i => "kidprov201",
       ~r/^KidProv/i => "kidprov101",
     
