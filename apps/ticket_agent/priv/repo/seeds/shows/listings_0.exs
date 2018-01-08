@@ -1,13 +1,13 @@
-require Logger
-alias TicketAgent.Random
+  require Logger
+  alias TicketAgent.Random
 
-Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
+  Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 
-account = SeedHelpers.create_account("Push Comedy Theater")
-user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
-card = SeedHelpers.create_credit_card(user)
-user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
-Logger.info "Seeding shows"
+  account = SeedHelpers.create_account("Push Comedy Theater")
+  user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
+  card = SeedHelpers.create_credit_card(user)
+  user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
+  Logger.info "Seeding shows"
 Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 
 Logger.info "=========== Writing Event Tales from the Campfire: The Improvised Ghost Story ==========="
@@ -837,7 +837,9 @@ event = SeedHelpers.create_event(
 </p>
 <p>Host: Hatton Jordan
 </p>
-<p>Line-Up TBA
+<p>Line-Up
+</p>
+<p>Kim Durfee Scaringello<br>Jon Small<br>Cletus Kassady<br>Tim Young<br>Beatty Barnes
 </p>
 <p><strong><br></strong>
 </p>
@@ -873,7 +875,9 @@ listing = SeedHelpers.create_listing(
 </p>
 <p>Host: Hatton Jordan
 </p>
-<p>Line-Up TBA
+<p>Line-Up
+</p>
+<p>Kim Durfee Scaringello<br>Jon Small<br>Cletus Kassady<br>Tim Young<br>Beatty Barnes
 </p>
 <p><strong><br></strong>
 </p>
@@ -1113,6 +1117,169 @@ end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
 Logger.info "=========== END Processing Universe Event The Pre Madonnas Present: All Groan Up ==========="
+Logger.info "=========== BEGIN Processing Universe Event Workshop: The Made-Up Western ==========="
+
+Logger.info "=========== Writing Event Workshop: The Made-Up Western ==========="
+event = SeedHelpers.create_event(
+  %{
+    slug: "Q7B2JC",
+    title: "Workshop: The Made-Up Western",
+    description: """
+    <p><strong></strong><strong>***This Workshop is for only for students who've completed 301***</strong>
+</p>
+<p>Howdy there, partner! Get ready for the Improvised Western.
+</p>
+<p>Don't miss the gunslinger with a heart of gold, the damsel in distress, the villain dressed in black... bank heists, shootouts, horse chases and more.
+</p>
+<p>It's everything you love about the good old fashioned western... made up right before your eyes.
+</p>
+<p>From John Wayne to Clint Eastwood, Tombstone to True Grit... if you're a fan of westerns (or just a fan of comedy), you'll love How the West was Improvised.
+</p>
+<p><br>
+</p>
+<p><strong>Workshop: The Made-Up Western</strong>
+</p>
+<p>Wednesday, January 17th at 6:30pm<br>
+</p>
+<p>Thursday, January 18th at 6:30pm
+</p>
+<p><br>
+</p>
+<p>Class Dismissed: The Made-Up Western - Thursday, January 18th at 9pm
+</p>
+<p><strong>This is a two-day workshop, with a graduation show.</strong>
+</p>
+<p>The class is limited to 16 people.  Because of the intensive nature of the training, students need to be at both nights.
+</p>
+    """,
+    status: "normal",
+    account_id: account.id,
+    user_id: user.id
+  }
+)
+Logger.info "=========== Inserted Event #{event.id} ==========="
+Logger.info "=========== Writing Event Listing Workshop: The Made-Up Western ==========="
+listing = SeedHelpers.create_listing(
+  %{
+    user_id: user.id,
+    event_id: event.id,
+    class_id: nil,
+    slug: "Q7B2JC",
+    title: "Workshop: The Made-Up Western",
+    description: """
+    <p><strong></strong><strong>***This Workshop is for only for students who've completed 301***</strong>
+</p>
+<p>Howdy there, partner! Get ready for the Improvised Western.
+</p>
+<p>Don't miss the gunslinger with a heart of gold, the damsel in distress, the villain dressed in black... bank heists, shootouts, horse chases and more.
+</p>
+<p>It's everything you love about the good old fashioned western... made up right before your eyes.
+</p>
+<p>From John Wayne to Clint Eastwood, Tombstone to True Grit... if you're a fan of westerns (or just a fan of comedy), you'll love How the West was Improvised.
+</p>
+<p><br>
+</p>
+<p><strong>Workshop: The Made-Up Western</strong>
+</p>
+<p>Wednesday, January 17th at 6:30pm<br>
+</p>
+<p>Thursday, January 18th at 6:30pm
+</p>
+<p><br>
+</p>
+<p>Class Dismissed: The Made-Up Western - Thursday, January 18th at 9pm
+</p>
+<p><strong>This is a two-day workshop, with a graduation show.</strong>
+</p>
+<p>The class is limited to 16 people.  Because of the intensive nature of the training, students need to be at both nights.
+</p>
+    """,
+    status: "active",
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-17 23:30:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-19 02:30:00Z")
+  }
+)
+Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
+
+Logger.info "=========== Writing cover photo for #{listing.id} ==========="
+SeedHelpers.create_image(%{
+  listing_id: listing.id,
+  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6bd7744a-5020-48be-846b-6db373c9dedd"
+})
+Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
+
+# Insert show
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "show"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert workshop
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "workshop"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert western
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  listing_id: listing.id,
+  tag: "western"
+})
+Logger.info "=========== Wrote tag ==========="
+
+Logger.info "=========== Writing 80 tickets for #{listing.id} ==========="
+order = SeedHelpers.create_order(
+  %{
+    user_id: user.id, 
+    credit_card_id: card.id,
+    slug: Random.generate_slug(),
+    status: "completed", 
+    subtotal: 5000,
+    credit_card_fee: 500,
+    processing_fee: 500,
+    total_price: 6000,
+    completed_at: NaiveDateTime.utc_now()
+  }
+)
+
+Enum.each(1..80, fn(x) ->
+  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      name = FakerElixir.Name.name()
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Workshop: The Made-Up Western",
+        status: TicketAgent.Random.sample(["purchased", "emailed"]),
+        guest_name: FakerElixir.Name.name(),
+        guest_email: FakerElixir.Internet.email(:popular, name),
+        order_id: order.id,
+        description: "Ticket for Workshop: The Made-Up Western",
+        price: 8000,
+        sale_start:  NaiveDateTime.from_iso8601!("2018-01-06T05:05:06.164Z")
+      }   
+    false -> 
+      %TicketAgent.Ticket{
+        listing_id: listing.id,
+        slug: Random.generate_slug(),
+        name: "Ticket for Workshop: The Made-Up Western",
+        status: "available",
+        description: "Ticket for Workshop: The Made-Up Western",
+        price: 8000,
+        sale_start:  NaiveDateTime.from_iso8601!("2018-01-06T05:05:06.164Z")
+      }
+  end
+  TicketAgent.Repo.insert!(ticket)
+  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+end)
+Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+
+Logger.info "=========== END Processing Universe Event Workshop: The Made-Up Western ==========="
 Logger.info "=========== BEGIN Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 
 Logger.info "=========== Writing Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
@@ -1304,7 +1471,13 @@ event = SeedHelpers.create_event(
     slug: "JN8VR3",
     title: "Good Talk: The Brad McMurran Show",
     description: """
-    <p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
+    <p style="text-align: center;">***DUE TO SNOW, THIS SHOW IS MOVED TO NEXT SUNDAY, JANUARY 14TH***
+</p>
+<p style="text-align: center;">IF YOU WOULD LIKE A REFUND, PLEASE CONTACT US
+</p>
+<p><br>
+</p>
+<p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
 </p>
 <p style="text-align: center;">New Years Resolutions and Regrets
 </p>
@@ -1316,7 +1489,7 @@ event = SeedHelpers.create_event(
 </p>
 <p style="text-align: center;">New Years Resolutions and Regrets
 </p>
-<p style="text-align: center;">Sunday, January 7th at 7pm
+<p style="text-align: center;">Sunday, January 14th at 7pm
 </p>
 <p style="text-align: center;">Tickets are $12
 </p>
@@ -1358,7 +1531,13 @@ listing = SeedHelpers.create_listing(
     slug: "JN8VR3",
     title: "Good Talk: The Brad McMurran Show",
     description: """
-    <p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
+    <p style="text-align: center;">***DUE TO SNOW, THIS SHOW IS MOVED TO NEXT SUNDAY, JANUARY 14TH***
+</p>
+<p style="text-align: center;">IF YOU WOULD LIKE A REFUND, PLEASE CONTACT US
+</p>
+<p><br>
+</p>
+<p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
 </p>
 <p style="text-align: center;">New Years Resolutions and Regrets
 </p>
@@ -1370,7 +1549,7 @@ listing = SeedHelpers.create_listing(
 </p>
 <p style="text-align: center;">New Years Resolutions and Regrets
 </p>
-<p style="text-align: center;">Sunday, January 7th at 7pm
+<p style="text-align: center;">Sunday, January 14th at 7pm
 </p>
 <p style="text-align: center;">Tickets are $12
 </p>
@@ -1398,8 +1577,8 @@ listing = SeedHelpers.create_listing(
 </p>
     """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-08 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-08 01:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-15 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-15 02:00:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="

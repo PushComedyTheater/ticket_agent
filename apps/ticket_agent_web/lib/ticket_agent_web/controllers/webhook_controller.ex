@@ -6,8 +6,9 @@ defmodule TicketAgentWeb.WebhookController do
 
   def create(conn, %{"provider" => "stripe"} = params) do
     Logger.info "Processing Stripe Webhook"
+
     %WebhookDetail{}
-    |> WebhookDetail.changeset(%{request: params})
+    |> WebhookDetail.changeset(%{source: "stripe", request: params})
     |> Repo.insert
 
     Stripe.process_webhook(params)
@@ -20,7 +21,7 @@ defmodule TicketAgentWeb.WebhookController do
   def create(conn, %{"provider" => "mailgun"} = params) do
     Logger.info "Processing MailGun Webhook"
     %WebhookDetail{}
-    |> WebhookDetail.changeset(%{request: params})
+    |> WebhookDetail.changeset(%{source: "mailgun", request: params})
     |> Repo.insert
 
     conn

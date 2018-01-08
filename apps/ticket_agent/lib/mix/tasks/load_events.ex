@@ -207,6 +207,7 @@ defmodule Mix.Tasks.LoadEvents do
     class_id = load_class_id(title, type)
 
     description = listing["description"]
+
     tags = load_tags(price, title, description, type)
     keywords = get_keywords(description, non_words)
 
@@ -272,22 +273,21 @@ defmodule Mix.Tasks.LoadEvents do
     title = String.downcase(title)
     tags = [Atom.to_string(type)]
     tags = if price == 0 do
-      tags = tags ++ ["free"]
-      tags
+      tags ++ ["free"]
     else
-      tags = if price <= 5 do
-        tags = tags ++ ["deal"]
+      if price <= 5 do
+        tags ++ ["deal"]
+      else
         tags
       end
-      tags
     end
 
     Enum.reduce(Mappings.regex_mappings, tags, fn({reg, val}, acc) ->
-      acc = if String.match?(title, reg) do
-        acc = acc ++ val
-        acc
+      if String.match?(title, reg) do
+        acc ++ val
+      else
+        acc        
       end
-      acc
     end)
     |> Enum.uniq()
   end
@@ -311,16 +311,7 @@ defmodule Mix.Tasks.LoadEvents do
       String.downcase(word)
     end)
     |> Enum.reduce(%{}, fn(word, acc) ->
-      acc = if String.length(word) > 0 && !Enum.member?(non_words, String.downcase(word)) do
-        if Map.has_key?(acc, word) do
-          {_, acc} = Map.get_and_update(acc, word, fn current_value -> {current_value, current_value + 1} end)
-          acc
-        else
-          acc = Map.put(acc, word, 1)
-          acc
-        end
-      end
-      acc
+      acc = add_to_map(acc, String.downcase(word), non_words)
     end)
     |> Enum.filter(fn({x,y}) ->
       y > 2 && String.length(x) > 2 && String.valid?(x)
@@ -328,6 +319,22 @@ defmodule Mix.Tasks.LoadEvents do
     |> Enum.map(fn({x,_}) ->
       x
     end)
+  end
+
+  defp add_to_map(acc, word, non_words) do
+    if !Enum.member?(non_words, word) do
+      {_, acc} = Map.get_and_update(acc, word, fn current_value -> 
+        current_value = if is_nil(current_value) do
+          0
+        else
+          current_value
+        end
+        {current_value, current_value + 1} 
+      end)
+      acc
+    else
+      acc
+    end
   end
 
   defp process_image(photo, public_id) do
@@ -417,41 +424,43 @@ defmodule Mix.Tasks.LoadEvents do
 
   defp load_preface(type) do
     preface = """
-require Logger
-alias TicketAgent.Random
+      require Logger
+      alias TicketAgent.Random
 
-Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
+      Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 
-account = SeedHelpers.create_account("Push Comedy Theater")
-user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
-card = SeedHelpers.create_credit_card(user)
-user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
-"""
-preface = if type == "classes" do
-  preface = preface <> """
-Logger.info "Loading classes"
-improv101 = SeedHelpers.create_class(%{slug: "improv101"})
-improv201 = SeedHelpers.create_class(%{slug: "improv201"})
-improv301 = SeedHelpers.create_class(%{slug: "improv301"})
-improv401 = SeedHelpers.create_class(%{slug: "improv401"})
-improv501 = SeedHelpers.create_class(%{slug: "improv501"})
-improv_studio = SeedHelpers.create_class(%{slug: "improv_studio"})
-kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
-kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
-music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})
-music_improv201 = SeedHelpers.create_class(%{slug: "music_improv201"})
-music_improv_studio = SeedHelpers.create_class(%{slug: "music_improv_studio"})
-teen_improv = SeedHelpers.create_class(%{slug: "teen_improv"})
-sketch101 = SeedHelpers.create_class(%{slug: "sketch101"})
-sketch201 = SeedHelpers.create_class(%{slug: "sketch201"})
-standup101 = SeedHelpers.create_class(%{slug: "standup101"})
-acting101 = SeedHelpers.create_class(%{slug: "acting101"})
-"""
-  preface
-  end
-  preface = preface <> """
-Logger.info "Seeding #{type}"
-  """
-  preface
+      account = SeedHelpers.create_account("Push Comedy Theater")
+      user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
+      card = SeedHelpers.create_credit_card(user)
+      user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
+    """
+
+    preface = if type == "classes" do
+      preface <> """
+        Logger.info "Loading classes"
+        improv101 = SeedHelpers.create_class(%{slug: "improv101"})
+        improv201 = SeedHelpers.create_class(%{slug: "improv201"})
+        improv301 = SeedHelpers.create_class(%{slug: "improv301"})
+        improv401 = SeedHelpers.create_class(%{slug: "improv401"})
+        improv501 = SeedHelpers.create_class(%{slug: "improv501"})
+        improv_studio = SeedHelpers.create_class(%{slug: "improv_studio"})
+        kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
+        kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
+        music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})
+        music_improv201 = SeedHelpers.create_class(%{slug: "music_improv201"})
+        music_improv_studio = SeedHelpers.create_class(%{slug: "music_improv_studio"})
+        teen_improv = SeedHelpers.create_class(%{slug: "teen_improv"})
+        sketch101 = SeedHelpers.create_class(%{slug: "sketch101"})
+        sketch201 = SeedHelpers.create_class(%{slug: "sketch201"})
+        standup101 = SeedHelpers.create_class(%{slug: "standup101"})
+        acting101 = SeedHelpers.create_class(%{slug: "acting101"})
+      """
+    else
+      preface
+    end
+  
+    preface <> """
+      Logger.info "Seeding #{type}"
+    """
   end
 end

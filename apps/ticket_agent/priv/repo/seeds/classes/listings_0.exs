@@ -1,29 +1,30 @@
-require Logger
-alias TicketAgent.Random
+  require Logger
+  alias TicketAgent.Random
 
-Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
+  Code.require_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 
-account = SeedHelpers.create_account("Push Comedy Theater")
-user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
-card = SeedHelpers.create_credit_card(user)
-user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
-Logger.info "Loading classes"
-improv101 = SeedHelpers.create_class(%{slug: "improv101"})
-improv201 = SeedHelpers.create_class(%{slug: "improv201"})
-improv301 = SeedHelpers.create_class(%{slug: "improv301"})
-improv401 = SeedHelpers.create_class(%{slug: "improv401"})
-improv501 = SeedHelpers.create_class(%{slug: "improv501"})
-kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
-kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
-music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})
-music_improv201 = SeedHelpers.create_class(%{slug: "music_improv201"})
-music_improv_studio = SeedHelpers.create_class(%{slug: "music_improv_studio"})
-teen_improv = SeedHelpers.create_class(%{slug: "teen_improv"})
-sketch101 = SeedHelpers.create_class(%{slug: "sketch101"})
-sketch201 = SeedHelpers.create_class(%{slug: "sketch201"})
-standup101 = SeedHelpers.create_class(%{slug: "standup101"})
-acting101 = SeedHelpers.create_class(%{slug: "acting101"})
-Logger.info "Seeding classes"
+  account = SeedHelpers.create_account("Push Comedy Theater")
+  user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
+  card = SeedHelpers.create_credit_card(user)
+  user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
+  Logger.info "Loading classes"
+  improv101 = SeedHelpers.create_class(%{slug: "improv101"})
+  improv201 = SeedHelpers.create_class(%{slug: "improv201"})
+  improv301 = SeedHelpers.create_class(%{slug: "improv301"})
+  improv401 = SeedHelpers.create_class(%{slug: "improv401"})
+  improv501 = SeedHelpers.create_class(%{slug: "improv501"})
+  improv_studio = SeedHelpers.create_class(%{slug: "improv_studio"})
+  kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
+  kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
+  music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})
+  music_improv201 = SeedHelpers.create_class(%{slug: "music_improv201"})
+  music_improv_studio = SeedHelpers.create_class(%{slug: "music_improv_studio"})
+  teen_improv = SeedHelpers.create_class(%{slug: "teen_improv"})
+  sketch101 = SeedHelpers.create_class(%{slug: "sketch101"})
+  sketch201 = SeedHelpers.create_class(%{slug: "sketch201"})
+  standup101 = SeedHelpers.create_class(%{slug: "standup101"})
+  acting101 = SeedHelpers.create_class(%{slug: "acting101"})
+  Logger.info "Seeding classes"
 Logger.info "=========== BEGIN Processing Universe Event Improv for Teens at the Push Comedy Theater ==========="
 
 Logger.info "=========== Writing Class Listing Improv for Teens at the Push Comedy Theater ==========="

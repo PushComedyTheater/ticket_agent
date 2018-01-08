@@ -6,6 +6,7 @@ defmodule TicketAgent.WebhookDetail do
   @foreign_key_type :binary_id
 
   schema "webhook_details" do
+    field :source, :string
     field :request, :map
     timestamps(type: :utc_datetime)
   end

@@ -105,6 +105,7 @@ defmodule TicketAgentWeb.Router do
     resources "/teachers", TeacherController, as: :admin_teacher
     resources "/tickets", TicketController, as: :admin_ticket
     resources "/users", UserController, as: :admin_user
+    resources "/webhooks", WebHookController, as: :admin_webhook
 
     get "/", Redirect, to: "/admin/dashboard"
   end

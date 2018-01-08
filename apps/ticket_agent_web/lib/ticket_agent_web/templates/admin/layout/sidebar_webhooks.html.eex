@@ -1,0 +1,17 @@
+<li class="<%= treeview_root(@conn, "webhooks") %>">
+  <a href="#">
+
+    <i class="ion ion-ios-gear-outline"></i>
+    <span>Webhooks</span>
+    <span class="pull-right-container">
+      <i class="fa fa-angle-left pull-right"></i>
+    </span>
+  </a>
+  <ul class="treeview-menu">
+    <li<%= raw treeview_action(@conn, "webhooks_index") %>>
+      <%= link to: admin_webhook_path(@conn, :index) do %>
+        <i class="fa fa-list"></i> <span>List</span>
+      <% end %>
+    </li>
+  </ul>
+</li>

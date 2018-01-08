@@ -21,6 +21,7 @@
         <%= render "sidebar_shows.html", assigns %>
         <%= render "sidebar_orders.html", assigns %>
         <%= render "sidebar_users.html", assigns %>
+        <%= render "sidebar_webhooks.html", assigns %>
         <li></li>
         <li>
         <a href="/">Return To Site</a>
