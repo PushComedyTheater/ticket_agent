@@ -89,6 +89,21 @@ defmodule TicketAgent.Listing do
     })
   end
 
+  def to_ical(listing) do
+    events = [
+      %ICalendar.Event{
+        summary: listing.title,
+        dtstart: listing.start_at,
+        dtend:   listing.end_at,
+        description: Curtail.truncate(HtmlSanitizeEx.strip_tags(listing.description), length: 400),
+        location: "Push Comedy Theater, 763 Granby St, Norfolk, VA 23510, USA",
+        url: "http://pushcomedytheater.com/events/#{listing.slug}-#{Listing.slugified_title(listing.title)}"
+      }
+    ]
+    %ICalendar{ events: events } 
+    |> ICalendar.to_ics
+  end  
+  
   def upcoming_shows do
     query = from l in Listing,
             where: fragment("? >= NOW()", l.start_at),

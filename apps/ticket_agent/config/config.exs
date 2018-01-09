@@ -10,7 +10,6 @@ config :paper_trail, repo: TicketAgent.Repo,
 
 import_config "#{Mix.env}.exs"
 
-
 {sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
 sha = String.trim(sha)
 config :ticket_agent, :release, sha

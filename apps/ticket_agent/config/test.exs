@@ -7,7 +7,8 @@ config :ticket_agent, TicketAgent.Repo,
   password: "postgres",
   database: "ticket_agent_test",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  log: false
 
-
-config :logger, level: :debug
+config :logger, level: :warn
+config :ticket_agent, :ticket_lock_length, 0

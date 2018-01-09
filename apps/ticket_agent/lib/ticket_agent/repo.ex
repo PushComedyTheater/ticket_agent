@@ -9,4 +9,8 @@ defmodule TicketAgent.Repo do
   def init(_, opts) do
     {:ok, Keyword.put(opts, :url, System.get_env("DATABASE_URL"))}
   end
+
+  def reload(%module{id: id}) do
+    get(module, id)
+  end  
 end

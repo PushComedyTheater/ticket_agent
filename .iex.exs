@@ -12,9 +12,9 @@
     Repo,
     Teacher,
     Ticket,
-    TicketRegistration,
     User,
     UserCredential,
+    Waitlist,
     WebhookDetail
   }
   require Logger

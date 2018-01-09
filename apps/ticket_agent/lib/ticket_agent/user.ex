@@ -108,7 +108,7 @@ defmodule TicketAgent.User do
   end
 
   def send_welcome_email(name, email) do
-    TicketAgent.UserEmail.welcome_email(name, email)
+    TicketAgent.Emails.UserWelcomeEmail.welcome_email(name, email)
     |> TicketAgent.Mailer.deliver!
   end
 

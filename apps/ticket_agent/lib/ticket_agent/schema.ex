@@ -26,7 +26,6 @@ defmodule TicketAgent.Schema do
         Repo,
         Teacher,
         Ticket,
-        TicketRegistration,
         User,
         UserCredential,
         Waitlist,

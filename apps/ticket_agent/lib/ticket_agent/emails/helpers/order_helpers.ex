@@ -54,22 +54,6 @@ defmodule TicketAgent.OrderHelpers do
     end
   end
 
-  def generate_ical(listing) do
-    events = [
-      %ICalendar.Event{
-        summary: listing.title,
-        dtstart: listing.start_at,
-        dtend:   listing.end_at,
-        description: Curtail.truncate(HtmlSanitizeEx.strip_tags(listing.description), length: 400),
-        location: "Push Comedy Theater, 763 Granby St, Norfolk, VA 23510, USA",
-        url: "http://pushcomedytheater.com/events/#{listing.slug}"
-      }
-    ]
-    ics = %ICalendar{ events: events } |> ICalendar.to_ics
-
-    File.write!("#{listing.slug}.ics", ics)
-  end
-
   def money(price) do
     "$" <> :erlang.float_to_binary(price / 100, decimals: 2)
   end
@@ -79,4 +63,10 @@ defmodule TicketAgent.OrderHelpers do
       "<tr><td>#{ticket.description}</td><td>$#{:erlang.float_to_binary(ticket.price / 100,decimals: 2)}</td></tr>"
     end)
   end
+
+  def ticket_table_text(order) do
+    Enum.map_join(order.tickets, "\n", fn(ticket) ->
+      "#{ticket.description}      $#{:erlang.float_to_binary(ticket.price / 100,decimals: 2)}"
+    end)
+  end  
 end

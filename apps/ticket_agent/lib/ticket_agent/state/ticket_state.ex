@@ -1,46 +1,22 @@
-require Logger
 defmodule TicketAgent.State.TicketState do
+  require Logger
   alias Ecto.Multi
   alias TicketAgent.{Repo, Ticket}
   alias TicketAgent.Finders.TicketFinder
   import Ecto.Query
-
   @seconds_to_add Application.get_env(:ticket_agent, :ticket_lock_length, 302)
 
-  def set_tickets_processing_transaction(ticket_ids, order_id) do
-    Logger.info "set_tickets_processing_transaction->order_id       = #{order_id}"
-    Logger.info "set_tickets_processing_transaction->ticket_ids     = #{inspect ticket_ids}"
-    Logger.info "set_tickets_processing_transaction->seconds_to_add = #{inspect @seconds_to_add}"
+  # Tickets can go from processing -> locked
+  def lock_processing_tickets(ticket_ids, order_id, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "lock_processing_tickets->ticket_ids     = #{inspect ticket_ids}"
+    Logger.info "lock_processing_tickets->order_id       = #{order_id}"
+    Logger.info "lock_processing_tickets->timestamp      = #{inspect timestamp}"
+    Logger.info "lock_processing_tickets->seconds_to_add = #{inspect @seconds_to_add}"
 
-    locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(@seconds_to_add)
-
-    Multi.new()
-    |> Multi.update_all(:processing_tickets,
-      from(
-        t in Ticket,
-        where: t.id in ^ticket_ids,
-        where: t.order_id == ^order_id,
-        where: t.status == "locked"
-      ),
-      [
-        set: [
-          status: "processing",
-          locked_until: locked_until
-        ]
-      ],
-      returning: true
-    )
-  end
-
-  def set_tickets_locked_transaction(ticket_ids, order_id) do
-    Logger.info "set_tickets_locked_transaction->order_id       = #{order_id}"
-    Logger.info "set_tickets_locked_transaction->ticket_ids     = #{inspect ticket_ids}"
-    Logger.info "set_tickets_locked_transaction->seconds_to_add = #{inspect @seconds_to_add}"
-
-    locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(@seconds_to_add)
+    locked_until = timestamp |> Calendar.NaiveDateTime.add!(@seconds_to_add)
 
     Multi.new()
-    |> Multi.update_all(:available_tickets,
+    |> Multi.update_all(:locked_processing_tickets,
       from(
         t in Ticket,
         where: t.id in ^ticket_ids,
@@ -57,12 +33,38 @@ defmodule TicketAgent.State.TicketState do
     )
   end
 
-  def set_tickets_purchased_transaction(ticket_ids, order_id) do
-    Logger.info "set_tickets_purchased_transaction->order_id       = #{order_id}"
-    Logger.info "set_tickets_purchased_transaction->ticket_ids     = #{inspect ticket_ids}"
+  # Tickets can go from locked -> processing
+  def unlock_tickets_to_processing(ticket_ids, order_id) do
+    Logger.info "unlock_tickets_to_processing->order_id       = #{order_id}"
+    Logger.info "unlock_tickets_to_processing->ticket_ids     = #{inspect ticket_ids}"
+    Logger.info "unlock_tickets_to_processing->seconds_to_add = #{inspect @seconds_to_add}"
 
     Multi.new()
-    |> Multi.update_all(:purchased_tickets,
+    |> Multi.update_all(:unlocked_processing_tickets,
+      from(
+        t in Ticket,
+        where: t.id in ^ticket_ids,
+        where: t.order_id == ^order_id,
+        where: t.status == "locked"
+      ),
+      [
+        set: [
+          status: "processing",
+          locked_until: nil
+        ]
+      ],
+      returning: true
+    )
+  end
+
+  # Tickets can go from processing -> purchased
+  def purchase_processing_tickets(ticket_ids, order_id, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "purchase_processing_tickets->ticket_ids     = #{inspect ticket_ids}"
+    Logger.info "purchase_processing_tickets->order_id       = #{order_id}"
+    Logger.info "purchase_processing_tickets->timestamp      = #{inspect timestamp}"
+
+    Multi.new()
+    |> Multi.update_all(:purchased_processing_tickets,
       from(
         t in Ticket,
         where: t.id in ^ticket_ids,
@@ -72,18 +74,44 @@ defmodule TicketAgent.State.TicketState do
       [
         set: [
           status: "purchased",
-          locked_until: nil
+          locked_until: nil,
+          purchased_at: timestamp
         ]
       ],
       returning: true
     )
   end
 
-  def set_ticket_checkedin_transaction(ticket_id, user_id) do
-    Logger.info "set_ticket_checkedin_transaction->ticket_id = #{inspect ticket_id}"
+  # Tickets can go from purchased -> emailed
+  def email_purchased_ticket(ticket_id, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "email_purchased_ticket->ticket_id = #{inspect ticket_id}"
+    Logger.info "email_purchased_ticket->timestamp = #{inspect timestamp}"
 
     Multi.new()
-    |> Multi.update_all(:available_tickets,
+    |> Multi.update_all(:emailed_tickets,
+      from(
+        t in Ticket,
+        where: t.id == ^ticket_id,
+        where: t.status  == "purchased"
+      ),
+      [
+        set: [
+          status: "emailed",
+          emailed_at: timestamp
+        ]
+      ],
+      returning: true
+    )
+  end  
+
+  # Tickets can go from purchased/email -> checkedin
+  def set_ticket_checkedin(ticket_id, user_id, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "set_ticket_checkedin->ticket_id = #{inspect ticket_id}"
+    Logger.info "set_ticket_checkedin->user_id   = #{inspect user_id}"
+    Logger.info "set_ticket_checkedin->timestamp = #{inspect timestamp}"
+
+    Multi.new()
+    |> Multi.update_all(:checked_in_tickets,
       from(
         t in Ticket,
         where: t.id == ^ticket_id,
@@ -92,7 +120,7 @@ defmodule TicketAgent.State.TicketState do
       [
         set: [
           status: "checkedin",
-          checked_in_at: NaiveDateTime.utc_now(),
+          checked_in_at: timestamp,
           checked_in_by: user_id
         ]
       ],

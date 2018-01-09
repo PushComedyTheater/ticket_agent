@@ -130,6 +130,22 @@
             </a>
           </li>
         </ul>
+        <br />
+        <h3 class="h5 g-color-black mb-3">Calendar:</h3>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item mr-1">
+            <a class="btn u-btn-outline-red g-rounded-25" href="<%= TicketAgent.OrderHelpers.google_calendar_link(@listing) %>" target="_blank">
+              <i class="mr-1 fa fa-google"></i>
+              Add to Google Calendar
+            </a>
+          </li>
+          <li class="list-inline-item mx-1">
+            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_path(@conn, :show, @listing) %>.ics" target="_blank">
+              <i class="mr-1 fa fa-calendar"></i>
+              ICal
+            </a>
+          </li>
+        </ul>        
       </div>
       <!-- End Share -->
     </div>

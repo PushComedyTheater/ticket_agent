@@ -3,6 +3,7 @@ defmodule TicketAgent.Services.Stripe do
   @stripe_api_version "2017-08-15"
   @stripe_user_agent "TicketAgent 1.0"
   alias TicketAgent.{OrderDetail, Repo, User}
+  alias TicketAgent.Services.Stripe
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
@@ -66,6 +67,24 @@ defmodule TicketAgent.Services.Stripe do
         {:error, anything}
     end
   end
+
+  def load_stripe_token(user, token_id, metadata) do
+    Logger.info "load_stripe_token -> #{token_id}"
+
+    case User.get_stripe_customer_id(user) do
+      nil ->
+        case Stripe.create_customer(token_id, user, metadata) do
+          {:error, error} ->
+            Logger.error "Could not create customer because: #{inspect error}"
+            {:token_error, error["message"]}
+          {:ok, user} ->
+            {:ok, user.stripe_customer_id}
+        end
+      stripe_customer_id ->
+        Logger.info "Found existing customer id"
+        {:ok, stripe_customer_id}
+    end
+  end  
 
   defp load_charge_values(order, customer_id, amount, description) do
     %{

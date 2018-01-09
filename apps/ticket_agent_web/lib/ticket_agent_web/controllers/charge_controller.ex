@@ -3,7 +3,7 @@ defmodule TicketAgentWeb.ChargeController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, User}
   alias TicketAgent.Services.Stripe
-  alias TicketAgent.State.{OrderState, TicketState, UserState}
+  alias TicketAgent.State.{ChargeProcessingState, OrderState, TicketState, UserState}
   use Coherence.Config
   plug TicketAgentWeb.LoadListing when action in [:create]
   plug TicketAgentWeb.LoadOrder when action in [:create]
@@ -31,14 +31,15 @@ defmodule TicketAgentWeb.ChargeController do
     # complete order
     # send ticket email
 
-    with {:ok, %{processing_tickets: {^ticket_count, _updated_tickets}, order_processing: {1, _updated_order}}} <- set_order_and_tickets_processing(order, ticket_ids),
-         {:ok, stripe_customer_id} <- load_stripe_token(current_user, token_id, metadata),
+    with {:ok, %{processing_tickets: {^ticket_count, _updated_tickets}, order_processing: {1, _updated_order}}} <- ChargeProcessingState.set_order_and_tickets_processing(order, ticket_ids),
+         {:ok, stripe_customer_id} <- Stripe.load_stripe_token(current_user, token_id, metadata),
          {:ok, _response} <- Stripe.create_charge(stripe_customer_id, price, description, order, token["client_ip"], current_user, metadata),
          {:ok, %{purchased_tickets: {^ticket_count, _updated_tickets}, completed_order: {1, _updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids),
          {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
          {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
 
         # Task.start(fn ->
+        #   TicketAgent.Emails.OrderEmail.order_email
         # end)
         conn
         |> render("create.json")
@@ -69,16 +70,9 @@ defmodule TicketAgentWeb.ChargeController do
     |> render("error.json", %{code: code, reason: message})
   end
 
-  defp set_order_and_tickets_processing(order, ticket_ids) do
-    ticket_ids
-    |> TicketState.set_tickets_processing_transaction(order.id)
-    |> Ecto.Multi.append(OrderState.set_order_processing_transaction(order))
-    |> Repo.transaction
-  end
-
   defp set_order_and_tickets_completed(order, ticket_ids) do
     ticket_ids
-    |> TicketState.set_tickets_purchased_transaction(order.id)
+    |> TicketState.purchase_processing_tickets(order.id)
     |> Ecto.Multi.append(OrderState.set_order_completed_transaction(order))
     |> Repo.transaction
   end
@@ -92,28 +86,12 @@ defmodule TicketAgentWeb.ChargeController do
 
   defp reset_order_and_tickets(order, ticket_ids) do
     ticket_ids
-    |> TicketState.set_tickets_locked_transaction(order.id)
+    |> TicketState.lock_processing_tickets(order.id)
     |> Ecto.Multi.append(OrderState.set_order_started_transaction(order))
     |> Repo.transaction
   end
 
-  defp load_stripe_token(user, token_id, metadata) do
-    Logger.info "load_stripe_token -> #{token_id}"
 
-    case User.get_stripe_customer_id(user) do
-      nil ->
-        case Stripe.create_customer(token_id, user, metadata) do
-          {:error, error} ->
-            Logger.error "Could not create customer because: #{inspect error}"
-            {:token_error, error["message"]}
-          {:ok, user} ->
-            {:ok, user.stripe_customer_id}
-        end
-      stripe_customer_id ->
-        Logger.info "Found existing customer id"
-        {:ok, stripe_customer_id}
-    end
-  end
 
   defp load_metadata(nil, conn, params) do
     Logger.info "load_metadata for no current user"

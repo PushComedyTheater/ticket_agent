@@ -4,6 +4,8 @@ defmodule TicketAgentWeb.TicketAuthController do
   alias Coherence.ControllerHelpers, as: Helpers
   alias Coherence.Schemas
   alias TicketAgent.{Repo, User}
+  alias TicketAgent.Mailer
+  alias TicketAgent.Emails.OneTimeLogin
   alias TicketAgent.Finders.UserFinder
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
 
@@ -60,8 +62,8 @@ defmodule TicketAgentWeb.TicketAuthController do
 
         url = "https://#{conn.host}/ticket_auth/#{token}?show_id=#{show_id}"
 
-        TicketAgent.UserEmail.one_time_login(user, url)
-        |> TicketAgent.Mailer.deliver!
+        OneTimeLogin.one_time_login(user, show_id)
+        |> Mailer.deliver!
 
         conn
         |> put_flash(:error, "Please check your email for information on how to continue your guest checkout.")

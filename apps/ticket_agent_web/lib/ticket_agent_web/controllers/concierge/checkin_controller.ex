@@ -25,10 +25,10 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
 
   def create(conn, %{"ticket_id" => ticket_id}) do
     user = Coherence.current_user(conn)
-    transaction = TicketState.set_ticket_checkedin_transaction(ticket_id, user.id)
+    transaction = TicketState.set_ticket_checkedin(ticket_id, user.id)
 
     ticket = case Repo.transaction(transaction) do
-      {:ok, %{available_tickets: {1, [ticket]}}} ->
+      {:ok, %{checked_in_tickets: {1, [ticket]}}} ->
         Logger.info "Updated ticket #{ticket_id}"
         ticket
       _ ->

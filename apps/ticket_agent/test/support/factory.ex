@@ -1,9 +1,27 @@
 defmodule TicketAgent.Factory do
+  alias TicketAgent.{
+    Account,
+    Class,
+    CreditCard,
+    Event,
+    Listing,
+    ListingImage,
+    ListingTag,
+    Order,
+    OrderDetail,
+    Random,
+    Teacher,
+    Ticket,
+    User,
+    UserCredential,
+    Waitlist,
+    WebhookDetail
+  }
   @lorem "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis leo eu mauris tincidunt aliquam quis sed sapien. Donec tristique malesuada diam ut venenatis. Quisque bibendum scelerisque massa. Suspendisse potenti. Pellentesque odio lacus, cursus ut venenatis id, posuere vitae ligula. Morbi mollis libero non ex vulputate interdum. Nullam a suscipit nisi. Morbi egestas interdum neque vel vestibulum. Aenean lacinia euismod viverra. Phasellus suscipit, lectus quis viverra sodales, arcu quam dictum est, porta iaculis sapien nisi nec urna. Curabitur pulvinar mi at odio mollis, sed scelerisque metus aliquam. Phasellus sit amet ante porta, imperdiet libero sit amet, blandit augue. Vestibulum in congue mauris. Mauris sed dolor quis velit euismod aliquet."
   use ExMachina.Ecto, repo: TicketAgent.Repo
 
   def account_factory do
-    %TicketAgent.Account{
+    %Account{
       name: sequence(:name, &"Account #{&1}"),
       description: "",
       url: "",
@@ -17,7 +35,7 @@ defmodule TicketAgent.Factory do
     title = sequence(:name, &"#{type} 10#{&1}")
     slug = String.split(title, " ") |> hd |> String.downcase
 
-    %TicketAgent.Class{
+    %Class{
       type: type,
       title: title,
       slug: slug,
@@ -26,9 +44,28 @@ defmodule TicketAgent.Factory do
     }
   end
 
+  def credit_card_factory do
+    %CreditCard{
+      user: build(:user),
+      stripe_id: sequence(:stripe_id, &"card_1BhrdEBwsbTzoyHbzn#{&1}"),
+      type: Random.sample(["Visa", "American Express", "MasterCard", "Discover", "JCB", "Diners Club", "Unknown"]),
+      name: sequence(:name, &"Jane Smith#{&1}"),
+      line_1_check: "pass",
+      zip_check: "pass",
+      cvc_check: "pass",
+      exp_month: 12,
+      exp_year: 2018,
+      last_4: "4242"
+    }
+  end
+
+  def event_factory do
+    %Event{}
+  end
+
   def listing_factory do
-    %TicketAgent.Listing{
-      slug: TicketAgent.Listing.generate_slug(),
+    %Listing{
+      slug: Random.generate_slug(),
       title: ExMachina.Sequence.next("title"),
       description: @lorem,
       status: "active",
@@ -38,17 +75,66 @@ defmodule TicketAgent.Factory do
   end
 
   def listing_image_factory do
-    %TicketAgent.ListingImage{
+    %ListingImage{
       listing: build(:listing),
       url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png"
     }
   end
 
+  def listing_tag_factory do
+    %ListingTag{}
+  end
+
+  def order_factory do
+    %Order{
+      user: build(:user),
+      credit_card: build(:credit_card),
+      listing: build(:listing),
+      slug: Random.generate_slug(),
+      status: "completed",
+      subtotal: 100,
+      credit_card_fee: 100,
+      processing_fee: 100,
+      total_price: 300
+    }
+  end
+
+  def order_detail_factory do
+    %OrderDetail{}
+  end
+
+  def teacher_factory do
+    %Teacher{}
+  end
+
+  def ticket_factory do
+    %Ticket{
+      slug: Random.generate_slug(),
+      listing: build(:listing),
+      order: build(:order),
+      name: sequence(:name, &"Ticket for It #{&1}"),
+      status: "available",
+      price: 500
+    }
+  end
+
   def user_factory do
-    %TicketAgent.User{
+    %User{
       name: sequence(:name, &"Jane Smith#{&1}"),
       email: sequence(:email, &"email-#{&1}@example.com"),
       account: build(:account)
     }
+  end
+
+  def user_credential_factory do
+    %UserCredential{}
+  end
+
+  def waitlist_factory do
+    %Waitlist{}
+  end
+
+  def webhook_detail_factory do
+    %WebhookDetail{}
   end
 end
