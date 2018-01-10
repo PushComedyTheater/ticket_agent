@@ -133,4 +133,4 @@
   });
 </script>
 <script type="text/javascript" src="/js/stripe_related.js"></script>
-<script src="https://assets.pushcomedytheater.com/2.0/jquery.countdown.min.js"></script>
+<script src="https://cdn.rawgit.com/hilios/jQuery.countdown/master/dist/jquery.countdown.min.js"></script>

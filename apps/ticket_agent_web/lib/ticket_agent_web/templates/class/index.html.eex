@@ -53,8 +53,7 @@
                   <div class="pull-right">
                     <%= link "More Info", to: class_path(@conn, :show, class.slug), class: "btn btn-xl u-btn-outline-black g-font-size-default mr-2" %>  
                     <%= if listing do %>
-                      <%= link "Register Now", to: event_path(@conn, :show, listing), class: "btn btn-xl u-btn-primary g-font-size-default" %>
-                      
+                      <%= link "Register Now", to: ticket_path(@conn, :new, show_id: listing.slug), class: "btn btn-xl u-btn-primary g-font-size-default" %>
                     <% end %>
                   </div>
                 </div>

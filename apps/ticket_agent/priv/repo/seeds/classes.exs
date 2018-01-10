@@ -128,7 +128,7 @@ music_improv_studio = SeedHelpers.create_class(
     type: "improvisation",
     slug: "music_improv_studio",
     description: "This course builds on what is learned in Musical Improv 101 and 201. We will work together on creating new forms and building skills for more varied and interesting scenes and songs.<br />Together, we will create a thematic musical form that will be the structure for our graduation show.",
-    photo_url: "http://res.cloudinary.com/push-comedy-theater/image/upload/v1508021107/covers/yes_yfvtxd.jpg",
+    photo_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1508021107/covers/yes_yfvtxd.jpg",
     menu_order: 10,
     account_id: account.id,
     prerequisite_id: music_improv201.id
