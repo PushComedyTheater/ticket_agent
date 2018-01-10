@@ -10,7 +10,7 @@ defmodule TicketAgent.Finders.TicketFinder do
       where: t.status == "locked" or t.status == "purchased",
       select: t
     )
-    |> Repo.all
+    |> Repo.all()
   end
 
   def count_by_listing_and_user(_, nil), do: {false, nil}

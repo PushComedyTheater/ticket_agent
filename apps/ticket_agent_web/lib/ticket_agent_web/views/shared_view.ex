@@ -147,7 +147,7 @@ defmodule TicketAgentWeb.SharedView do
   end
 
   def page_image(conn) do
-    og_data(conn, :page_image, "https://cdn.pushcomedytheater.com/images/logo.jpg")
+    og_data(conn, :page_image, "https://cdn.rawgit.com/PushComedyTheater/assets/master/images/logo.jpg")
   end
 
   def page_title(conn), do: og_data(conn, :page_title, "Push Comedy Theater")

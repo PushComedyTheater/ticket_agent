@@ -16,7 +16,7 @@
               <!-- Team Block -->
               <figure class="u-block-hover">
                 <!-- Figure Image -->
-                <%= img_tag(static_path(@conn, "/images/#{teacher.slug}.jpg"), class: "w-100", alt: teacher.name, onerror: "this.src='https://cdn.pushcomedytheater.com/images/red_mask.png';") %>
+                <%= img_tag(static_path(@conn, "/images/#{teacher.slug}.jpg"), class: "w-100", alt: teacher.name, onerror: "this.src='https://cdn.rawgit.com/PushComedyTheater/assets/master/images/red_mask.png';") %>
                 <!-- End Figure Image-->
 
                 <!-- Figure Info -->

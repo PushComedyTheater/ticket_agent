@@ -24,7 +24,7 @@ defmodule TicketAgentWeb.AboutController do
     conn
     |> assign(:page_title, teacher.name)
     |> assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(teacher.biography, false))
-    |> assign(:page_image, "https://cdn.pushcomedytheater.com/images/#{teacher.slug}.jpg")
+    |> assign(:page_image, "https://cdn.rawgit.com/PushComedyTheater/assets/master/images/#{teacher.slug}.jpg")
     |> render("show.html", teacher: teacher, teachers: teachers)
   end
 end

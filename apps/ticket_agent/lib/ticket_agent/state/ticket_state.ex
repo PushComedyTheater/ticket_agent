@@ -128,53 +128,56 @@ defmodule TicketAgent.State.TicketState do
     )
   end
 
+  # Locks a particular number of tickets
+  def lock_tickets(listing_id, order_id, quantity, timestamp \\ NaiveDateTime.utc_now()) do
+    locked_until = timestamp |> Calendar.NaiveDateTime.add!(@seconds_to_add)
+
+    Logger.info "lock_tickets->listing_id     = #{inspect listing_id}"
+    Logger.info "lock_tickets->order_id       = #{inspect order_id}"
+    Logger.info "lock_tickets->quantity       = #{inspect quantity}"
+    Logger.info "lock_tickets->timestamp      = #{inspect timestamp}" 
+    Logger.info "lock_tickets->seconds_to_add = #{inspect @seconds_to_add}"  
+    Logger.info "lock_tickets->locked_until   = #{inspect locked_until}"   
+    
+    subset_query =
+      from(
+        t in Ticket,
+        where: t.listing_id == ^listing_id,
+        where: t.status == "available",
+        where: is_nil(t.locked_until),
+        where: is_nil(t.order_id),
+        where: is_nil(t.guest_name),
+        where: is_nil(t.guest_email),
+        limit: ^quantity
+      )
+
+    Multi.new()
+    |> Multi.update_all(:lock_tickets,
+      from(
+        t in Ticket,
+        join: s in subquery(subset_query),
+        on: s.id == t.id
+      ),
+      [
+        set: [
+          status: "locked",
+          order_id: order_id,
+          locked_until: locked_until
+        ]
+      ],
+      returning: true
+    )
+  end  
+
+  # Reserves tickets for a particular order
   def reserve_tickets(%{id: order_id} = order, input_tickets) do
     listing_id = Enum.at(input_tickets, 0)["listing_id"]
 
-    existing_tickets = TicketFinder.find_by_listing_and_order(listing_id, order_id)
-
-    to_be_created_tickets =
-      input_tickets
-      |> Enum.filter(fn(ticket) ->
-        Logger.info "Looking for existing ticket #{inspect ticket}"
-        Enum.find(existing_tickets, fn(existing_ticket) ->
-          (existing_ticket.id == ticket["id"]) ||
-          (
-            existing_ticket.guest_name == ticket["name"] &&
-            existing_ticket.guest_email == ticket["email"]
-           )
-        end)
-        |> is_nil
-      end)
-
-    to_be_created_ticket_count = Enum.count(to_be_created_tickets)
-    Logger.info "Tickets to create = #{inspect to_be_created_tickets} #{to_be_created_ticket_count}"
-
-    if to_be_created_ticket_count > 0 do
-      {:ok, _} =
-        listing_id
-        |> lock_operation(order_id, to_be_created_ticket_count)
-        |> Repo.transaction()
-
-      available_tickets =
-        listing_id
-        |> TicketFinder.find_by_listing_and_order(order_id)
-
-      input_tickets
-      |> Enum.with_index()
-      |> Enum.map(fn({%{"name" => name, "email" => email}, index}) ->
-        Enum.at(available_tickets, index)
-        |> Ecto.Changeset.change([guest_name: name, guest_email: email])
-        |> Repo.update!
-      end)
-    end
-
-    tickets =
-      listing_id
-      |> TicketFinder.find_by_listing_and_order(order_id)
-
-    minimum_ticket = Enum.min_by(tickets, fn(ticket) -> ticket.locked_until end)
-    {order, tickets, minimum_ticket.locked_until}
+    order
+    |> filter_created_tickets(listing_id, input_tickets)
+    |> create_new_tickets(listing_id, order_id)
+    
+    load_minimum_locked_until(order, listing_id)
   end
 
   def release_tickets(%{id: order_id}, input_ticket_ids) do
@@ -204,37 +207,54 @@ defmodule TicketAgent.State.TicketState do
     )
   end
 
-  def lock_operation(listing_id, order_id, quantity) do
-    subset_query =
-      from(
-        t in Ticket,
-        where: t.listing_id == ^listing_id,
-        where: t.status == "available",
-        where: is_nil(t.locked_until),
-        where: is_nil(t.order_id),
-        where: is_nil(t.guest_name),
-        where: is_nil(t.guest_email),
-        limit: ^quantity
-      )
+  def filter_created_tickets(order, listing_id, input_tickets) do
+    Logger.info "find_existing_tickets->order.id:         #{inspect order.id}"
+    Logger.info "find_existing_tickets->listing_id:       #{inspect listing_id}"
+    Logger.info "find_existing_tickets->input_tickets:    #{inspect input_tickets}"
 
-    Logger.info "seconds_to_add set to #{inspect @seconds_to_add}"
-    locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(@seconds_to_add)
+    existing_tickets = 
+      listing_id
+      |> TicketFinder.find_by_listing_and_order(order.id)
+      
+    Logger.info "find_existing_tickets->existing_tickets: #{inspect existing_tickets}"
 
-    Multi.new()
-    |> Multi.update_all(:lock_tickets,
-      from(
-        t in Ticket,
-        join: s in subquery(subset_query),
-        on: s.id == t.id
-      ),
-      [
-        set: [
-          status: "locked",
-          order_id: order_id,
-          locked_until: locked_until
-        ]
-      ],
-      returning: false
-    )
+    input_tickets
+    |> Enum.filter(fn(ticket) ->
+      Enum.find(existing_tickets, fn(existing_ticket) -> 
+        ((existing_ticket.id == ticket["id"]) || ((existing_ticket.guest_name == ticket["name"]) && (existing_ticket.guest_email == ticket["email"])))
+      end)
+      |> is_nil
+    end)    
+  end
+
+  def create_new_tickets(tickets, _, _) when length(tickets) == 0, do: tickets
+  def create_new_tickets(tickets, listing_id, order_id) when length(tickets) > 0 do
+    to_be_created_ticket_count = Enum.count(tickets)
+    
+    {:ok, _} =
+      listing_id
+      |> lock_tickets(order_id, to_be_created_ticket_count)
+      |> Repo.transaction()  
+      
+    available_tickets =
+      listing_id
+      |> TicketFinder.find_by_listing_and_order(order_id)
+
+    tickets
+    |> Enum.with_index()
+    |> Enum.map(fn({%{"name" => name, "email" => email}, index}) ->
+      Enum.at(available_tickets, index)
+      |> Ecto.Changeset.change([guest_name: name, guest_email: email])
+      |> Repo.update!
+    end)
+  end
+
+  def load_minimum_locked_until(order, listing_id) do
+    tickets =
+      listing_id
+      |> TicketFinder.find_by_listing_and_order(order.id)
+    
+    minimum_ticket = Enum.min_by(tickets, fn(ticket) -> ticket.locked_until end)
+    {order, tickets, minimum_ticket.locked_until}
   end
 end

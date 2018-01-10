@@ -5,12 +5,11 @@ defmodule TicketAgentWeb.RootView do
   @months ~w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
   @images ~w(push_sign push_sign push_sign push_sign push_sign push_sign driving
              lion lion lion lion lion elf_wizard alba_brad alba_brad alba_brad
-             alba_brad ed_bunny life_preservers brad_purple brad_purple
-             brad_purple brad_purple brad_purple brad_purple brad_purple
-             brad_purple brad_purple brad_purple brad_purple)
+             alba_brad ed_bunny life_preservers brad_purple brad_purple brad_purple
+             brad_purple brad_purple brad_purple)
 
   def header_image do
-    "https://cdn.pushcomedytheater.com/images/headers/#{Random.sample(@images)}.jpg"
+    "https://cdn.rawgit.com/PushComedyTheater/assets/master/images/headers/#{Random.sample(@images)}.jpg"
   end
 
   def event_date(date) do

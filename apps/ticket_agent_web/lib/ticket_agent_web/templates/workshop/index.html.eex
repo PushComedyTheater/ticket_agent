@@ -25,7 +25,7 @@
       <!-- Promo Block -->
       <section class="container g-pt-10">
         <div class="u-shadow-v24 g-bg-white rounded g-pa-20">
-          <div class="g-bg-cover g-bg-img-hero g-bg-black-opacity-0_1--after g-px-20 g-py-200" style="background-image: url(https://cdn.pushcomedytheater.com/images/corporate/corp0.jpg);">
+          <div class="g-bg-cover g-bg-img-hero g-bg-black-opacity-0_1--after g-px-20 g-py-200" style="background-image: url(https://cdn.rawgit.com/PushComedyTheater/assets/master/images/corporate/corp0.jpg);">
             <div class="text-center g-pos-rel g-z-index-1">
               <span class="d-block g-color-white g-font-size-20 text-uppercase g-letter-spacing-5 g-mb-50">Push Comedy Theater's</span>
               <h1 class="d-inline-block g-brd-around g-brd-2 g-brd-white g-color-white g-font-weight-700 g-font-size-20 g-font-size-50--md text-uppercase g-line-height-1_2 g-letter-spacing-5 g-py-12 g-px-20 g-mb-50">Corporate Workshops</h1>
@@ -60,7 +60,7 @@
 
             <!-- Figure Image -->
             <div class="col-md-6 px-0">
-              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/corporate/corp1.jpg" alt="Image Description">
+              <img class="w-100" src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/corporate/corp1.jpg" alt="Image Description">
             </div>
             <!-- End Figure Image -->
           </figure>
@@ -86,7 +86,7 @@
 
             <!-- Figure Image -->
             <div class="col-md-6 pull-md-6 px-0">
-              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/corporate/corp2.jpg" alt="Image Description">
+              <img class="w-100" src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/corporate/corp2.jpg" alt="Image Description">
             </div>
             <!-- End Figure Image -->
           </figure>
@@ -116,7 +116,7 @@
 
             <!-- Figure Image -->
             <div class="col-md-6 px-0">
-              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/corporate/corp3.jpg" alt="Image Description">
+              <img class="w-100" src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/corporate/corp3.jpg" alt="Image Description">
             </div>
             <!-- End Figure Image -->
           </figure>
@@ -141,7 +141,7 @@
 
             <!-- Figure Image -->
             <div class="col-md-6 pull-md-6 px-0">
-              <img class="w-100" src="https://cdn.pushcomedytheater.com/images/pushers.jpg" alt="Image Description">
+              <img class="w-100" src="https://raw.githubusercontent.com/PushComedyTheater/assets/master/images/pushers.jpg" alt="Image Description">
             </div>
             <!-- End Figure Image -->
           </figure>

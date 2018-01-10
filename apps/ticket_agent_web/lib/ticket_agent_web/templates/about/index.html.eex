@@ -24,7 +24,7 @@
 
       <section class="dzsparallaxer auto-init height-is-based-on-content use-loading mode-scroll loaded dzsprx-readyall " data-options='{direction: "fromtop", animation_duration: 25, direction: "reverse"}'>
         <!-- Parallax Image -->
-        <div class="divimage dzsparallaxer--target w-100 u-bg-overlay g-bg-black-opacity-0_3--after" style="height: 140%; background-image: url(https://cdn.pushcomedytheater.com/images/headers/push_sign.jpg);"></div>
+        <div class="divimage dzsparallaxer--target w-100 u-bg-overlay g-bg-black-opacity-0_3--after" style="height: 140%; background-image: url(https://cdn.rawgit.com/PushComedyTheater/assets/master/images/headers/push_sign.jpg);"></div>
         <!-- End Parallax Image -->
 
         <!-- Promo Block Content -->

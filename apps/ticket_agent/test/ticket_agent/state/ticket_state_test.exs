@@ -316,5 +316,294 @@ defmodule TicketAgent.State.TicketStateTest do
       multi = TicketState.set_ticket_checkedin(ticket.id, "80847ad5-7fd1-4d8a-bdc3-7fe47661fefd")
       assert {:ok, %{checked_in_tickets: {0, []}}} == Repo.transaction(multi)
     end
-  end    
+  end
+
+  describe "lock_tickets" do
+    test "it makes sure they are all updated", %{timestamp: timestamp} do
+      order = insert(:order)
+      listing = insert(:listing)
+      tickets = Enum.map(1..5, fn(_) -> 
+        insert(
+          :ticket, 
+          status: "available",
+          locked_until: nil,
+          order: nil,
+          listing: listing,
+          guest_name: nil,
+          guest_email: nil
+        ) 
+      end)
+      multi = TicketState.lock_tickets(listing.id, order.id, 5, timestamp)
+
+      assert [
+        lock_tickets: {:update_all, query, updates, [returning: true]}
+      ] = Multi.to_list(multi)
+
+      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  limit: ^5), on: t1.id == t0.id>"
+
+      assert updates == [set: [status: "locked", order_id: order.id, locked_until: timestamp]]
+
+      {:ok, %{lock_tickets: {5, updated_tickets}}} = Repo.transaction(multi)
+      Enum.each(tickets, fn(ticket) ->
+        assert Enum.find(updated_tickets, fn(updated_ticket) -> updated_ticket.id == ticket.id end)
+      end)
+    end
+
+    test "it locks the correct number", %{timestamp: timestamp} do
+      order = insert(:order)
+      listing = insert(:listing)
+      tickets = Enum.map(1..5, fn(_) -> 
+        insert(
+          :ticket, 
+          status: "available",
+          locked_until: nil,
+          order: nil,
+          listing: listing,
+          guest_name: nil,
+          guest_email: nil
+        ) 
+      end)
+      multi = TicketState.lock_tickets(listing.id, order.id, 3, timestamp)
+
+      assert [
+        lock_tickets: {:update_all, query, updates, [returning: true]}
+      ] = Multi.to_list(multi)
+
+      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  limit: ^3), on: t1.id == t0.id>"
+
+      assert updates == [set: [status: "locked", order_id: order.id, locked_until: timestamp]]
+
+      {:ok, %{lock_tickets: {3, _}}} = Repo.transaction(multi)
+
+      assert 3 == Enum.count(tickets, fn(ticket) ->
+        ticket = Repo.reload(ticket)
+        ticket.status == "locked"
+      end)
+      assert 2 == Enum.count(tickets, fn(ticket) ->
+        ticket = Repo.reload(ticket)
+        ticket.status == "available"
+      end)      
+      # Enum.each(tickets, fn(ticket) ->
+      #   assert Enum.find(updated_tickets, fn(updated_ticket) -> updated_ticket.id == ticket.id end)
+      # end)
+    end  
+    
+    test "it maxes out", %{timestamp: timestamp} do
+      order = insert(:order)
+      listing = insert(:listing)
+      tickets = Enum.map(1..5, fn(_) -> 
+        insert(
+          :ticket, 
+          status: "available",
+          locked_until: nil,
+          order: nil,
+          listing: listing,
+          guest_name: nil,
+          guest_email: nil
+        ) 
+      end)
+      multi = TicketState.lock_tickets(listing.id, order.id, 15, timestamp)
+
+      assert [
+        lock_tickets: {:update_all, query, updates, [returning: true]}
+      ] = Multi.to_list(multi)
+
+      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  limit: ^15), on: t1.id == t0.id>"
+
+      assert updates == [set: [status: "locked", order_id: order.id, locked_until: timestamp]]
+
+      {:ok, %{lock_tickets: {5, updated_tickets}}} = Repo.transaction(multi)
+      Enum.each(tickets, fn(ticket) ->
+        assert Enum.find(updated_tickets, fn(updated_ticket) -> updated_ticket.id == ticket.id end)
+      end)
+    end    
+  end
+
+  describe "filter_created_tickets" do
+    test "filters if they are all there" do
+      listing = insert(:listing)
+      order = insert(:order)
+      
+      ticket = insert(
+        :ticket, 
+        guest_name: "patrick",
+        guest_email: "patrick@veverka.net",
+        status: "locked", 
+        listing: listing, 
+        order: order
+      )
+      
+      tickets = [%{"listing_id" => listing.id, "name" => ticket.guest_name, "email" => ticket.guest_email}]
+      count = 
+        TicketState.filter_created_tickets(order, listing.id, tickets)
+        |> Enum.count
+      
+      assert count == 0
+    end
+
+    test "gets one to create" do
+      listing = insert(:listing)
+      order = insert(:order)
+      
+      ticket = insert(
+        :ticket, 
+        guest_name: "patrick",
+        guest_email: "patrick@veverka.net",
+        status: "locked", 
+        listing: listing, 
+        order: order
+      )
+      
+      tickets = [
+        %{
+          "listing_id" => listing.id, 
+          "name" => ticket.guest_name, 
+          "email" => ticket.guest_email
+        },
+        %{
+          "listing_id" => listing.id, 
+          "name" => "James", 
+          "email" => "james@pushcomedytheater.com"
+        }        
+      ]
+      count = 
+        TicketState.filter_created_tickets(order, listing.id, tickets)
+        |> Enum.count
+      
+      assert count == 1
+    end  
+
+    test "gets 10 to create" do
+      listing = insert(:listing)
+      order = insert(:order)
+      
+      ticket = insert(
+        :ticket, 
+        guest_name: "patrick",
+        guest_email: "patrick@veverka.net",
+        status: "locked", 
+        listing: listing, 
+        order: order
+      )
+      
+      tickets = [
+        %{
+          "listing_id" => listing.id, 
+          "name" => ticket.guest_name, 
+          "email" => ticket.guest_email
+        }      
+      ]
+
+      tickets = Enum.reduce(1..10, tickets, fn(counter, acc) ->
+        acc ++ [%{"listing_id" => listing.id, "name" => "James#{counter}", "email" => "james#{counter}@pushcomedytheater.com"}]
+      end)
+      count = 
+        TicketState.filter_created_tickets(order, listing.id, tickets)
+        |> Enum.count
+      
+      assert count == 10
+    end      
+  end
+
+  describe "create_new_tickets" do
+    test "doesn't create for empty tickets" do
+      assert [] == TicketState.create_new_tickets([], nil, nil)
+    end
+
+    test "creates when none exist" do
+      listing = insert(:listing)
+      order = insert(:order)
+      
+      first = insert(
+        :ticket,
+        status: "available", 
+        listing: listing,
+        order: nil,
+        locked_until: nil,
+        guest_name: nil,
+        guest_email: nil
+      )
+
+      ticket = insert(
+        :ticket, 
+        guest_name: "patrick",
+        guest_email: "patrick@veverka.net",
+        status: "locked", 
+        listing: listing, 
+        order: order
+      )
+      
+      tickets = [
+        %{
+          "listing_id" => listing.id, 
+          "name" => ticket.guest_name, 
+          "email" => ticket.guest_email
+        },
+        %{
+          "listing_id" => listing.id, 
+          "name" => "James", 
+          "email" => "james@pushcomedytheater.com"
+        }        
+      ]
+      
+      response = TicketState.create_new_tickets(tickets, listing.id, order.id)
+      assert Enum.count(response) == 2
+
+      first = Repo.reload(first)
+      assert first.status == "locked"
+    end
+  end
+
+  describe "reserve_tickets" do
+    test "doesn't reserve anything if they are all reserved" do
+      listing = insert(:listing)
+      order = insert(:order)
+      
+      ticket = insert(
+        :ticket, 
+        guest_name: "patrick",
+        guest_email: "patrick@veverka.net",
+        status: "locked", 
+        listing: listing, 
+        order: order
+      )
+      
+      tickets = [%{"listing_id" => listing.id, "name" => ticket.guest_name, "email" => ticket.guest_email}]
+      {updated_order, updated_tickets, _} = TicketState.reserve_tickets(order, tickets)
+      assert order == updated_order
+      assert Enum.count(updated_tickets) == 1
+    end
+  end
+
+  describe "load_minimum_locked_until" do
+    test "gets the minimum" do
+      timestamp = NaiveDateTime.utc_now()
+
+      listing = insert(:listing)
+      order = insert(:order)
+      
+      insert(
+        :ticket, 
+        status: "locked",
+        listing: listing, 
+        order: order,
+        locked_until: timestamp
+      )
+
+      old_ticket = insert(
+        :ticket, 
+        status: "locked",
+        listing: listing, 
+        order: order,
+        locked_until: (timestamp |> Calendar.NaiveDateTime.add!(300))
+      )      
+      
+      {updated_order, tickets, locked_until} = TicketState.load_minimum_locked_until(order, listing.id)
+      assert updated_order == order
+      assert DateTime.to_iso8601(locked_until) == (NaiveDateTime.to_iso8601(timestamp) <> "Z")
+      refute locked_until == old_ticket.locked_until
+      refute DateTime.to_iso8601(locked_until) == (NaiveDateTime.to_iso8601(old_ticket.locked_until) <> "Z")
+      assert Enum.count(tickets) == 2
+    end
+  end
 end

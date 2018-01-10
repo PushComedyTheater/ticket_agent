@@ -2,17 +2,18 @@
   <%= link "about us", to: about_path(@conn, :index), id: "nav-link--about", class: menu_class(@conn.path_info, "about") %>
   <!-- Submenu -->
   <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home">
+
     <li class="dropdown-item">
-      <%= link "Ed Carden", to: about_path(@conn, :show, "ed"), class: "nav-link" %>
+      <%= link "Ed Carden", to: about_path(@conn, :show, "ed_carden"), class: "nav-link" %>
     </li>
     <li class="dropdown-item">
-      <%= link "Sean Devereux", to: about_path(@conn, :show, "sean"), class: "nav-link" %>
+      <%= link "Sean Devereux", to: about_path(@conn, :show, "sean_devereux"), class: "nav-link" %>
     </li>
     <li class="dropdown-item">
-      <%= link "Brad McMurran", to: about_path(@conn, :show, "brad"), class: "nav-link" %>
+      <%= link "Brad McMurran", to: about_path(@conn, :show, "brad_mcmurran"), class: "nav-link" %>
     </li>
     <li class="dropdown-item">
-      <%= link "Alba Woolard", to: about_path(@conn, :show, "alba"), class: "nav-link" %>
+      <%= link "Alba Woolard", to: about_path(@conn, :show, "alba_woolard"), class: "nav-link" %>
     </li>
   </ul>
   <!-- End Submenu -->
