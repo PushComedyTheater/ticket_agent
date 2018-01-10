@@ -6,6 +6,59 @@ defmodule TicketAgent.Services.Stripe do
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
+  def load_stripe_token(user, token_id, metadata \\ %{}) when is_map(metadata) do
+    Logger.info "load_stripe_token -> #{token_id}"
+
+    case User.get_stripe_customer_id(user) do
+      nil ->
+        case create_customer(user, token_id, metadata) do
+          {:error, error} ->
+            Logger.error "Could not create customer because: #{inspect error}"
+            {:token_error, error}
+          {:ok, user} ->
+            {:ok, user.stripe_customer_id}
+        end
+      stripe_customer_id ->
+        Logger.info "Found existing customer id"
+        {:ok, stripe_customer_id}
+    end
+  end  
+
+  def create_customer(user, token, metadata \\ %{}) do
+    Logger.info "create_customer->Creating a customer because we don't have a key"
+    values = %{
+      "source" => token,
+      "email" => user.email,
+      "description" => user.name
+    }
+
+    values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
+      Map.put(acc, "metadata[#{key}]", value)
+    end)
+
+    body =
+      values
+      |> URI.encode_query()
+
+    uri = "#{api_url()}/customers"
+
+    Logger.info "create_customer->Making POST request to #{uri}"
+    
+    case request(:post, uri, [], body, hackney_opts()) do
+      {:ok, %{"id" => stripe_customer_id}} ->
+        {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
+      {:error, %{"message" => message}} ->
+        Logger.error "create_customer->Received error from Stripe: #{message}"
+        {:error, message}
+      {:error, %{"error" => error}} ->
+        Logger.error "create_customer->Received error from Stripe: #{inspect error}"
+        {:error, "#{inspect error}"}
+      error ->
+        Logger.error "Received unknown bad response from Stripe #{inspect error}"
+        {:error, "#{inspect error}"}
+    end
+  end
+
   def create_charge(customer, amount, description, order, client_ip, user, metadata \\ %{}) do
     values = load_charge_values(order, customer, amount, description)
 
@@ -37,53 +90,7 @@ defmodule TicketAgent.Services.Stripe do
     end
   end
 
-  def create_customer(token, user, metadata) do
-    Logger.info "Creating a customer because we don't have a key"
-    values = %{
-      "source" => token,
-      "email" => user.email,
-      "description" => user.name
-    }
 
-    values = Enum.reduce(metadata, values, fn({key, value}, acc) ->
-      Map.put(acc, "metadata[#{key}]", value)
-    end)
-
-    body =
-      values
-      |> URI.encode_query()
-
-    uri = "#{api_url()}/customers"
-
-    case request(:post, uri, [], body, hackney_opts()) do
-      {:ok, %{"id" => stripe_customer_id}} ->
-        {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
-      {:error, %{"error" => error}} ->
-        Logger.error "Received bad response from Stripe #{inspect error}"
-        {:error, error}
-      anything ->
-        Logger.error "Received unknown bad response from Stripe #{inspect anything}"
-        {:error, anything}
-    end
-  end
-
-  def load_stripe_token(user, token_id, metadata) do
-    Logger.info "load_stripe_token -> #{token_id}"
-
-    case User.get_stripe_customer_id(user) do
-      nil ->
-        case create_customer(token_id, user, metadata) do
-          {:error, error} ->
-            Logger.error "Could not create customer because: #{inspect error}"
-            {:token_error, error["message"]}
-          {:ok, user} ->
-            {:ok, user.stripe_customer_id}
-        end
-      stripe_customer_id ->
-        Logger.info "Found existing customer id"
-        {:ok, stripe_customer_id}
-    end
-  end  
 
   defp load_charge_values(order, customer_id, amount, description) do
     %{
@@ -148,7 +155,7 @@ defmodule TicketAgent.Services.Stripe do
     ]
   end
 
-  defp api_url, do: get_env_variable(:api_url)
+  defp api_url, do: Application.get_env(:ticket_agent, :stripe_api_url)
 
   defp secret_key, do: get_env_variable(:secret_key)
 

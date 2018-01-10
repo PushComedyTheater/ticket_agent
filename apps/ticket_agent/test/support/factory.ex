@@ -122,7 +122,9 @@ defmodule TicketAgent.Factory do
     %User{
       name: sequence(:name, &"Jane Smith#{&1}"),
       email: sequence(:email, &"email-#{&1}@example.com"),
-      account: build(:account)
+      account: build(:account),
+      password: "reallylongandsecurepassword",
+      password_confirmation: "reallylongandsecurepassword"
     }
   end
 

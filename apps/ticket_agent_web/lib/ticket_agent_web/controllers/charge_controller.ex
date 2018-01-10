@@ -31,9 +31,9 @@ defmodule TicketAgentWeb.ChargeController do
     # complete order
     # send ticket email
 
-    with {:ok, %{processing_tickets: {^ticket_count, _updated_tickets}, order_processing: {1, _updated_order}}} <- ChargeProcessingState.set_order_and_tickets_processing(order, ticket_ids),
-         {:ok, stripe_customer_id} <- Stripe.load_stripe_token(current_user, token_id, metadata),
-         {:ok, _response} <- Stripe.create_charge(stripe_customer_id, price, description, order, token["client_ip"], current_user, metadata),
+    with {:ok, {updated_order, updated_tickets}} <- ChargeProcessingState.set_order_and_tickets_processing(order, ticket_ids),
+         {:ok, stripe_customer_id}               <- Stripe.load_stripe_token(current_user, token_id, metadata),
+         {:ok, _response} <- Stripe.create_charge(stripe_customer_id, price, description, updated_order, token["client_ip"], current_user, metadata),
          {:ok, %{purchased_tickets: {^ticket_count, _updated_tickets}, completed_order: {1, _updated_order}}} <- set_order_and_tickets_completed(order, ticket_ids),
          {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
          {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
@@ -44,22 +44,22 @@ defmodule TicketAgentWeb.ChargeController do
         conn
         |> render("create.json")
     else
-      # order or tickets couldn't be set properly, let's exit and flip out
-      {:ok, %{processing_tickets: _, order_processing: _}} ->
-        Logger.error "There are no tickets or orders to update, this is bad, resetting"
-        release_order_and_tickets(order, ticket_ids)
-        render_error(conn, "reset")
-      {:ok, %{purchased_tickets: _, completed_order: _}} ->
-        Logger.error "This is the end of the world.  We need to tell someone."
-        release_order_and_tickets(order, ticket_ids)
-        render_error(conn, "reset")
-      {:token_error, message} when is_binary(message) ->
-        reset_order_and_tickets(order, ticket_ids)
-        render_error(conn, "continue", message)
+      # # order or tickets couldn't be set properly, let's exit and flip out
+      # {:ok, %{processing_tickets: _, order_processing: _}} ->
+      #   Logger.error "There are no tickets or orders to update, this is bad, resetting"
+      #   release_order_and_tickets(order, ticket_ids)
+      #   render_error(conn, "reset")
+      # {:ok, %{purchased_tickets: _, completed_order: _}} ->
+      #   Logger.error "This is the end of the world.  We need to tell someone."
+      #   release_order_and_tickets(order, ticket_ids)
+      #   render_error(conn, "reset")
+      # {:token_error, message} when is_binary(message) ->
+      #   reset_order_and_tickets(order, ticket_ids)
+      #   render_error(conn, "continue", message)
       error ->
         Logger.error "Unmatched error "
         Logger.error "#{inspect error}"
-        reset_order_and_tickets(order, ticket_ids)
+        # reset_order_and_tickets(order, ticket_ids)
         render_error(conn, "continue")
     end
   end

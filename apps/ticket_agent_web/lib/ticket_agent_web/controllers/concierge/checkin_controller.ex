@@ -12,7 +12,7 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
 
   def show(conn, %{"listing_slug" => listing_slug}) do
     # lisitn
-    listing = ListingFinder.find_listing_by_slug(listing_slug) |> IO.inspect
+    listing = ListingFinder.find_listing_by_slug(listing_slug)
     user = Coherence.current_user(conn)
     token = Coherence.SessionService.sign_user_token(conn, user)
     render(

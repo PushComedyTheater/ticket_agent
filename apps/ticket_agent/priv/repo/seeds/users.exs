@@ -8,7 +8,6 @@ card = SeedHelpers.create_credit_card(user)
 user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
 
 Enum.each(1..50, fn(x) ->
-  IO.inspect x
   user = SeedHelpers.create_user(
     "user#{x}@veverka.net", 
     account, 

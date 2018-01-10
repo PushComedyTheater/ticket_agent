@@ -66,7 +66,7 @@ defmodule TicketAgentWeb.AuthController do
         uri
     end
 
-    Logger.info "provider = #{provider}"
+    Logger.info "provider = #{provider} with code #{code}"
 
     with {:ok, client} <- get_token!(provider, code),
          {:ok, %{name: name, email: email, extra_details: extra_details}} <- get_user(provider, client) do

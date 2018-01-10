@@ -5,7 +5,6 @@ defmodule TicketAgent.Microsoft do
   use OAuth2.Strategy
 
   alias OAuth2.Strategy.AuthCode
-# https://login.live.com/oauth20_authorize.srf?client_id=073ce2f8-e2ef-4408-b830-500bee19cdad&scope=wl.emails,wl.basic&response_type=code&redirect_uri=https://veverka.ngrok.io/auth/microsoft/callback
   defp config do
     [strategy: TicketAgent.Microsoft,
      site: "https://login.live.com",
@@ -25,11 +24,11 @@ defmodule TicketAgent.Microsoft do
     OAuth2.Client.authorize_url!(client(), params)
   end
 
-  def get_token!(params \\ [], _) do
+  def get_token!(params \\ [], headers \\ []) do
     OAuth2.Client.get_token!(client(), params)
   end
 
-  def get_token(params \\ [], _) do
+  def get_token(params \\ [], headers \\ []) do
     OAuth2.Client.get_token(client(), params)
   end
 

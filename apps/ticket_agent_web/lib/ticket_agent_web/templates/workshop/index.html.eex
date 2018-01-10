@@ -68,6 +68,11 @@
 
           <!-- Figure -->
           <figure class="row flex-md-row align-items-center">
+            <!-- Figure Image -->
+            <div class="col-md-6 pull-md-6 px-0">
+              <img class="w-100" src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/corporate/corp2.jpg" alt="Image Description">
+            </div>
+            <!-- End Figure Image -->          
             <!-- Figure Body -->
             <div class="col-md-6 push-md-6 px-0">
               <div class="u-ns-bg-v1-bottom u-ns-bg-v1-left--md g-bg-white g-py-30 g-px-50">
@@ -84,11 +89,7 @@
             </div>
             <!-- End Figure Body -->
 
-            <!-- Figure Image -->
-            <div class="col-md-6 pull-md-6 px-0">
-              <img class="w-100" src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/corporate/corp2.jpg" alt="Image Description">
-            </div>
-            <!-- End Figure Image -->
+
           </figure>
           <!-- End Figure -->
 
@@ -125,6 +126,11 @@
           <!-- Figure -->
           <figure class="row flex-md-row align-items-center">
             <!-- Figure Body -->
+            <!-- Figure Image -->
+            <div class="col-md-6 pull-md-6 px-0">
+              <img class="w-100" src="https://raw.githubusercontent.com/PushComedyTheater/assets/master/images/pushers.jpg" alt="Image Description">
+            </div>
+            <!-- End Figure Image -->            
             <div class="col-md-6 push-md-6 px-0">
               <div class="u-ns-bg-v1-bottom u-ns-bg-v1-left--md g-bg-white g-py-30 g-px-50">
                 <!-- Figure Info -->
@@ -139,11 +145,7 @@
             </div>
             <!-- End Figure Body -->
 
-            <!-- Figure Image -->
-            <div class="col-md-6 pull-md-6 px-0">
-              <img class="w-100" src="https://raw.githubusercontent.com/PushComedyTheater/assets/master/images/pushers.jpg" alt="Image Description">
-            </div>
-            <!-- End Figure Image -->
+
           </figure>
           <!-- End Figure -->
         </div>

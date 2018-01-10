@@ -24,11 +24,11 @@ defmodule TicketAgent.Facebook do
     OAuth2.Client.authorize_url!(client(), params)
   end
 
-  def get_token(params \\ [], _) do
+  def get_token(params \\ [], headers \\ []) do
     OAuth2.Client.get_token(client(), params)
   end
 
-  def get_token!(params \\ [], _) do
+  def get_token!(params \\ [], headers \\ []) do
     OAuth2.Client.get_token!(client(), params)
   end
 

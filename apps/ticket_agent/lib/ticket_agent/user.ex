@@ -29,6 +29,12 @@ defmodule TicketAgent.User do
     |> validate_coherence(params)
   end
 
+  def changeset(model, params, :stripe_customer_id) do
+    model
+    |> cast(params, ~w(stripe_customer_id))
+    |> validate_required([:stripe_customer_id])
+  end
+
   def changeset(model, params, :password) do
     model
     |> cast(params, ~w(password password_confirmation reset_password_token reset_password_sent_at))
@@ -124,10 +130,12 @@ defmodule TicketAgent.User do
 
   def update_stripe_customer_id(user, stripe_customer_id) do
     user
-    |> User.changeset(%{
-      stripe_customer_id: stripe_customer_id
-    })
+    |> User.changeset(
+      %{
+        stripe_customer_id: stripe_customer_id
+      }, 
+      :stripe_customer_id
+    )
     |> Repo.update!
-    |> IO.inspect
   end
 end

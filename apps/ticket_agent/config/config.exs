@@ -134,5 +134,6 @@ config :ticket_agent, :ticket_lock_length, value
 
 config :ticket_agent, Stripe,
   secret_key: System.get_env("STRIPE_SECRET_KEY"),
-  publishable_key: System.get_env("STRIPE_PUBLISHABLE_KEY"),
-  api_url: System.get_env("STRIPE_API_URL")
+  publishable_key: System.get_env("STRIPE_PUBLISHABLE_KEY")
+
+config :ticket_agent, :stripe_api_url, System.get_env("STRIPE_API_URL")
