@@ -3,26 +3,23 @@ defmodule TicketAgent.Services.Stripe do
   @stripe_api_version "2017-08-15"
   @stripe_user_agent "TicketAgent 1.0"
   alias TicketAgent.{OrderDetail, Repo, User}
+  alias TicketAgent.State.OrderState
 
   def publishable_key, do: get_env_variable(:publishable_key)
 
   def load_stripe_token(user, token_id, metadata \\ %{}) when is_map(metadata) do
-    Logger.info "load_stripe_token -> #{token_id}"
-
     case User.get_stripe_customer_id(user) do
       nil ->
         case create_customer(user, token_id, metadata) do
           {:error, error} ->
-            Logger.error "Could not create customer because: #{inspect error}"
-            {:token_error, error}
+            {:error, :token_error}
           {:ok, user} ->
             {:ok, user.stripe_customer_id}
         end
       stripe_customer_id ->
-        Logger.info "Found existing customer id"
         {:ok, stripe_customer_id}
     end
-  end  
+  end
 
   def create_customer(user, token, metadata \\ %{}) do
     Logger.info "create_customer->Creating a customer because we don't have a key"
@@ -46,30 +43,26 @@ defmodule TicketAgent.Services.Stripe do
     
     case request(:post, uri, [], body, hackney_opts()) do
       {:ok, %{"id" => stripe_customer_id}} ->
-        {:ok, User.update_stripe_customer_id(user, stripe_customer_id)}
-      {:error, %{"message" => message}} ->
-        Logger.error "create_customer->Received error from Stripe: #{message}"
-        {:error, message}
-      {:error, %{"error" => error}} ->
-        Logger.error "create_customer->Received error from Stripe: #{inspect error}"
-        {:error, "#{inspect error}"}
+        Logger.info "create_customer->created stripe customer with stripe id: #{stripe_customer_id}"
+        User.update_stripe_customer_id(user, stripe_customer_id)
       error ->
         Logger.error "Received unknown bad response from Stripe #{inspect error}"
-        {:error, "#{inspect error}"}
+        {:error, :stripe_error}
     end
   end
 
-  def create_charge(customer, amount, description, order, client_ip, user, metadata \\ %{}) do
-    values = load_charge_values(order, customer, amount, description)
-
-    body =
-      metadata
-      |> Enum.reduce(values, fn({key, value}, acc) ->
-        Map.put(acc, "metadata[#{key}]", value)
-      end)
-      |> URI.encode_query()
+  def create_charge(order, %{stripe_customer_id: stripe_id} = user, description, client_ip, metadata \\ %{}) when not is_nil(stripe_id) do
+    Logger.info "create_charge->creating charge for order ##{order.slug}"
+    order = OrderState.calculate_order_cost(order) #just in case
+    
+    body = 
+      order
+      |> load_charge_values(user, description)
+      |> load_body(metadata)
 
     uri = api_url() <> "/charges"
+
+    Logger.info "create_charge->Making POST request to #{uri}"    
 
     {status, response} =
       request(:post, uri, [], body, hackney_opts())
@@ -77,32 +70,22 @@ defmodule TicketAgent.Services.Stripe do
 
     case status do
       :error ->
-        Logger.error "There was an error submitting the post"
+        Logger.error "create_charge->There was an error submitting the post #{inspect response}"
         message = get_in(response, ["error", "message"])
         if String.match?(message, ~r/^No such customer/i) do
-          Logger.error "Customer ID is stale"
+          Logger.error "create_charge->Customer ID is stale"
           User.update_stripe_customer_id(user, nil)
+          {:error, :missing_stripe_customer_id}
+        else
+          {:error, :unknown_error}
         end
-        {:error, response}
       :ok ->
-        Logger.info "Everything is ok"
+        Logger.info "create_charge->Charge created successfully"
         {:ok, response}
     end
   end
 
-
-
-  defp load_charge_values(order, customer_id, amount, description) do
-    %{
-      "customer" => customer_id,
-      "amount" => amount,
-      "description" => description,
-      "currency" => "usd",
-      "application_fee" => order.processing_fee
-    }
-  end
-
-  defp insert_order_details({status, response}, order_id, client_ip) do
+  def insert_order_details({status, response}, order_id, client_ip) do
     parsed_response =
       response
       |> OrderDetail.parse_stripe_response(order_id)
@@ -113,6 +96,24 @@ defmodule TicketAgent.Services.Stripe do
     |> Repo.insert!
 
     {status, response}
+  end
+
+  defp load_charge_values(order, user, description) do
+    %{
+      "customer" => user.stripe_customer_id,
+      "amount" => order.total_price,
+      "description" => description,
+      "currency" => "usd",
+      "application_fee" => order.processing_fee
+    }
+  end
+
+  defp load_body(values, metadata) do
+    metadata
+    |> Enum.reduce(values, fn({key, value}, acc) ->
+      Map.put(acc, "metadata[#{key}]", value)
+    end)
+    |> URI.encode_query()    
   end
 
   defp request(method, url, headers, body, hackney_options) do

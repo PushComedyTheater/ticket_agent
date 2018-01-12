@@ -7,7 +7,7 @@ user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
 card = SeedHelpers.create_credit_card(user)
 user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
 
-Enum.each(1..50, fn(x) ->
+Enum.each(1..5, fn(x) ->
   user = SeedHelpers.create_user(
     "user#{x}@veverka.net", 
     account, 

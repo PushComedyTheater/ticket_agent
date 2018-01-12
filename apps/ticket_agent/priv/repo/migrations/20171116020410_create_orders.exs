@@ -2,7 +2,7 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE order_status AS ENUM ('started', 'processing', 'completed', 'failed', 'errored', 'cancelled')"
+    execute "CREATE TYPE order_status AS ENUM ('started', 'processing', 'completed', 'errored', 'cancelled')"
 
     create table(:orders, primary_key: false) do
       add :id, :binary_id, primary_key: true
@@ -14,7 +14,11 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
       add :credit_card_fee, :integer, default: 0
       add :processing_fee, :integer, default: 0
       add :total_price, :integer, default: 0
+      add :started_at, :timestamptz, default: nil
+      add :processing_at, :timestamptz, default: nil
       add :completed_at, :timestamptz, default: nil
+      add :errored_at, :timestamptz, default: nil
+      add :cancelled_at, :timestamptz, default: nil
       timestamps(type: :timestamptz)
     end
 

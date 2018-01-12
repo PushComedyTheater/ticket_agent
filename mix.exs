@@ -42,7 +42,7 @@ defmodule TicketAgent.Umbrella.Mixfile do
         "ecto.dump"
         ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      "test": ["ecto.drop", "ecto.create --quiet", "ecto.load", "test"]
     ]
   end
 end

@@ -74,6 +74,7 @@ CREATE TYPE event_status AS ENUM (
 CREATE TYPE listing_status AS ENUM (
     'unpublished',
     'active',
+    'completed',
     'canceled',
     'deleted'
 );
@@ -87,7 +88,6 @@ CREATE TYPE order_status AS ENUM (
     'started',
     'processing',
     'completed',
-    'failed',
     'errored',
     'cancelled'
 );
@@ -102,7 +102,8 @@ CREATE TYPE ticket_status AS ENUM (
     'locked',
     'processing',
     'purchased',
-    'emailed'
+    'emailed',
+    'checkedin'
 );
 
 
@@ -126,7 +127,7 @@ CREATE TYPE user_credential_provider AS ENUM (
 
 CREATE TYPE user_role AS ENUM (
     'admin',
-    'agent',
+    'concierge',
     'customer',
     'oauth_customer',
     'guest'
@@ -194,8 +195,7 @@ CREATE TABLE credit_cards (
     address jsonb,
     metadata jsonb,
     inserted_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    order_id uuid
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -299,7 +299,11 @@ CREATE TABLE orders (
     credit_card_fee integer DEFAULT 0,
     processing_fee integer DEFAULT 0,
     total_price integer DEFAULT 0,
+    started_at timestamp with time zone,
+    processing_at timestamp with time zone,
     completed_at timestamp with time zone,
+    errored_at timestamp with time zone,
+    cancelled_at timestamp with time zone,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -349,6 +353,10 @@ CREATE TABLE tickets (
     sale_start timestamp with time zone,
     sale_end timestamp with time zone,
     locked_until timestamp with time zone,
+    purchased_at timestamp with time zone,
+    emailed_at timestamp with time zone,
+    checked_in_at timestamp with time zone,
+    checked_in_by uuid,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -400,17 +408,37 @@ CREATE TABLE users (
 
 
 --
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE versions (
+    id uuid NOT NULL,
+    event character varying(10) NOT NULL,
+    item_type character varying(255) NOT NULL,
+    item_id uuid,
+    item_changes jsonb NOT NULL,
+    originator_id uuid,
+    origin character varying(50),
+    meta jsonb,
+    inserted_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    updated_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL
+);
+
+
+--
 -- Name: waitlists; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE waitlists (
     id uuid NOT NULL,
     listing_id uuid NOT NULL,
+    user_id uuid,
     name character varying(255),
     email_address character varying(255),
+    admin_notified boolean,
     message_sent_at timestamp with time zone,
-    inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -420,6 +448,7 @@ CREATE TABLE waitlists (
 
 CREATE TABLE webhook_details (
     id uuid NOT NULL,
+    source text,
     request jsonb,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
@@ -539,6 +568,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY versions
+    ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: waitlists waitlists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -587,13 +624,6 @@ CREATE UNIQUE INDEX classes_slug_index ON classes USING btree (slug);
 --
 
 CREATE INDEX classes_type_index ON classes USING btree (type);
-
-
---
--- Name: credit_cards_order_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX credit_cards_order_id_index ON credit_cards USING btree (order_id);
 
 
 --
@@ -821,6 +851,41 @@ CREATE INDEX users_stripe_customer_id_index ON users USING btree (stripe_custome
 
 
 --
+-- Name: versions_event_item_type_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX versions_event_item_type_index ON versions USING btree (event, item_type);
+
+
+--
+-- Name: versions_item_id_item_type_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX versions_item_id_item_type_index ON versions USING btree (item_id, item_type);
+
+
+--
+-- Name: versions_item_type_inserted_at_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX versions_item_type_inserted_at_index ON versions USING btree (item_type, inserted_at);
+
+
+--
+-- Name: versions_originator_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX versions_originator_id_index ON versions USING btree (originator_id);
+
+
+--
+-- Name: waitlists_admin_notified_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX waitlists_admin_notified_index ON waitlists USING btree (admin_notified);
+
+
+--
 -- Name: waitlists_email_address_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -839,6 +904,27 @@ CREATE UNIQUE INDEX waitlists_listing_id_email_address_index ON waitlists USING 
 --
 
 CREATE INDEX waitlists_listing_id_index ON waitlists USING btree (listing_id);
+
+
+--
+-- Name: waitlists_listing_id_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX waitlists_listing_id_user_id_index ON waitlists USING btree (listing_id, user_id);
+
+
+--
+-- Name: waitlists_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX waitlists_user_id_index ON waitlists USING btree (user_id);
+
+
+--
+-- Name: webhook_details_source_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX webhook_details_source_index ON webhook_details USING btree (source);
 
 
 --
@@ -863,14 +949,6 @@ ALTER TABLE ONLY classes
 
 ALTER TABLE ONLY classes
     ADD CONSTRAINT classes_prerequisite_id_fkey FOREIGN KEY (prerequisite_id) REFERENCES classes(id);
-
-
---
--- Name: credit_cards credit_cards_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY credit_cards
-    ADD CONSTRAINT credit_cards_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id);
 
 
 --
@@ -962,6 +1040,14 @@ ALTER TABLE ONLY orders
 
 
 --
+-- Name: tickets tickets_checked_in_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tickets
+    ADD CONSTRAINT tickets_checked_in_by_fkey FOREIGN KEY (checked_in_by) REFERENCES users(id);
+
+
+--
 -- Name: tickets tickets_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -994,6 +1080,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: versions versions_originator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY versions
+    ADD CONSTRAINT versions_originator_id_fkey FOREIGN KEY (originator_id) REFERENCES users(id);
+
+
+--
 -- Name: waitlists waitlists_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1002,8 +1096,16 @@ ALTER TABLE ONLY waitlists
 
 
 --
+-- Name: waitlists waitlists_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY waitlists
+    ADD CONSTRAINT waitlists_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020411), (20171116020412), (20171116020413), (20171116020414), (20171208181236), (20171211141945), (20171223212910);
+INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020413), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180102135330);
 

@@ -129,13 +129,16 @@ defmodule TicketAgent.User do
   end
 
   def update_stripe_customer_id(user, stripe_customer_id) do
-    user
-    |> User.changeset(
-      %{
-        stripe_customer_id: stripe_customer_id
-      }, 
-      :stripe_customer_id
-    )
-    |> Repo.update!
+    changeset = 
+      user
+      |> User.changeset(%{stripe_customer_id: stripe_customer_id}, :stripe_customer_id)
+      
+    case Repo.update(changeset) do
+      {:ok, user} ->
+        {:ok, user}
+      {:error, error} ->
+        Logger.error "update_stripe_customer_id->There was an error updating this user #{inspect error}"
+        {:error, :persistence_error}
+    end
   end
 end

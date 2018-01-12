@@ -8,115 +8,37 @@ defmodule TicketAgent.State.OrderState do
   @processing_fixed_fee 50
   
   def calculate_price({order, tickets, locked_until}) do
-    subtotal =
-      tickets
-      |> Enum.reduce(0, fn(ticket, acc) ->
-        acc + ticket.price
-      end)
-
-    {total, credit_card_fee, processing_fee} = calculate_fees(subtotal)
-
-    order
-    |> Order.changeset(%{
-      subtotal: subtotal,
-      processing_fee: processing_fee,
-      credit_card_fee: credit_card_fee,
-      total_price: total
-    })
-    |> Repo.update!
-
+    order = calculate_order_cost(order)
     {
       order,
       tickets,
       locked_until,
       %{
-        subtotal: subtotal,
-        processing_fee: @processing_fixed_fee + credit_card_fee,
-        total: total
+        subtotal: order.subtotal,
+        processing_fee: order.processing_fee + order.credit_card_fee,
+        total: order.total_price
       }
     }
   end
 
-  def set_credit_card_for_order(order, credit_card) do
-    from(o in Order, where: o.id == ^order.id)
-    |> Repo.update_all(set: [credit_card_id: credit_card.id])
-  end
+  # this loads the order's tickets, adds them up and then calculate the stripe fee
+  def calculate_order_cost(order) do
+    order = case Ecto.assoc_loaded?(order.tickets) do
+      true -> order
+      false -> Repo.preload(order, :tickets)
+    end
+    subtotal = Enum.reduce(order.tickets, 0, fn(ticket, acc) -> acc + ticket.price end)
 
-  def set_order_processing_transaction(order) do
-    Logger.info "set_order_processing_transaction->slug #{order.slug}"
+    {total, credit_card_fee, processing_fee} = calculate_fees(subtotal)
 
-    Multi.new()
-    |> Multi.update_all(:order_processing,
-      from(
-        o in Order,
-        where: o.id == ^order.id,
-        where: o.status == "started"
-      ),
-      [
-        set: [
-          status: "processing"
-        ]
-      ],
-      returning: true
-    )
-  end
-
-  def set_order_completed_transaction(order) do
-    Logger.info "set_order_completed_transaction->slug #{order.slug}"
-
-    Multi.new()
-    |> Multi.update_all(:completed_order,
-      from(
-        o in Order,
-        where: o.id == ^order.id,
-        where: o.status == "processing"
-      ),
-      [
-        set: [
-          status: "completed",
-          completed_at: NaiveDateTime.utc_now(),
-        ]
-      ],
-      returning: true
-    )
-  end
-
-  def set_order_started_transaction(order) do
-    Logger.info "set_order_started_transaction for order #{order.slug}"
-
-    Multi.new()
-    |> Multi.update_all(:processing_order,
-      from(
-        o in Order,
-        where: o.id == ^order.id,
-        where: o.status == "processing"
-      ),
-      [
-        set: [
-          status: "started"
-        ]
-      ],
-      returning: true
-    )
-  end
-
-  def release_order(order) do
-    Logger.info "release_order for order #{order.slug}"
-
-    Multi.new()
-    |> Multi.update_all(:release_oser,
-      from(
-        o in Order,
-        where: o.id == ^order.id,
-        where: o.status in ["started", "processing"]
-      ),
-      [
-        set: [
-          status: "cancelled"
-        ]
-      ],
-      returning: true
-    )
+    order
+    |> Order.changeset(%{
+      subtotal:         subtotal,
+      processing_fee:   processing_fee,
+      credit_card_fee:  credit_card_fee,
+      total_price:      total
+    })
+    |> Repo.update!()
   end
 
   def calculate_fees(price) do
@@ -135,4 +57,92 @@ defmodule TicketAgent.State.OrderState do
     {round(total_to_charge), round(stripe_fees), @processing_fixed_fee}
   end
 
+  def set_credit_card_for_order(order, credit_card) do
+    from(o in Order, where: o.id == ^order.id)
+    |> Repo.update_all(set: [credit_card_id: credit_card.id])
+  end
+
+  # While orders start by default as 'started', we can also go from processing -> started
+  def set_order_started(order, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "set_order_started for order #{order.slug}"
+
+    Multi.new()
+    |> Multi.update_all(:order_started,
+      from(
+        o in Order,
+        where: o.id == ^order.id,
+        where: o.status == "processing"
+      ),
+      [
+        set: [
+          status: "started",
+          started_at: timestamp
+        ]
+      ],
+      returning: true
+    )
+  end
+
+  # An order can go from started -> processing
+  def set_order_processing(order, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "set_order_processing->slug #{order.slug}"
+
+    Multi.new()
+    |> Multi.update_all(:order_processing,
+      from(
+        o in Order,
+        where: o.id == ^order.id,
+        where: o.status == "started"
+      ),
+      [
+        set: [
+          status: "processing",
+          processing_at: timestamp
+        ]
+      ],
+      returning: true
+    )
+  end
+
+  # An order can go from processing -> completed
+  def set_order_completed(order, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "set_order_completed->slug #{order.slug}"
+
+    Multi.new()
+    |> Multi.update_all(:order_completed,
+      from(
+        o in Order,
+        where: o.id == ^order.id,
+        where: o.status == "processing"
+      ),
+      [
+        set: [
+          status: "completed",
+          completed_at: timestamp,
+        ]
+      ],
+      returning: true
+    )
+  end
+
+  # An order can go from started or processing -> cancelled
+  def release_order(order, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "release_order for order #{order.slug}"
+
+    Multi.new()
+    |> Multi.update_all(:order_released,
+      from(
+        o in Order,
+        where: o.id == ^order.id,
+        where: o.status in ["started", "processing"]
+      ),
+      [
+        set: [
+          status: "cancelled",
+          cancelled_at: timestamp
+        ]
+      ],
+      returning: true
+    )
+  end
 end

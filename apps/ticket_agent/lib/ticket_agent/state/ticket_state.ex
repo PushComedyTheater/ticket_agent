@@ -7,9 +7,8 @@ defmodule TicketAgent.State.TicketState do
   @seconds_to_add Application.get_env(:ticket_agent, :ticket_lock_length, 302)
 
   # Tickets can go from processing -> locked
-  def lock_processing_tickets(ticket_ids, order_id, timestamp \\ NaiveDateTime.utc_now()) do
-    Logger.info "lock_processing_tickets->ticket_ids     = #{inspect ticket_ids}"
-    Logger.info "lock_processing_tickets->order_id       = #{order_id}"
+  def lock_processing_tickets(order, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "lock_processing_tickets->order_id       = #{order.id}"
     Logger.info "lock_processing_tickets->timestamp      = #{inspect timestamp}"
     Logger.info "lock_processing_tickets->seconds_to_add = #{inspect @seconds_to_add}"
 
@@ -19,8 +18,7 @@ defmodule TicketAgent.State.TicketState do
     |> Multi.update_all(:locked_processing_tickets,
       from(
         t in Ticket,
-        where: t.id in ^ticket_ids,
-        where: t.order_id == ^order_id,
+        where: t.order_id == ^order.id,
         where: t.status == "processing"
       ),
       [
@@ -34,17 +32,14 @@ defmodule TicketAgent.State.TicketState do
   end
 
   # Tickets can go from locked -> processing
-  def unlock_tickets_to_processing(ticket_ids, order_id) do
-    Logger.info "unlock_tickets_to_processing->order_id       = #{order_id}"
-    Logger.info "unlock_tickets_to_processing->ticket_ids     = #{inspect ticket_ids}"
-    Logger.info "unlock_tickets_to_processing->seconds_to_add = #{inspect @seconds_to_add}"
+  def unlock_tickets_to_processing_for_order(order) do
+    Logger.info "unlock_tickets_to_processing_for_order->order_id  = #{order.id}"
 
     Multi.new()
     |> Multi.update_all(:unlocked_processing_tickets,
       from(
         t in Ticket,
-        where: t.id in ^ticket_ids,
-        where: t.order_id == ^order_id,
+        where: t.order_id == ^order.id,
         where: t.status == "locked"
       ),
       [
@@ -58,17 +53,15 @@ defmodule TicketAgent.State.TicketState do
   end
 
   # Tickets can go from processing -> purchased
-  def purchase_processing_tickets(ticket_ids, order_id, timestamp \\ NaiveDateTime.utc_now()) do
-    Logger.info "purchase_processing_tickets->ticket_ids     = #{inspect ticket_ids}"
-    Logger.info "purchase_processing_tickets->order_id       = #{order_id}"
-    Logger.info "purchase_processing_tickets->timestamp      = #{inspect timestamp}"
+  def purchase_processing_tickets_for_order(order, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info "purchase_processing_tickets_for_order->order_id       = #{order.id}"
+    Logger.info "purchase_processing_tickets_for_order->timestamp      = #{inspect timestamp}"
 
     Multi.new()
     |> Multi.update_all(:purchased_processing_tickets,
       from(
         t in Ticket,
-        where: t.id in ^ticket_ids,
-        where: t.order_id == ^order_id,
+        where: t.order_id == ^order.id,
         where: t.status == "processing"
       ),
       [
@@ -180,28 +173,23 @@ defmodule TicketAgent.State.TicketState do
     load_minimum_locked_until(order, listing_id)
   end
 
-  def release_tickets(%{id: order_id}, input_ticket_ids) do
-
-    ticket_count = Enum.count(input_ticket_ids)
-
-    Logger.info "There are #{ticket_count} existing tickets to be released"
+  def release_tickets(order) do
+    Logger.info "release_tickets->order_id  = #{order.id}"
 
     Multi.new()
     |> Multi.update_all(:release_tickets,
       from(
         t in Ticket,
-        where: t.order_id == ^order_id,
-        where: t.status == "locked" or t.status == "processing",
-        where: t.id in ^input_ticket_ids
+        where: t.order_id == ^order.id
       ),
       [
         set: [
-            status: "available",
-            order_id: nil,
-            locked_until: nil,
-            guest_name: nil,
-            guest_email: nil
-          ]
+          status: "available",
+          order_id: nil,
+          locked_until: nil,
+          guest_name: nil,
+          guest_email: nil
+        ]
       ],
       returning: true
     )

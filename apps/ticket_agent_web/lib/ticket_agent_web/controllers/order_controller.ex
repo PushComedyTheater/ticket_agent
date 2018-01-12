@@ -71,8 +71,7 @@ defmodule TicketAgentWeb.OrderController do
       nil ->
         Logger.warn("Not able to find this order")
       order ->
-        order
-        |> maybe_release_tickets(ticket_ids)
+        maybe_release_tickets(order)
     end
 
     conn
@@ -83,9 +82,9 @@ defmodule TicketAgentWeb.OrderController do
     TicketState.reserve_tickets(order, tickets)
   end
 
-  defp maybe_release_tickets(order, ticket_ids) do
+  defp maybe_release_tickets(order) do
     order
-    |> TicketState.release_tickets(ticket_ids)
+    |> TicketState.release_tickets()
     |> Ecto.Multi.append(OrderState.release_order(order))
     |> Repo.transaction
   end

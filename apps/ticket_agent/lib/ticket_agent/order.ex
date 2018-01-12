@@ -3,7 +3,7 @@ defmodule TicketAgent.Order do
   @derive {Phoenix.Param, key: :slug}
   use TicketAgent.Schema
 
-  @required ~w(slug status total_price user_id)a
+  @required ~w(slug status total_price user_id credit_card_id)a
   @fields ~w(subtotal credit_card_fee processing_fee)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -19,7 +19,11 @@ defmodule TicketAgent.Order do
     field :credit_card_fee, :integer
     field :processing_fee, :integer
     field :total_price, :integer
+    field :started_at, :utc_datetime
+    field :processing_at, :utc_datetime
     field :completed_at, :utc_datetime
+    field :errored_at, :utc_datetime
+    field :cancelled_at, :utc_datetime
     timestamps(type: :utc_datetime)
   end
 
