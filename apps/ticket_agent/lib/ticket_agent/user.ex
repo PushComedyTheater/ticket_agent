@@ -32,7 +32,6 @@ defmodule TicketAgent.User do
   def changeset(model, params, :stripe_customer_id) do
     model
     |> cast(params, ~w(stripe_customer_id))
-    |> validate_required([:stripe_customer_id])
   end
 
   def changeset(model, params, :password) do

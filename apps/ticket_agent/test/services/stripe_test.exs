@@ -240,27 +240,37 @@ defmodule TicketAgent.Services.StripeTest do
       assert Enum.count(Repo.all(OrderDetail)) == 1
     end
 
-    # test "handles error", %{bypass: bypass} do
-    #   user = insert(:user, stripe_customer_id: nil)
+    test "handles error", %{bypass: bypass} do
+      order = insert(:order)
+      insert(:ticket, price: 500, order: order)
+      client_ip = "127.0.0.1"
+      user = insert(:user, stripe_customer_id: "cus_C762tFGaC3ctq4")
 
-    #   response = ~s<{
-    #     "message": "No such token: s",
-    #     "type": "invalid_request_error",
-    #     "param": "source"
-    #   }>
+      response = ~s<{
+        "error": {
+          "message": "No such customer: cus_C762tFGaC3ctq4",
+          "param": "customer", 
+          "type": "invalid_request_error"
+        }
+      }>
+    
+      expect_json bypass, fn conn ->
+        assert "/charges" == conn.request_path
+        assert "POST" == conn.method
+        {:ok, body, conn} = Plug.Conn.read_body(conn, length: 1_000_000)
+        assert body == "amount=598&application_fee=50&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+        Plug.Conn.resp(conn, 400, response)
+      end
 
-    #   expect_json bypass, fn conn ->
-    #     assert "/customers" == conn.request_path
-    #     assert "POST" == conn.method
-    #     Plug.Conn.resp(conn, 400, response)
-    #   end
-
-    #   {:error, "No such token: s"} = Stripe.create_customer(user, "blah", %{})
-
-    #   user = Repo.reload(user)
-
-    #   assert is_nil(user.stripe_customer_id)
-    # end   
+      assert Enum.count(Repo.all(OrderDetail)) == 0
+      Stripe.create_charge(
+        order,
+        user,
+        "description",
+        client_ip
+      )
+      assert Enum.count(Repo.all(OrderDetail)) == 1
+    end   
     
     # test "handles nested error", %{bypass: bypass} do
     #   user = insert(:user, stripe_customer_id: nil)

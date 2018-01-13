@@ -19,13 +19,13 @@ defmodule TicketAgent.State.ChargeProcessingStateTest do
 
     test "does nothing for tickets that are not locked" do
       order = insert(:order, status: "started")
-      ticket = insert(:ticket, status: "available", order: order)
+      insert(:ticket, status: "available", order: order)
       assert {:error, :ticket_processing_error} == ChargeProcessingState.set_order_processing_with_tickets(order)
     end
 
     test "does nothing for orders that are not started" do
       order = insert(:order, status: "processing")
-      ticket = insert(:ticket, status: "locked", order: order)
+      insert(:ticket, status: "locked", order: order)
       assert {:error, :order_processing_error} == ChargeProcessingState.set_order_processing_with_tickets(order)
     end
 
@@ -67,17 +67,33 @@ defmodule TicketAgent.State.ChargeProcessingStateTest do
   end
 
   describe "set_order_completed_with_tickets" do
-    test "does nothing for tickets that are not processing" do
+    test "works for orders that are locked and tickets that are processing" do
       order = insert(:order, status: "processing")
       ticket = insert(:ticket, status: "locked", order: order)
-      assert {:error, :ticket_completing_error} == ChargeProcessingState.set_order_completed_with_tickets(order)
-    end
+      {:ok, {updated_order, [updated_ticket]}} = ChargeProcessingState.set_order_completed_with_tickets(order)
 
-    test "does nothing for orders that are not started" do
+      order = Repo.reload(order)
+      ticket = Repo.reload(ticket)
+
+      assert order.id == updated_order.id
+      assert ticket.id == updated_ticket.id
+      assert order.status == "completed"
+      assert ticket.status == "purchased"
+    end      
+
+    test "works for orders that are started and tickets that are processing" do
       order = insert(:order, status: "started")
       ticket = insert(:ticket, status: "processing", order: order)
-      assert {:error, :order_completing_error} == ChargeProcessingState.set_order_completed_with_tickets(order)
-    end
+      {:ok, {updated_order, [updated_ticket]}} = ChargeProcessingState.set_order_completed_with_tickets(order)
+
+      order = Repo.reload(order)
+      ticket = Repo.reload(ticket)
+
+      assert order.id == updated_order.id
+      assert ticket.id == updated_ticket.id
+      assert order.status == "completed"
+      assert ticket.status == "purchased"
+    end   
 
     test "works for orders that are processing and tickets that are processing" do
       order = insert(:order, status: "processing")
@@ -125,5 +141,33 @@ defmodule TicketAgent.State.ChargeProcessingStateTest do
       assert order.status == "cancelled"
       assert Enum.count(order.tickets) == 0
     end      
+  end  
+  
+  describe "reset_order_and_tickets" do
+    test "does nothing for tickets that are not processing" do
+      order = insert(:order, status: "processing")
+      insert(:ticket, status: "locked", order: order)
+      assert {:error, :ticket_locked_error} == ChargeProcessingState.reset_order_and_tickets(order)
+    end
+
+    test "does nothing for orders that are not started" do
+      order = insert(:order, status: "started")
+      insert(:ticket, status: "processing", order: order)
+      assert {:error, :order_starting_error} == ChargeProcessingState.reset_order_and_tickets(order)
+    end
+
+    test "works for orders that are processing and tickets that are processing" do
+      order = insert(:order, status: "processing")
+      ticket = insert(:ticket, status: "processing", order: order)
+      {:ok, {updated_order, [updated_ticket]}} = ChargeProcessingState.set_order_completed_with_tickets(order)
+
+      order = Repo.reload(order)
+      ticket = Repo.reload(ticket)
+
+      assert order.id == updated_order.id
+      assert ticket.id == updated_ticket.id
+      assert order.status == "completed"
+      assert ticket.status == "purchased"
+    end    
   end    
 end

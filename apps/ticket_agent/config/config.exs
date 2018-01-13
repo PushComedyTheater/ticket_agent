@@ -25,7 +25,7 @@ config :sentry,
   },
   use_error_logger: true,
   included_environments: [:prod],
-  # included_environments: [:dev, :prod],
+  # included_environments: [:dev, :test, :prod],
   release: sha
 
 # %% Coherence Configuration %%   Don't remove this line

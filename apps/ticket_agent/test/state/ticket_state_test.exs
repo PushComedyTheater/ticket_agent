@@ -13,7 +13,7 @@ defmodule TicketAgent.State.TicketStateTest do
   describe "lock_processing_tickets" do
     test "does not affect available" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "available", order: order)
+      insert(:ticket, status: "available", order: order)
       multi = TicketState.lock_processing_tickets(order)
 
       assert {:ok, %{locked_processing_tickets: {0, []}}} == Repo.transaction(multi)
@@ -21,7 +21,7 @@ defmodule TicketAgent.State.TicketStateTest do
     
     test "does not affect locked tickets" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "locked", order: order)
+      insert(:ticket, status: "locked", order: order)
       multi = TicketState.lock_processing_tickets(order)
 
       assert {:ok, %{locked_processing_tickets: {0, []}}} == Repo.transaction(multi)
@@ -50,21 +50,21 @@ defmodule TicketAgent.State.TicketStateTest do
 
     test "does not affect purchased" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "purchased", order: order)
+      insert(:ticket, status: "purchased", order: order)
       multi = TicketState.lock_processing_tickets(order)
       assert {:ok, %{locked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
     
     test "does not affect emailed" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "emailed", order: order)
+      insert(:ticket, status: "emailed", order: order)
       multi = TicketState.lock_processing_tickets(order)
       assert {:ok, %{locked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
     
     test "does not affect checkedin" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "checkedin", order: order)
+      insert(:ticket, status: "checkedin", order: order)
       multi = TicketState.lock_processing_tickets(order)
       assert {:ok, %{locked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
@@ -74,14 +74,14 @@ defmodule TicketAgent.State.TicketStateTest do
     test "does not affect tickets for other orders" do
       first_order = insert(:order)
       order = insert(:order)
-      ticket = insert(:ticket, status: "locked", order: first_order)
+      insert(:ticket, status: "locked", order: first_order)
       multi = TicketState.unlock_tickets_to_processing_for_order(order)
       assert {:ok, %{unlocked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
 
     test "does not affect available" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "available", order: order)
+      insert(:ticket, status: "available", order: order)
       multi = TicketState.unlock_tickets_to_processing_for_order(order)
       assert {:ok, %{unlocked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
@@ -108,28 +108,28 @@ defmodule TicketAgent.State.TicketStateTest do
 
     test "does not affect processing" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "processing", order: order)
+      insert(:ticket, status: "processing", order: order)
       multi = TicketState.unlock_tickets_to_processing_for_order(order)
       assert {:ok, %{unlocked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
 
     test "does not affect purchased" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "purchased", order: order)
+      insert(:ticket, status: "purchased", order: order)
       multi = TicketState.unlock_tickets_to_processing_for_order(order)
       assert {:ok, %{unlocked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
     
     test "does not affect emailed" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "emailed", order: order)
+      insert(:ticket, status: "emailed", order: order)
       multi = TicketState.unlock_tickets_to_processing_for_order(order)
       assert {:ok, %{unlocked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
     
     test "does not affect checkedin" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "checkedin", order: order)
+      insert(:ticket, status: "checkedin", order: order)
       multi = TicketState.unlock_tickets_to_processing_for_order(order)
       assert {:ok, %{unlocked_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
@@ -138,20 +138,30 @@ defmodule TicketAgent.State.TicketStateTest do
   describe "purchase_processing_tickets_for_order" do
     test "does not affect available" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "available", order: order)
+      insert(:ticket, status: "available", order: order)
       multi = TicketState.purchase_processing_tickets_for_order(order)
 
       assert {:ok, %{purchased_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
-    
-    test "does not affect locked tickets" do
+
+    test "affects locked", %{timestamp: timestamp} do
       order = insert(:order)
       ticket = insert(:ticket, status: "locked", order: order)
-      multi = TicketState.purchase_processing_tickets_for_order(order)
+      multi = TicketState.purchase_processing_tickets_for_order(order, timestamp)
 
-      assert {:ok, %{purchased_processing_tickets: {0, []}}} == Repo.transaction(multi)
+      assert [
+        purchased_processing_tickets: {:update_all, query, updates, [returning: true]}
+      ] = Multi.to_list(multi)
+
+      assert inspect(query) == ~s(#Ecto.Query<from t in TicketAgent.Ticket, where: t.order_id == ^\"#{order.id}\", where: t.status in [\"locked\", \"processing\"]>)
+      assert updates == [set: [status: "purchased", locked_until: nil, purchased_at: timestamp]]
+
+      {:ok, %{purchased_processing_tickets: {1, [updated_ticket]}}} = Repo.transaction(multi)
+      assert ticket.id == updated_ticket.id
+
+      ticket = Repo.reload(ticket)
+      assert ticket.status == "purchased"
     end
-
     test "affects processing", %{timestamp: timestamp} do
       order = insert(:order)
       ticket = insert(:ticket, status: "processing", order: order)
@@ -161,7 +171,7 @@ defmodule TicketAgent.State.TicketStateTest do
         purchased_processing_tickets: {:update_all, query, updates, [returning: true]}
       ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from t in TicketAgent.Ticket, where: t.order_id == ^\"#{order.id}\", where: t.status == \"processing\">)
+      assert inspect(query) == ~s(#Ecto.Query<from t in TicketAgent.Ticket, where: t.order_id == ^\"#{order.id}\", where: t.status in [\"locked\", \"processing\"]>)
       assert updates == [set: [status: "purchased", locked_until: nil, purchased_at: timestamp]]
 
       {:ok, %{purchased_processing_tickets: {1, [updated_ticket]}}} = Repo.transaction(multi)
@@ -173,21 +183,21 @@ defmodule TicketAgent.State.TicketStateTest do
 
     test "does not affect purchased" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "purchased", order: order)
+      insert(:ticket, status: "purchased", order: order)
       multi = TicketState.purchase_processing_tickets_for_order(order)
       assert {:ok, %{purchased_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
     
     test "does not affect emailed" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "emailed", order: order)
+      insert(:ticket, status: "emailed", order: order)
       multi = TicketState.purchase_processing_tickets_for_order(order)
       assert {:ok, %{purchased_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end
     
     test "does not affect checkedin" do
       order = insert(:order)
-      ticket = insert(:ticket, status: "checkedin", order: order)
+      insert(:ticket, status: "checkedin", order: order)
       multi = TicketState.purchase_processing_tickets_for_order(order)
       assert {:ok, %{purchased_processing_tickets: {0, []}}} == Repo.transaction(multi)
     end

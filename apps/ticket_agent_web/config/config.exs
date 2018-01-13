@@ -38,23 +38,23 @@ config :logger, :console,
 config :ticket_agent_web, :generators,
   context_app: :ticket_agent
 
-{sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
-sha = String.trim(sha)
-config :ticket_agent_web, :release, sha
+# {sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
+# sha = String.trim(sha)
+# config :ticket_agent_web, :release, sha
 
-config :sentry,
-  dsn: System.get_env("SENTRY_PRIVATE_DSN"),
-  environment_name: Mix.env,
-  enable_source_code_context: true,
-  root_source_code_path: File.cwd!,
-  use_error_logger: true,
-  tags: %{
-    env: "#{Mix.env}",
-    app: "ticket_agent_web"
-  },
-  included_environments: [:prod],
-  # included_environments: [:dev, :prod],
-  release: sha
+# config :sentry,
+#   dsn: System.get_env("SENTRY_PRIVATE_DSN"),
+#   environment_name: Mix.env,
+#   enable_source_code_context: true,
+#   root_source_code_path: File.cwd!,
+#   use_error_logger: true,
+#   tags: %{
+#     env: "#{Mix.env}",
+#     app: "ticket_agent_web"
+#   },
+#   # included_environments: [:prod],
+#   included_environments: [:dev, :prod],
+#   release: sha
 
 config :coherence,
   user_token: true

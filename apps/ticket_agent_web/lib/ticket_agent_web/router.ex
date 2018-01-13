@@ -70,6 +70,11 @@ defmodule TicketAgentWeb.Router do
     get "/", RootController, :index
   end
 
+  scope "/", TicketAgentWeb do
+    pipe_through :protected
+    resources "/orders", OrderController
+  end
+
   scope "/auth", TicketAgentWeb do
     pipe_through :browser
 
@@ -110,10 +115,6 @@ defmodule TicketAgentWeb.Router do
     get "/", Redirect, to: "/admin/dashboard"
   end
 
-  scope "/", TicketAgentWeb do
-    pipe_through :protected
-    resources "/orders", OrderController
-  end
 
   def ensure_admin(conn, _params) do
     case conn.assigns.current_user.role do

@@ -52,7 +52,7 @@ defmodule TicketAgent.State.TicketState do
     )
   end
 
-  # Tickets can go from processing -> purchased
+  # Tickets can go from processing/locked -> purchased
   def purchase_processing_tickets_for_order(order, timestamp \\ NaiveDateTime.utc_now()) do
     Logger.info "purchase_processing_tickets_for_order->order_id       = #{order.id}"
     Logger.info "purchase_processing_tickets_for_order->timestamp      = #{inspect timestamp}"
@@ -62,7 +62,7 @@ defmodule TicketAgent.State.TicketState do
       from(
         t in Ticket,
         where: t.order_id == ^order.id,
-        where: t.status == "processing"
+        where: t.status in ["locked", "processing"]
       ),
       [
         set: [

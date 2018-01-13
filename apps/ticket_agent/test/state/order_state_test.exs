@@ -158,15 +158,15 @@ defmodule TicketAgent.State.OrderStateTest do
   end   
   
   describe "set_order_completed" do
-    test "affects processing", %{timestamp: timestamp} do
-      order = insert(:order, status: "processing")
+    test "affects started", %{timestamp: timestamp} do
+      order = insert(:order, status: "started")
       multi = OrderState.set_order_completed(order, timestamp)
 
       assert [
         order_completed: {:update_all, query, updates, [returning: true]}
       ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status == \"processing\">)
+      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
       assert updates == [set: [status: "completed", completed_at: timestamp]]
 
       {:ok, %{order_completed: {1, [updated_order]}}} = Repo.transaction(multi)
@@ -178,8 +178,28 @@ defmodule TicketAgent.State.OrderStateTest do
       refute is_nil(order.completed_at)
     end
 
+    test "affects processing", %{timestamp: timestamp} do
+      order = insert(:order, status: "processing")
+      multi = OrderState.set_order_completed(order, timestamp)
+
+      assert [
+        order_completed: {:update_all, query, updates, [returning: true]}
+      ] = Multi.to_list(multi)
+
+      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
+      assert updates == [set: [status: "completed", completed_at: timestamp]]
+
+      {:ok, %{order_completed: {1, [updated_order]}}} = Repo.transaction(multi)
+      assert order.id == updated_order.id
+      assert updated_order.status == "completed"
+
+      order = Repo.reload(order)
+      assert order.status == "completed"
+      refute is_nil(order.completed_at)
+    end    
+
     test "does not affect others" do 
-      Enum.each(~w(started completed errored cancelled), fn(status) ->
+      Enum.each(~w(errored cancelled), fn(status) ->
         order = insert(:order, status: status)
         {:ok, %{order_completed: {0, _}}} = 
           order

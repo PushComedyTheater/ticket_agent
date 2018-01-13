@@ -4,20 +4,23 @@ defmodule TicketAgentWeb.ChargeController do
   alias TicketAgent.{Repo, User}
   alias TicketAgent.Services.Stripe
   alias TicketAgent.State.{ChargeProcessingState, OrderState, TicketState, UserState}
+  alias TicketAgentWeb.ExceptionSender
   use Coherence.Config
   plug TicketAgentWeb.LoadListing when action in [:create]
   plug TicketAgentWeb.LoadOrder when action in [:create]
 
   # logged in user
-  def create(conn, %{"token" => token, "pricing" => pricing} = params) do
+  def create(conn, %{"token" => token} = params) do
     description  = "Tickets for #{conn.assigns.listing.title}"
     current_user = Coherence.current_user(conn)
     order        = conn.assigns.order
     token_id     = token["token_id"]
-    metadata     = load_metadata(current_user, conn, params)
+    metadata     = load_metadata(conn)
+
     Logger.info "current_user = #{current_user.name}"
     Logger.info "order        = #{inspect order.slug}"
     Logger.info "token        = #{inspect token}"
+    Logger.info "metadata     = #{inspect metadata}"
 
     # set order to processing
     # set tickets to processing
@@ -34,89 +37,60 @@ defmodule TicketAgentWeb.ChargeController do
           conn
           |> render("create.json")
     else
-      {:error, :missing_tickets} ->
-        ChargeProcessingState.cancel_order_and_release_tickets(order)
-        render_error(conn, "reset")    
-      {:error, :ticket_processing_error} ->     
-        Logger.error "charge_controller->create: tickets were not in proper state."
-        ChargeProcessingState.cancel_order_and_release_tickets(order)
-        render_error(conn, "reset")    
       error ->
-        IO.inspect error
-        ChargeProcessingState.cancel_order_and_release_tickets(order)
-        render_error(conn, "reset")    
+        conn
+        |> handle_error(error, order)   
     end        
-# raise "FUCK"
-
-#     with {:ok, {updated_order, updated_tickets}} <- ChargeProcessingState.set_order_processing_with_tickets(order, ticket_ids),
-#          {:ok, stripe_customer_id}               <- Stripe.load_stripe_token(current_user, token_id, metadata),
-#          {:ok, _response} <- Stripe.create_charge(stripe_customer_id, order.total_price, description, updated_order, token["client_ip"], current_user, metadata),
-#          {:ok, %{purchased_tickets: {^ticket_count, _updated_tickets}, completed_order: {1, _updated_order}}} <- set_order_completed_with_tickets(order, ticket_ids),
-#          {:ok, credit_card} <- UserState.store_card_details(current_user, order, token["card"]),
-#          {1, _} <- OrderState.set_credit_card_for_order(order, credit_card) do
-
-#         # Task.start(fn ->
-#         #   TicketAgent.Emails.OrderEmail.order_email
-#         # end)
-
-#     else
-#       # # order or tickets couldn't be set properly, let's exit and flip out
-#       # {:ok, %{processing_tickets: _, order_processing: _}} ->
-#       #   Logger.error "There are no tickets or orders to update, this is bad, resetting"
-#       #   cancel_order_and_release_tickets(order, ticket_ids)
-#       #   render_error(conn, "reset")
-#       # {:ok, %{purchased_tickets: _, completed_order: _}} ->
-#       #   Logger.error "This is the end of the world.  We need to tell someone."
-#       #   cancel_order_and_release_tickets(order, ticket_ids)
-#       #   render_error(conn, "reset")
-#       # {:token_error, message} when is_binary(message) ->
-#       #   reset_order_and_tickets(order, ticket_ids)
-#       #   render_error(conn, "continue", message)
-#       error ->
-#         Logger.error "Unmatched error "
-#         Logger.error "#{inspect error}"
-#         # reset_order_and_tickets(order, ticket_ids)
-#         render_error(conn, "continue")
-#     end
   end
 
-  defp render_error(conn, code, message \\ "There was an error.  Please try again") do
+  def handle_error(conn, {:error, type}, order) when type in [:missing_tickets, :ticket_processing_error, :order_processing_error] do
+    details = 
+      conn.params
+      |> Map.merge(load_metadata(conn))
+      |> Map.merge(%{error_type: type})
+
+    type
+    |> ExceptionSender.message()
+    |> ExceptionSender.send(type, details)
+
+    ChargeProcessingState.cancel_order_and_release_tickets(order)
+    render_error(conn, "reset")    
+  end
+
+  def handle_error(conn, {:error, type}, order) when type in [:token_error, :missing_stripe_customer_id] do
+    details = 
+      conn.params
+      |> Map.merge(load_metadata(conn))
+      |> Map.merge(%{error_type: type})
+    
+    type
+    |> ExceptionSender.message()
+    |> ExceptionSender.send(type, details)
+
+    ChargeProcessingState.reset_order_and_tickets(order)
+    render_error(conn, "continue")
+  end
+
+  defp render_error(conn, code, message \\ "There was an error.  Please try again.") do
     conn
     |> put_status(422)
     |> render("error.json", %{code: code, reason: message})
   end
+  
+  defp load_metadata(conn) do
+    user    = conn.assigns[:current_user]
+    order   = conn.assigns.order
+    listing = conn.assigns.listing
 
-
-
-  defp reset_order_and_tickets(order, ticket_ids) do
-    ticket_ids
-    |> TicketState.lock_processing_tickets(order)
-    |> Ecto.Multi.append(OrderState.set_order_started(order))
-    |> Repo.transaction
-  end
-
-
-
-  defp load_metadata(nil, conn, params) do
-    Logger.info "load_metadata for no current user"
     %{
-      "order_id" => conn.assigns.order.id,
-      "order_slug" => conn.assigns.order.slug,
-      "email" => params["email"],
-      "ticket_count" => Enum.count(params["tickets"]),
-      "listing_id" => conn.assigns.listing.id,
-      "name" => params["name"]
-    }
-  end
-
-  defp load_metadata(current_user, conn, params) do
-    %{
-      "order_id" => conn.assigns.order.id,
-      "order_slug" => conn.assigns.order.slug,
-      "email" => current_user.email,
-      "ticket_count" => Enum.count(params["tickets"]),
-      "listing_id" => conn.assigns.listing.id,
-      "name" => current_user.name
+      "order_id"            => order.id,
+      "order_slug"          => order.slug,
+      "email"               => user.email,
+      "params_ticket_count" => Enum.count(conn.params["tickets"]),
+      "order_ticket_count"  => Enum.count(order.tickets),
+      "listing_id"          => listing.id,
+      "name"                => user.name,
+      "user_id"             => user.id
     }
   end
 end

@@ -74,4 +74,30 @@ defmodule TicketAgent.State.ChargeProcessingState do
         :ok
     end
   end  
+
+  def reset_order_and_tickets(%{tickets: %Ecto.Association.NotLoaded{}} = order), do: reset_order_and_tickets(Repo.preload(order, :tickets))
+  def reset_order_and_tickets(order) do
+    order_ticket_count = Enum.count(order.tickets)
+    Logger.info "reset_order_and_tickets->order_ticket_count: #{order_ticket_count}"
+    
+    transaction = 
+      order
+      |> TicketState.lock_processing_tickets()
+      |> Ecto.Multi.append(OrderState.set_order_started(order))
+
+    case Repo.transaction(transaction) do
+      {:ok, %{order_started: {1, [updated_order]}, locked_processing_tickets: {^order_ticket_count, updated_tickets}}} ->
+        {:ok, {updated_order, updated_tickets}}
+      {:ok, %{order_started: {0, _}}} ->
+        Logger.error "reset_order_and_tickets->#{order.slug}: order was not updated to started"
+        {:error, :order_starting_error}
+      {:ok, %{locked_processing_tickets: _}} ->
+        Logger.error "reset_order_and_tickets->#{order.slug}: tickets were not updated to locked"
+        {:error, :ticket_locked_error}
+      anything ->
+        Logger.error "reset_order_and_tickets->#{order.slug}: received unmatched error: #{inspect anything}"
+        {:error, :unknown_error}
+    end      
+
+  end  
 end

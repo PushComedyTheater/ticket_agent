@@ -113,7 +113,7 @@ defmodule TicketAgent.State.OrderState do
       from(
         o in Order,
         where: o.id == ^order.id,
-        where: o.status == "processing"
+        where: o.status in ["started", "processing"]
       ),
       [
         set: [
