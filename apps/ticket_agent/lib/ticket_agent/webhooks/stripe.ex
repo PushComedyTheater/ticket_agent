@@ -4,7 +4,7 @@ defmodule TicketAgent.Webhooks.Stripe do
   alias TicketAgent.Finders.UserFinder
 
   def process_webhook(%{"type" => "customer.deleted"} = webhook) do
-    Logger.info "Customer Deleted Webhook = #{inspect webhook}"
+    Logger.info "process_webhook->Customer Deleted Webhook = #{inspect webhook}"
 
     email = get_in(webhook, ["data", "object", "email"])
     stripe_customer_id = get_in(webhook, ["data", "object", "id"])
@@ -18,6 +18,18 @@ defmodule TicketAgent.Webhooks.Stripe do
       anything ->
         IO.inspect anything
     end
+  end
+
+  def process_webhook(%{"type" => "charge.succeeded"} = webhook) do
+    Logger.info "process_webhook->Charge Succeeded Webhook = #{inspect webhook}"
+  end
+
+  def process_webhook(%{"type" => "customer.source.created"} = webhook) do
+    Logger.info "process_webhook->Customer Source Created Webhook = #{inspect webhook}"
+  end
+
+  def process_webhook(%{"type" => "customer.created"} = webhook) do
+    Logger.info "process_webhook->Customer Created Webhook = #{inspect webhook}"
   end
 
   def process_webhook(webhook) do

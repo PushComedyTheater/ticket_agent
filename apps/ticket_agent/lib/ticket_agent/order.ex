@@ -3,8 +3,8 @@ defmodule TicketAgent.Order do
   @derive {Phoenix.Param, key: :slug}
   use TicketAgent.Schema
 
-  @required ~w(slug status total_price user_id credit_card_id)a
-  @fields ~w(subtotal credit_card_fee processing_fee)a
+  @required ~w(slug status total_price user_id)a
+  @fields ~w(subtotal credit_card_fee processing_fee credit_card_id)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 

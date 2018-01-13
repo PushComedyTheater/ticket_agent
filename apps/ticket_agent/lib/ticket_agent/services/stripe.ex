@@ -14,10 +14,10 @@ defmodule TicketAgent.Services.Stripe do
           {:error, error} ->
             {:error, :token_error}
           {:ok, user} ->
-            {:ok, user.stripe_customer_id}
+            {:ok, user}
         end
       stripe_customer_id ->
-        {:ok, stripe_customer_id}
+        {:ok, user}
     end
   end
 

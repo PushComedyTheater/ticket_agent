@@ -30,10 +30,10 @@ defmodule TicketAgentWeb.ChargeController do
     # send ticket email
 
     with {:ok, {updated_order, updated_tickets}} <- ChargeProcessingState.set_order_processing_with_tickets(order),
-         {:ok, stripe_customer_id}               <- Stripe.load_stripe_token(current_user, token_id, metadata),
-         {:ok, response}                         <- Stripe.create_charge(order, current_user, description, token["client_ip"], metadata),
+         {:ok, updated_user}                     <- Stripe.load_stripe_token(current_user, token_id, metadata),
+         {:ok, response}                         <- Stripe.create_charge(order, updated_user, description, token["client_ip"], metadata),
          {:ok, {updated_order, updated_tickets}} <- ChargeProcessingState.set_order_completed_with_tickets(updated_order),
-         {:ok, credit_card}                      <- UserState.store_card_for_order(current_user, order, token["card"]) do
+         {:ok, credit_card}                      <- UserState.store_card_for_order(updated_user, order, token["card"]) do
           conn
           |> render("create.json")
     else

@@ -15,7 +15,8 @@ defmodule TicketAgent.Services.StripeTest do
   describe "load_stripe_token" do
     test "loads a stripe token if user record has one" do
       user = insert(:user, stripe_customer_id: "abc123")
-      {:ok, "abc123"} = Stripe.load_stripe_token(user, "blah")
+      {:ok, updated_user} = Stripe.load_stripe_token(user, "blah")
+      assert updated_user.stripe_customer_id == "abc123"
     end
 
     test "loads a stripe token from stripe", %{bypass: bypass} do
@@ -29,7 +30,8 @@ defmodule TicketAgent.Services.StripeTest do
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 200, response)
       end
-      {:ok, "cus_C762tFGaC3ctq4"} = Stripe.load_stripe_token(user, "blah")
+      {:ok, updated_user} = Stripe.load_stripe_token(user, "blah")
+      assert updated_user.stripe_customer_id == "cus_C762tFGaC3ctq4"
     end  
     
     test "loads from stripe with error", %{bypass: bypass} do
