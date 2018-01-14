@@ -22,6 +22,7 @@ defmodule TicketAgent.State.OrderState do
   end
 
   # this loads the order's tickets, adds them up and then calculate the stripe fee
+  def calculate_order_cost(nil), do: nil
   def calculate_order_cost(order) do
     order = case Ecto.assoc_loaded?(order.tickets) do
       true -> order

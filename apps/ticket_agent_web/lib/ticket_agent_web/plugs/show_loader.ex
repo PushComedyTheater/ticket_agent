@@ -15,11 +15,14 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
   end
 
   defp setup_conn_with_listing(nil, conn) do
-    Logger.info "ShowLoader.load_listing no listing"
+    Logger.error "load_order_plug->Cannot find listing"
     conn
-    |> put_status(404)
-    |> Phoenix.Controller.render(TicketAgentWeb.ErrorView, :"404", message: "Cannot find")
-    |> halt()
+    |> Plug.Conn.put_status(404)
+    |> Phoenix.Controller.render(
+          TicketAgentWeb.ErrorView,
+          "404.html",
+          message: "Cannot find listing")
+    |> Plug.Conn.halt()    
   end
 
   defp setup_conn_with_listing({listing, available_tickets}, conn) do
@@ -33,7 +36,7 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
 
     available_ticket_count = available_ticket_count(available_tickets, past_date)
 
-    ticket_price = ticket_price(listing, available_tickets)
+    ticket_price = ticket_price(available_tickets)
 
     conn
     |> load_flash_message()
@@ -77,11 +80,11 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
     end
   end
 
-  defp ticket_price(listing, []) do
-    TicketFinder.listing_price(listing.id) |> hd
+  defp ticket_price([]) do
+    0
   end
 
-  defp ticket_price(_, available_tickets) when length(available_tickets) > 0 do
+  defp ticket_price(available_tickets) when length(available_tickets) > 0 do
     Enum.at(available_tickets, 0).price
   end
 

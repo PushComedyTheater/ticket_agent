@@ -1,16 +1,15 @@
 defmodule TicketAgentWeb.ChargeController do
   require Logger
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Repo, User}
   alias TicketAgent.Services.Stripe
-  alias TicketAgent.State.{ChargeProcessingState, OrderState, TicketState, UserState}
+  alias TicketAgent.State.{ChargeProcessingState, UserState}
   alias TicketAgentWeb.ExceptionSender
   use Coherence.Config
-  plug TicketAgentWeb.LoadListing when action in [:create]
-  plug TicketAgentWeb.LoadOrder when action in [:create]
+  plug TicketAgentWeb.Plugs.LoadListing when action in [:create]
+  plug TicketAgentWeb.Plugs.LoadOrder when action in [:create]
 
   # logged in user
-  def create(conn, %{"token" => token} = params) do
+  def create(conn, %{"token" => token}) do
     description  = "Tickets for #{conn.assigns.listing.title}"
     current_user = Coherence.current_user(conn)
     order        = conn.assigns.order
@@ -29,11 +28,11 @@ defmodule TicketAgentWeb.ChargeController do
     # complete order
     # send ticket email
 
-    with {:ok, {updated_order, updated_tickets}} <- ChargeProcessingState.set_order_processing_with_tickets(order),
+    with {:ok, {updated_order, _updated_tickets}} <- ChargeProcessingState.set_order_processing_with_tickets(order),
          {:ok, updated_user}                     <- Stripe.load_stripe_token(current_user, token_id, metadata),
-         {:ok, response}                         <- Stripe.create_charge(order, updated_user, description, token["client_ip"], metadata),
-         {:ok, {updated_order, updated_tickets}} <- ChargeProcessingState.set_order_completed_with_tickets(updated_order),
-         {:ok, credit_card}                      <- UserState.store_card_for_order(updated_user, order, token["card"]) do
+         {:ok, _response}                         <- Stripe.create_charge(order, updated_user, description, token["client_ip"], metadata),
+         {:ok, {_updated_order, _updated_tickets}} <- ChargeProcessingState.set_order_completed_with_tickets(updated_order),
+         {:ok, _credit_card}                      <- UserState.store_card_for_order(updated_user, order, token["card"]) do
           conn
           |> render("create.json")
     else

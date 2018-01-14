@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.OrderController do
   require Logger
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Order, Repo}
+  alias TicketAgent.{Repo}
   alias TicketAgent.State.{OrderState, TicketState}
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.Plugs.ValidateShowRequest when action in [:new]
@@ -15,25 +15,28 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def show(conn, %{"id" => order_id} = params) do
-    order = Repo.get_by(Order, slug: order_id)
-            |> Repo.preload([:user, :credit_card, :tickets, :listing])
-    # case Coherence.current_user(conn) do
-      # nil ->
-      #   conn
-      #   |> redirect(to: order_path(conn, :new, %{show_id: id}))
-    # end
+    current_user = Coherence.current_user(conn)
+    order = 
+      order_id
+      |> OrderFinder.find_order(current_user.id)
+      |> Repo.preload([:credit_card, :tickets])
+    
+    if order do
+      conn = case params["msg"] do
+        nil -> conn
+        _ ->
+          conn
+          |> put_flash(:info, "Thank you so much for your order.  You can find details about your order below.  Please check your email to receive your tickets.")
+      end
 
-    # order = OrderFinder.find_order(order_id, current_user.id)
-
-    conn = case params["msg"] do
-      nil -> conn
-      _ ->
-        conn
-        |> put_flash(:info, "Thank you so much for your order.  You can find details about your order below.  Please check your email to receive your tickets.")
-    end
-
-    conn
-    |> render("show.html", order: order, host: @host)
+      conn
+      |> render("show.html", order: order, host: @host)
+    else
+      conn
+      |> put_status(404)
+      |> render(TicketAgentWeb.ErrorView, :"404", message: "Cannot find that order.")
+      |> halt()
+    end      
   end
 
   def new(conn, %{"show_id" => _}) do
@@ -64,9 +67,7 @@ defmodule TicketAgentWeb.OrderController do
     )
   end
 
-  def delete(conn, %{"tickets" => tickets}) do
-    ticket_ids = Enum.map(tickets, fn(ticket) -> ticket["id"] end)
-
+  def delete(conn, _) do
     case OrderFinder.find_started_order(Coherence.current_user(conn)) do
       nil ->
         Logger.warn("Not able to find this order")
