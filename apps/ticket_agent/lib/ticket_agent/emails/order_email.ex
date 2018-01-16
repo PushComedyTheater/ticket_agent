@@ -30,8 +30,8 @@ defmodule TicketAgent.Emails.OrderEmail do
     html = EEx.eval_file(html_layout_template, [body: customer_order_html])
     text = EEx.eval_file(text_layout_template, [body: customer_order_text])
     
-    pdf_filename = Task.await(pdf_task)
-    ical_file_name = Task.await(ical_task)
+    pdf_filename = Task.await(pdf_task, 20000)
+    ical_file_name = Task.await(ical_task, 20000)
 
     %Email{}
     |> to({name, email})

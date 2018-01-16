@@ -15,6 +15,19 @@ defmodule TicketAgent.Finders.ListingFinder do
     Repo.all(query)
   end
 
+  def active_class_listings do
+    query = from listing in Listing,
+            where: listing.status == "active",
+            where: is_nil(listing.event_id),
+            where: not is_nil(listing.class_id),
+            where: fragment("? >= NOW() - interval '1 hour'", listing.start_at),
+            order_by: [asc: :start_at],
+            preload: [:tickets],
+            select: listing
+
+    Repo.all(query)
+  end  
+
   def find_listing_by_slug(slug) do
     slug =
       slug

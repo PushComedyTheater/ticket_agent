@@ -60,7 +60,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("2018-01-13 18:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-17 20:00:00Z")
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-17 20:00:00Z"),
+    created_at: NaiveDateTime.from_iso8601("2017-12-13T04:17:25.431Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -111,35 +112,24 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..12, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Improv for Teens at the Push Comedy Theater",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Improv for Teens at the Push Comedy Theater",
-        price: 15000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-13T04:17:25.431Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Improv for Teens at the Push Comedy Theater",
-        status: "available",
-        description: "Ticket for Improv for Teens at the Push Comedy Theater",
-        price: 15000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-13T04:17:25.431Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for Improv for Teens at the Push Comedy Theater"
+
+Enum.map(1..12, fn(x) ->
+  price =  15000 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
@@ -178,7 +168,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("2017-11-18 20:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 23:00:00Z")
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 23:00:00Z"),
+    created_at: NaiveDateTime.from_iso8601("2017-09-10T21:07:26.636Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -221,35 +212,24 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..12, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Musical Improv 201",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Musical Improv 201",
-        price: 21000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-09-10T21:07:26.636Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Musical Improv 201",
-        status: "available",
-        description: "Ticket for Musical Improv 201",
-        price: 21000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-09-10T21:07:26.636Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for Musical Improv 201"
+
+Enum.map(1..12, fn(x) ->
+  price =  21000 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
@@ -296,7 +276,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("2018-01-14 18:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-18 20:00:00Z")
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-18 20:00:00Z"),
+    created_at: NaiveDateTime.from_iso8601("2017-12-13T04:00:05.903Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -347,35 +328,24 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..12, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for KidProv Studio at the Push Comedy Theater",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for KidProv Studio at the Push Comedy Theater",
-        price: 15000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-13T04:00:05.903Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for KidProv Studio at the Push Comedy Theater",
-        status: "available",
-        description: "Ticket for KidProv Studio at the Push Comedy Theater",
-        price: 15000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-13T04:00:05.903Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for KidProv Studio at the Push Comedy Theater"
+
+Enum.map(1..12, fn(x) ->
+  price =  15000 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
@@ -420,7 +390,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("2018-01-13 15:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-17 17:00:00Z")
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-17 17:00:00Z"),
+    created_at: NaiveDateTime.from_iso8601("2017-12-13T03:44:13.284Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -471,35 +442,24 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..12, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for KidProv at the Push Comedy Theater",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for KidProv at the Push Comedy Theater",
-        price: 14000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-13T03:44:13.284Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for KidProv at the Push Comedy Theater",
-        status: "available",
-        description: "Ticket for KidProv at the Push Comedy Theater",
-        price: 14000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-12-13T03:44:13.284Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for KidProv at the Push Comedy Theater"
+
+Enum.map(1..12, fn(x) ->
+  price =  14000 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
@@ -534,7 +494,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("2017-11-27 23:30:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-09 02:30:00Z")
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-09 02:30:00Z"),
+    created_at: NaiveDateTime.from_iso8601("2017-11-14T23:04:38.502Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -569,35 +530,24 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..12, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for ​Improv 201 at the Push Comedy Theater",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for ​Improv 201 at the Push Comedy Theater",
-        price: 19000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-14T23:04:38.502Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for ​Improv 201 at the Push Comedy Theater",
-        status: "available",
-        description: "Ticket for ​Improv 201 at the Push Comedy Theater",
-        price: 19000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-14T23:04:38.502Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for ​Improv 201 at the Push Comedy Theater"
+
+Enum.map(1..12, fn(x) ->
+  price =  19000 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 
@@ -632,7 +582,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("2018-01-23 23:30:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-28 02:30:00Z")
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-28 02:30:00Z"),
+    created_at: NaiveDateTime.from_iso8601("2017-11-24T05:44:08.919Z")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
@@ -675,35 +626,24 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..12, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Improv 101 with Brad McMurran",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for Improv 101 with Brad McMurran",
-        price: 19000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-24T05:44:08.919Z")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for Improv 101 with Brad McMurran",
-        status: "available",
-        description: "Ticket for Improv 101 with Brad McMurran",
-        price: 19000,
-        sale_start:  NaiveDateTime.from_iso8601!("2017-11-24T05:44:08.919Z")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for Improv 101 with Brad McMurran"
+
+Enum.map(1..12, fn(x) ->
+  price =  19000 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
 

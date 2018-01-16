@@ -5,19 +5,20 @@ require 'net/http'
   offset = x * 1000
   puts "offset == #{offset}"
 
-  url = URI("https://www.universe.com/api/v2/guestlists?limit=1000&offset=#{offset}")
+  url = URI("https://www.universe.com/api/v2/guestlists?limit=10&offset=#{offset}")
   puts "Downloading #{url}"
 
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
 
   request = Net::HTTP::Get.new(url)
-  request["authorization"] = 'Bearer aa3253e90bcfd384b8affd1f384d2a151bb08ea839a4b373637a114d75040dda'
+  request["authorization"] = 'Bearer 66357af744d1b404ea667eed280c676406c494bd57f9e8778bab52a78f1da47e'
 
   response = http.request(request)
   # puts
 
-  File.open("/Users/patrickveverka/Code/Personal/ticket_agent/lib/mix/tasks/guestlist#{x}.json", 'wb') {|f| f.write(response.read_body ) }
-
+  puts response.read_body
+  # File.open("/Users/patrickveverka/Code/Personal/ticket_agent/lib/mix/tasks/guestlist#{x}.json", 'wb') {|f| f.write(response.read_body ) }
+  raise "FUCK"
 
 end

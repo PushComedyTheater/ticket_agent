@@ -11,7 +11,8 @@ listing = SeedHelpers.create_listing(
     """,
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("<%= @start_time %>"),
-    end_at:  NaiveDateTime.from_iso8601!("<%= @end_time %>")
+    end_at:  NaiveDateTime.from_iso8601!("<%= @end_time %>"),
+    created_at: NaiveDateTime.from_iso8601("<%= @created_at %>")
   }
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="

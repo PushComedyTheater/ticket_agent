@@ -13,34 +13,23 @@ order = SeedHelpers.create_order(
   }
 )
 
-Enum.each(1..<%= @ticket_count %>, fn(x) ->
-  ticket = case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      name = FakerElixir.Name.name()
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for <%= String.replace(@title, "\"", "'") %>",
-        status: TicketAgent.Random.sample(["purchased", "emailed"]),
-        guest_name: FakerElixir.Name.name(),
-        guest_email: FakerElixir.Internet.email(:popular, name),
-        order_id: order.id,
-        description: "Ticket for <%= String.replace(@title, "\"", "'") %>",
-        price: <%= round(@price) * 100 %>,
-        sale_start:  NaiveDateTime.from_iso8601!("<%= @created_at %>")
-      }   
-    false -> 
-      %TicketAgent.Ticket{
-        listing_id: listing.id,
-        slug: Random.generate_slug(),
-        name: "Ticket for <%= String.replace(@title, "\"", "'") %>",
-        status: "available",
-        description: "Ticket for <%= String.replace(@title, "\"", "'") %>",
-        price: <%= round(@price) * 100 %>,
-        sale_start:  NaiveDateTime.from_iso8601!("<%= @created_at %>")
-      }
-  end
-  TicketAgent.Repo.insert!(ticket)
+ticket_name = "Ticket for <%= String.replace(@title, "\"", "'") %>"
+
+Enum.map(1..<%= @ticket_count %>, fn(x) ->
+  price =  <%= round(@price) * 100 %> 
+
   Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
+
+  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
+    true ->
+      status = TicketAgent.Random.sample(["purchased", "emailed"])
+      Logger.info "Inserting #{status} ticket"
+      SeedHelpers.create_ticket(listing, order, status, price)
+    false ->
+      Logger.info "Inserting available ticket"
+      SeedHelpers.create_ticket(listing, order, "available", price)
+  end
+  |> TicketAgent.Repo.insert!
+  
 end)
 Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="

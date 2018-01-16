@@ -25,6 +25,15 @@ defmodule TicketAgentWeb.Router do
     plug Coherence.Authentication.Session, protected: true  # Add this
   end
 
+  pipeline :protected_api do
+    plug :accepts, ["json"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+    plug Coherence.Authentication.Session, protected: true  # Add this
+  end  
+
   pipeline :admin_layout do
     plug :put_layout, {TicketAgentWeb.Admin.LayoutView, :admin}
   end
@@ -99,6 +108,11 @@ defmodule TicketAgentWeb.Router do
     resources "/checkin", CheckinController
   end
 
+  scope "/api", TicketAgentWeb.Api do
+    pipe_through [:protected_api, :ensure_admin]
+    get "/listings/:listing_slug/tickets", ListingTicketsController, :show
+  end
+
   scope "/admin", TicketAgentWeb.Admin do
     pipe_through [:protected, :ensure_admin, :admin_layout]
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
@@ -113,8 +127,7 @@ defmodule TicketAgentWeb.Router do
     resources "/webhooks", WebHookController, as: :admin_webhook
 
     get "/", Redirect, to: "/admin/dashboard"
-  end
-
+  end  
 
   def ensure_admin(conn, _params) do
     case conn.assigns.current_user.role do

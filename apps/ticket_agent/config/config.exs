@@ -126,6 +126,11 @@ config :ticket_agent, Twitter,
   consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET"),
   redirect_uri: System.get_env("TWITTER_REDIRECT_URI")
 
+config :ticket_agent, Universe,
+  client_id: System.get_env("UNIVERSE_CLIENT_ID"),
+  client_secret: System.get_env("UNIVERSE_CLIENT_SECRET"),
+  redirect_uri: System.get_env("UNIVERSE_REDIRECT_URI")  
+
 value = case System.get_env("TICKET_LOCK_LENGTH") do
   nil -> 302
   value -> String.to_integer(value)

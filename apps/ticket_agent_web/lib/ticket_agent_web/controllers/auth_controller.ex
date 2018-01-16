@@ -69,6 +69,7 @@ defmodule TicketAgentWeb.AuthController do
     Logger.info "provider = #{provider} with code #{code}"
 
     with {:ok, client} <- get_token!(provider, code),
+         IO.inspect(client),
          {:ok, %{name: name, email: email, extra_details: extra_details}} <- get_user(provider, client) do
 
       user = User.find_or_create_with_credentials(
@@ -104,6 +105,7 @@ defmodule TicketAgentWeb.AuthController do
   defp authorize_url!("linkedin", _params), do: TicketAgent.LinkedIn.authorize_url!(scope: "r_basicprofile r_emailaddress")
   defp authorize_url!("microsoft", _params), do: TicketAgent.Microsoft.authorize_url!(scope: "wl.emails,wl.basic,wl.postal_addresses,wl.phone_numbers")
   defp authorize_url!("twitter", params), do: Twitter.authorize_url!(params)
+  defp authorize_url!("universe", _params), do: TicketAgent.Universe.authorize_url!()
   defp authorize_url!(_, _), do: raise "No matching provider available"
 
   defp get_token!("amazon", code), do: TicketAgent.Amazon.get_token(code: code)
@@ -111,6 +113,7 @@ defmodule TicketAgentWeb.AuthController do
   defp get_token!("google", code),   do: TicketAgent.Google.get_token(code: code)
   defp get_token!("linkedin", code),   do: TicketAgent.LinkedIn.get_token(code: code)
   defp get_token!("microsoft", code), do: TicketAgent.Microsoft.get_token(code: code)
+  defp get_token!("universe", code), do: TicketAgent.Universe.get_token(code: code)
   defp get_token!(_, _),             do: raise "No matching provider available"
 
   defp get_user("amazon", client) do
@@ -211,5 +214,26 @@ defmodule TicketAgentWeb.AuthController do
     end
   end
 
+  defp get_user("universe", client) do
+    with {:ok, 
+      %{
+        body: %{
+          "current_user" => %{
+            "first_name" => first_name, 
+            "last_name" => last_name, 
+            "email" => email, 
+            "cover_photo_url" => avatar
+          } = current_user
+        } = body}} <- OAuth2.Client.get(client, "https://www.universe.com/api/v2/current_user") do
+          {:ok, %{name: "#{first_name} #{last_name}", avatar: avatar, email: email, extra_details: body}}
+    else
+      {:error, response} ->
+        Logger.error "Error: #{inspect response}"
+        {:user_error, "Unknown error, contact support"}
+      other ->
+        Logger.error "Unmatched error: #{inspect other}"
+        {:user_error, "Unknown error, contact support"}
+    end
+  end
   defp skip_url_encode_option, do: [path_encode_fun: fn(a) -> a end]
 end

@@ -1,5 +1,5 @@
 defmodule TicketAgentWeb.Admin.ListingController do
-  alias TicketAgent.{Class, Listing, Random, Repo, Ticket}
+  alias TicketAgent.{Class, Event, Listing, Random, Repo, Ticket}
   import Ecto.Query
   use TicketAgentWeb, :controller
   plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "listings"}
@@ -18,29 +18,55 @@ defmodule TicketAgentWeb.Admin.ListingController do
     render conn, "index.html", listings: listings
   end
 
-  def new(conn, %{"class_id" => class_id}) do
-    class = Repo.get(Class, class_id)
-    changeset = conn.assigns.current_user
-                |> Listing.from_class(class)
-    render conn, "new.html", changeset: changeset, class: class
+  def new(conn, %{"class_id" => "new"}) do
+    conn
+    |> render("new_class.html")
   end
 
-  # SELECT
-  # CONCAT(date_part('month', t0."purchased_at"), '/', date_part('day', t0."purchased_at"), '/', date_part('year', t0."purchased_at")) as date,
-  # count('*')
-  # FROM "tickets" AS t0 WHERE (t0."listing_id" = '0a6da2f9-e925-4a37-ac11-a3500b6d6b6d') AND (t0."status" = 'purchased')
-  # GROUP BY
-  # CONCAT(date_part('month', t0."purchased_at"), '/', date_part('day', t0."purchased_at"), '/', date_part('year', t0."purchased_at"))
-  # ORDER BY CONCAT(date_part('month', t0."purchased_at"), '/', date_part('day', t0."purchased_at"), '/', date_part('year', t0."purchased_at"))
-  #
-  def new(conn, _params) do
-    changeset = Listing.changeset(
-      %Listing{
-        start_at: NaiveDateTime.utc_now(),
-        end_at: NaiveDateTime.utc_now(),
-        slug: Random.generate_slug()})
+  def new(conn, %{"class_id" => class_id}) do
+    conn
+    |> render("new_class.html")    
+  end
 
-    render conn, "new.html", changeset: changeset
+  def new(conn, %{"event_id" => "new"}) do
+    conn
+    |> render("new_event.html")    
+  end
+
+  def new(conn, %{"event_id" => event_id}) do
+    event = Repo.get(Event, event_id)
+
+    changeset = Listing.change_listing(%Listing{
+      title: event.title,
+      event_id: event_id,
+      start_at: NaiveDateTime.utc_now,
+      end_at: NaiveDateTime.utc_now |> Calendar.NaiveDateTime.add!(86400),
+      description: event.description
+    })
+
+    conn
+    |> assign(:changeset, changeset)
+    |> assign(:event, event)
+    |> render("new_event.html")    
+  end  
+
+  def new(conn, _params) do
+    class_query = from c in Class,
+                  order_by: c.type,
+                  select: c
+
+    classes = Repo.all(class_query)
+
+    event_query = from e in Event,
+                  order_by: e.title,
+                  select: e
+    events = Repo.all(event_query)
+
+    conn
+    |> assign(:classes, classes)
+    |> assign(:events, events)
+    |> render("new.html")
+
   end  
 
   def show(conn, %{"titled_slug" => titled_slug}) do
@@ -50,7 +76,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
       from(
         t in Ticket,
         where: t.listing_id == ^show.id,
-        where: t.status == "purchased"
+        where: t.status in ["purchased", "emailed", "checkedin"]
       )
 
     sold_ticket_count = Repo.aggregate(ticket_query, :count, :id)
@@ -60,10 +86,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
       other ->
         other
     end
-
-    IO.inspect sold_ticket_price
-
-
 
     weeks =
       ticket_query
@@ -78,7 +100,15 @@ defmodule TicketAgentWeb.Admin.ListingController do
       v
     end)
 
-    render(conn, "show.html", show: show, sold_ticket_count: sold_ticket_count, labels: labels, data: data, sold_ticket_price: sold_ticket_price)
+    render(
+      conn, 
+      "show.html", 
+      show: show, 
+      sold_ticket_count: sold_ticket_count, 
+      labels: labels, 
+      data: data, 
+      sold_ticket_price: sold_ticket_price
+    )
   end
 
   def count_by_day(query, date_field) do
@@ -100,6 +130,23 @@ defmodule TicketAgentWeb.Admin.ListingController do
         )
       )
     )
+    |> order_by(
+      [r],
+      (
+        fragment(
+          "CONCAT(date_part('month', ?), '/', date_part('day', ?), '/', date_part('year', ?))",
+          (
+            field(r, ^date_field)
+          ),
+          (
+            field(r, ^date_field)
+          ),
+          (
+            field(r, ^date_field)
+          )
+        )
+      )
+    )    
     |> select(
       [r],
       [
@@ -115,11 +162,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
       ]
     )
   end
-
-
-
-
-
 
   def edit(conn, %{"titled_slug" => titled_slug}) do
     show = load_show(titled_slug)

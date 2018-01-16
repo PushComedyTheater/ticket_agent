@@ -7,8 +7,7 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
-          <p style="padding: 10px;">These are the classes that are used to create new offerings of a class.  When you create a new "listing" for a class, it copies the data from this
-          class.  Changing things here will only affect future listings.</p>
+          <p style="padding: 10px;">These are the class templates that are used to create new listings of a class.  When you create a new listing for a class, it copies the data from this  class.  Changing things here will only affect future listings.</p>
           <table class="table table-hover">
             <tbody><tr>
               <th width="250px;">Actions</th>

@@ -57,98 +57,118 @@
     </div>
     <!-- /.box-body -->
   </div>
-  <div class="row">
-          <div class="col-xs-12">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title">Attendees</h3>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">Attendees</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table id="datatable" class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Purchased</th>
+            <th>Tickets Emailed</th>
+            <th>Checked In</th>
+          </tr>
+          </thead>
+          <tbody>
+          <%= for ticket <- @show.tickets do %>
+          <tr>
+            <td><%= ticket.slug %></td>
+            <td><%= ticket.guest_name %></td>
+            <td><%= ticket.status %></td>
+            <td><%= order_timestamp(ticket.purchased_at) %></td>
+            <td><%= order_timestamp(ticket.emailed_at) %></td>
+            <td><%= order_timestamp(ticket.checked_in_at) %></td>
+          </tr>
+          <% end %>
+          </tbody>
+          <tfoot>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Purchased</th>
+            <th>Tickets Emailed</th>
+            <th>Checked In</th>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  window.show_slug = "<%= @show.slug %>";
 
-                <div class="box-tools">
+  $( document ).ready(function(){
+    var ctx = document.getElementById("canvas").getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: [
+            <%= for label <- @labels do %>
+              "<%= label %>",
+            <% end %>
+          ],
+          datasets: [{
+              label: '# of Sales',
+              data: [
+                <%= for data <- @data do %>
+                  "<%= data %>",
+                <% end %>
 
-                </div>
-              </div>
-              <!-- /.box-header -->
-              <div class="box-body table-responsive no-padding">
-                <table class="table table-hover">
-                  <tbody><tr>
-                    <th>ID</th>
-                    <th>User</th>
-                    <th>Status</th>
-                    <th>Purchased At</th>
-                    <th>Emailed At</th>
-                    <th>Checked In At</th>
-                  </tr>
-                  <%= for ticket <- purchased_tickets(@show.tickets) do %>
-                  <tr>
-                    <td><%= ticket.slug %></td>
-                    <td><%= ticket.guest_name %></td>
-                    <td><%= raw ticket_status(ticket) %></td>
-                    <td><%= order_timestamp(ticket.purchased_at) %></td>
-                    <td><%= order_timestamp(ticket.emailed_at) %></td>
-                    <td><%= order_timestamp(ticket.checked_in_at) %></td>
-                  </tr>
-                  <% end %>
-                </tbody></table>
-              </div>
-              <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-          </div>
-        </div>
-  <script type="text/javascript">
-
-    $( document ).ready(function(){
-      var ctx = document.getElementById("canvas").getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [
-              <%= for label <- @labels do %>
-                "<%= label %>",
-              <% end %>
-            ],
-            datasets: [{
-                label: '# of Sales',
-                data: [
-                  <%= for data <- @data do %>
-                    "<%= data %>",
-                  <% end %>
-
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }],
-                xAxes: [{
-                            gridLines: {
-                                offsetGridLines: true
-                            }
-                        }]
-            }
-        }
-      });
+              ],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255,99,132,1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 0
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero:true
+                  }
+              }],
+              xAxes: [{
+                          gridLines: {
+                              offsetGridLines: true
+                          }
+                      }]
+          }
+      }
     });
 
-  </script>
+    var table = $('#datatable').DataTable();
+    var filteredData = table
+    .column( 2 )
+    .data()
+    .filter( function ( value, index ) {
+        return value == "available" ? true : false;
+    } );      
+    console.log(filteredData);
+    table.data = filteredData;
+  });
+
+</script>

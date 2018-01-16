@@ -18,7 +18,7 @@ defmodule TicketAgentWeb.Endpoint do
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
-
+  plug TrailingFormatPlug
   plug Plug.RequestId
   plug Plug.Logger
 

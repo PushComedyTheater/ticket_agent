@@ -17,7 +17,7 @@ defmodule TicketAgent.Services.Stripe do
             {:ok, user}
         end
       stripe_customer_id ->
-        {:ok, user}
+        {:ok, Repo.reload(user)}
     end
   end
 

@@ -16,10 +16,10 @@
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-        <%= render "sidebar_teachers.html", assigns %>
         <%= render "sidebar_classes.html", assigns %>
         <%= render "sidebar_shows.html", assigns %>
         <%= render "sidebar_orders.html", assigns %>
+        <%= render "sidebar_teachers.html", assigns %>
         <%= render "sidebar_users.html", assigns %>
         <%= render "sidebar_webhooks.html", assigns %>
         <li></li>

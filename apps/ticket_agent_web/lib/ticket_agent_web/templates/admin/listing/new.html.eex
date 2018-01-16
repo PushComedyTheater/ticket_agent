@@ -1,82 +1,63 @@
 <div class="box box-primary">
   <div class="box-header with-border">
-    <h3 class="box-title">Create New Listing</h3>
+    <h3 class="box-title">Create New Ticketed Event</h3>
   </div>
   <!-- /.box-header -->
   <!-- form start -->
-  <%= form_for @changeset, admin_event_path(@conn, :create), fn f -> %>
-    <div class="box-body">
-      <%= hidden_input(f, :type) %>
-      <%= hidden_input(f, :slug) %>
-      <%= hidden_input(f, :cover_image) %>
+  <div class="box-body">
+    What type of event is this?
+    <hr>
 
-      <div class="form-group">
-        <label>Title</label>
-        <%= text_input(f, :title, class: "form-control") %>
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10) %>
-      </div>
-      <div class="form-group">
-        <label>Start Time</label>
-        <%= my_datetime_select f, :start_time %>
-      </div>
-      <div class="form-group">
-        <label>End Time</label>
-        <%= my_datetime_select f, :end_time %>
-      </div>
+    <div class="col-md-6">
+      <h4><i class="fa fa-university"></i> This Is A Class</h4>
+      <br />
+      Please select the class from the drop down to prepopulate the form.  It is important to make sure that you create a new instance of one of the classes versus creating an entirely new one.
+      <br />
+      <br />
+      <select id="class_select">
+        <option value="">Choose Class</option>
+        <%= for class <- @classes do %>
+          <option value="<%= class.id %>"><%= class.title %></option>
+        <% end%>
+      </select>
+      <br />
+      <br />
+      <center><button id="class_click" class="btn btn-success btn-lg">Create Class Listing</button></center>
     </div>
+    <div class="col-md-6">
+      <h4><i class="fa fa-calendar"></i> This Is A Show</h4>
+     <br />
+     If this show has been created previously, please choose from the drop down to prepopulate the form on the next page.  Otherwise, please choose to create a new listing.
+     <br />
+     <br />
+     <select id="event_select">
+        <option value="new">Create New Show</option>
+        <%= for event <- @events do %>
+          <option value="<%= event.id %>"><%= event.title %></option>
+        <% end%>
+      </select>
+      <br />
+      <br />
+      <center><button id="event_click" class="btn btn-success btn-lg">Create New Show</button></center>
     </div>
-    <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">Listing Images</h3>
-      </div>
-    <!-- /.box-body -->
-
-    <div class="box-body">
-      <div class="row">
-        <div class="col-sm-4">Event Cover Image</div>
-        <div class="col-sm-4">
-          <img id="cover_image" src="<%= cover_image(f.data) %>" style="zoom: 50%; padding: 5px;" /><br /><br />
-          <a href="#" id="upload_cover_photo" class="btn btn-primary">
-            Upload Photo
-          </a>
-          <a href="#" id="choose_cover_photo" class="btn btn-primary">
-            Choose Existing Photo
-          </a>
-          <!-- Button trigger modal -->
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div class="box-body">
-      <div class="row">
-        <div class="col-sm-4">Event Social Image</div>
-        <div class="col-sm-4">
-          <img id="social_image" src="<%= social_image(f.data) %>" style="zoom: 50%; padding: 5px;" /><br /><br />
-          <a href="#" id="upload_social_photo" class="btn btn-primary">
-            Upload Photo
-          </a>
-          <a href="#" id="choose_social_photo" class="btn btn-primary">
-            Choose Existing Photo
-          </a>
-          <!-- Button trigger modal -->
-        </div>
-      </div>
-    </div>
-    <br />
-    <div class="box box-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">Tickets</h3>
-      </div>
-    </div>
-
-    TICKDTS
-
-    <div class="box-footer">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-  <% end %>
+  </div>
 </div>
+<script>
+  $(function () {
+    $("#event_click").on("click", function(e){
+      e.preventDefault();
+      var value = $("#event_select").val();
+      window.location.href = "/admin/listings/new?event_id=" + value;
+    });
+
+    $("#class_click").on("click", function(e){
+      e.preventDefault();
+      var value = $("#class_select").val();
+      if (value == "") {
+        alert("Please select a class")
+      } else {   
+        window.location.href = "/admin/listings/new?class_id=" + value;
+      }
+    });    
+  })
+</script>

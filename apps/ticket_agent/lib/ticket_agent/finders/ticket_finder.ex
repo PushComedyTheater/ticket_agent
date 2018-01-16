@@ -2,6 +2,15 @@ defmodule TicketAgent.Finders.TicketFinder do
   import Ecto.Query
   alias TicketAgent.{Order, Repo, Ticket}
 
+  def paginate_tickets_for_listing(listing_id, params \\ %{}) do
+    query = from(
+      t in Ticket,
+      where: t.listing_id == ^listing_id,
+      order_by: :purchased_at
+    )
+    |> Repo.paginate(params)
+  end
+
   def find_by_listing_and_order(listing_id, order_id) do
     from(
       t in Ticket,
