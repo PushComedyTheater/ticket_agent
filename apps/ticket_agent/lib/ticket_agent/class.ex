@@ -12,7 +12,7 @@ defmodule TicketAgent.Class do
     field :slug, :string
     field :description, :string
     field :menu_order, :integer
-    field :photo_url, :string
+    field :image_url, :string
 
     belongs_to :account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID
     belongs_to :prerequisite, Class, references: :id, foreign_key: :prerequisite_id, type: Ecto.UUID
@@ -25,7 +25,7 @@ defmodule TicketAgent.Class do
   @doc false
   def changeset(%Class{} = class, attrs) do
     class
-    |> cast(attrs, [:type, :title, :description, :prerequisite_id, :slug, :menu_order, :photo_url])
+    |> cast(attrs, [:type, :title, :description, :prerequisite_id, :slug, :menu_order, :image_url])
     |> cast_assoc(:prerequisite)
     |> validate_required([:type, :title])
   end

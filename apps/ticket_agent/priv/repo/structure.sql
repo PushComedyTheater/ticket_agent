@@ -63,6 +63,7 @@ CREATE TYPE credit_card_type AS ENUM (
 
 CREATE TYPE event_status AS ENUM (
     'hidden',
+    'draft',
     'normal'
 );
 
@@ -168,7 +169,7 @@ CREATE TABLE classes (
     menu_order integer,
     account_id uuid,
     prerequisite_id uuid,
-    photo_url text,
+    image_url text,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -211,6 +212,7 @@ CREATE TABLE events (
     status event_status DEFAULT 'normal'::event_status,
     account_id uuid,
     user_id uuid,
+    image_url text,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );

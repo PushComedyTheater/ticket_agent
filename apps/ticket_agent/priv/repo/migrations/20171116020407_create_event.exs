@@ -2,7 +2,7 @@ defmodule TicketAgent.Repo.Migrations.CreateEvent do
   use Ecto.Migration
 
   def change do
-    execute "CREATE TYPE event_status AS ENUM ('hidden', 'normal')"
+    execute "CREATE TYPE event_status AS ENUM ('hidden', 'draft', 'normal')"
 
     create table(:events, primary_key: false) do
       add :id, :binary_id, primary_key: true
@@ -13,6 +13,8 @@ defmodule TicketAgent.Repo.Migrations.CreateEvent do
 
       add :account_id, references(:accounts, on_delete: :nothing, type: :binary_id)
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
+
+      add :image_url, :text
 
       timestamps(type: :timestamptz)
     end

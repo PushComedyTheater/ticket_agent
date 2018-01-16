@@ -77,13 +77,12 @@ defmodule TicketAgent.Listing do
 
     %Listing{images: [listing_image]}
     |> changeset(%{
-      type: "class",
       slug: Random.generate_slug(),
-      account_id: current_user.account_id,
-      user_id: current_user.id,
       title: class.title,
       description: class.description,
       status: "unpublished",
+      user_id: current_user.id,
+      class_id: class.id,
       start_time: NaiveDateTime.utc_now(),
       end_time: NaiveDateTime.utc_now(),
     })

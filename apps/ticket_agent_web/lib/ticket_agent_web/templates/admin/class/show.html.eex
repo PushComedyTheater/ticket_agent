@@ -19,7 +19,7 @@
       </tr>
       <tr>
         <th>Photo</th>
-        <td><img src="<%= @class.photo_url %>" %></td>
+        <td><img src="<%= @class.image_url %>" %></td>
       </tr>
     </table>
   </div>

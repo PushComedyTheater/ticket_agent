@@ -1,3 +1,4 @@
+<meta name="description" content="<%= raw page_description(@conn) %>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<%= page_title(@conn) %>">
 <meta property="og:url" content="<%= full_url(@conn) %>" />
@@ -6,3 +7,11 @@
 <meta property="og:description" content="<%= raw page_description(@conn) %>">
 <meta property="og:site_name" content="Push Comedy Theater">
 <meta property="fb:app_id" content="1421152897991577" />
+
+<meta itemprop="name" content="<%= page_title(@conn) %>">
+<meta itemprop="description" content="<%= raw page_description(@conn) %>">
+<meta itemprop="image" content="<%= page_image(@conn) %>">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= page_title(@conn) %>">
+<meta name="twitter:description" content="<%= raw page_description(@conn) %>">
+<meta name="twitter:image" content="<%= page_image(@conn) %>">

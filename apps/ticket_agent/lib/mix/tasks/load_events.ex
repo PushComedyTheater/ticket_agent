@@ -258,10 +258,10 @@ defmodule Mix.Tasks.LoadEvents do
 
   defp process_images(images, event_photo_id) do
     photo = Enum.find(images, fn(x) -> x["id"] == event_photo_id end)
-    %{"url" => photo_url} = photo
+    %{"url" => image_url} = photo
 
 
-    photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, photo_url) |> hd) <> "/-/inline/yes/"
+    photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, image_url) |> hd) <> "/-/inline/yes/"
     public_id = String.split(photo, "/") |> Enum.at(3)
 
     process_image(photo, public_id)

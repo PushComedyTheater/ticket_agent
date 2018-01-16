@@ -40,7 +40,7 @@ defmodule TicketAgent.Factory do
       title: title,
       slug: slug,
       description: @lorem,
-      photo_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/covers/wd4vnbdjwchrclmuhomg.png"
+      image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/covers/wd4vnbdjwchrclmuhomg.png"
     }
   end
 

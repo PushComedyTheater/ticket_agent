@@ -54,7 +54,7 @@
           </div>
 
           <div class="col-lg-4 g-mb-60">
-            <%= img_tag(@class.photo_url, class: "img-fluid") %>
+            <%= img_tag(@class.image_url, class: "img-fluid") %>
           </div>
         </div>
       </section>
