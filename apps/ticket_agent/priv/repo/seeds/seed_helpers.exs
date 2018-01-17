@@ -195,23 +195,6 @@ defmodule SeedHelpers do
     end
   end
 
-  def create_image(%{listing_id: listing_id} = listing_image) do
-    Logger.info "Seeds->create_image:   Checking if image with listing_id #{listing_id} exists"
-    query = from l in ListingImage,
-            where: l.listing_id == ^listing_id,
-            select: l
-
-    case Repo.one(query) do
-      nil ->
-        Logger.info "Seeds->create_image:   Creating image"
-        struct(ListingImage, listing_image)
-        |> TicketAgent.Repo.insert!
-      listing ->
-        Logger.info "Seeds->create_image:   Image with type listing_id #{listing_id} exists"
-        listing
-    end
-  end
-
   def create_order(order) do
     Logger.info "Seeds->create_order:   Creating order"
     struct(Order, order)
@@ -220,7 +203,7 @@ defmodule SeedHelpers do
 
   def create_ticket(listing, _, status, price) when status == "available" do
     title = String.replace(listing.title, "\"", "'") 
-    %TicketAgent.Ticket{
+    %{
       listing_id: listing.id,
       slug: Random.generate_slug(),
       name: "Ticket for #{title}",
@@ -228,7 +211,8 @@ defmodule SeedHelpers do
       description: "Ticket for #{title}",
       price: price,
       sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
-      inserted_at: listing.inserted_at
+      inserted_at: listing.inserted_at,
+      updated_at: listing.updated_at
     }
   end
 
@@ -236,9 +220,7 @@ defmodule SeedHelpers do
     title = String.replace(listing.title, "\"", "'") 
     guest_name = FakerElixir.Name.name()
     {:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-    IO.inspect a
-    IO.inspect b
-    %TicketAgent.Ticket{
+    %{
       listing_id: listing.id,
       slug: Random.generate_slug(),
       name: "Ticket for #{title}",
@@ -250,16 +232,18 @@ defmodule SeedHelpers do
       order_id: order.id,   
       price: price,
       sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
-      inserted_at: listing.inserted_at
+      inserted_at: listing.inserted_at,
+      updated_at: listing.updated_at
     }
   end  
 
   def create_ticket(listing, order, status, price) when status == "emailed" do
-    {:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
     ticket = create_ticket(listing, order, "purchased", price)
-    ticket = %TicketAgent.Ticket{
-      ticket | status: "emailed", 
-      emailed_at: ticket.purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))
-    }
+    emailed_at = ticket.purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))
+    
+    ticket = 
+      ticket
+      |> Map.put(:status, "emailed")
+      |> Map.put(:emailed_at, emailed_at)
   end    
 end

@@ -10,6 +10,7 @@ defmodule TicketAgent.Event do
     field :title, :string
     field :description, :string
     field :status, :string
+    field :image_url, :string
 
     belongs_to :account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID

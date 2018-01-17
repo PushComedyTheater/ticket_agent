@@ -4,7 +4,6 @@ Logger.info "=========== BEGIN Processing Universe Event <%= String.replace(@tit
 <% else %>
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/event_with_listing.eex", assigns: assigns %>
 <% end %>
-<%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/photo.eex", assigns: [photo_type: "cover", photo: @cover_photo]  %>
 <%= for tag <- @tags do %>
 # Insert <%= tag %>
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/tag.eex", assigns: [tag: tag] %>

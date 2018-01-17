@@ -3,6 +3,7 @@ event = SeedHelpers.create_event(
   %{
     slug: "<%= @slug %>",
     title: "<%= String.replace(@title, "\"", "'") %>",
+    image_url: "<%= @cover_photo %>",
     description: """
     <%= @description %>
     """,

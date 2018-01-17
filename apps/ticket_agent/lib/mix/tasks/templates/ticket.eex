@@ -14,22 +14,9 @@ order = SeedHelpers.create_order(
 )
 
 ticket_name = "Ticket for <%= String.replace(@title, "\"", "'") %>"
-
-Enum.map(1..<%= @ticket_count %>, fn(x) ->
-  price =  <%= round(@price) * 100 %> 
-
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
-
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+<%= for number <- (1..@ticket_count) do %>
+<%= Mix.Tasks.LoadEvents.generate_ticket(
+  TicketAgent.Random.sample([true, true, false, true, false, true, true]),
+  TicketAgent.Random.sample(["purchased", "emailed"]),
+  @price) %>
+<% end %>

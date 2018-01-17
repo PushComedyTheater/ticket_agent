@@ -112,14 +112,11 @@ defmodule TicketAgentWeb.SharedView do
     })
   end
 
-  def listing_image(%{images: []}), do: nil
   def listing_image(show, width \\ 1050) do
-    image =
-      show.images
-      |> hd
+    image = show.event.image_url
 
     public_id =
-      image.url
+      image
       |> String.split("/")
       |> List.last()
       |> String.split(".")

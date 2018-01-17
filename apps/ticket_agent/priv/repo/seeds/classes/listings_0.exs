@@ -66,12 +66,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/02e47add-c2da-4f40-a319-78867643f4b6"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
 # Insert class
 Logger.info "=========== Writing tag ==========="
@@ -114,24 +108,218 @@ order = SeedHelpers.create_order(
 
 ticket_name = "Ticket for Improv for Teens at the Push Comedy Theater"
 
-Enum.map(1..12, fn(x) ->
-  price =  15000 
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
 
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
 
 Logger.info "=========== END Processing Universe Event Improv for Teens at the Push Comedy Theater ==========="
 Logger.info "=========== BEGIN Processing Universe Event Musical Improv 201 ==========="
@@ -174,12 +362,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/20f01bb1-d774-4ecd-8ac0-00dca64a153f"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
 # Insert class
 Logger.info "=========== Writing tag ==========="
@@ -214,24 +396,233 @@ order = SeedHelpers.create_order(
 
 ticket_name = "Ticket for Musical Improv 201"
 
-Enum.map(1..12, fn(x) ->
-  price =  21000 
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
 
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 21000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
 
 Logger.info "=========== END Processing Universe Event Musical Improv 201 ==========="
 Logger.info "=========== BEGIN Processing Universe Event KidProv Studio at the Push Comedy Theater ==========="
@@ -282,12 +673,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9052b361-b187-4963-aaa8-d59d95a2a381"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
 # Insert class
 Logger.info "=========== Writing tag ==========="
@@ -330,24 +715,251 @@ order = SeedHelpers.create_order(
 
 ticket_name = "Ticket for KidProv Studio at the Push Comedy Theater"
 
-Enum.map(1..12, fn(x) ->
-  price =  15000 
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
 
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 15000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
 
 Logger.info "=========== END Processing Universe Event KidProv Studio at the Push Comedy Theater ==========="
 Logger.info "=========== BEGIN Processing Universe Event KidProv at the Push Comedy Theater ==========="
@@ -396,12 +1008,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/9052b361-b187-4963-aaa8-d59d95a2a381"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
 # Insert class
 Logger.info "=========== Writing tag ==========="
@@ -444,24 +1050,221 @@ order = SeedHelpers.create_order(
 
 ticket_name = "Ticket for KidProv at the Push Comedy Theater"
 
-Enum.map(1..12, fn(x) ->
-  price =  14000 
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
 
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 14000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
 
 Logger.info "=========== END Processing Universe Event KidProv at the Push Comedy Theater ==========="
 Logger.info "=========== BEGIN Processing Universe Event ​Improv 201 at the Push Comedy Theater ==========="
@@ -500,12 +1303,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/c76ccb66-c7a5-4a89-95c4-c9c20824e139"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
 # Insert class
 Logger.info "=========== Writing tag ==========="
@@ -532,24 +1329,233 @@ order = SeedHelpers.create_order(
 
 ticket_name = "Ticket for ​Improv 201 at the Push Comedy Theater"
 
-Enum.map(1..12, fn(x) ->
-  price =  19000 
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
 
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
 
 Logger.info "=========== END Processing Universe Event ​Improv 201 at the Push Comedy Theater ==========="
 Logger.info "=========== BEGIN Processing Universe Event Improv 101 with Brad McMurran ==========="
@@ -588,12 +1594,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-Logger.info "=========== Writing cover photo for #{listing.id} ==========="
-SeedHelpers.create_image(%{
-  listing_id: listing.id,
-  url: "https://res.cloudinary.com/push-comedy-theater/image/upload/988155d3-5ef5-494c-a005-0fabeb97240d"
-})
-Logger.info "=========== Inserted cover photo for #{listing.id} ==========="
 
 # Insert class
 Logger.info "=========== Writing tag ==========="
@@ -628,23 +1628,235 @@ order = SeedHelpers.create_order(
 
 ticket_name = "Ticket for Improv 101 with Brad McMurran"
 
-Enum.map(1..12, fn(x) ->
-  price =  19000 
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
 
-  Logger.info "=========== Inserted ticket ##{x} for #{listing.id} ==========="
 
-  case TicketAgent.Random.sample([true, true, false, true, false, true, true]) do
-    true ->
-      status = TicketAgent.Random.sample(["purchased", "emailed"])
-      Logger.info "Inserting #{status} ticket"
-      SeedHelpers.create_ticket(listing, order, status, price)
-    false ->
-      Logger.info "Inserting available ticket"
-      SeedHelpers.create_ticket(listing, order, "available", price)
-  end
-  |> TicketAgent.Repo.insert!
-  
-end)
-Logger.info "=========== Inserted 80 tickets for #{listing.id} ==========="
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+guest_name = FakerElixir.Name.name()
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "emailed",
+  emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+  purchased_at: purchased_at,
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
+
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "available",
+  description: ticket_name,
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!
+
+
+guest_name = FakerElixir.Name.name()
+{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+%TicketAgent.Ticket{
+  listing_id: listing.id,
+  slug: Random.generate_slug(),
+  name: ticket_name,
+  status: "purchased",
+  purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+  description: ticket_name,
+  guest_name: guest_name,
+  guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+  order_id: order.id,   
+  price: 19000,
+  sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+  inserted_at: listing.inserted_at,
+  updated_at: listing.updated_at
+}
+|> TicketAgent.Repo.insert!()
+
 
 Logger.info "=========== END Processing Universe Event Improv 101 with Brad McMurran ==========="

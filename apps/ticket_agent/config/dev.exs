@@ -8,6 +8,6 @@ config :ticket_agent, TicketAgent.Repo,
   database: "ticket_agent_dev",
   hostname: "localhost",
   pool_size: 10,
-  log: true
+  log: false
 
 config :ticket_agent, :email_base_url, "https://veverka.ngrok.io"

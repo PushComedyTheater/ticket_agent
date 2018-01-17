@@ -45,6 +45,72 @@ defmodule Mix.Tasks.LoadEvents do
     end)
   end
 
+  def generate_ticket(true, "purchased", price) do
+    """
+    guest_name = FakerElixir.Name.name()
+    {:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+    %TicketAgent.Ticket{
+      listing_id: listing.id,
+      slug: Random.generate_slug(),
+      name: ticket_name,
+      status: "purchased",
+      purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
+      description: ticket_name,
+      guest_name: guest_name,
+      guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+      order_id: order.id,   
+      price: #{round(price * 100)},
+      sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+      inserted_at: listing.inserted_at,
+      updated_at: listing.updated_at
+    }
+    |> TicketAgent.Repo.insert!()
+    """
+  end
+
+  def generate_ticket(true, "emailed", price) do
+    """
+    {:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+    purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+    guest_name = FakerElixir.Name.name()
+    
+    %TicketAgent.Ticket{
+      listing_id: listing.id,
+      slug: Random.generate_slug(),
+      name: ticket_name,
+      status: "emailed",
+      emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
+      purchased_at: purchased_at,
+      description: ticket_name,
+      guest_name: guest_name,
+      guest_email: FakerElixir.Internet.email(:popular, guest_name),   
+      order_id: order.id,   
+      price: #{round(price * 100)},
+      sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+      inserted_at: listing.inserted_at,
+      updated_at: listing.updated_at
+    }
+    |> TicketAgent.Repo.insert!
+    """
+  end  
+
+  def generate_ticket(false, _, price) do
+    """
+    %TicketAgent.Ticket{
+      listing_id: listing.id,
+      slug: Random.generate_slug(),
+      name: ticket_name,
+      status: "available",
+      description: ticket_name,
+      price: #{round(price * 100)},
+      sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
+      inserted_at: listing.inserted_at,
+      updated_at: listing.updated_at
+    }
+    |> TicketAgent.Repo.insert!
+    """
+  end
+
   def parse_history_files(non_words) do
     load_new_stuff(non_words)
     # load_classes(non_words)
@@ -261,11 +327,12 @@ defmodule Mix.Tasks.LoadEvents do
     %{"url" => image_url} = photo
 
 
-    photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, image_url) |> hd) <> "/-/inline/yes/"
-    public_id = String.split(photo, "/") |> Enum.at(3)
+    # photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, image_url) |> hd) <> "/-/inline/yes/"
+    # public_id = String.split(photo, "/") |> Enum.at(3)
 
-    process_image(photo, public_id)
-    Cloudinex.Url.for(public_id)
+    # process_image(photo, public_id)
+    # Cloudinex.Url.for(public_id)
+    image_url
   end
 
   def load_tags(_, _, _, :class), do: ["class"]

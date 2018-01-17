@@ -2,6 +2,9 @@ require Logger
 
 Code.load_file("seed_helpers.exs", "./apps/ticket_agent/priv/repo/seeds")
 
+
+TicketAgent.Repo.query("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
+
 account = SeedHelpers.create_account("Push Comedy Theater")
 user = SeedHelpers.create_user("patrick@pushcomedytheater.com", account)
 

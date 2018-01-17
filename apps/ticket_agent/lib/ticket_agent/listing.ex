@@ -11,7 +11,6 @@ defmodule TicketAgent.Listing do
     belongs_to :event, Event, references: :id, foreign_key: :event_id, type: Ecto.UUID
     belongs_to :class, Class, references: :id, foreign_key: :class_id, type: Ecto.UUID
 
-    has_many :images, ListingImage
     has_many :tickets, Ticket
     has_many :listing_tags, ListingTag
 
@@ -73,9 +72,7 @@ defmodule TicketAgent.Listing do
   end  
 
   def from_class(current_user, %Class{} = class) do
-    listing_image = %ListingImage{url: class.photo_url}
-
-    %Listing{images: [listing_image]}
+    %Listing{}
     |> changeset(%{
       slug: Random.generate_slug(),
       title: class.title,
@@ -108,7 +105,7 @@ defmodule TicketAgent.Listing do
             where: fragment("? >= NOW()", l.start_at),
             where: not is_nil(l.event_id),
             order_by: [asc: :start_at],
-            preload: [:event, :images, :listing_tags, :tickets],
+            preload: [:event, :listing_tags, :tickets],
             select: l
     Repo.all(query)
   end
