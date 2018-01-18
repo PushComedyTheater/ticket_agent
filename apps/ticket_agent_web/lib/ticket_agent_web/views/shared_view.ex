@@ -131,8 +131,8 @@ defmodule TicketAgentWeb.SharedView do
     })
   end
 
-  def event_image(event, width \\ 1050) do
-    image = event.image_url
+  def event_image(%{event_image_url: image_url}, width \\ 1050) do
+    image = image_url
 
     public_id =
       image

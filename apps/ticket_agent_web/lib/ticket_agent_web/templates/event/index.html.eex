@@ -21,6 +21,50 @@
             <div class="row">
             <%= for event <- event_chunk do %>
 
+            <div class="col-lg-4 g-mb-30">
+              <!-- Search Result -->
+              <article data-event-slug="<%= event.event_slug %>" class="g-bg-white" style="border: 1px dashed #f2f2f2;">
+                <figure class="g-pos-rel">
+                  <%= link to: event_path(@conn, :show, event) do %>
+                    <img class="img-fluid w-100" src="<%= event_image(event, 400) %>" style="height: 264px;" alt="<%= event.event_title %>">
+                  <% end %>
+
+
+                  <figcaption class="g-pos-abs g-bottom-0 g-left-0">
+                    <%= link full_event_date(event), to: event_path(@conn, :show, event), class: "btn btn-med u-btn-primary rounded-0" %>
+                  </figcaption>
+                  <figcaption class="g-pos-abs g-bottom-0 g-right-0">
+                    <%= link "$" <> event_cost(event), to: event_path(@conn, :show, event), class: "btn btn-med u-btn-blue rounded-0" %>
+                  </figcaption>
+                </figure>
+
+                <div class="g-pa-30">
+                  <h4 class="g-font-weight-100 g-mb-15">
+                    <%= link event.event_title, to: event_path(@conn, :show, event), class: "g-color-main g-text-underline--none--hover" %>
+                  </h4>
+                  <div>
+                    <%= raw HtmlSanitizeEx.basic_html(truncated_description(event.event_description)) %>
+                  </div>
+                </div>
+
+                <div class="media g-font-size-12 g-brd-top g-brd-gray-light-v4 g-pa-15-30">
+                  <div class="media-body align-self-center">
+                  </div>
+
+                  <div class="align-self-center">
+                    <%= link "More Information", to: event_path(@conn, :show, event), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
+                  </div>
+                </div>
+              </article>
+              <!-- End Search Result -->
+            </div>
+
+
+
+
+
+
+
 
             <% end %>
             </div>

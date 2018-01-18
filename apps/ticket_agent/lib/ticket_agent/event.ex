@@ -2,6 +2,7 @@ defmodule TicketAgent.Event do
   @derive {Phoenix.Param, key: :slug}
   use TicketAgent.Schema
 
+  @derive {Phoenix.Param, key: :slug}
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -28,5 +29,18 @@ defmodule TicketAgent.Event do
     |> cast(attrs, [:slug, :title, :description, :status])
     |> cast_assoc(:account)
     |> cast_assoc(:user)
+  end  
+
+  defimpl Phoenix.Param, for: TicketAgent.Event do
+    def to_param(%{slug: slug, title: title}) do
+      "#{slug}-#{TicketAgent.Event.slugified_title(title)}"
+    end
+  end
+
+  def slugified_title(title) do
+    title
+      |> String.downcase
+      |> String.replace(~r/[^a-z0-9\s-]/, "")
+      |> String.replace(~r/(\s|-)+/, "-")
   end  
 end

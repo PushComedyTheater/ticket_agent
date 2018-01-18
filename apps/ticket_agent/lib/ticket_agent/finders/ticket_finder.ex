@@ -55,6 +55,18 @@ defmodule TicketAgent.Finders.TicketFinder do
     |> Repo.all
   end
 
+  def price_range(listing_ids) do
+    from(
+      t in Ticket,
+      where: t.listing_id in ^listing_ids,
+      select: %{
+        min_price: min(t.price),
+        max_price: max(t.price)
+      }
+    )
+    |> Repo.one
+  end
+
   def all_available_tickets(listing_id) do
     from(
       t in Ticket,

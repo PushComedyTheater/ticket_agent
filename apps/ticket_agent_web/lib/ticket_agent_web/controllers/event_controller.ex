@@ -1,12 +1,12 @@
 defmodule TicketAgentWeb.EventController do
   use TicketAgentWeb, :controller
   alias TicketAgent.Listing
-  alias TicketAgent.Finders.{ListingFinder, WaitlistFinder}
+  alias TicketAgent.Finders.{ShowFinder, WaitlistFinder}
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:show]
 
   def index(conn, _params) do
     events = 
-      ListingFinder.active_show_listings
+      ShowFinder.upcoming_listings
 
     # events
     # |> Enum.sort(fn(x,y) ->
