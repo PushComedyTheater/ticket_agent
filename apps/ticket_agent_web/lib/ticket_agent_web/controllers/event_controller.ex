@@ -1,17 +1,30 @@
 defmodule TicketAgentWeb.EventController do
   use TicketAgentWeb, :controller
   alias TicketAgent.Listing
-  alias TicketAgent.Finders.WaitlistFinder
+  alias TicketAgent.Finders.{ListingFinder, WaitlistFinder}
   plug TicketAgentWeb.Plugs.ShowLoader when action in [:show]
 
   def index(conn, _params) do
+    events = 
+      ListingFinder.active_show_listings
+
+    # events
+    # |> Enum.sort(fn(x,y) ->
+    #   # IO.inspect Enum.at(x.listings, 0).start_at
+    #   # IO.inspect Enum.at(y.listings, 0).start_at
+    #   Enum.at(x.listings, 0).start_at > Enum.at(y.listings, 0).start_at
+    # end)
+    # |> Enum.each(fn(event) ->
+    #   IO.inspect event.title
+    #   IO.inspect Enum.at(event.listings, 0).start_at
+    # end)
     conn
     |> assign(:page_title, "Upcoming Shows at Push Comedy Theater")
-    |> render("index.html", listings: Listing.upcoming_shows)
+    |> render("index.html", events: events)
   end
 
   def show(conn, _) do
-    conn = case Regex.match?(~r/.*(ics)$/, conn.request_path) do
+    case Regex.match?(~r/.*(ics)$/, conn.request_path) do
       true -> 
         value = Listing.to_ical(conn.assigns.listing)
 

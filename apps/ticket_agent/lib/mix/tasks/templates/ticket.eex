@@ -1,17 +1,7 @@
 Logger.info "=========== Writing <%= @ticket_count %> tickets for #{listing.id} ==========="
-order = SeedHelpers.create_order(
-  %{
-    user_id: user.id, 
-    credit_card_id: card.id,
-    slug: Random.generate_slug(),
-    status: "completed", 
-    subtotal: 5000,
-    credit_card_fee: 500,
-    processing_fee: 500,
-    total_price: 6000,
-    completed_at: NaiveDateTime.utc_now()
-  }
-)
+sql = "INSERT INTO orders (id, user_id, credit_card_id, slug, status, subtotal, credit_card_fee, processing_fee, total_price, started_at, processing_at, completed_at, errored_at, cancelled_at, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{user.id}', '#{card.id}', '#{TicketAgent.Random.generate_slug()}', 'completed', 5000, 500, 500, 6000, NULL, NULL, NOW(), NULL, NULL, NOW(), NOW()) RETURNING cast(id as text);"
+
+%Postgrex.Result{rows: [[order_id]]} = TicketAgent.Repo.query!(sql)
 
 ticket_name = "Ticket for <%= String.replace(@title, "\"", "'") %>"
 <%= for number <- (1..@ticket_count) do %>

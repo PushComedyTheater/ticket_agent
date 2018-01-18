@@ -131,6 +131,25 @@ defmodule TicketAgentWeb.SharedView do
     })
   end
 
+  def event_image(event, width \\ 1050) do
+    image = event.image_url
+
+    public_id =
+      image
+      |> String.split("/")
+      |> List.last()
+      |> String.split(".")
+      |> List.first()
+
+    Cloudinex.Url.for(public_id, %{
+      width: width,
+      height: 400,
+      gravity: "north",
+      crop: "fill",
+      flags: 'progressive'
+    })
+  end
+
   def open_graph_description(text, true) do
     HtmlSanitizeEx.strip_tags(text) |> truncated_description()
   end

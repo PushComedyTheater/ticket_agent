@@ -46,68 +46,40 @@ defmodule Mix.Tasks.LoadEvents do
   end
 
   def generate_ticket(true, "purchased", price) do
-    """
     guest_name = FakerElixir.Name.name()
-    {:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-    %TicketAgent.Ticket{
-      listing_id: listing.id,
-      slug: Random.generate_slug(),
-      name: ticket_name,
-      status: "purchased",
-      purchased_at: (NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))),
-      description: ticket_name,
-      guest_name: guest_name,
-      guest_email: FakerElixir.Internet.email(:popular, guest_name),   
-      order_id: order.id,   
-      price: #{round(price * 100)},
-      sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
-      inserted_at: listing.inserted_at,
-      updated_at: listing.updated_at
-    }
-    |> TicketAgent.Repo.insert!()
+    guest_email = FakerElixir.Internet.email(:popular, guest_name)
+    """
+    sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+    {:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+    purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+
+    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'purchased', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());\"
+
+    TicketAgent.Repo.query(sql)
     """
   end
 
   def generate_ticket(true, "emailed", price) do
-    """
-    {:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-    purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
     guest_name = FakerElixir.Name.name()
-    
-    %TicketAgent.Ticket{
-      listing_id: listing.id,
-      slug: Random.generate_slug(),
-      name: ticket_name,
-      status: "emailed",
-      emailed_at: (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))),
-      purchased_at: purchased_at,
-      description: ticket_name,
-      guest_name: guest_name,
-      guest_email: FakerElixir.Internet.email(:popular, guest_name),   
-      order_id: order.id,   
-      price: #{round(price * 100)},
-      sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
-      inserted_at: listing.inserted_at,
-      updated_at: listing.updated_at
-    }
-    |> TicketAgent.Repo.insert!
+    guest_email = FakerElixir.Internet.email(:popular, guest_name)    
+    """
+    sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+    {:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+    purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+    emailed_at =  (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500)))
+
+    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'emailed', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', '\#{emailed_at}', NULL, NULL, NOW(), NOW());\"
+
+    TicketAgent.Repo.query(sql)
     """
   end  
 
   def generate_ticket(false, _, price) do
     """
-    %TicketAgent.Ticket{
-      listing_id: listing.id,
-      slug: Random.generate_slug(),
-      name: ticket_name,
-      status: "available",
-      description: ticket_name,
-      price: #{round(price * 100)},
-      sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
-      inserted_at: listing.inserted_at,
-      updated_at: listing.updated_at
-    }
-    |> TicketAgent.Repo.insert!
+    sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', NULL, '\#{ticket_name}', 'available', '\#{ticket_name}', #{price * 100}, NULL, NULL, '\#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());\"
+
+    TicketAgent.Repo.query(sql)
     """
   end
 
@@ -127,14 +99,13 @@ defmodule Mix.Tasks.LoadEvents do
     preface = load_preface("classes")
 
     files
-    |> Enum.chunk_every(10)
     |> Enum.with_index
-    |> Enum.each(fn({chunk, index}) ->
+    |> Enum.each(fn({file, index}) ->
       Logger.info "Processing #{index+1} of class chunks"
       {:ok, pid} = StringIO.open("")
-      Enum.each(chunk, fn(file) ->
+      # Enum.each(chunk, fn(file) ->
         process_file(base <> file, non_words, :class, pid)
-      end)
+      # end)
       string = StringIO.flush(pid)
       File.write!("./apps/ticket_agent/priv/repo/seeds/classes/listings_#{index}.exs", preface <> string)
       StringIO.close(pid)
@@ -147,14 +118,13 @@ defmodule Mix.Tasks.LoadEvents do
     preface = load_preface("shows")
 
     files
-    |> Enum.chunk_every(20)
     |> Enum.with_index
-    |> Enum.each(fn({chunk, index}) ->
+    |> Enum.each(fn({file, index}) ->
       Logger.info "Processing #{index+1} of show chunks"
       {:ok, pid} = StringIO.open("")
-      Enum.each(chunk, fn(file) ->
+      # Enum.each(chunk, fn(file) ->
         process_file(base <> file, non_words, :show, pid)
-      end)
+      # end)
       string = StringIO.flush(pid)
       File.write("./apps/ticket_agent/priv/repo/seeds/shows/listings_#{index}.exs", preface <> string)
       StringIO.close(pid)
@@ -327,12 +297,12 @@ defmodule Mix.Tasks.LoadEvents do
     %{"url" => image_url} = photo
 
 
-    # photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, image_url) |> hd) <> "/-/inline/yes/"
-    # public_id = String.split(photo, "/") |> Enum.at(3)
+    photo = (Regex.run(~r/(https:\/\/images.universe.com\/[a-z0-9\-]*)/, image_url) |> hd) <> "/-/inline/yes/"
+    public_id = String.split(photo, "/") |> Enum.at(3)
 
-    # process_image(photo, public_id)
-    # Cloudinex.Url.for(public_id)
-    image_url
+    process_image(photo, public_id)
+    Cloudinex.Url.for(public_id)
+    # image_url
   end
 
   def load_tags(_, _, _, :class), do: ["class"]

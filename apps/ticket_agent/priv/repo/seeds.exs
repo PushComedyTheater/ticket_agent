@@ -13,6 +13,7 @@ Code.load_file("teachers.exs", "./apps/ticket_agent/priv/repo/seeds")
 |> Enum.each(fn(base) ->
   File.ls!(base)
   |> Enum.each(fn(file) ->
+    IO.inspect "Processing file #{file}"
     Code.load_file(file, base)
   end)
 end)

@@ -17,45 +17,11 @@
         <!-- End Sidebar -->
         <!-- Search Results -->
         <div class="col-lg-12">
-          <%= for listings <- Enum.chunk(@listings, 3) do %>
+          <%= for event_chunk <- Enum.chunk_every(@events, 3) do %>
             <div class="row">
-            <%= for listing <- listings do %>
-            <div class="col-lg-4 g-mb-30">
-              <!-- Search Result -->
-              <article data-show="<%= listing.id %>" class="g-bg-white" style="border: 1px dashed #f2f2f2;" data-tags='<%= raw show_tags(listing) %>'>
-                <figure class="g-pos-rel">
-                  <%= link to: event_path(@conn, :show, listing) do %>
-                    <img class="img-fluid w-100" src="<%= listing_image(listing, 400) %>" style="height: 264px;" alt="<%= listing.title %>">
-                  <% end %>
+            <%= for event <- event_chunk do %>
 
-                  <figcaption class="g-pos-abs g-bottom-0 g-left-0">
-                    <%= link event_date_long(listing.start_at), to: event_path(@conn, :show, listing), class: "btn btn-med u-btn-primary rounded-0" %>
-                  </figcaption>
-                  <figcaption class="g-pos-abs g-bottom-0 g-right-0">
-                    <%= link "$" <> listing_cost(listing), to: event_path(@conn, :show, listing), class: "btn btn-med u-btn-blue rounded-0" %>
-                  </figcaption>
-                </figure>
 
-                <div class="g-pa-30">
-                  <h4 class="g-font-weight-100 g-mb-15">
-                    <%= link listing.title, to: event_path(@conn, :show, listing), class: "g-color-main g-text-underline--none--hover" %>
-                  </h4>
-                  <div>
-                    <%= raw HtmlSanitizeEx.basic_html(truncated_description(listing.description)) %>
-                  </div>
-                </div>
-
-                <div class="media g-font-size-12 g-brd-top g-brd-gray-light-v4 g-pa-15-30">
-                  <div class="media-body align-self-center">
-                  </div>
-
-                  <div class="align-self-center">
-                    <%= link "More Information", to: event_path(@conn, :show, listing), class: "btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
-                  </div>
-                </div>
-              </article>
-              <!-- End Search Result -->
-            </div>
             <% end %>
             </div>
           <% end %>
