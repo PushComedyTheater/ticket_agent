@@ -12,7 +12,6 @@ defmodule TicketAgent.Listing do
     belongs_to :class, Class, references: :id, foreign_key: :class_id, type: Ecto.UUID
 
     has_many :tickets, Ticket
-    has_many :listing_tags, ListingTag
 
     field :slug, :string
     field :title, :string
@@ -105,7 +104,7 @@ defmodule TicketAgent.Listing do
             where: fragment("? >= NOW()", l.start_at),
             where: not is_nil(l.event_id),
             order_by: [asc: :start_at],
-            preload: [:event, :listing_tags, :tickets],
+            preload: [:event, :tickets],
             select: l
     Repo.all(query)
   end

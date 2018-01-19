@@ -3,10 +3,10 @@ Logger.info "=========== BEGIN Processing Universe Event <%= String.replace(@tit
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/class_listing.eex", assigns: assigns %>
 <% else %>
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/event_with_listing.eex", assigns: assigns %>
-<% end %>
 <%= for tag <- @tags do %>
 # Insert <%= tag %>
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/tag.eex", assigns: [tag: tag] %>
+<% end %>
 <% end %>
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/ticket.eex", assigns: assigns %>
 Logger.info "=========== END Processing Universe Event <%= String.replace(@title, "\"", "'") %> ==========="

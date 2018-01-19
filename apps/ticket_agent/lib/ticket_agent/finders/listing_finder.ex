@@ -49,7 +49,7 @@ defmodule TicketAgent.Finders.ListingFinder do
 
     query = from listing in Listing,
             where: listing.slug == ^slug,
-            preload: [:images, :listing_tags],
+            preload: [:event],
             select: listing
 
     case Repo.one(query) do

@@ -6,7 +6,7 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
     listing = 
       Listing
       |> Repo.get(listing_id)
-      |> Repo.preload([:images, :listing_tags])
+      |> Repo.preload([:images])
     conn
     |> Plug.Conn.assign(:listing, listing)
   end

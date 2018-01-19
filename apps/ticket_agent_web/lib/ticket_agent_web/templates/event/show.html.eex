@@ -3,86 +3,38 @@
     background-color: #ededed;
   }
 </style>
-
-<div id="photoParent" style="background: url('<%= listing_image(@listing) %>') no-repeat; background-size: 100%; min-height: 450px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
+<div id="photoParent" style="background: url('<%= event_image(@listing) %>') no-repeat; background-size: 100%; min-height: 450px; background-size: cover; opacity: 0.8; border-bottom: 1px solid 000;">
 </div>
 <section class="g-bg-blue-opacity-0_7 g-py-50 g-px-30 u-shadow-v1-5" style="margin-bottom: 5px;">
   <div class="container" style="border: 1px">
     <div class="row">
       <div class="col-md-9 align-self-center" style="margin-top: -20px;">
-        <h2 class="h1" style="color: #fff;"><%= @listing.title %></h2>
+        <h2 class="h1" style="color: #fff;"><%= @listing.listing_title %></h2>
         <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
-          <strong><%= event_date(@listing.start_at) %></strong>&nbsp;
           <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15">
-            <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.ticket_price) %></strong>
+            <%= if @conn.assigns.min_ticket_price != @conn.assigns.max_ticket_price do %>
+              <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.min_ticket_price) %> - <%= cost_smallest_unit(@conn.assigns.max_ticket_price) %></strong>
+            <% else %>
+              <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.min_ticket_price) %></strong>
+            <% end %>
           </span>
+          <%= for listing <- @listings do %>
+          <span class="u-label g-bg-orange u-label--med g-px-15 g-py-8 g-mr-10 g-mb-15"><i class="fa fa-calendar g-mr-3"></i> <%= order_timestamp(listing.listing_start_at) %></span>
+          <% end %>   
         </p>
         <ul class="u-list-inline mb-0">
           <%= for tag <- @listing.listing_tags do %>
           <li class="list-inline-item g-mb-10">
-            <a class="u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><strong><%= tag.tag %></strong></a>
+            <a class="u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><strong><%= tag %></strong></a>
           </li>
           <% end %>
         </ul>
       </div>
       <div class="col-md-3 align-self-center text-md">
         <%= if @conn.assigns.past_date do %>
-          <a href="#" class="btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
-            <i class="fa fa-ticket g-mr-3"></i> Show Ended
-          </a>
+          <%= render "show_ended.html", assigns %>
         <% else %>
-          <%= if @conn.assigns.available_ticket_count > 0 do %>
-            <%= link to: ticket_path(@conn, :new, show_id: @listing.slug), class: "btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15" do %>
-            <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
-            <% end %>
-          <% else %>
-            <div class="alert alert-dismissible fade show g-bg-yellow rounded-0" role="alert">
-              <div class="media">
-                <span class="d-flex g-mr-10 g-mt-5">
-                  <i class="icon-info g-font-size-25"></i>
-                </span>
-                <span class="media-body align-self-center">
-                  This show has sold out.
-                </span>
-              </div>
-            </div>
-
-            <%= if @conn.assigns.waitlisted do %>
-            <a style="margin-left: 20px;" href="#" onclick="return false;" class="btn btn-md u-btn-inset u-btn-inset--rounded u-btn-blue g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
-              <i class="fa fa-check-circle g-mr-3"></i>
-              On Waitlist
-            </a>
-            <% else %>
-              <a style="margin-left: 20px;" href="#waitlist" data-modal-target="#waitlist" data-modal-effect="slide" class="btn btn-md u-btn-inset u-btn-inset--rounded u-btn-blue g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
-                <i class="fa fa-check-circle g-mr-3"></i>
-                Join Waitlist
-              </a>
-              <div id="waitlist" class="text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;">
-                <button type="button" class="close" onclick="Custombox.modal.close();">
-                  <i class="hs-icon hs-icon-close"></i>
-                </button>
-                <h4 class="g-mb-20">Waitlist</h4>
-                <p>This show is currently sold out.  We have no more tickets to sell online.</p>
-                <p>However, you are welcome to join our waitlist and we will send you an email if any tickets become available.</p>
-                <div class="form-group g-mb-20">
-                  <div class="u-input-group-v2">
-                    <input id="name" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn) %>">
-                    <label for="name">Full Name</label>
-                  </div>
-                  <small id="name_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
-                </div>
-                <div class="form-group g-mb-20">
-                  <div class="u-input-group-v2">
-                    <input id="email" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn, :email) %>">
-                    <label for="email">Email Address</label>
-                  </div>
-                  <small id="email_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
-                </div>
-                <a href="#!" id="add_waitlist_btn" class="btn btn-md u-btn-outline-primary g-mr-10 g-mb-15">Add Me To Waitlist</a>
-              </div>
-            <% end %>
-
-          <% end %>
+          <%= render "show_running.html", assigns %>
         <% end %>
         <%= if get_flash(@conn, :error) do %>
           <p class="alert alert-danger rounded" role="alert"><%= get_flash(@conn, :error) %></p>
@@ -103,7 +55,7 @@
         <h4 class="g-color-black mb-1">About This Show</h4>
         <hr />
 
-        <p class="lead g-mb-20 g-mb-0--md"><%= raw @listing.description %></p>
+        <p class="lead g-mb-20 g-mb-0--md"><%= raw @listing.listing_description %></p>
       </div>
     </div>
 
@@ -131,21 +83,24 @@
           </li>
         </ul>
         <br />
-        <h3 class="h5 g-color-black mb-3">Calendar:</h3>
+        <%= for listing <- @listings do %>
+        <h3 class="h5 g-color-black mb-3">Calendar (<%= order_timestamp(listing.listing_start_at) %>):</h3>
         <ul class="list-inline mb-0">
           <li class="list-inline-item mr-1">
-            <a class="btn u-btn-outline-red g-rounded-25" href="<%= TicketAgent.OrderHelpers.google_calendar_link(@listing) %>" target="_blank">
+            <a class="btn u-btn-outline-red g-rounded-25" href="<%= google_calendar(@listing) %>" target="_blank">
               <i class="mr-1 fa fa-google"></i>
               Add to Google Calendar
             </a>
           </li>
           <li class="list-inline-item mx-1">
-            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_path(@conn, :show, @listing) %>.ics" target="_blank">
+            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_path(@conn, :show, @listing.listing_slug) %>.ics" target="_blank">
               <i class="mr-1 fa fa-calendar"></i>
               ICal
             </a>
           </li>
-        </ul>        
+        </ul>
+        <br />
+        <% end %>      
       </div>
       <!-- End Share -->
     </div>
@@ -153,62 +108,3 @@
 </section>
 <!-- End Portfolio Single Item -->
 <br />
-<script type="text/javascript">
-window.join_waitlist = function (details) {
-  $.ajax({
-    // The URL for the request
-    url: "/waitlist",
-    // The data to send (will be converted to a query string)
-    data: JSON.stringify(details),
-    // Whether this is a POST or GET request
-    type: "POST",
-    // The type of data we expect back
-    contentType: "application/json",
-    dataType: "json",
-    // add in csrf_token
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
-    },
-  }).done(function (response) {
-    $("#name").val("");
-    $("#email").val("");
-    window.setTimeout(function () { Custombox.modal.close(); }, 125);
-  }).fail(function (xhr, status, errorThrown) {
-    window.setTimeout(function () { Custombox.modal.close(); }, 25);
-  });
-}
-
-$(document).on('ready', function () {
-  Cookies.remove("ticket_data");
-  $("#add_waitlist_btn").on("click", function(e) {
-    e.preventDefault();
-
-    var name = $("#name").val().trim();
-    var email = $("#email").val().trim();
-    var listing_id = "<%= @conn.assigns.listing.id %>";
-
-    if (name.length == 0) {
-      $("#name_required").show();
-    } else {
-      $("#name_required").hide();
-    }
-
-    if (email.length == 0) {
-      $("#email_required").show();
-    } else {
-      $("#email_required").hide();
-    }
-
-    if ((name.length > 0) && (email.length > 0)) {
-      var details = {
-        name: name,
-        email: email,
-        listing_id: listing_id
-      }
-      window.join_waitlist(details);
-    }
-
-  });
-
-});
-</script>

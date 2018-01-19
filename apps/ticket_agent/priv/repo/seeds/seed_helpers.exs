@@ -6,9 +6,9 @@ alias TicketAgent.{
   Class, 
   CreditCard,
   Event, 
+  EventTag,
   Listing, 
   ListingImage, 
-  ListingTag, 
   Order,
   OrderDetail, 
   Random,
@@ -177,21 +177,21 @@ defmodule SeedHelpers do
     end
   end
 
-  def create_tag(%{tag: tag, listing_id: listing_id} = listing_tag) do
+  def create_tag(%{tag: tag, event_id: event_id} = event_tag) do
     Logger.info "Seeds->create_tag:     Checking if tag with name #{tag} exists"
-    query = from l in ListingTag,
-            where: l.tag == ^tag,
-            where: l.listing_id == ^listing_id,
-            select: l
+    query = from e in EventTag,
+            where: e.tag == ^tag,
+            where: e.event_id == ^event_id,
+            select: e
 
     case Repo.one(query) do
       nil ->
         Logger.info "Seeds->create_tag:     Creating tag"
-        struct(ListingTag, listing_tag)
+        struct(EventTag, event_tag)
         |> TicketAgent.Repo.insert!
-      listing ->
+      event_tag ->
         Logger.info "Seeds->create_tag:     Tag with name #{tag} already exists"
-        listing
+        event_tag
     end
   end
 

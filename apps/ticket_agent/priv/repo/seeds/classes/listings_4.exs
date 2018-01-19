@@ -60,15 +60,6 @@ listing = SeedHelpers.create_listing(
 )
 Logger.info "=========== Inserted Class Listing #{listing.id} ==========="
 
-
-# Insert class
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  listing_id: listing.id,
-  tag: "class"
-})
-Logger.info "=========== Wrote tag ==========="
-
 Logger.info "=========== Writing 12 tickets for #{listing.id} ==========="
 sql = "INSERT INTO orders (id, user_id, credit_card_id, slug, status, subtotal, credit_card_fee, processing_fee, total_price, started_at, processing_at, completed_at, errored_at, cancelled_at, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{user.id}', '#{card.id}', '#{TicketAgent.Random.generate_slug()}', 'completed', 5000, 500, 500, 6000, NULL, NULL, NOW(), NULL, NULL, NOW(), NOW()) RETURNING cast(id as text);"
 
@@ -77,93 +68,96 @@ sql = "INSERT INTO orders (id, user_id, credit_card_id, slug, status, subtotal, 
 ticket_name = "Ticket for ​Improv 201 at the Push Comedy Theater"
 
 sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '8cb616185c3275c7bfce', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
-
-TicketAgent.Repo.query(sql)
-
-
-sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
-
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'caf9d7297a761e2416fc', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Tyrique Brakus', 'tyrique.brakus@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
-
-TicketAgent.Repo.query(sql)
-
-
-sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
-
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '80776b08bcb4b0daaab4', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Adalberto Lakin', 'adalberto.lakin@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
-
-TicketAgent.Repo.query(sql)
-
-
-sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '4d606da25bccaf583cc4', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
-
-TicketAgent.Repo.query(sql)
-
-
-sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
-
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'e59e829cf07b2b46e35b', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Columbus Langosh', 'columbus.langosh@hotmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
-
-TicketAgent.Repo.query(sql)
-
-
-sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '16b54f0d94f13cb22907', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
-
-TicketAgent.Repo.query(sql)
-
-
-sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
 purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
 emailed_at =  (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500)))
 
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'c8e2c9efd104062e647a', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'emailed', '#{ticket_name}', 1.9e4, 'Jaqueline Tromp', 'jaqueline.tromp@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', '#{emailed_at}', NULL, NULL, NOW(), NOW());"
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'cbd2e7dd8fbad79c2e3e', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'emailed', '#{ticket_name}', 1.9e4, 'Elda Littel', 'elda.littel@yahoo.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', '#{emailed_at}', NULL, NULL, NOW(), NOW());"
 
 TicketAgent.Repo.query(sql)
 
 
 sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '87e16faefc16fef875bb', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'b59623821577d20f5394', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Crystal Wintheiser', 'crystal.wintheiser@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
 
 TicketAgent.Repo.query(sql)
 
 
 sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '0b971deba0cdd89a8393', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Larue O'Conner', 'larue.oconner@outlook.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
+
+TicketAgent.Repo.query(sql)
+
+
+sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '3f323f4a3cf33a382ae5', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Kylee Willms', 'kylee.willms@hotmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
+
+TicketAgent.Repo.query(sql)
+
+
+sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '542cfe56a6fee9129478', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Garnett Berge', 'garnett.berge@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
+
+TicketAgent.Repo.query(sql)
+
+
+sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '1ff62ecbc2e9ec663841', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
+
+TicketAgent.Repo.query(sql)
+
+
+sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'd4c98e6bde34a47c1664', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
+
+TicketAgent.Repo.query(sql)
+
+
+sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
+purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
+
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'fc3e195371d832901f83', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Mia Legros', 'mia.legros@yahoo.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
+
+TicketAgent.Repo.query(sql)
+
+
+sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
+{:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
 purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
 emailed_at =  (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500)))
 
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '99122bcabb9aacd52436', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'emailed', '#{ticket_name}', 1.9e4, 'Lance Heller', 'lance.heller@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', '#{emailed_at}', NULL, NULL, NOW(), NOW());"
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '5ba2f84a1318045648b8', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'emailed', '#{ticket_name}', 1.9e4, 'Judge Murphy', 'judge.murphy@outlook.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', '#{emailed_at}', NULL, NULL, NOW(), NOW());"
 
 TicketAgent.Repo.query(sql)
 
 
 sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '9cbd7a8df630b48f8e91', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'e197b68e57a11c883751', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
 
 TicketAgent.Repo.query(sql)
 
 
 sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'bb16789e748f654432af', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '3275cd4a8b148b65d436', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
 
 TicketAgent.Repo.query(sql)
 
 
 sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-{:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
-
-sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '207b0f4cf50359a5908e', '#{listing.id}', '#{order_id}', '#{ticket_name}', 'purchased', '#{ticket_name}', 1.9e4, 'Julius Lowe', 'julius.lowe@gmail.com', '#{sale_start}', NULL, NULL, '#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());"
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), 'f9aa15e0e63551026bc6', '#{listing.id}', NULL, '#{ticket_name}', 'available', '#{ticket_name}', 1.9e4, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());"
 
 TicketAgent.Repo.query(sql)
 

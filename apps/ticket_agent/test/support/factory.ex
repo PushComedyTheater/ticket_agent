@@ -4,9 +4,9 @@ defmodule TicketAgent.Factory do
     Class,
     CreditCard,
     Event,
+    EventTag,
     Listing,
     ListingImage,
-    ListingTag,
     Order,
     OrderDetail,
     Random,
@@ -63,6 +63,10 @@ defmodule TicketAgent.Factory do
     %Event{}
   end
 
+  def event_tag_factory do
+    %EventTag{}
+  end  
+
   def listing_factory do
     %Listing{
       slug: Random.generate_slug(),
@@ -79,10 +83,6 @@ defmodule TicketAgent.Factory do
       listing: build(:listing),
       url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png"
     }
-  end
-
-  def listing_tag_factory do
-    %ListingTag{}
   end
 
   def order_factory do

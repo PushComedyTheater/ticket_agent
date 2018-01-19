@@ -1,5 +1,18 @@
 defmodule TicketAgentWeb.SharedView do
   require Logger
+
+  def google_calendar(listing) do
+    url = "http://www.google.com/calendar/render?action=TEMPLATE"
+    url = url <> "&dates=#{calendar_timestamp(listing.listing_start_at)}/#{calendar_timestamp(listing.listing_end_at)}"
+    url = url <> "&location=Push+Comedy+Theater,+763+Granby+St,+Norfolk,+VA+23510,+USA"
+    url = url <> "&pli=1sf=true"
+    url <> "&text=#{URI.encode(listing.listing_title)}"
+  end
+
+  def calendar_timestamp(date) do
+    date
+    |> Calendar.Strftime.strftime!("%Y%m%dT%H%M%SZ")
+  end
   
   def treeview_root(conn, path_combined) do
     treeview_root = Map.get(conn.assigns, :treeview_root, "unknown")

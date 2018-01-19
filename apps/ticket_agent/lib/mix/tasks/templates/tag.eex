@@ -1,6 +1,6 @@
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
-  listing_id: listing.id,
+  event_id: event.id,
   tag: "<%= @tag %>"
 })
 Logger.info "=========== Wrote tag ==========="

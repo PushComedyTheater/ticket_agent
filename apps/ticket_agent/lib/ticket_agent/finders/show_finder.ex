@@ -57,4 +57,35 @@ defmodule TicketAgent.Finders.ShowFinder do
     Repo.all(query)
     |> Enum.map(fn(detail) -> struct(ShowDetail, detail) end)
   end
+
+  def find_by_slug(slug) do
+    slug =
+      slug
+      |> String.split("-")
+      |> hd
+
+    query = from listing in Listing,
+            left_join: event in assoc(listing, :event), on: listing.event_id == event.id,
+            left_join: event_tag in assoc(event, :event_tags), on: event_tag.event_id == event.id,
+            left_join: ticket in assoc(listing, :tickets), on: ticket.listing_id == listing.id,
+            where: event.slug == ^slug,
+            where: ticket.status == "available",
+            group_by: [listing.id, event.image_url],
+            order_by: listing.start_at,
+            select: %{
+              listing_id: listing.id,
+              listing_title: listing.title,
+              listing_description: listing.description,
+              listing_slug: listing.slug,
+              listing_start_at: listing.start_at,
+              listing_end_at: listing.end_at,
+              ticket_count: fragment("count(DISTINCT ?)", ticket.id),
+              min_ticket_price: min(ticket.price),
+              max_ticket_price: max(ticket.price),
+              event_image_url: event.image_url,
+              listing_tags: fragment("json_agg(DISTINCT ?)", event_tag.tag)
+            }
+
+    Repo.all(query)
+  end  
 end

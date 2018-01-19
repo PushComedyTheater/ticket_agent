@@ -1,0 +1,45 @@
+            <div class="alert alert-dismissible fade show g-bg-yellow rounded-0" role="alert">
+              <div class="media">
+                <span class="d-flex g-mr-10 g-mt-5">
+                  <i class="icon-info g-font-size-25"></i>
+                </span>
+                <span class="media-body align-self-center">
+                  This show has sold out.
+                </span>
+              </div>
+            </div>
+
+            <%= if @conn.assigns.waitlisted do %>
+            <a style="margin-left: 20px;" href="#" onclick="return false;" class="btn btn-md u-btn-inset u-btn-inset--rounded u-btn-blue g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
+              <i class="fa fa-check-circle g-mr-3"></i>
+              On Waitlist
+            </a>
+            <% else %>
+              <a style="margin-left: 20px;" href="#waitlist" data-modal-target="#waitlist" data-modal-effect="slide" class="btn btn-md u-btn-inset u-btn-inset--rounded u-btn-blue g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
+                <i class="fa fa-check-circle g-mr-3"></i>
+                Join Waitlist
+              </a>
+              <div id="waitlist" class="text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;">
+                <button type="button" class="close" onclick="Custombox.modal.close();">
+                  <i class="hs-icon hs-icon-close"></i>
+                </button>
+                <h4 class="g-mb-20">Waitlist</h4>
+                <p>This show is currently sold out.  We have no more tickets to sell online.</p>
+                <p>However, you are welcome to join our waitlist and we will send you an email if any tickets become available.</p>
+                <div class="form-group g-mb-20">
+                  <div class="u-input-group-v2">
+                    <input id="name" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn) %>">
+                    <label for="name">Full Name</label>
+                  </div>
+                  <small id="name_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
+                </div>
+                <div class="form-group g-mb-20">
+                  <div class="u-input-group-v2">
+                    <input id="email" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn, :email) %>">
+                    <label for="email">Email Address</label>
+                  </div>
+                  <small id="email_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
+                </div>
+                <a href="#!" id="add_waitlist_btn" class="btn btn-md u-btn-outline-primary g-mr-10 g-mb-15">Add Me To Waitlist</a>
+              </div>
+            <% end %>

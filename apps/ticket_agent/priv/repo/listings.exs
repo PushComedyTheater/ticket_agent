@@ -447,7 +447,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "free"
 }
@@ -504,14 +504,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "music"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "lip-sync"
 }
@@ -640,14 +640,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "harold"
 }
@@ -712,7 +712,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "workshop"
 }
@@ -807,7 +807,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
@@ -880,14 +880,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "date-night"
 }
@@ -956,7 +956,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
@@ -1011,7 +1011,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
@@ -1090,7 +1090,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "good-talk"
 }
@@ -1161,14 +1161,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "girl-prov"
 }
@@ -1235,14 +1235,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "graduation-show"
 }
@@ -1301,7 +1301,7 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "murder-mystery"
 }
@@ -1358,14 +1358,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "deal"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "standup"
 }
@@ -1422,14 +1422,14 @@ type: "social"
 }
 |> TicketAgent.Repo.insert!
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "music"
 }
 |> TicketAgent.Repo.insert!
 
 
-%TicketAgent.ListingTag{
+%TicketAgent.EventTag{
 listing_id: listing.id,
 tag: "lip-sync"
 }
