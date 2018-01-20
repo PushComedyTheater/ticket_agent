@@ -2,6 +2,14 @@ defmodule TicketAgentWeb.EventView do
   use TicketAgentWeb, :view
   alias TicketAgent.Finders.TicketFinder
 
+
+  def event_buy_timestamp(nil), do: ""
+  def event_buy_timestamp(date) do
+    date
+    |> Calendar.DateTime.shift_zone!("America/New_York")
+    |> Calendar.Strftime.strftime!("%m/%d/%Y at %l:%M%p")    
+  end
+  
   def purchased_order_list(conn, orders) do
     Enum.map_join(orders, ", ", fn(order) ->
       safe_to_string(link(event_date(order.completed_at), to: order_path(conn, :show, order), target: "_blank"))

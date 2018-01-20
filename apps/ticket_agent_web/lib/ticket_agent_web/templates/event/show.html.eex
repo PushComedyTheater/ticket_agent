@@ -11,7 +11,7 @@
       <div class="col-md-9 align-self-center" style="margin-top: -20px;">
         <h2 class="h1" style="color: #fff;"><%= @listing.listing_title %></h2>
         <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
-        <%= render TicketAgentWeb.Event.SharedView, "_ticket_price.html", assigns %>
+        <%= render "shared/_ticket_price.html", assigns %>
         <%= for listing <- @listings do %>
         <span class="u-label g-bg-orange u-label--med g-px-15 g-py-8 g-mr-10 g-mb-15"><i class="fa fa-calendar g-mr-3"></i> <%= order_timestamp(listing.listing_start_at) %></span>
         <% end %>   
@@ -22,7 +22,7 @@
         <%= if @past_date do %>
           <%= render "show_ended.html", assigns %>
         <% else %>
-          <%= render TicketAgentWeb.Event.SharedView, "_live.html", assigns %>
+          <%= render "shared/_live.html", assigns %>
         <% end %>
         <%= if get_flash(@conn, :error) do %>
           <p class="alert alert-danger rounded" role="alert"><%= get_flash(@conn, :error) %></p>
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="col-md-4 g-mb-50">
-      <%= render TicketAgentWeb.Event.SharedView, "_sharing.html", assigns %>
+      <%= render "shared/_sharing.html", assigns %>
     </div>
   </div>
 </section>
