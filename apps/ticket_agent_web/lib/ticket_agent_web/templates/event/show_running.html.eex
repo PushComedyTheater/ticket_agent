@@ -1,5 +1,0 @@
-<%= if @conn.assigns.available_ticket_count > 0 do %>
-  <%= render "show_buy_tickets.html", assigns %>
-<% else %>
-  <%= render "show_sold_out.html", assigns %>
-<% end %>

@@ -11,30 +11,18 @@
       <div class="col-md-9 align-self-center" style="margin-top: -20px;">
         <h2 class="h1" style="color: #fff;"><%= @listing.listing_title %></h2>
         <p class="lead g-mb-20 g-mb-0--md" style="color: #fff;">
-          <span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15">
-            <%= if @conn.assigns.min_ticket_price != @conn.assigns.max_ticket_price do %>
-              <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.min_ticket_price) %> - <%= cost_smallest_unit(@conn.assigns.max_ticket_price) %></strong>
-            <% else %>
-              <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.min_ticket_price) %></strong>
-            <% end %>
-          </span>
-          <%= for listing <- @listings do %>
-          <span class="u-label g-bg-orange u-label--med g-px-15 g-py-8 g-mr-10 g-mb-15"><i class="fa fa-calendar g-mr-3"></i> <%= order_timestamp(listing.listing_start_at) %></span>
-          <% end %>   
+        <%= render TicketAgentWeb.Event.SharedView, "_ticket_price.html", assigns %>
+        <%= for listing <- @listings do %>
+        <span class="u-label g-bg-orange u-label--med g-px-15 g-py-8 g-mr-10 g-mb-15"><i class="fa fa-calendar g-mr-3"></i> <%= order_timestamp(listing.listing_start_at) %></span>
+        <% end %>   
         </p>
-        <ul class="u-list-inline mb-0">
-          <%= for tag <- @listing.listing_tags do %>
-          <li class="list-inline-item g-mb-10">
-            <a class="u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><strong><%= tag %></strong></a>
-          </li>
-          <% end %>
-        </ul>
+        <%= render "event_tags.html", assigns %>
       </div>
       <div class="col-md-3 align-self-center text-md">
-        <%= if @conn.assigns.past_date do %>
+        <%= if @past_date do %>
           <%= render "show_ended.html", assigns %>
         <% else %>
-          <%= render "show_running.html", assigns %>
+          <%= render TicketAgentWeb.Event.SharedView, "_live.html", assigns %>
         <% end %>
         <%= if get_flash(@conn, :error) do %>
           <p class="alert alert-danger rounded" role="alert"><%= get_flash(@conn, :error) %></p>
@@ -47,64 +35,15 @@
   <div class="row g-mb-70">
     <div class="col-md-8 g-mb-30">
       <div class="mb-5">
-        <%= if @conn.assigns.has_purchased_tickets do %>
-          <p class="alert alert-info rounded" role="alert">
-            You purchased tickets to this event on <%= link event_date(@conn.assigns.purchase_order.completed_at), to: order_path(@conn, :show, @conn.assigns.purchase_order), target: "_blank" %>
-          </p>
-        <% end %>
+        <%= render "previous_purchase.html", assigns %>
         <h4 class="g-color-black mb-1">About This Show</h4>
         <hr />
-
         <p class="lead g-mb-20 g-mb-0--md"><%= raw @listing.listing_description %></p>
       </div>
     </div>
-
-
-
     <div class="col-md-4 g-mb-50">
-      <!-- Client -->
-      <!-- End Client -->
-
-      <!-- Share -->
-      <div class="mb-4">
-        <h3 class="h5 g-color-black mb-3">Share:</h3>
-        <ul class="list-inline mb-0">
-          <li class="list-inline-item mr-1">
-            <a class="btn u-btn-outline-facebook g-rounded-25" href="https://www.facebook.com/sharer/sharer.php?u=<%= full_url(@conn) %>" target="_blank">
-              <i class="mr-1 fa fa-facebook"></i>
-              Facebook
-            </a>
-          </li>
-          <li class="list-inline-item mx-1">
-            <a class="btn u-btn-outline-twitter g-rounded-25" href="https://twitter.com/home?status=Check%20out%20this%20show%20at%20Push%20Comedy%20Theater%20<%= full_url(@conn) %>%20via%20%40pushcomedy" target="_blank">
-              <i class="mr-1 fa fa-twitter"></i>
-              Twitter
-            </a>
-          </li>
-        </ul>
-        <br />
-        <%= for listing <- @listings do %>
-        <h3 class="h5 g-color-black mb-3">Calendar (<%= order_timestamp(listing.listing_start_at) %>):</h3>
-        <ul class="list-inline mb-0">
-          <li class="list-inline-item mr-1">
-            <a class="btn u-btn-outline-red g-rounded-25" href="<%= google_calendar(@listing) %>" target="_blank">
-              <i class="mr-1 fa fa-google"></i>
-              Add to Google Calendar
-            </a>
-          </li>
-          <li class="list-inline-item mx-1">
-            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_path(@conn, :show, @listing.listing_slug) %>.ics" target="_blank">
-              <i class="mr-1 fa fa-calendar"></i>
-              ICal
-            </a>
-          </li>
-        </ul>
-        <br />
-        <% end %>      
-      </div>
-      <!-- End Share -->
+      <%= render TicketAgentWeb.Event.SharedView, "_sharing.html", assigns %>
     </div>
   </div>
 </section>
-<!-- End Portfolio Single Item -->
 <br />

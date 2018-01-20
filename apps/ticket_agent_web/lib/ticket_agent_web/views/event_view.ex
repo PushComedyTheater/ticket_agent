@@ -2,6 +2,12 @@ defmodule TicketAgentWeb.EventView do
   use TicketAgentWeb, :view
   alias TicketAgent.Finders.TicketFinder
 
+  def purchased_order_list(conn, orders) do
+    Enum.map_join(orders, ", ", fn(order) ->
+      safe_to_string(link(event_date(order.completed_at), to: order_path(conn, :show, order), target: "_blank"))
+    end)
+  end
+
   def aggregated_tags(shows) do
     Enum.reduce(shows, [], fn([show, _], acc) ->
       tags = Enum.map(show.listing_tags, fn(x) -> x.tag end)
@@ -49,6 +55,7 @@ defmodule TicketAgentWeb.EventView do
     |> Enum.map_join(", ", fn tag -> tag.tag end)
   end
 
+  defp cost_range(%{min_price: nil, max_price: nil}), do: "0"
   defp cost_range(%{min_price: min, max_price: max}) when max == min do
     max / 100
     |> :erlang.float_to_binary(decimals: 2)

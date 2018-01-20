@@ -1,0 +1,7 @@
+<span class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15">
+  <%= if @conn.assigns.min_ticket_price != @conn.assigns.max_ticket_price do %>
+    <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.min_ticket_price) %> - <%= cost_smallest_unit(@conn.assigns.max_ticket_price) %></strong>
+  <% else %>
+    <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@conn.assigns.min_ticket_price) %></strong>
+  <% end %>
+</span>

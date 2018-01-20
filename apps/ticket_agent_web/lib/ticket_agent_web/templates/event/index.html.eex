@@ -59,13 +59,6 @@
               <!-- End Search Result -->
             </div>
 
-
-
-
-
-
-
-
             <% end %>
             </div>
           <% end %>

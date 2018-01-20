@@ -30,10 +30,10 @@ defmodule TicketAgentWeb.EventController do
       user -> user.email
     end
 
-    # waitlist =
-    #   email_address
-    #   |> WaitlistFinder.find_by_email_and_listing_id(conn.assigns.listing.id)
-waitlist = nil
+    waitlist =
+      email_address
+      |> WaitlistFinder.find_by_email_and_listing_id(conn.assigns.listing.listing_id)
+
     conn
     |> assign(:waitlisted, !is_nil(waitlist))
     |> render("show.html")    

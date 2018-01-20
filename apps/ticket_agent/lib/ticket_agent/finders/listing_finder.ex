@@ -61,7 +61,11 @@ defmodule TicketAgent.Finders.ListingFinder do
                 where: ticket.status == "available",
                 where: is_nil(ticket.locked_until),
                 where: fragment("? <= NOW()", ticket.sale_start),
-                select: ticket
+                group_by: ticket.price,
+                select: %{
+                  count: count(ticket.id), 
+                  price: ticket.price
+                }
 
         available_tickets = Repo.all(query)
 

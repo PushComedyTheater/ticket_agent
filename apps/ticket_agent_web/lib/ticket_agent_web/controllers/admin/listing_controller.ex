@@ -183,7 +183,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
     Repo.get_by!(Listing, slug: slug)
     |> Repo.preload(:class)
     |> Repo.preload(:event)
-    |> Repo.preload(:images)
     |> Repo.preload(:tickets)
   end
 end

@@ -36,12 +36,15 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
 
     available_ticket_count = available_ticket_count(available_tickets, past_date)
 
-    ticket_price = ticket_price(available_tickets)
+    ticket_prices = ticket_prices(available_tickets)
 
     conn
     |> load_flash_message()
     |> Plug.Conn.assign(:has_purchased_tickets, has_purchased_tickets)
-    |> Plug.Conn.assign(:ticket_price, ticket_price)
+    |> Plug.Conn.assign(:ticket_prices, ticket_prices)
+    |> Plug.Conn.assign(:available_tickets, available_tickets)
+    |> Plug.Conn.assign(:min_ticket_price, Enum.min(ticket_prices))
+    |> Plug.Conn.assign(:max_ticket_price, Enum.max(ticket_prices))
     |> Plug.Conn.assign(:past_date, past_date)
     |> Plug.Conn.assign(:page_title, "#{listing.title} at Push Comedy Theater")
     |> Plug.Conn.assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(listing.description, true))
@@ -80,12 +83,9 @@ defmodule TicketAgentWeb.Plugs.ShowLoader do
     end
   end
 
-  defp ticket_price([]) do
-    0
-  end
-
-  defp ticket_price(available_tickets) when length(available_tickets) > 0 do
-    Enum.at(available_tickets, 0).price
+  defp ticket_prices(available_tickets) do
+    Enum.uniq_by(available_tickets, fn(ticket) -> ticket.price end)
+    |> Enum.map(fn(ticket) -> ticket.price end)
   end
 
   defp past_date(listing) do

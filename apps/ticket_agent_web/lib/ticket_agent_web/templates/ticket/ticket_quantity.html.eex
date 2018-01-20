@@ -4,7 +4,8 @@
   </div>
 
   <div class="form-inline">
-    <div class="form-group col-sm-4 g-pt-10">
+  <div class="form-group col-sm-2 g-pt-10">Ticket Type</div>
+    <div class="form-group col-sm-2 g-pt-10">
       <p class="form-control-static">Number of tickets: </p>
     </div>
     <div class="form-group col-sm-4">
@@ -51,61 +52,4 @@
     </div>
   </div>
 </form>
-<script type="text/javascript">
-window.join_waitlist = function (details) {
-  $.ajax({
-    // The URL for the request
-    url: "/waitlist",
-    // The data to send (will be converted to a query string)
-    data: JSON.stringify(details),
-    // Whether this is a POST or GET request
-    type: "POST",
-    // The type of data we expect back
-    contentType: "application/json",
-    dataType: "json",
-    // add in csrf_token
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
-    },
-  }).done(function (response) {
-    $("#name").val("");
-    $("#email").val("");
-    window.setTimeout(function () { Custombox.modal.close(); }, 125);
-  }).fail(function (xhr, status, errorThrown) {
-    window.setTimeout(function () { Custombox.modal.close(); }, 25);
-  });
-}
 
-$(document).on('ready', function () {
-  $("#add_waitlist_btn").on("click", function(e) {
-    e.preventDefault();
-
-    var name = $("#name").val().trim();
-    var email = $("#email").val().trim();
-    var listing_id = "<%= @conn.assigns.listing.id %>";
-
-    if (name.length == 0) {
-      $("#name_required").show();
-    } else {
-      $("#name_required").hide();
-    }
-
-    if (email.length == 0) {
-      $("#email_required").show();
-    } else {
-      $("#email_required").hide();
-    }
-
-    if ((name.length > 0) && (email.length > 0)) {
-      var details = {
-        name: name,
-        email: email,
-        listing_id: listing_id
-      }
-      window.join_waitlist(details);
-    }
-
-  });
-
-});
-</script>

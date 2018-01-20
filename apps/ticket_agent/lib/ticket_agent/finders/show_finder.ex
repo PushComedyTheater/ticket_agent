@@ -58,7 +58,7 @@ defmodule TicketAgent.Finders.ShowFinder do
     |> Enum.map(fn(detail) -> struct(ShowDetail, detail) end)
   end
 
-  def find_by_slug(slug) do
+  def load_show_details_by_slug(slug) do
     slug =
       slug
       |> String.split("-")
@@ -73,17 +73,17 @@ defmodule TicketAgent.Finders.ShowFinder do
             group_by: [listing.id, event.image_url],
             order_by: listing.start_at,
             select: %{
-              listing_id: listing.id,
-              listing_title: listing.title,
-              listing_description: listing.description,
-              listing_slug: listing.slug,
-              listing_start_at: listing.start_at,
-              listing_end_at: listing.end_at,
-              ticket_count: fragment("count(DISTINCT ?)", ticket.id),
-              min_ticket_price: min(ticket.price),
-              max_ticket_price: max(ticket.price),
-              event_image_url: event.image_url,
-              listing_tags: fragment("json_agg(DISTINCT ?)", event_tag.tag)
+              listing_id:           listing.id,
+              listing_title:        listing.title,
+              listing_description:  listing.description,
+              listing_slug:         listing.slug,
+              listing_start_at:     listing.start_at,
+              listing_end_at:       listing.end_at,
+              ticket_count:         fragment("count(DISTINCT ?)", ticket.id),
+              min_ticket_price:     min(ticket.price),
+              max_ticket_price:     max(ticket.price),
+              event_image_url:      event.image_url,
+              listing_tags:         fragment("json_agg(DISTINCT ?)", event_tag.tag)
             }
 
     Repo.all(query)

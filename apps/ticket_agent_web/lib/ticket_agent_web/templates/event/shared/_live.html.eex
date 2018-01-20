@@ -1,0 +1,9 @@
+<%= if @available_ticket_count > 0 do %>
+  <%= if Enum.count(@listings) > 1 do %>
+  <%= render TicketAgentWeb.Event.SharedView, "_buy_multiple_tickets.html", assigns %>
+  <% else %>
+  <%= render TicketAgentWeb.Event.SharedView, "_buy_tickets.html", assigns %>
+  <% end %>
+<% else %>
+  <%= render TicketAgentWeb.Event.SharedView, "_sold_out.html", assigns %>
+<% end %>

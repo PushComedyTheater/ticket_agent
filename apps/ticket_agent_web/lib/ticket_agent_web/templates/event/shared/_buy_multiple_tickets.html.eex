@@ -1,0 +1,19 @@
+<button class="btn btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary u-btn-content g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-mr-10 g-mb-15 g-brd-2 g-rounded-50 dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
+  <div class="dropdown-menu" style="width: 100%;">
+    <%= for listing <- @listings do %>
+      <%= link to: ticket_path(@conn, :new, show_id: listing.listing_slug), class: "dropdown-item" do %>
+        <div class="listing-redirect" data-listing="<%= listing.listing_slug %>" style="text-align: center; padding: 15px;"><%= event_buy_timestamp(listing.listing_start_at) %></div>
+      <% end %>
+    <% end %>
+  </div>    
+</button>
+<ins>This show has multiple performances, please choose your preferred time.</ins>
+<script type="text/javascript">
+$(document).on('ready', function () {
+  $(".listing-redirect").on("click", function(e){
+    var listing = $(this).data("listing");
+    window.location.href = "<%= ticket_path(@conn, :new) %>?show_id=" + listing;
+  });
+});
+</script>

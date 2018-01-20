@@ -7,9 +7,14 @@
       <div class="col-md-6">
         <div class="g-mb-30">
           <h2 class="h3 text-uppercase g-font-weight-300 u-heading-v2__title"><%= @listing.title %></h2>
-            Date: <strong><%= event_date(@listing.start_at) %></strong> <strong><%= raw full_event_time(@listing) %></strong> / Price: <strong>$<%= cost_smallest_unit(@conn.assigns.ticket_price) %></strong>
+            Date: <strong><%= event_date(@listing.start_at) %></strong> <strong><%= raw full_event_time(@listing) %></strong> / Price:  <%= if Enum.count(@ticket_prices) == 1 do %>
+              <strong>$<%= cost_smallest_unit(@min_ticket_price) %></strong>
+            <% else %>
+              <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(@min_ticket_price) %> - <%= cost_smallest_unit(@max_ticket_price) %></strong>
+            <% end %>
           <br />
           <br />
+
 
           <div class="alert alert-info" role="alert">
             <%= raw @message %>
