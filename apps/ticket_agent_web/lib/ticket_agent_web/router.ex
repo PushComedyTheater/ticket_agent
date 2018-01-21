@@ -3,7 +3,7 @@ defmodule TicketAgentWeb.Router do
   use Coherence.Router         # Add this
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "ics"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
@@ -61,6 +61,7 @@ defmodule TicketAgentWeb.Router do
     resources "/about", AboutController, only: [:index, :show]
     resources "/camps", CampController, only: [:index, :show]
     resources "/charges", ChargeController, only: [:create]
+    get "/event_calendar/:slug", EventCalendarController, :show, as: :event_ics
     resources "/events", EventController, only: [:index, :show], param: "slug"
     get "/tickets/:show_id/new", TicketController, :new, as: :new_ticket
     resources "/tickets", TicketController

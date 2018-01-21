@@ -2,7 +2,7 @@
   <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
   <div class="dropdown-menu" style="width: 100%;">
     <%= for listing <- @listings do %>
-      <%= link to: ticket_path(@conn, :new, show_id: listing.listing_slug), class: "dropdown-item" do %>
+      <%= link to: ticket_path(@conn, :new, listing_id: listing.listing_slug), class: "dropdown-item" do %>
         <div class="listing-redirect" data-listing="<%= listing.listing_slug %>" style="text-align: center; padding: 15px;"><%= event_buy_timestamp(listing.listing_start_at) %></div>
       <% end %>
     <% end %>
@@ -13,7 +13,7 @@
 $(document).on('ready', function () {
   $(".listing-redirect").on("click", function(e){
     var listing = $(this).data("listing");
-    window.location.href = "<%= ticket_path(@conn, :new) %>?show_id=" + listing;
+    window.location.href = "<%= ticket_path(@conn, :new) %>?listing_id=" + listing;
   });
 });
 </script>

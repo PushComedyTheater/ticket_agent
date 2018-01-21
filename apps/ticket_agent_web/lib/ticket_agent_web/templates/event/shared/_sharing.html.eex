@@ -26,7 +26,7 @@
             </a>
           </li>
           <li class="list-inline-item mx-1">
-            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_path(@conn, :show, @listing.listing_slug) %>.ics" target="_blank">
+            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_ics_path(@conn, :show, @listing.listing_slug) %>.ics" target="_blank">
               <i class="mr-1 fa fa-calendar"></i>
               ICal
             </a>

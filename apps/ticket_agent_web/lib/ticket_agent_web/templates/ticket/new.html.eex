@@ -1,11 +1,12 @@
-<%= render "ticket_template.html", assigns %>
+<%= render "partial/ticket_template.html", assigns %>
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+
 <section class="g-bg-white">
   <div class="container">
     <%= for ticket <- @available_tickets do %>
     <div class="row">
       <div class="col-md-12">
-        <%= render "ticket_quantity.html", Map.put(assigns, :single_ticket, ticket) %>
+        <%= render "partial/ticket_quantity.html", Map.put(assigns, :single_ticket, ticket) %>
       </div>
     </div>
     <% end %>
@@ -22,5 +23,3 @@
     </div>
   </div>
 </section>
-
-<%= raw Poison.encode!(@ticket_prices) %>

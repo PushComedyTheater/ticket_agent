@@ -1,17 +1,19 @@
-defmodule TicketAgentWeb.Plugs.ShowsLoader do
+defmodule TicketAgentWeb.Plugs.TicketDetailsLoader do
   require Logger
   import Plug.Conn
   import Phoenix.Controller
   alias TicketAgent.Finders.{ListingFinder, TicketFinder}
   def init(opts), do: opts
 
-  def call(%Plug.Conn{params: %{"slug" => slug}} = conn, _), do: load_listing(slug, conn)
+  def call(%Plug.Conn{params: %{"show_id" => slug}} = conn, _) do
+    Logger.info "TicketDetailsLoader.load_listing for slug #{slug}"
 
-  defp load_listing(slug, conn) do
-    Logger.info "ShowLoader.load_listing for slug #{slug}"
 
-    ListingFinder.find_listing_and_tickets_by_slug(slug)
-    |> setup_conn_with_listing(conn)
+    ListingFinder.find_listing_and_available_tickets_by_slug(slug)
+    |> IO.inspect
+    
+    conn
+    # |> Plug.Conn.assign(:page_image, TicketAgentWeb.SharedView.listing_image(listing))
   end
 
   defp setup_conn_with_listing(nil, conn) do

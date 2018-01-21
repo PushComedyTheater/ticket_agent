@@ -11,20 +11,6 @@ defmodule TicketAgentWeb.EventController do
   end
 
   def show(conn, _) do
-    case Regex.match?(~r/.*(ics)$/, conn.request_path) do
-      true -> 
-        value = Listing.to_ical(conn.assigns.listing)
-
-        conn
-        |> put_resp_content_type("text/calendar")
-        |> put_resp_header("content-disposition", "attachment; filename=\"#{conn.assigns.listing.slug}.ics\"")
-        |> send_resp(200, value)        
-      false -> 
-        render_page(conn)
-      end
-  end
-
-  defp render_page(conn) do
     email_address = case Coherence.current_user(conn) do
       nil -> nil
       user -> user.email

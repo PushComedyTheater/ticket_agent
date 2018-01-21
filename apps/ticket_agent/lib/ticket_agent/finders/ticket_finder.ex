@@ -67,10 +67,10 @@ defmodule TicketAgent.Finders.TicketFinder do
     |> Repo.one
   end
 
-  def all_available_tickets(listing_id) do
+  def all_available_tickets(listing_ids) do
     from(
       t in Ticket,
-      where: t.listing_id == ^listing_id,
+      where: t.listing_id in ^listing_ids,
       where: t.status == "available",
       where: is_nil(t.locked_until),
       where: is_nil(t.order_id),

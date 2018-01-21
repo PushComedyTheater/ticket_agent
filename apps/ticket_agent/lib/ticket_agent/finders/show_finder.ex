@@ -70,6 +70,7 @@ defmodule TicketAgent.Finders.ShowFinder do
             left_join: ticket in assoc(listing, :tickets), on: ticket.listing_id == listing.id,
             where: event.slug == ^slug,
             where: ticket.status == "available",
+            where: fragment("? >= NOW() - interval '1 hour'", listing.start_at),
             group_by: [listing.id, event.image_url],
             order_by: listing.start_at,
             select: %{

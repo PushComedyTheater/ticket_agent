@@ -2,7 +2,7 @@
   <div align="center">
     <h3 class="g-mb-10"><strong>Ticket Quantity</strong></h3>
   </div>
-
+<%= raw Poison.encode!(assigns.single_ticket) %>
   <div class="form-inline">
   <div class="form-group col-sm-2 g-pt-10">Ticket Type</div>
     <div class="form-group col-sm-2 g-pt-10">

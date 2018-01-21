@@ -1,7 +1,7 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+
 <section class="g-bg-gray-light-v5">
   <div class="container">
-
       <%= if get_flash(@conn, :info) do %>
         <div class="row justify-content-center">
           <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>

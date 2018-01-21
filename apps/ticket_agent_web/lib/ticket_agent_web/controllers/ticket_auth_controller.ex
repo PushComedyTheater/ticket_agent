@@ -7,14 +7,14 @@ defmodule TicketAgentWeb.TicketAuthController do
   alias TicketAgent.Mailer
   alias TicketAgent.Emails.OneTimeLogin
   alias TicketAgent.Finders.UserFinder
-  plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
+  # plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
 
-  def show(conn, %{"show_id" => show_id, "token" => token} = params) do
+  def show(conn, %{"listing_id" => listing_id, "token" => token} = params) do
     case UserFinder.find_guest_by_token(token) do
       nil ->
         conn
         |> put_flash(:error, "There was an error with your submission.  Your link has expired.  Please try again or contact support@pushcomedytheater.com.")
-        |> redirect(to: "/ticket_auth?show_id=#{show_id}")
+        |> redirect(to: "/ticket_auth?listing_id=#{listing_id}")
         |> halt()
       user ->
         user =
@@ -24,14 +24,14 @@ defmodule TicketAgentWeb.TicketAuthController do
 
         conn
         |> Helpers.login_user(user, params)
-        |> redirect(to: "/tickets/new?show_id=#{show_id}")
+        |> redirect(to: "/tickets/new?listing_id=#{listing_id}")
     end
   end
 
-  def new(conn, %{"show_id" => show_id}) do
+  def new(conn, %{"listing_id" => listing_id}) do
     if Coherence.logged_in?(conn) do
       conn
-      |> redirect(to: ticket_path(conn, :new, %{show_id: show_id}))
+      |> redirect(to: ticket_path(conn, :new, %{listing_id: listing_id}))
     else
       message = """
         In order to complete your purchase, please login to (or create) your Push Comedy Theater account for the best experience.
@@ -41,13 +41,13 @@ defmodule TicketAgentWeb.TicketAuthController do
       """
       conn
       |> assign(:message, message)
-      |> assign(:user_return_to, ticket_path(conn, :new, show_id: show_id))
-      |> put_session("user_return_to", ticket_path(conn, :new, show_id: show_id))
+      |> assign(:user_return_to, ticket_path(conn, :new, listing_id: listing_id))
+      |> put_session("user_return_to", ticket_path(conn, :new, listing_id: listing_id))
       |> render(:new, email: "")
     end
   end
 
-  def create(conn, %{"registration" => registration_params, "show_id" => show_id} = params) do
+  def create(conn, %{"registration" => registration_params, "listing_id" => listing_id} = params) do
     case UserFinder.find_guest_by_email(registration_params["email"]) do
       nil ->
         conn
@@ -60,14 +60,14 @@ defmodule TicketAgentWeb.TicketAuthController do
           |> User.changeset(%{one_time_token: token, one_time_token_at: NaiveDateTime.utc_now})
           |> Repo.update!
 
-        url = "https://#{conn.host}/ticket_auth/#{token}?show_id=#{show_id}"
+        url = "https://#{conn.host}/ticket_auth/#{token}?listing_id=#{listing_id}"
 
-        OneTimeLogin.one_time_login(user, show_id)
+        OneTimeLogin.one_time_login(user, listing_id)
         |> Mailer.deliver!
 
         conn
         |> put_flash(:error, "Please check your email for information on how to continue your guest checkout.")
-        |> redirect(to: "/ticket_auth?show_id=#{show_id}")
+        |> redirect(to: "/ticket_auth?listing_id=#{listing_id}")
         |> halt()end
   end
 
@@ -86,7 +86,7 @@ defmodule TicketAgentWeb.TicketAuthController do
       {:error, _} ->
         conn
         |> put_flash(:error, "There was an error with your submission.  Please try again or contact support@pushcomedytheater.com.")
-        |> redirect(to: "/ticket_auth?show_id=" <> params["show_id"])
+        |> redirect(to: "/ticket_auth?listing_id=" <> params["listing_id"])
         |> halt()
     end
   end
