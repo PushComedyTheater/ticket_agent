@@ -1,6 +1,6 @@
-<%= if Enum.count(@purchased_tickets) > 0 do %>
+<%= if @has_purchased_event do %>
   <p class="alert alert-info rounded" role="alert">
     You purchased tickets to this event on:  
-    <%= raw purchased_order_list(@conn, @purchased_tickets) %>
+    <%= raw purchased_order_list(@conn, @purchase_orders) %>
   </p>
 <% end %>

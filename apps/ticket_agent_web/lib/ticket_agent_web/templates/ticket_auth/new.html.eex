@@ -78,7 +78,7 @@
             <h2 class="h2 g-color-black g-font-weight-600">Create Account</h2>
           </header>
           <%= form_for @conn, custom_registration_path(@conn, :create), [as: :registration, class: "g-py-15"], fn f  -> %>
-            <input type="hidden" name="show_id" value="<%= @conn.assigns.listing.slug %>">
+            <input type="hidden" name="listing_id" value="<%= @conn.assigns.listing.slug %>">
             <div class="mb-4">
             	<label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13"><%= dgettext("coherence", "Name") %>:</label>
               <%= text_input f, :name, class: "form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v4 g-brd-primary--hover rounded g-py-15 g-px-15", required: "", placeholder: "John Doe" %>

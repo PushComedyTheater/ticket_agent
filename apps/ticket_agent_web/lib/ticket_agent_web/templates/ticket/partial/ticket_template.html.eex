@@ -1,4 +1,4 @@
-<script id="entry-template" type="text/x-handlebars-template">
+<script id="ticket-template" type="text/x-handlebars-template">
   <div class="card rounded-0 col-md-6" style="padding: 5px;">
     <h3 class="card-header h5 rounded-0">
       <i class="fa fa-user g-font-size-default g-mr-5"></i>

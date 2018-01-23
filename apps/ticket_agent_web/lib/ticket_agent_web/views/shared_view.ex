@@ -3,10 +3,10 @@ defmodule TicketAgentWeb.SharedView do
 
   def google_calendar(listing) do
     url = "http://www.google.com/calendar/render?action=TEMPLATE"
-    url = url <> "&dates=#{calendar_timestamp(listing.listing_start_at)}/#{calendar_timestamp(listing.listing_end_at)}"
+    url = url <> "&dates=#{calendar_timestamp(listing.start_at)}/#{calendar_timestamp(listing.end_at)}"
     url = url <> "&location=Push+Comedy+Theater,+763+Granby+St,+Norfolk,+VA+23510,+USA"
     url = url <> "&pli=1sf=true"
-    url <> "&text=#{URI.encode(listing.listing_title)}"
+    url <> "&text=#{URI.encode(listing.title)}"
   end
 
   def calendar_timestamp(date) do
@@ -144,7 +144,7 @@ defmodule TicketAgentWeb.SharedView do
     })
   end
 
-  def event_image(%{event_image_url: image_url}, width \\ 1050) do
+  def event_image(image_url, width \\ 1050) do
     image = image_url
 
     public_id =

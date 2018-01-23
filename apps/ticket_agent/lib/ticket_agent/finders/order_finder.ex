@@ -1,7 +1,7 @@
 defmodule TicketAgent.Finders.OrderFinder do
   require Logger
   import Ecto.Query
-  alias TicketAgent.{Order, Random, Repo}
+  alias TicketAgent.{Listing, Order, Random, Repo}
 
   def find_all_customer_orders(current_user) when not is_nil(current_user) do
     query =
@@ -15,6 +15,32 @@ defmodule TicketAgent.Finders.OrderFinder do
       )
 
     Repo.all(query)
+  end
+
+  def has_customer_ordered_event?(user, event_id) when not is_nil(user) do
+    count = 
+      customer_event_orders(user.id, event_id)
+      |> Enum.count()
+
+    count > 0
+  end
+
+  def customer_event_orders(user_id, event_id) do
+    Logger.info "user_id = #{user_id}"
+    Logger.info "event_id = #{event_id}"
+    query =
+      from(
+        listing in Listing,
+        join: tickets in assoc(listing, :tickets),
+        join: orders in assoc(tickets, :order),
+        where: listing.event_id == ^event_id,
+        where: orders.user_id == ^user_id,
+        group_by: orders.id,
+        select: orders
+      )
+
+    query
+    |> Repo.all()    
   end
 
   def find_or_create_order(current_user) when not is_nil(current_user) do

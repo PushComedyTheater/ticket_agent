@@ -1,8 +1,8 @@
-<%= if @available_ticket_count > 0 do %>
+<%= if Enum.count(@tickets) > 0 do %>
   <%= if Enum.count(@listings) > 1 do %>
-  <%= render "shared/_buy_multiple_tickets.html", assigns %>
+    <%= render "shared/_buy_multiple_tickets.html", assigns %>
   <% else %>
-  <%= render "shared/_buy_tickets.html", assigns %>
+    <%= render "shared/_buy_tickets.html", Map.put(assigns, :listing, Enum.at(@listings, 0)) %>
   <% end %>
 <% else %>
   <%= render "shared/_sold_out.html", assigns %>

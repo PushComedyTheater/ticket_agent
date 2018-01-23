@@ -2,6 +2,26 @@ defmodule TicketAgentWeb.EventView do
   use TicketAgentWeb, :view
   alias TicketAgent.Finders.TicketFinder
 
+  def load_event_image(event, width \\ 1050)
+  def load_event_image(%{image_url: image_url}, width) do
+    image = image_url
+
+    public_id =
+      image
+      |> String.split("/")
+      |> List.last()
+      |> String.split(".")
+      |> List.first()
+
+    Cloudinex.Url.for(public_id, %{
+      width: width,
+      height: 400,
+      gravity: "north",
+      crop: "fill",
+      flags: 'progressive'
+    })
+  end
+  def load_event_image(_, _), do: ""
 
   def event_buy_timestamp(nil), do: ""
   def event_buy_timestamp(date) do

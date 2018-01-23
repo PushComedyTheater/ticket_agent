@@ -1,0 +1,16 @@
+        <h3 class="h5 g-color-black mb-3">Calendar (<%= order_timestamp(@listing.start_at) %>):</h3>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item mr-1">
+            <a class="btn u-btn-outline-red g-rounded-25" href="<%= google_calendar(@listing) %>" target="_blank">
+              <i class="mr-1 fa fa-google"></i>
+              Add to Google Calendar
+            </a>
+          </li>
+          <li class="list-inline-item mx-1">
+            <a class="btn u-btn-outline-blue g-rounded-25" href="<%= event_ics_path(@conn, :show, @listing.slug) %>.ics" target="_blank">
+              <i class="mr-1 fa fa-calendar"></i>
+              ICal
+            </a>
+          </li>
+        </ul>
+        <br />

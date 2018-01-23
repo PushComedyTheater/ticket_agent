@@ -1,4 +1,4 @@
-<%= link to: ticket_path(@conn, :new, listing_id: @listing.listing_slug), class: "btn btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary u-btn-content g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-mr-10 g-mb-15 g-brd-2 g-rounded-50" do %>
+<%= link to: ticket_path(@conn, :new, listing_id: @listing.slug), class: "btn btn-block btn-xxl u-btn-inset u-btn-inset--rounded u-btn-primary u-btn-content g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-mr-10 g-mb-15 g-brd-2 g-rounded-50" do %>
   <i class="fa fa-ticket g-mr-3"></i>  Buy Tickets
-  <span class="d-block g-font-size-14">for <%= order_timestamp(@listing.listing_start_at) %></span>
+  <span class="d-block g-font-size-14">for <%= order_timestamp(@listing.start_at) %></span>
 <% end %>

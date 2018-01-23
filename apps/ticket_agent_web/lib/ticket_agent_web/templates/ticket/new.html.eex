@@ -1,12 +1,11 @@
 <%= render "partial/ticket_template.html", assigns %>
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
-
 <section class="g-bg-white">
   <div class="container">
     <%= for ticket <- @available_tickets do %>
     <div class="row">
       <div class="col-md-12">
-        <%= render "partial/ticket_quantity.html", Map.put(assigns, :single_ticket, ticket) %>
+        <%= render "partial/ticket_quantity.html", ticket: ticket %>
       </div>
     </div>
     <% end %>
@@ -14,12 +13,59 @@
     </div>
     <br />
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-9">
         <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
           <i class="fa fa-check-circle g-mr-5"></i>
           <span id="logged_in_text">Reserve 1 Ticket</span>
         </button>
       </div>
+      <div class="col-md-3">
+        <center><%= render "partial/waitlist.html", assigns %></center>
+      </div>
     </div>
   </div>
 </section>
+<script type="text/javascript" src="/js/ticket_related.js"></script>
+<script type="text/javascript">
+$(document).on('ready', function () {
+  var source               = $("#ticket-template").html();
+  window.attendee_template = Handlebars.compile(source);
+  
+  Cookies.remove("ticket_data");
+
+  window.details = {
+    listing: {
+      id: "<%= @listing.id %>",
+      slug: "<%= @listing.slug %>",
+      ticket_price: <%= @conn.assigns.ticket_price %>
+    },
+    tickets: [
+      {
+        name: "<%= Coherence.current_user_name(@conn, :name) %>",
+        email: "<%= Coherence.current_user_name(@conn, :email) %>",
+        price: <%= @conn.assigns.ticket_price %>,
+      }
+    ]
+  }
+
+
+  $(".ticket_count").on("change", function(e) {
+    var ticket_id = $(this).data("ticket-id");
+    var ticket_quantity = $(this).val();
+    console.log(ticket_id);
+    console.log(ticket_quantity);
+    console.log("CHANGE");
+
+    var output = "";
+
+    for (var i = 0; i < ticket_quantity; i++) {
+      var context = {
+        count_string: i+1
+      };
+      var html    = window.attendee_template(context);
+      output += html;
+    }
+    $("#attendee_form").html(output);    
+  })
+});
+</script>

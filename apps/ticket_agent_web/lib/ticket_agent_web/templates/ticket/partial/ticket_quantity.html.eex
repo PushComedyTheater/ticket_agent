@@ -1,55 +1,19 @@
-<form class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
-  <div align="center">
-    <h3 class="g-mb-10"><strong>Ticket Quantity</strong></h3>
-  </div>
-<%= raw Poison.encode!(assigns.single_ticket) %>
-  <div class="form-inline">
-  <div class="form-group col-sm-2 g-pt-10">Ticket Type</div>
-    <div class="form-group col-sm-2 g-pt-10">
-      <p class="form-control-static">Number of tickets: </p>
+<section class="g-brd-around g-brd-5 g-brd-gray-light-v4 g-pa-30">
+  <div class="row">
+    <div class="col-md-10 align-self-center">
+      <h3 class="h4"><%= Enum.at(@ticket.name, 0) %></h3>
+      <p class="lead g-mb-20 g-mb-0--md">
+      $<%= cost_smallest_unit(@ticket.price) %>
+      </p>
     </div>
-    <div class="form-group col-sm-4">
-      <select class="form-control rounded-0" id="ticket_count">
-        <%= for i <- (1..assigns.available_ticket_count) do %>
-          <option><%= i %></option>
+
+    <div class="col-md-2 align-self-center text-md-right">
+      Choose # of tickets: <select class="form-control rounded-0 ticket_count" data-ticket-id="<%= @ticket.ticket_id %>">
+        <%= for i <- (0..@ticket.ticket_count) do %>
+          <option value="<%= i %>"><%= i %></option>
         <% end %>
       </select>
-
-      <%= if assigns.available_ticket_count < 8 do %>
-      <a class="btn u-btn-default" style="margin-left: 10px;" href="#modal2" data-modal-target="#modal2" data-modal-effect="slide">Need More?</a>
-
-      <!-- Demo modal window -->
-      <div id="modal2" class="text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;">
-        <button type="button" class="close" onclick="Custombox.modal.close();">
-          <i class="hs-icon hs-icon-close"></i>
-        </button>
-        <h4 class="g-mb-20">Waitlist</h4>
-        <p>Currently this event only has a few tickets left.</p>
-        <p>You can purchase up to <%= assigns.available_ticket_count %> ticket(s) now.</p>
-        <p>If you need more tickets, you are welcome to join our waitlist and we will send you an email if any tickets become available.</p>
-        <br />
-        <div class="form-group g-mb-20">
-          <div class="u-input-group-v2">
-            <input id="name" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn) %>">
-            <label for="name">Full Name</label>
-          </div>
-          <small id="name_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
-        </div>
-        <div class="form-group g-mb-20">
-          <div class="u-input-group-v2">
-            <input id="email" class="form-control rounded-0 u-form-control" name="full-name" type="text" value="<%= Coherence.current_user_name(@conn, :email) %>">
-            <label for="email">Email Address</label>
-          </div>
-          <small id="email_required" class="form-control-feedback" style="color: red; display: none;">This is a required field.</small>
-        </div>
-        <a href="#!" id="add_waitlist_btn" class="btn btn-md u-btn-outline-primary g-mr-10 g-mb-15">Add Me To Waitlist</a>
-      </div>
-      <% end %>
-      <!-- End Demo modal window -->
-    </div>
-    <div class="form-group col-sm-4">
-      Total:&nbsp;&nbsp;<strong id="total_price">$</strong>
     </div>
   </div>
-</form>
-
+</section>
+<br />

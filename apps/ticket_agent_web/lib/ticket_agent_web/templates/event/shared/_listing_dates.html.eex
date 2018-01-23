@@ -1,0 +1,11 @@
+<%= if Enum.count(@listings) > 0 do %>
+  <%= for listing <- @listings do %>
+  <span class="u-label g-bg-orange u-label--med g-px-15 g-py-8 g-mr-10 g-mb-15">
+    <i class="fa fa-calendar g-mr-3"></i> <%= order_timestamp(listing.start_at) %>
+  </span>
+  <% end %>   
+<% else %>
+  <span class="u-label g-bg-orange u-label--med g-px-15 g-py-8 g-mr-10 g-mb-15">
+    <i class="fa fa-calendar g-mr-3"></i> No upcoming shows 
+  </span>
+<% end %>

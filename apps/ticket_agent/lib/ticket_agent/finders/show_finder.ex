@@ -4,14 +4,6 @@ defmodule TicketAgent.Finders.ShowFinder do
   alias TicketAgent.{Event, Listing, Repo, ShowDetail, Ticket}
 
   def upcoming_listings do
-    # SELECT count(id) as listing_count, event_id, min(start_at) as start_at
-    # FROM listings 
-    # WHERE status = 'active' 
-    # AND start_at >= NOW() - interval '1 hour'
-    # AND event_id IS NOT NULL
-    # GROUP BY event_id
-    # ORDER BY min(start_at)
-
     listing_query = 
       from listing in Listing,
       where: listing.status == "active",
@@ -25,18 +17,6 @@ defmodule TicketAgent.Finders.ShowFinder do
         start_at: min(listing.start_at),
         listing_ids: fragment("json_agg(?)", listing.id)
       }
-
-    # SELECT 
-    # events.slug,
-    # events.title,
-    # events.description,
-    # events.image_url,
-    # l1.listing_count,
-    # l1.start_at
-    # FROM events
-    # INNER JOIN
-    # subquery as l1 on l1.event_id = events.id
-    # WHERE events.status = 'normal'    
 
     query = 
       from event in Event,
@@ -64,29 +44,16 @@ defmodule TicketAgent.Finders.ShowFinder do
       |> String.split("-")
       |> hd
 
-    query = from listing in Listing,
-            left_join: event in assoc(listing, :event), on: listing.event_id == event.id,
-            left_join: event_tag in assoc(event, :event_tags), on: event_tag.event_id == event.id,
-            left_join: ticket in assoc(listing, :tickets), on: ticket.listing_id == listing.id,
+     
+    query = from event in Event,
+            left_join: listing in assoc(event, :listings),
+            preload: [:event_tags],
+            preload: [listings: listing],
             where: event.slug == ^slug,
-            where: ticket.status == "available",
-            where: fragment("? >= NOW() - interval '1 hour'", listing.start_at),
-            group_by: [listing.id, event.image_url],
             order_by: listing.start_at,
-            select: %{
-              listing_id:           listing.id,
-              listing_title:        listing.title,
-              listing_description:  listing.description,
-              listing_slug:         listing.slug,
-              listing_start_at:     listing.start_at,
-              listing_end_at:       listing.end_at,
-              ticket_count:         fragment("count(DISTINCT ?)", ticket.id),
-              min_ticket_price:     min(ticket.price),
-              max_ticket_price:     max(ticket.price),
-              event_image_url:      event.image_url,
-              listing_tags:         fragment("json_agg(DISTINCT ?)", event_tag.tag)
-            }
+            select: event
+            
 
-    Repo.all(query)
+    Repo.one(query)
   end  
 end

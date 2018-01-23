@@ -1,7 +1,9 @@
 <ul class="u-list-inline mb-0">
-  <%= for tag <- @listing.listing_tags do %>
+  <%= for tag <- @event.event_tags do %>
   <li class="list-inline-item g-mb-10">
-    <a class="u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" href="#"><strong><%= tag %></strong></a>
+    <%= link to: event_path(@conn, :index, tag: tag.tag), class: "u-tags-v1 g-color-white g-brd-around g-brd-gray-light-v3 g-bg-gray-dark-v2--hover g-brd-gray-dark-v2--hover g-color-white--hover g-rounded-50 g-py-4 g-px-15" do %>
+      <strong><%= tag.tag %></strong>
+    <% end %>
   </li>
   <% end %>
 </ul>

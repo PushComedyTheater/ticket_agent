@@ -2,13 +2,13 @@ defmodule TicketAgent.Emails.OneTimeLogin do
   import Swoosh.Email
   alias Swoosh.Email
 
-  def one_time_login(user, show_id) do
+  def one_time_login(user, listing_id) do
     html_layout_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex"
     text_layout_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.txt.eex"
     html_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/one_time_login.html.eex"
     text_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/one_time_login.txt.eex"
 
-    url = "#{host()}/ticket_auth/#{user.one_time_token}?show_id=#{show_id}"
+    url = "#{host()}/ticket_auth/#{user.one_time_token}?listing_id=#{listing_id}"
 
     html = EEx.eval_file(html_layout_template, [body: EEx.eval_file(html_template, [name: user.name, url: url])])
     text = EEx.eval_file(text_layout_template, [body: EEx.eval_file(text_template, [name: user.name, url: url])])

@@ -7,26 +7,8 @@ defmodule TicketAgentWeb.TicketAuthController do
   alias TicketAgent.Mailer
   alias TicketAgent.Emails.OneTimeLogin
   alias TicketAgent.Finders.UserFinder
+  plug TicketAgentWeb.Plugs.TicketInfoLoader when action in [:new]
   # plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
-
-  def show(conn, %{"listing_id" => listing_id, "token" => token} = params) do
-    case UserFinder.find_guest_by_token(token) do
-      nil ->
-        conn
-        |> put_flash(:error, "There was an error with your submission.  Your link has expired.  Please try again or contact support@pushcomedytheater.com.")
-        |> redirect(to: "/ticket_auth?listing_id=#{listing_id}")
-        |> halt()
-      user ->
-        user =
-          user
-          |> User.changeset(%{one_time_token: nil, one_time_token_at: nil})
-          |> Repo.update!
-
-        conn
-        |> Helpers.login_user(user, params)
-        |> redirect(to: "/tickets/new?listing_id=#{listing_id}")
-    end
-  end
 
   def new(conn, %{"listing_id" => listing_id}) do
     if Coherence.logged_in?(conn) do
@@ -44,6 +26,25 @@ defmodule TicketAgentWeb.TicketAuthController do
       |> assign(:user_return_to, ticket_path(conn, :new, listing_id: listing_id))
       |> put_session("user_return_to", ticket_path(conn, :new, listing_id: listing_id))
       |> render(:new, email: "")
+    end
+  end
+
+  def show(conn, %{"listing_id" => listing_id, "token" => token} = params) do
+    case UserFinder.find_guest_by_token(token) do
+      nil ->
+        conn
+        |> put_flash(:error, "There was an error with your submission.  Your link has expired.  Please try again or contact support@pushcomedytheater.com.")
+        |> redirect(to: "/ticket_auth?listing_id=#{listing_id}")
+        |> halt()
+      user ->
+        user =
+          user
+          |> User.changeset(%{one_time_token: nil, one_time_token_at: nil})
+          |> Repo.update!
+
+        conn
+        |> Helpers.login_user(user, params)
+        |> redirect(to: "/tickets/new?listing_id=#{listing_id}")
     end
   end
 

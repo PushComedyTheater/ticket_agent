@@ -3,6 +3,7 @@ defmodule TicketAgentWeb.EventController do
   alias TicketAgent.Listing
   alias TicketAgent.Finders.{ShowFinder, WaitlistFinder}
   plug TicketAgentWeb.Plugs.EventLoader when action in [:show]
+  plug TicketAgentWeb.Plugs.WaitlistLoader when action in [:show]
 
   def index(conn, _params) do
     conn
@@ -10,18 +11,8 @@ defmodule TicketAgentWeb.EventController do
     |> render("index.html", events: ShowFinder.upcoming_listings)
   end
 
-  def show(conn, _) do
-    email_address = case Coherence.current_user(conn) do
-      nil -> nil
-      user -> user.email
-    end
-
-    waitlist =
-      email_address
-      |> WaitlistFinder.find_by_email_and_listing_id(conn.assigns.listing.listing_id)
-
+  def show(conn, %{"slug" => slug}) do
     conn
-    |> assign(:waitlisted, !is_nil(waitlist))
     |> render("show.html")    
   end
 end
