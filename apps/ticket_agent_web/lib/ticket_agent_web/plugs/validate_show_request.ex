@@ -15,6 +15,15 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
       |> Base.decode64!()
       |> Poison.decode!
 
+    tickets = 
+      tickets
+      |> Enum.group_by(fn({_, ticket}) -> 
+        ticket["group"] 
+      end, 
+      fn({_, item}) -> 
+        item 
+      end)
+
     if slug == listing_id do
       conn
       |> assign(:show_id, slug)

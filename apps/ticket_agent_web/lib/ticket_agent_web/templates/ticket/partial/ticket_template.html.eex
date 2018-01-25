@@ -6,21 +6,21 @@
     </h3>
     <div class="card-block ticket_div">
       <div>
-        <div id="attendee_div_{{id}}">
-          <div id="name_group_{{id}}" class="form-group g-mb-20">
+        <div id="attendee_div_{{counter}}">
+          <div id="name_group_{{counter}}" class="form-group g-mb-20">
             <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Name</label>
-            <input class="form-control form-control-md rounded-0 attendee_name" type="email" id="attendee_name_{{id}}" name="attendee_name_{{id}}" placeholder="Name" value="{{name}}" required>
-            <small id="name_required_{{id}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+            <input class="form-control form-control-md rounded-0 attendee_name" type="email" id="attendee_name_{{counter}}" name="attendee_name_{{counter}}" placeholder="Name" value="{{name}}" required>
+            <small id="name_required_{{counter}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
           </div>
 
-          <div id="email_group_{{id}}" class="form-group g-mb-20">
+          <div id="email_group_{{counter}}" class="form-group g-mb-20">
             <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
-            <input class="form-control form-control-md rounded-0 attendee_email" type="email" id="attendee_email_{{id}}" name="attendee_email_{{id}}" placeholder="user@domain.com" value="{{email}}" requiredtype="email">
-            <small id="email_required_{{id}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+            <input class="form-control form-control-md rounded-0 attendee_email" type="email" id="attendee_email_{{counter}}" name="attendee_email_{{counter}}" placeholder="user@domain.com" value="{{email}}" requiredtype="email">
+            <small id="email_required_{{counter}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
           </div>
         </div>
 
-        <a id="guest_{{id}}" onclick="window.save_ticket('{{id}}', true, event);" data-group="{{id}}" href="#" class="guest_save btn btn-md btn-block u-btn-inset u-btn-outline-blue g-mr-10 g-mb-15" role="guest_save">Save Ticket</a>
+        <a id="guest_{{counter}}" onclick="window.save_ticket('{{counter}}', true, event);" data-counter="{{counter}}" data-group="{{group}}" data-price="{{price}}" href="#" class="guest_save btn btn-md btn-block u-btn-inset u-btn-outline-blue g-mr-10 g-mb-15" role="guest_save">Save Ticket</a>
       </div>
     </div>
   </div>

@@ -47,15 +47,17 @@ $(document).on('ready', function () {
 
   window.save_ticket = function(counter, individual_button, e) {
     e.preventDefault();
-    var current = window.details.tickets[counter];
     var valid_form = true;
-    var name = $("#attendee_name_" + counter).val();
+    var name  = $("#attendee_name_" + counter).val();
     var email = $("#attendee_email_" + counter).val();
+    var group = $("#guest_" + counter).data("group");
+    var price = $("#guest_" + counter).data("price");    
     
     window.console_group("window.save_ticket");
-    window.console_log("counter = " + counter);
+    window.console_log("counter               = " + counter);
     window.console_log("individual_button     = " + individual_button);
-    window.console_log("current = " + JSON.stringify(current));
+    window.console_log("group                 = " + group);
+    window.console_log("price                 = " + price);
     
     if ($("#attendee_div_" + counter).css("display") == "block") {
       window.console_log("validate attendee_div_" + counter); 
@@ -98,9 +100,9 @@ $(document).on('ready', function () {
       }
 
       window.details.tickets[counter] = {
-        id: current.id,
-        ticket_price: current.ticket_price,
-        ticket_name: current.ticket_name,
+        listing_id: window.details.listing.id,
+        price: price,
+        group: group,
         name: name,
         email: email,
         valid: valid_form
@@ -125,7 +127,8 @@ $(document).on('ready', function () {
     var valid_tickets = true;
     var ticket_count = 0;
     $("[role='guest_save']").each(function (index, button) {
-      var button_id = $(button).data("group");
+      var button_id = $(button).data("counter");
+      console.log("button_id = " + button_id);
       ticket_count += 1;
       if (!window.save_ticket(button_id, false, event)) {
         valid_tickets = false;
@@ -147,29 +150,29 @@ $(document).on('ready', function () {
 
     $(".ticket_count").each(function(item) {
       var index = $(this).data("index");
+      var group = $(this).data("group");
+      var price = $(this).data("price");
       var attendee_form = $("#attendee_form_" + index);
       var current_count = attendee_form.children().length;
       var ticket_quantity = $(this).val();
 
       window.console_group("ticket_count each: " + item);
       window.console_log("index           = " + index);
+      window.console_log("group           = " + group);
       window.console_log("current_count   = " + current_count);
       window.console_log("ticket_quantity = " + ticket_quantity);
 
       if (current_count == ticket_quantity) {
       } else {
         var output = "";
-        var ticket_ids = window.ticket_pool[index].slice(0, ticket_quantity);
 
         for(var i = 0; i < ticket_quantity; i++) {
-          var current_ticket = ticket_ids[i];
-
-          window.console_log("current_ticket  = " + JSON.stringify(current_ticket));
+          var counter = group + "_" + i;
 
           var ticket = {
-            id: current_ticket.id,
-            ticket_price: current_ticket.price,
-            ticket_name: current_ticket.name,
+            counter: counter,
+            group: group,
+            price: price,
             name: "",
             email: ""
           };
@@ -180,7 +183,6 @@ $(document).on('ready', function () {
           window.console_log("ticket          = " + JSON.stringify(ticket));
           var html = window.attendee_template(ticket);
           output += html;
-          window.details.tickets[ticket.id] = ticket;
         }
         attendee_form.html(output);
       }

@@ -24,7 +24,7 @@ defmodule TicketAgentWeb.TicketController do
   def load_tickets(listing_id) do
     TicketFinder.all_available_tickets_by_listing_id(listing_id)
     |> Enum.chunk_by(fn(ticket) ->
-      ticket.name
+      ticket.group
     end)
   end
 end

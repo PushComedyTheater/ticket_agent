@@ -9,11 +9,13 @@ defmodule TicketAgentWeb.TicketView do
   def render("show.json", %{ticket: ticket}) do
     %{
       id: ticket.id,
+      ticket_name: ticket.name,
       name: ticket.guest_name,
       email: ticket.guest_email,
       status: ticket.status,
       locked_until: ticket.locked_until,
-      price: ticket.price
+      price: ticket.price,
+      group: ticket.group
     }
   end
 

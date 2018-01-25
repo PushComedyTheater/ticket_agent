@@ -5,13 +5,13 @@ ticket = Enum.at(@tickets, 0)
 <section class="g-brd-around g-brd-5 g-brd-gray-light-v4 g-pa-30">
   <div class="row">
     <div class="col-md-10 align-self-center">
-      <h3 class="h4"><%= ticket.name %></h3>
+      <h3 class="h4"><%= ticket.name %> <%= ticket.group %></h3>
       <p class="lead g-mb-20 g-mb-0--md">
       $<%= cost_smallest_unit(ticket.price) %>
       </p>
     </div>
     <div class="col-md-2 align-self-center text-md-right">
-      Choose # of tickets: <select class="form-control rounded-0 ticket_count" data-index="<%= @index %>">
+      Choose # of tickets: <select class="form-control rounded-0 ticket_count" data-index="<%= @index %>" data-group="<%= ticket.group %>" data-price="<%= ticket.price %>">
         <%= for i <- (0..Enum.count(sliced_tickets)) do %>
           <option value="<%= i %>"><%= i %></option>
         <% end %>
@@ -23,14 +23,3 @@ ticket = Enum.at(@tickets, 0)
   </div>  
 </section>
 <br />
-<script type="text/javascript">
-window.ticket_pool[<%= @index %>] = [
-  <%= for sliced_ticket <- @tickets do %>
-  {
-    id: "<%= sliced_ticket.id %>",
-    name: "<%= sliced_ticket.name %>",
-    price: <%= sliced_ticket.price %>
-  },
-  <% end %>
-]
-</script>

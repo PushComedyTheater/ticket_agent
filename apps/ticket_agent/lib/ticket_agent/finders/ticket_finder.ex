@@ -22,6 +22,18 @@ defmodule TicketAgent.Finders.TicketFinder do
     |> Repo.all()
   end
 
+  def find_by_listing_and_order_and_group(listing_id, order_id, group) do
+    from(
+      t in Ticket,
+      where: t.listing_id == ^listing_id,
+      where: t.order_id == ^order_id,
+      where: t.status == "locked" or t.status == "purchased",
+      where: t.group == ^group,
+      select: t
+    )
+    |> Repo.all()
+  end
+
   def count_by_listing_and_user(_, nil), do: {false, nil}
   def count_by_listing_and_user(listing_id, %{id: user_id}) do
     orders =

@@ -49,35 +49,48 @@ defmodule TicketAgentWeb.OrderController do
     |> render("new.html")
   end
 
-  # %{
-  #   "listing" => %{
-  #     "id" => "b22969ad-2122-4761-ba9d-86a94a9c635c", 
-  #     "slug" => "C9KMXL"
-  #   }, 
-  #   "locked_until" => nil, 
-  #   "order_id" => nil, 
-  #   "pricing" => %{}, 
-  #   "tickets" => [
-  #     %{"email" => "luz@veverka.net", "id" => "531d1d25-6446-457e-a1d4-b567efaf2fe8_0", "listing_id" => "b22969ad-2122-4761-ba9d-86a94a9c635c", "name" => "Luz Veverka", "price" => 500, "ticket_id" => "531d1d25-6446-457e-a1d4-b567efaf2fe8"}, %{"email" => "patrick@veverka.net", "id" => "b73038e1-7011-4e06-9a08-dbda904353cb_0", "listing_id" => "b22969ad-2122-4761-ba9d-86a94a9c635c", "name" => "Patrick Veverka", "price" => 5000, "ticket_id" => "b73038e1-7011-4e06-9a08-dbda904353cb"}]}
-  def create(conn, params) do
-    # {order, tickets, locked_until, pricing} =
-      Coherence.current_user(conn)
+  def create(conn, %{"listing" => %{"id" => listing_id}} = params) do
+    order = 
+      conn
+      |> Coherence.current_user()
       |> OrderFinder.find_or_create_order()
-      |> maybe_reserve_tickets(params)
-      # |> OrderState.calculate_price
+    
+    tickets_stored = 
+      params["tickets"]
+      |> Enum.map(fn({group, tickets}) ->
+        Logger.info "Processing group #{group}"
+        TicketState.reserve_tickets(order, tickets, group)
+      end)
+      |> Enum.find(fn(response) -> response != :ok end)
+      |> is_nil
 
-    raise "FUCK"
-    # conn
-    # |> put_status(200)
-    # |> render(
-    #   "create.json",
-    #   %{
-    #     order: order,
-    #     tickets: tickets,
-    #     locked_until: locked_until,
-    #     pricing: pricing
-    #   }
-    # )
+    if tickets_stored do
+      Logger.info "All tickets were stored"
+       {order, tickets, locked_until, pricing} = 
+        order
+        |> Repo.reload()
+        |> TicketState.load_minimum_locked_until(listing_id)
+        |> OrderState.calculate_price
+
+      conn
+      |> put_status(200)
+      |> render(
+        "create.json",
+        %{
+          order: order,
+          tickets: tickets,
+          locked_until: locked_until,
+          pricing: pricing
+        }
+      )        
+    else
+      conn
+      |> put_status(500)
+      |> render(
+        "create.json",
+        %{}
+      )      
+    end
   end
 
   def delete(conn, _) do

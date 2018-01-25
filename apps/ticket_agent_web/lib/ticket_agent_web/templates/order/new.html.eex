@@ -1,7 +1,7 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
 <script id="entry-template" type="text/x-handlebars-template">
   <tr>
-    <td class="g-color-black-opacity-0_8" scope="row">Ticket For {{name}}</td>
+    <td class="g-color-black-opacity-0_8" scope="row">{{ticket_name}} Ticket For {{name}}</td>
     <td>${{price}}</td>
   </tr>
 </script>
@@ -95,6 +95,14 @@
   </div>
 </section>
 <script type="text/javascript">
+  var tickets = {
+  <%= for {p, ticket} <- @conn.assigns.tickets do %>
+    "<%= p %>": <%= raw Poison.encode!(ticket) %>,
+  <% end %>
+  };
+
+  console.log(tickets);
+
   window.details = {
     listing: {
       id: "<%= @listing.id %>",
@@ -103,15 +111,7 @@
     locked_until: null,
     order_id: null,
     pricing: {},
-    tickets: [<%= for {_, ticket} <- @conn.assigns.tickets do %>
-    {
-      ticket_id: "<%= ticket["id"] %>",
-      listing_id: "<%= @listing.id %>",
-      email: "<%= ticket["email"] %>",
-      name: "<%= ticket["name"] %>",
-      price: <%= ticket["ticket_price"] %>
-    },<% end %>
-    ]
+    tickets: tickets
   }
 
   console.log(window.details);

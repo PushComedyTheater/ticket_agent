@@ -16,6 +16,8 @@ window.load_order_table = function() {
     var ticket_price = ticket.price;
     subtotal += ticket_price;
     var context = {
+      group: ticket.group,
+      ticket_name: ticket.ticket_name,
       name: ticket.name,
       price: (ticket_price / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
     };
