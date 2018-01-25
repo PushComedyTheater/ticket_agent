@@ -65,7 +65,7 @@ defmodule TicketAgent.Finders.OrderFinder do
   end
 
   def find_started_order(current_user) do
-    Logger.info "OrderFinder.find_started_order: current_user: #{inspect current_user}"
+    Logger.info "OrderFinder.find_started_order: current_user: #{current_user.email}"
     query =
       from(
         o in Order,

@@ -8,7 +8,7 @@ defmodule TicketAgent.Finders.ListingFinder do
       from(
         listing in Listing,
         where: listing.slug == ^slug,
-        preload: [:tickets, :event],
+        preload: [:event],
         select: listing
       )
 

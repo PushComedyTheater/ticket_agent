@@ -1,22 +1,26 @@
 <script id="ticket-template" type="text/x-handlebars-template">
-  <div class="card rounded-0 col-md-6" style="padding: 5px;">
+  <div class="card rounded-0 col-md-6" style="padding: 5px; margin-top: 10px;">
     <h3 class="card-header h5 rounded-0">
       <i class="fa fa-user g-font-size-default g-mr-5"></i>
-      Guest {{count_string}} Information
+      Guest Information
     </h3>
     <div class="card-block ticket_div">
-      <div id="attendee_div_{{count}}">
-        <div id="name_group_{{count}}" class="form-group g-mb-20">
-          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Name</label>
-          <input class="form-control form-control-md rounded-0 attendee_name" type="email" id="attendee_name_{{count}}" name="attendee_name_{{count}}" placeholder="Name" value="{{ticket.name}}" required>
-          <small id="name_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+      <div>
+        <div id="attendee_div_{{id}}">
+          <div id="name_group_{{id}}" class="form-group g-mb-20">
+            <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Name</label>
+            <input class="form-control form-control-md rounded-0 attendee_name" type="email" id="attendee_name_{{id}}" name="attendee_name_{{id}}" placeholder="Name" value="{{name}}" required>
+            <small id="name_required_{{id}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+          </div>
+
+          <div id="email_group_{{id}}" class="form-group g-mb-20">
+            <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
+            <input class="form-control form-control-md rounded-0 attendee_email" type="email" id="attendee_email_{{id}}" name="attendee_email_{{id}}" placeholder="user@domain.com" value="{{email}}" requiredtype="email">
+            <small id="email_required_{{id}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
+          </div>
         </div>
 
-        <div id="email_group_{{count}}" class="form-group g-mb-20">
-          <label class="g-color-gray-dark-v2 g-font-weight-600 g-font-size-13">Email</label>
-          <input class="form-control form-control-md rounded-0" type="email" id="attendee_email_{{count}}" name="attendee_email_{{count}}" placeholder="user@domain.com" value="{{ticket.email}}" requiredtype="email">
-          <small id="email_required_{{count}}" style="display: none;" class="form-control-feedback">This is a required field.</small>
-        </div>
+        <a id="guest_{{id}}" onclick="window.save_ticket('{{id}}', true, event);" data-group="{{id}}" href="#" class="guest_save btn btn-md btn-block u-btn-inset u-btn-outline-blue g-mr-10 g-mb-15" role="guest_save">Save Ticket</a>
       </div>
     </div>
   </div>

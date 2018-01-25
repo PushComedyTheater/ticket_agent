@@ -12,6 +12,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
       add :order_id, references(:orders, on_delete: :nothing, type: :binary_id), null: true
 
       add :name, :text, null: false
+      add :group, :text, null: false
       add :status, :ticket_status, default: "available"
       add :description, :text, null: true
       add :price, :integer, null: false
@@ -34,6 +35,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
     create unique_index(:tickets, [:slug])
     create index(:tickets, [:listing_id])
     create index(:tickets, [:order_id])
+    create index(:tickets, [:group])
     create index(:tickets, [:status])
     create index(:tickets, [:locked_until])
 

@@ -122,7 +122,11 @@ defmodule TicketAgent.State.TicketState do
   end
 
   # Locks a particular number of tickets
-  def lock_tickets(listing_id, order_id, quantity, timestamp \\ NaiveDateTime.utc_now()) do
+  def lock_tickets(listing_id, order_id, tickets, timestamp \\ NaiveDateTime.utc_now()) do
+    quantity = Enum.count(tickets)
+    ticket_ids = Enum.map(tickets, fn(ticket) -> 
+      ticket["ticket_id"] 
+    end)
     locked_until = timestamp |> Calendar.NaiveDateTime.add!(@seconds_to_add)
 
     Logger.info "lock_tickets->listing_id     = #{inspect listing_id}"
@@ -141,6 +145,7 @@ defmodule TicketAgent.State.TicketState do
         where: is_nil(t.order_id),
         where: is_nil(t.guest_name),
         where: is_nil(t.guest_email),
+        where: t.id in ^ticket_ids,
         limit: ^quantity
       )
 
@@ -170,7 +175,7 @@ defmodule TicketAgent.State.TicketState do
     |> filter_created_tickets(listing_id, input_tickets)
     |> create_new_tickets(listing_id, order_id)
     
-    load_minimum_locked_until(order, listing_id)
+    # load_minimum_locked_until(order, listing_id)
   end
 
   def release_tickets(order) do
@@ -209,7 +214,13 @@ defmodule TicketAgent.State.TicketState do
     input_tickets
     |> Enum.filter(fn(ticket) ->
       Enum.find(existing_tickets, fn(existing_ticket) -> 
-        ((existing_ticket.id == ticket["id"]) || ((existing_ticket.guest_name == ticket["name"]) && (existing_ticket.guest_email == ticket["email"])))
+        (
+          (existing_ticket.id == ticket["ticket_id"]) || (
+            (existing_ticket.guest_name == ticket["name"]) 
+            && (existing_ticket.guest_email == ticket["email"]) 
+            && (existing_ticket.price == ticket["price"])
+          )
+        )
       end)
       |> is_nil
     end)    
@@ -217,11 +228,9 @@ defmodule TicketAgent.State.TicketState do
 
   def create_new_tickets(tickets, _, _) when length(tickets) == 0, do: tickets
   def create_new_tickets(tickets, listing_id, order_id) when length(tickets) > 0 do
-    to_be_created_ticket_count = Enum.count(tickets)
-    
     {:ok, _} =
       listing_id
-      |> lock_tickets(order_id, to_be_created_ticket_count)
+      |> lock_tickets(order_id, tickets)
       |> Repo.transaction()  
       
     available_tickets =

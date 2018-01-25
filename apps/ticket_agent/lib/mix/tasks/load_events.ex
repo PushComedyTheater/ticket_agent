@@ -53,7 +53,7 @@ defmodule Mix.Tasks.LoadEvents do
     {:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
     purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
 
-    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'purchased', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());\"
+    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, \\"name\\", \\"group\\", status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'default', 'purchased', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());\"
 
     TicketAgent.Repo.query(sql)
     """
@@ -68,7 +68,7 @@ defmodule Mix.Tasks.LoadEvents do
     purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
     emailed_at =  (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500)))
 
-    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'emailed', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', '\#{emailed_at}', NULL, NULL, NOW(), NOW());\"
+    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, \\"name\\", \\"group\\", status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'default', 'emailed', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', '\#{emailed_at}', NULL, NULL, NOW(), NOW());\"
 
     TicketAgent.Repo.query(sql)
     """
@@ -77,7 +77,7 @@ defmodule Mix.Tasks.LoadEvents do
   def generate_ticket(false, _, price) do
     """
     sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, name, status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', NULL, '\#{ticket_name}', 'available', '\#{ticket_name}', #{price * 100}, NULL, NULL, '\#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());\"
+    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, \\"name\\", \\"group\\", status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', NULL, '\#{ticket_name}', 'default', 'available', '\#{ticket_name}', #{price * 100}, NULL, NULL, '\#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW());\"
 
     TicketAgent.Repo.query(sql)
     """

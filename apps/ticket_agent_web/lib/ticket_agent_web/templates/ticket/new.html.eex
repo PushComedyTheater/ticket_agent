@@ -1,22 +1,23 @@
 <%= render "partial/ticket_template.html", assigns %>
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
+<script type="text/javascript">
+window.ticket_pool = {}
+</script>
 <section class="g-bg-white">
   <div class="container">
-    <%= for ticket <- @available_tickets do %>
+    <%= for {tickets, index} <- Enum.with_index(@available_tickets) do %>
     <div class="row">
       <div class="col-md-12">
-        <%= render "partial/ticket_quantity.html", ticket: ticket %>
+        <%= render "partial/ticket_quantity.html", tickets: tickets, index: index %>
       </div>
     </div>
     <% end %>
-    <div id="attendee_form" class="row">
-    </div>
     <br />
     <div class="row">
       <div class="col-md-9">
         <button id="continue" class="btn btn-block u-btn-primary g-font-size-18 g-py-15 mb-4" type="button">
           <i class="fa fa-check-circle g-mr-5"></i>
-          <span id="logged_in_text">Reserve 1 Ticket</span>
+          <span id="logged_in_text">Reserve Tickets</span>
         </button>
       </div>
       <div class="col-md-3">
@@ -28,44 +29,164 @@
 <script type="text/javascript" src="/js/ticket_related.js"></script>
 <script type="text/javascript">
 $(document).on('ready', function () {
+  // setup
   var source               = $("#ticket-template").html();
   window.attendee_template = Handlebars.compile(source);
+  window.guest_name        = "<%= Coherence.current_user_name(@conn, :name) %>";
+  window.guest_email       = "<%= Coherence.current_user_name(@conn, :email) %>";
   
   Cookies.remove("ticket_data");
 
   window.details = {
     listing: {
       id: "<%= @listing.id %>",
-      slug: "<%= @listing.slug %>",
-      ticket_price: <%= @conn.assigns.ticket_price %>
+      slug: "<%= @listing.slug %>"
     },
-    tickets: [
-      {
-        name: "<%= Coherence.current_user_name(@conn, :name) %>",
-        email: "<%= Coherence.current_user_name(@conn, :email) %>",
-        price: <%= @conn.assigns.ticket_price %>,
-      }
-    ]
+    tickets: {}
   }
 
+  window.save_ticket = function(counter, individual_button, e) {
+    e.preventDefault();
+    var current = window.details.tickets[counter];
+    var valid_form = true;
+    var name = $("#attendee_name_" + counter).val();
+    var email = $("#attendee_email_" + counter).val();
+    
+    window.console_group("window.save_ticket");
+    window.console_log("counter = " + counter);
+    window.console_log("individual_button     = " + individual_button);
+    window.console_log("current = " + JSON.stringify(current));
+    
+    if ($("#attendee_div_" + counter).css("display") == "block") {
+      window.console_log("validate attendee_div_" + counter); 
+      if (name.length == 0) {
+        window.console_log("name is 0");
+        $("#name_required_" + counter).show();
+        $("#name_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      } else {
+        window.console_log("name is not 0");
+        $("#name_required_" + counter).hide();
+        $("#name_group_" + counter).removeClass("u-has-error-v1");
+      }
+
+      if (email.length == 0) {
+        window.console_log("email is 0");
+        $("#email_required_" + counter).show();
+        $("#email_required_" + counter).html("This is a required field.");
+        $("#email_group_" + counter).addClass("u-has-error-v1");
+        valid_form = false;
+      } else {
+        window.console_log("email is not 0");
+        if (!$("#attendee_email_" + counter)[0].checkValidity()) {
+          window.console_log("email is not valid");
+          $("#email_required_" + counter).show();
+          $("#email_required_" + counter).html("Please use a valid email address.");
+          $("#email_group_" + counter).addClass("u-has-error-v1");
+          valid_form = false;
+        } else {
+          window.console_log("email is valid");
+          $("#email_required_" + counter).hide();
+          $("#email_group_" + counter).removeClass("u-has-error-v1");
+        }
+      }
+
+      if (valid_form) {
+        window.console_log("validated successfully attendee_div_" + counter);
+        $("#attendee_div_" + counter).hide();
+        $("#guest_" + counter).html("Edit Ticket For " + name);      
+      }
+
+      window.details.tickets[counter] = {
+        id: current.id,
+        ticket_price: current.ticket_price,
+        ticket_name: current.ticket_name,
+        name: name,
+        email: email,
+        valid: valid_form
+      }
+    } else {
+      if (individual_button) {
+        $("#attendee_div_" + counter).show();
+        $("#guest_" + counter).html("Save Ticket");
+      }
+    }
+    window.console_group_end();
+    return valid_form;
+  }  
+
+  window.save_details_to_cookie = function() {
+    var encodedData = window.btoa(JSON.stringify(window.details));
+    var inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+    Cookies.set("ticket_data", encodedData, {expires: inFifteenMinutes});
+  }
+
+  window.save_all_tickets_and_redirect = function (event) {
+    var valid_tickets = true;
+    var ticket_count = 0;
+    $("[role='guest_save']").each(function (index, button) {
+      var button_id = $(button).data("group");
+      ticket_count += 1;
+      if (!window.save_ticket(button_id, false, event)) {
+        valid_tickets = false;
+      }
+    })
+    window.save_details_to_cookie();
+    if (valid_tickets && ticket_count > 0) {
+      var redirect_url = "/orders/new?listing_id=" + window.details.listing.slug;
+      window.location.href = redirect_url;
+    }
+  }  
+
+  $("#continue").on("click", function(e) {
+    window.save_all_tickets_and_redirect(e);
+  })
 
   $(".ticket_count").on("change", function(e) {
-    var ticket_id = $(this).data("ticket-id");
-    var ticket_quantity = $(this).val();
-    console.log(ticket_id);
-    console.log(ticket_quantity);
-    console.log("CHANGE");
+    window.console_group("ticket_count on change");
 
-    var output = "";
+    $(".ticket_count").each(function(item) {
+      var index = $(this).data("index");
+      var attendee_form = $("#attendee_form_" + index);
+      var current_count = attendee_form.children().length;
+      var ticket_quantity = $(this).val();
 
-    for (var i = 0; i < ticket_quantity; i++) {
-      var context = {
-        count_string: i+1
-      };
-      var html    = window.attendee_template(context);
-      output += html;
-    }
-    $("#attendee_form").html(output);    
+      window.console_group("ticket_count each: " + item);
+      window.console_log("index           = " + index);
+      window.console_log("current_count   = " + current_count);
+      window.console_log("ticket_quantity = " + ticket_quantity);
+
+      if (current_count == ticket_quantity) {
+      } else {
+        var output = "";
+        var ticket_ids = window.ticket_pool[index].slice(0, ticket_quantity);
+
+        for(var i = 0; i < ticket_quantity; i++) {
+          var current_ticket = ticket_ids[i];
+
+          window.console_log("current_ticket  = " + JSON.stringify(current_ticket));
+
+          var ticket = {
+            id: current_ticket.id,
+            ticket_price: current_ticket.price,
+            ticket_name: current_ticket.name,
+            name: "",
+            email: ""
+          };
+          if (i == 0) {
+            ticket.name = window.guest_name;
+            ticket.email = window.guest_email;
+          }
+          window.console_log("ticket          = " + JSON.stringify(ticket));
+          var html = window.attendee_template(ticket);
+          output += html;
+          window.details.tickets[ticket.id] = ticket;
+        }
+        attendee_form.html(output);
+      }
+      window.console_group_end();
+    });
+    window.console_group_end();
   })
 });
 </script>

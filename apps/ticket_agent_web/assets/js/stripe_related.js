@@ -37,8 +37,8 @@ window.load_order_table = function() {
 }
 
 window.reserve_tickets = function () {
-  //window.console_group("reserve_tickets");
-  //window.console_log("Reserving tickets");
+  window.console_group("reserve_tickets");
+  window.console_log("Reserving tickets");
   $("#ticket_bar").css("width", "60%");
 
   $.ajax({
@@ -57,8 +57,8 @@ window.reserve_tickets = function () {
     },
   }).done(function (response) {
     $("#ticket_bar").css("width", "90%");
-    // window.console_log("Reserved tickets successfully with response: ");
-    // window.console_log(response);
+    window.console_log("Reserved tickets successfully with response: ");
+    window.console_log(response);
 
     window.details.locked_until = response.locked_until;
     window.details.order_id     = response.order_slug;

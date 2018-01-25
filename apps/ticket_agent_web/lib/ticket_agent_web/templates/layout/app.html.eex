@@ -9,6 +9,7 @@
   <meta name="csrf-token" content="<%= Plug.CSRFProtection.get_csrf_token() %>">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com/">
   <link rel="dns-prefetch" href="https://cdn.rawgit.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <%= render "social.html", conn: @conn %>
   <%= render "favicons.html" %>
   <!-- Google Fonts -->

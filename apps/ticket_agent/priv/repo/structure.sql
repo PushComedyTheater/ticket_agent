@@ -28,6 +28,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -201,6 +215,19 @@ CREATE TABLE credit_cards (
 
 
 --
+-- Name: event_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE event_tags (
+    id uuid NOT NULL,
+    event_id uuid NOT NULL,
+    tag text NOT NULL,
+    inserted_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
+);
+
+
+--
 -- Name: events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -213,32 +240,6 @@ CREATE TABLE events (
     account_id uuid,
     user_id uuid,
     image_url text,
-    inserted_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL
-);
-
-
---
--- Name: listing_images; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE listing_images (
-    id uuid NOT NULL,
-    listing_id uuid NOT NULL,
-    url text NOT NULL,
-    inserted_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL
-);
-
-
---
--- Name: listing_tags; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE listing_tags (
-    id uuid NOT NULL,
-    listing_id uuid NOT NULL,
-    tag text NOT NULL,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -347,6 +348,7 @@ CREATE TABLE tickets (
     listing_id uuid NOT NULL,
     order_id uuid,
     name text NOT NULL,
+    "group" text NOT NULL,
     status ticket_status DEFAULT 'available'::ticket_status,
     description text,
     price integer NOT NULL,
@@ -482,27 +484,19 @@ ALTER TABLE ONLY credit_cards
 
 
 --
+-- Name: event_tags event_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY event_tags
+    ADD CONSTRAINT event_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
-
-
---
--- Name: listing_images listing_images_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY listing_images
-    ADD CONSTRAINT listing_images_pkey PRIMARY KEY (id);
-
-
---
--- Name: listing_tags listing_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY listing_tags
-    ADD CONSTRAINT listing_tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -678,13 +672,6 @@ CREATE INDEX index_locked_tickets_by_locked_until ON tickets USING btree (locked
 
 
 --
--- Name: listing_images_listing_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX listing_images_listing_id_index ON listing_images USING btree (listing_id);
-
-
---
 -- Name: listings_class_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -780,6 +767,13 @@ CREATE INDEX orders_user_id_index ON orders USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX teachers_slug_index ON teachers USING btree (slug);
+
+
+--
+-- Name: tickets_group_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tickets_group_index ON tickets USING btree ("group");
 
 
 --
@@ -962,6 +956,14 @@ ALTER TABLE ONLY credit_cards
 
 
 --
+-- Name: event_tags event_tags_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY event_tags
+    ADD CONSTRAINT event_tags_event_id_fkey FOREIGN KEY (event_id) REFERENCES events(id);
+
+
+--
 -- Name: events events_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -975,22 +977,6 @@ ALTER TABLE ONLY events
 
 ALTER TABLE ONLY events
     ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
-
-
---
--- Name: listing_images listing_images_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY listing_images
-    ADD CONSTRAINT listing_images_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES listings(id);
-
-
---
--- Name: listing_tags listing_tags_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY listing_tags
-    ADD CONSTRAINT listing_tags_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES listings(id);
 
 
 --
@@ -1109,5 +1095,5 @@ ALTER TABLE ONLY waitlists
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020413), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180102135330);
+INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180102135330);
 

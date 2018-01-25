@@ -10,6 +10,7 @@ defmodule TicketAgent.Ticket do
     belongs_to :order, Order, references: :id, foreign_key: :order_id, type: Ecto.UUID
     belongs_to :concierge, User, references: :id, foreign_key: :checked_in_by, type: Ecto.UUID
     field :slug, :string
+    field :group, :string
     field :name, :string
     field :status, :string
     field :description, :string

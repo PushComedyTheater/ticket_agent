@@ -67,6 +67,24 @@ defmodule TicketAgent.Finders.TicketFinder do
     |> Repo.one
   end
 
+  def all_available_tickets_by_listing_id(listing_id) do
+    from(
+      ticket in Ticket,
+      where: ticket.listing_id == ^listing_id,
+      where: ticket.status == "available",
+      where: is_nil(ticket.locked_until),
+      where: is_nil(ticket.order_id),
+      where: is_nil(ticket.guest_name),
+      where: is_nil(ticket.guest_email),
+      where: fragment("? < NOW()", ticket.sale_start),
+      order_by: [desc: ticket.price, asc: ticket.name, desc: ticket.price],
+      select: ticket
+    )
+    |> Repo.all
+
+
+  end
+
   def all_available_tickets_by_listing_slug(listing_slug) do
 # SELECT json_agg(distinct t0."name"), t0."price", count(t0.id) 
 # FROM "tickets" AS t0 

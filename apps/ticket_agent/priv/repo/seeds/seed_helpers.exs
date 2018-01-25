@@ -201,7 +201,7 @@ defmodule SeedHelpers do
     |> TicketAgent.Repo.insert!
   end
 
-  def create_ticket(listing, _, status, price) when status == "available" do
+  def create_ticket(listing, _, status, price, group) when status == "available" do
     title = String.replace(listing.title, "\"", "'") 
     %{
       listing_id: listing.id,
@@ -209,6 +209,7 @@ defmodule SeedHelpers do
       name: "Ticket for #{title}",
       status: status,
       description: "Ticket for #{title}",
+      group: group,
       price: price,
       sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
       inserted_at: listing.inserted_at,
@@ -216,7 +217,7 @@ defmodule SeedHelpers do
     }
   end
 
-  def create_ticket(listing, order, status, price) when status == "purchased" do
+  def create_ticket(listing, order, status, price, group) when status == "purchased" do
     title = String.replace(listing.title, "\"", "'") 
     guest_name = FakerElixir.Name.name()
     {:ok, seconds, a, b} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
@@ -230,6 +231,7 @@ defmodule SeedHelpers do
       guest_name: guest_name,
       guest_email: FakerElixir.Internet.email(:popular, guest_name),   
       order_id: order.id,   
+      group: group,
       price: price,
       sale_start: listing.start_at |> Calendar.NaiveDateTime.subtract!(604800),
       inserted_at: listing.inserted_at,
@@ -237,8 +239,8 @@ defmodule SeedHelpers do
     }
   end  
 
-  def create_ticket(listing, order, status, price) when status == "emailed" do
-    ticket = create_ticket(listing, order, "purchased", price)
+  def create_ticket(listing, order, status, price, group) when status == "emailed" do
+    ticket = create_ticket(listing, order, "purchased", price, group)
     emailed_at = ticket.purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500))
     
     ticket = 

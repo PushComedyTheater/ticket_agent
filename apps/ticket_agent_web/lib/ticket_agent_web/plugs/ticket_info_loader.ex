@@ -17,8 +17,8 @@ defmodule TicketAgentWeb.Plugs.TicketInfoLoader do
     %{min_price: min_ticket_price, max_price: max_ticket_price} = TicketFinder.price_range([listing.id])
     
     conn
-    |> assign(:page_image, TicketAgentWeb.SharedView.listing_image(listing))
-    |> assign(:listing, %{title: listing.title, start_at: listing.start_at, end_at: listing.end_at, slug: listing.slug})
+    |> assign(:page_image, TicketAgentWeb.SharedView.event_image(listing.event.image_url))
+    |> assign(:listing, listing)
     |> assign(:min_ticket_price, min_ticket_price)
     |> assign(:max_ticket_price, max_ticket_price)
   end
