@@ -178,9 +178,9 @@ description = """
 listing = %TicketAgent.Listing{
 user_id: user.id,
 account_id: account.id,
-class_id: kidprov201.id,
+class_id: kidprov_studio.id,
 type: "class",
-title: "KidProv 201 at the Push Comedy Theater",
+title: "KidProv Studio at the Push Comedy Theater",
 slug: "G0DC7L",
 description: description,
 status: "active",

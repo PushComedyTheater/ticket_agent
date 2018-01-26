@@ -7,7 +7,7 @@ defmodule TicketAgent.Mappings do
       "Improv 501: Improv Studio",
       "Improv 501: Improv Studio (Advanced Harold Study)",
       "Improv for Teens at the Push Comedy Theater",
-      "KidProv 201 at the Push Comedy Theater",
+      "KidProv Studio at the Push Comedy Theater",
       "KidProv at the Push Comedy Theater",
       "Musical Improv 101",
       "Musical Improv 201",
@@ -63,7 +63,8 @@ defmodule TicketAgent.Mappings do
       ~r/^Improv 401/i => "improv401",
       ~r/^Improv 501/i => "improv501",
       ~r/^Improv For Teens/i => "teen_improv",
-      ~r/^KidProv 201/i => "kidprov201",
+      ~r/^KidProv 201/i => "kidprov_studio",
+      ~r/^KidProv Studio/i => "kidprov_studio",
       ~r/^KidProv/i => "kidprov101",
     
       ~r/^Stand-Up Comedy 101/i => "improv301",

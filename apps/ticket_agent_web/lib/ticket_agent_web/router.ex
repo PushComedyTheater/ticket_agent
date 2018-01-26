@@ -63,7 +63,7 @@ defmodule TicketAgentWeb.Router do
     resources "/charges", ChargeController, only: [:create]
     get "/event_calendar/:slug", EventCalendarController, :show, as: :event_ics
     resources "/events", EventController, only: [:index, :show], param: "slug"
-    get "/tickets/:show_id/new", TicketController, :new, as: :new_ticket
+    get "/tickets/:listing_id/new", TicketController, :new, as: :new_ticket
     resources "/tickets", TicketController
 
     get "/ticket_auth/:token", TicketAuthController, :show, as: :ticket_auth

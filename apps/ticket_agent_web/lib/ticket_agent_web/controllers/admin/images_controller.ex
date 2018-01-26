@@ -25,7 +25,7 @@ defmodule TicketAgentWeb.Admin.ImageController do
     #     "public_id" => "covers/wd4vnbdjwchrclmuhomg"
     #   },
     #   %{
-    #     "secure_url" => "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png",
+    #     "secure_url" => "https://res.cloudinary.com/push-comedy-theater/image/upload/social/dxcfi6mfoag1mst2k0pr.jpg",
     #     "public_id" => "social/dxcfi6mfoag1mst2k0pr"
     #   }
     # ]

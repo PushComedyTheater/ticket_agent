@@ -176,10 +176,10 @@ $(document).on('ready', function () {
             name: "",
             email: ""
           };
-          if (i == 0) {
+          //if (i == 0) {
             ticket.name = window.guest_name;
             ticket.email = window.guest_email;
-          }
+          //}
           window.console_log("ticket          = " + JSON.stringify(ticket));
           var html = window.attendee_template(ticket);
           output += html;

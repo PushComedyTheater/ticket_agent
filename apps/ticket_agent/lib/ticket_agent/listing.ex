@@ -1,4 +1,5 @@
 defmodule TicketAgent.Listing do
+  require Logger
   use TicketAgent.Schema
 
   @required ~w(slug title description status start_at end_at)a
@@ -33,15 +34,84 @@ defmodule TicketAgent.Listing do
     |> unique_constraint(:slug)
   end
 
-  def current_class_listing(%{id: class_id}) do
-    query = from listing in Listing,
-            where: listing.class_id == ^class_id,
-            where: fragment("? >= NOW()", listing.start_at),
-            limit: 1,
-            select: listing
+  def listing_image_with_dimensions(%Listing{event_id: nil, class_id: class_id} = listing, width, height) do
+    listing = case Ecto.assoc_loaded?(listing.class) do
+      true -> listing
+      false -> Repo.preload(listing, :class)
+    end    
+    listing.class.image_url
+    |> get_cloudinary(width, height)
+  end
 
-    Repo.one(query)
+  def listing_image_with_dimensions(%Listing{event_id: event_id, class_id: nil} = listing, width, height) do
+    listing = case Ecto.assoc_loaded?(listing.event) do
+      true -> listing
+      false -> Repo.preload(listing, :event)
+    end    
+    listing.event.image_url
+    |> get_cloudinary(width, height)
+  end  
+
+  def get_cloudinary(image_url, width, height) do
+    IO.inspect image_url
+  
+    public_id = get_public_id(image_url)
+
+    Cloudinex.Url.for(public_id, %{
+      width: width,
+      height: height,
+      gravity: "north",
+      crop: "fill",
+      flags: 'progressive'
+    })    
+  end
+
+  def get_public_id("https://res.cloudinary.com/push-comedy-theater/image/upload/covers/" <> item) do
+    "covers/" <> String.replace(item, ".jpg", "")
+  end
+
+  def get_public_id("https://res.cloudinary.com/push-comedy-theater/image/upload/" <> item) do
+    String.replace(item, ".jpg", "")
+  end  
+
+  def current_class_listing(%{id: class_id} = class) do
+    utc_now =
+      DateTime.utc_now()
+      |> Calendar.NaiveDateTime.to_date_time_utc
+
+    class = case Ecto.assoc_loaded?(class.listings) do
+      true -> class
+      false -> Repo.preload(class, :listings)
+    end
+    Enum.filter(class.listings, fn(listing) ->
+      start_at = convert_to_date_time_utc(listing.start_at)
+      end_at = convert_to_date_time_utc(listing.end_at)
+      date_between(utc_now, start_at, end_at)
+    end)
+    |> Enum.at(0)
   end    
+
+  def convert_to_date_time_utc(nil), do: nil
+  def convert_to_date_time_utc(date), do: Calendar.NaiveDateTime.to_date_time_utc(date)
+
+  def date_between(_, nil, _), do: false
+  def date_between(date, start_at, nil) do
+    Logger.info "date     = #{date}"
+    Logger.info "start_at = #{start_at}"
+    Logger.info "end_at   = nil"
+    (DateTime.compare(start_at, date) == :lt)
+  end
+
+  def date_between(date, start_at, end_at) do
+    Logger.info "date     = #{date}"
+    Logger.info "start_at = #{start_at}"
+    Logger.info "end_at   = #{end_at}"
+    (DateTime.compare(start_at, date) == :lt) && (DateTime.compare(end_at, date) == :gt)
+  end  
+
+  def date_between(_, _, _) do
+    ""
+  end
 
   def list_listings(params) do
     Listing

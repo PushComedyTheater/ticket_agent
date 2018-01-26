@@ -2,6 +2,9 @@
     <%= link "Classes", to: classes_path(@conn, :index), id: "nav-link-home", class: "nav-link g-py-7 g-px-0" %>
     <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu-demos"
         aria-labelledby="nav-link-demos">
+    <li class="dropdown-item">
+      <%= link "Currently Offered", to: class_type_path(@conn, :class, "currently_offered"), class: "nav-link" %>
+    </li>
     <%= for class <- class_types() do %>
       <li class="dropdown-item hs-has-sub-menu">
         <%= link class, to: class_type_path(@conn, :class, class), class: "nav-link" %>

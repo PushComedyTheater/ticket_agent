@@ -14,7 +14,7 @@
   improv401 = SeedHelpers.create_class(%{slug: "improv401"})
   improv501 = SeedHelpers.create_class(%{slug: "improv501"})
   kidprov101 = SeedHelpers.create_class(%{slug: "kidprov101"})
-  kidprov201 = SeedHelpers.create_class(%{slug: "kidprov201"})
+  kidprov_studio = SeedHelpers.create_class(%{slug: "kidprov_studio"})
   music_improv101 = SeedHelpers.create_class(%{slug: "music_improv101"})
   music_improv201 = SeedHelpers.create_class(%{slug: "music_improv201"})
   music_improv_studio = SeedHelpers.create_class(%{slug: "music_improv_studio"})

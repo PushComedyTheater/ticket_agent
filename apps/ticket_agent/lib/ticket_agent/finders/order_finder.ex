@@ -10,7 +10,9 @@ defmodule TicketAgent.Finders.OrderFinder do
         where: o.user_id == ^current_user.id,
         where: o.status != "started",
         where: o.status != "processing",
+        where: o.status != "cancelled",
         preload: [:tickets, :listing],
+        preload: [listing: :event],
         select: o
       )
 

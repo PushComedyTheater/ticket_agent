@@ -10,7 +10,7 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
     ticket = Enum.at(order.tickets, 0)
     ticket_count = Enum.count(order.tickets)
 
-    listing = ticket.listing
+    listing = Repo.preload(ticket.listing, :event)
 
     customer_order = EEx.eval_file(File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/tickets_pdf.html.eex",
                                        [tickets: order.tickets, listing: listing, ticket_count: ticket_count, host: @host])

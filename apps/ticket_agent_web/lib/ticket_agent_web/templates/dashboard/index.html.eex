@@ -2,93 +2,32 @@
 <br />
 <br />
 <br />
-  <section class="g-bg-gray-light-v5 g-py-20">
-    <div class="container">
-      <div class="d-sm-flex text-center">
+<section class="g-bg-gray-light-v5 g-py-20">
+  <div class="container">
+    <div class="d-sm-flex text-center">
 
-        <div class="align-self-center ml-auto">
-          <ul class="u-list-inline">
-            <li class="list-inline-item g-mr-5">
-              <%= link "Home", to: root_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
-              <i class="g-color-gray-light-v2 g-ml-5">/</i>
-            </li>
-            <li class="list-inline-item g-color-primary">
-              <span>Dashboard</span>
-            </li>
-          </ul>
-        </div>
+      <div class="align-self-center ml-auto">
+        <ul class="u-list-inline">
+          <li class="list-inline-item g-mr-5">
+            <%= link "Home", to: root_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+            <i class="g-color-gray-light-v2 g-ml-5">/</i>
+          </li>
+          <li class="list-inline-item g-color-primary">
+            <span>Dashboard</span>
+          </li>
+        </ul>
       </div>
     </div>
-  </section>
-      <!-- End Breadcrumb -->
+  </div>
+</section>
 <br />
-      <section class="g-mb-100">
-        <div class="container">
-          <div class="row">
-          <%= render "sidebar.html", assigns %>
-
-            <!-- Profile Content -->
-            <div class="col-lg-9">
-
-              <!-- Product Table Panel -->
-              <div class="card border-0">
-                <div class="card-header d-flex align-items-center justify-content-between g-bg-gray-light-v5 border-0 g-mb-15">
-                  <h3 class="h6 mb-0">
-                    <i class="icon-directions g-pos-rel g-top-1 g-mr-5"></i> Your Orders
-                  </h3>
-                  <div class="dropdown g-mb-10 g-mb-0--md">
-
-                  </div>
-                </div>
-
-                <div class="card-block g-pa-0">
-                  <%= if Enum.count(@orders) == 0 do %>
-                  You have no orders at this time.
-                  <% end %>
-                  <%= for order <- @orders do %>
-                  <%
-                    ticket = Enum.at(order.tickets, 0)
-                    listing = ticket.listing
-                  %>
-                      <table style="background-color: #fff; width: 100%; padding: 5px; border: 2px solid #f7f7f7; border-radius: 15px;">
-                        <tr>
-                          <td style="background-color: #f7f7f7; padding: 10px;">
-                            ORDER PLACED:<br /><%= order_timestamp(order.completed_at) %>
-                          </td>
-                          <td style="background-color: #f7f7f7; padding: 10px; text-align: center;">
-                            TOTAL:<br />$<%= cost_smallest_unit(order.total_price) %>
-                          </td>
-                          <td style="background-color: #f7f7f7; padding: 10px; text-align: right;" class="text-uppercase">
-                            Order #<%= order.slug %><br />
-                            <%= link "Order Details", to: order_path(@conn, :show, order.slug) %>
-                          </td>
-                        </tr>
-                      <tr>
-                        <td style="width: 200px; padding: 5px; text-align: center;">
-                          <img src="<%= listing_image_with_dimensions(listing, 150, 150) %>" style="border-radius: 5px;" />
-                        </td>
-                        <td style="padding: 10px;">
-                          <%= Enum.count(order.tickets) %> ticket(s) to
-                          <%= link listing.title, to: event_path(@conn, :show, listing) %>
-                          <br />
-                          <%= event_date(listing.start_at) %> <%= full_event_time(listing) %>
-                        </td>
-                        <td style="text-align: right;">
-                          <%= link to: order_pdf_path(@conn, :show, order.slug), class: "btn btn-lg u-btn-primary g-mr-10 g-mb-15" do %>
-                            <i class="fa fa-cloud-download g-mr-5"></i>Download Tickets
-                          <% end %>
-                        </td>
-                      </tr>
-                      </table>
-                        <br />
-<% end %>
-                  </div>
-                  <!-- End Product Table -->
-                </div>
-              </div>
-              <!-- End Product Table Panel -->
-            </div>
-            <!-- End Profile Content -->
-          </div>
-        </div>
-      </section>
+<section class="g-mb-100">
+  <div class="container">
+    <div class="row">
+      <%= render "partial/sidebar.html", assigns %>
+      <!-- Profile Content -->
+      <%= render "partial/orders.html", assigns %>
+      <!-- End Product Table Panel -->
+    </div>
+  </div>
+</section>

@@ -1,7 +1,42 @@
 defmodule TicketAgent.Finders.ListingFinder do
   require Logger
   import Ecto.Query
-  alias TicketAgent.{Listing, Repo}
+  alias TicketAgent.{Class, Event, Listing, Repo}
+
+  def active_show_listings do
+    query = from listing in Listing,
+            where: listing.status == "active",
+            where: is_nil(listing.class_id),
+            where: fragment("? >= NOW() - interval '1 hour'", listing.start_at),
+            order_by: [asc: :start_at],
+            preload: [:tickets],
+            select: listing
+
+    Repo.all(query)
+  end
+
+  def active_class_listings do
+    query = from class in Class,
+            left_join: listings in assoc(class, :listings),
+            where: fragment("? < NOW()", listings.start_at),
+            where: (is_nil(listings.end_at) or fragment("? > NOW()", listings.end_at)),
+            preload: [:prerequisite]
+
+    Repo.all(query)
+  end    
+
+  def find_listing_by_slug(slug) do
+    slug =
+      slug
+      |> String.split("-")
+      |> hd
+
+    query = from listing in Listing,
+            where: listing.slug == ^slug,
+            select: listing
+
+    Repo.one(query)
+  end  
 
   def find_by_id(listing_id) do
     Listing

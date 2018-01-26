@@ -107,12 +107,8 @@ defmodule TicketAgentWeb.SharedView do
   def full_event_time(_), do: "Unknown"
 
   def listing_image_with_dimensions(show, width, height) do
-    image =
-      show.images
-      |> hd
-
     public_id =
-      image.url
+      show.event.image_url
       |> String.split("/")
       |> List.last()
       |> String.split(".")

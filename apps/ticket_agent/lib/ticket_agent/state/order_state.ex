@@ -6,6 +6,7 @@ defmodule TicketAgent.State.OrderState do
   @stripe_fixed_fee 30
   @stripe_percentage_fee 0.029
   @processing_fixed_fee 50
+  @processing_percentage_fee 0.01
   
   def calculate_price({order, tickets, locked_until}) do
     order = calculate_order_cost(order)
@@ -43,19 +44,22 @@ defmodule TicketAgent.State.OrderState do
   end
 
   def calculate_fees(price) do
-    total_with_processing = price + @processing_fixed_fee
+    total_with_processing = price + @processing_fixed_fee + (@processing_percentage_fee * price)
     total_to_charge = Float.ceil((total_with_processing + @stripe_fixed_fee) / (1 - @stripe_percentage_fee))
     stripe_fees = total_to_charge - total_with_processing
+    pv_fees = Float.ceil(total_with_processing - price)
 
     Logger.info "calculate_fees->price                     = #{price}"
     Logger.info "calculate_fees->processing_fixed_fee      = #{@processing_fixed_fee}"
+    Logger.info "calculate_fees->processing_percentage_fee = #{@processing_percentage_fee}"
+    Logger.info "calculate_fees->pv_processing             = #{pv_fees}"
     Logger.info "calculate_fees->total_with_processing     = #{total_with_processing}"
     Logger.info "calculate_fees->stripe_percentage_fee     = #{@stripe_percentage_fee}"
     Logger.info "calculate_fees->stripe_fixed_fee          = #{@stripe_fixed_fee}"    
     Logger.info "calculate_fees->total_to_charge           = #{total_to_charge}"
     Logger.info "calculate_fees->stripe_fees               = #{stripe_fees}"
 
-    {round(total_to_charge), round(stripe_fees), @processing_fixed_fee}
+    {round(total_to_charge), round(stripe_fees), round(pv_fees)}
   end
 
   def set_credit_card_for_order(order, credit_card) do
