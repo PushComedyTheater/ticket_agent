@@ -435,7 +435,8 @@ CREATE TABLE versions (
 
 CREATE TABLE waitlists (
     id uuid NOT NULL,
-    listing_id uuid NOT NULL,
+    listing_id uuid,
+    class_id uuid,
     user_id uuid,
     name character varying(255),
     email_address character varying(255),
@@ -879,6 +880,27 @@ CREATE INDEX versions_originator_id_index ON versions USING btree (originator_id
 --
 
 CREATE INDEX waitlists_admin_notified_index ON waitlists USING btree (admin_notified);
+
+
+--
+-- Name: waitlists_class_id_email_address_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX waitlists_class_id_email_address_index ON waitlists USING btree (class_id, email_address);
+
+
+--
+-- Name: waitlists_class_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX waitlists_class_id_index ON waitlists USING btree (class_id);
+
+
+--
+-- Name: waitlists_class_id_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX waitlists_class_id_user_id_index ON waitlists USING btree (class_id, user_id);
 
 
 --

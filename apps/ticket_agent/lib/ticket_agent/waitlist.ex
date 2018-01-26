@@ -20,7 +20,7 @@ defmodule TicketAgent.Waitlist do
   @doc false
   def changeset(%Waitlist{} = waitlist, attrs) do
     waitlist
-    |> cast(attrs, @required ++ [:message_sent_at, :user_id, :admin_notified])
+    |> cast(attrs, @required ++ [:message_sent_at, :user_id, :admin_notified, :class_id, :listing_id])
     |> validate_required(@required)
     |> unique_constraint(:email_address_and_listing_id, name: :waitlists_listing_id_email_address_index)
     |> unique_constraint(:user_id_and_listing_id, name: :waitlists_listing_id_user_id_index)

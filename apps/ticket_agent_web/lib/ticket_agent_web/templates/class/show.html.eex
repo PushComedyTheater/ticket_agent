@@ -84,12 +84,36 @@
   <a href="#!" id="add_waitlist_btn" class="btn btn-md u-btn-outline-primary g-mr-10 g-mb-15">Add Me To Waitlist</a>
 </div>
 <script type="text/javascript">
+  window.join_waitlist = function (details) {
+    $.ajax({
+      // The URL for the request
+      url: "/waitlist",
+      // The data to send (will be converted to a query string)
+      data: JSON.stringify(details),
+      // Whether this is a POST or GET request
+      type: "POST",
+      // The type of data we expect back
+      contentType: "application/json",
+      dataType: "json",
+      // add in csrf_token
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+      },
+    }).done(function (response) {
+      $("#name").val("");
+      $("#email").val("");
+      window.setTimeout(function () { Custombox.modal.close(); }, 125);
+    }).fail(function (xhr, status, errorThrown) {
+      window.setTimeout(function () { Custombox.modal.close(); }, 25);
+    });
+  }
+
   $("#add_waitlist_btn").on("click", function(e) {
     e.preventDefault();
 
-    var name = $("#name").val().trim();
-    var email = $("#email").val().trim();
-    var listing_id = "<%= @conn.assigns.class.id %>";
+    var name     = $("#name").val().trim();
+    var email    = $("#email").val().trim();
+    var class_id = "<%= @conn.assigns.class.id %>";
 
     if (name.length == 0) {
       $("#name_required").show();
@@ -107,7 +131,7 @@
       var details = {
         name: name,
         email: email,
-        listing_id: listing_id
+        class_id: class_id
       }
       window.join_waitlist(details);
     }

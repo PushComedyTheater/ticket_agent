@@ -479,8 +479,8 @@ ALTER TABLE versions OWNER TO postgres;
 
 CREATE TABLE waitlists (
     id uuid NOT NULL,
-    listing_id uuid NOT NULL,
-    class_id uuid NOT NULL,
+    listing_id uuid,
+    class_id uuid,
     user_id uuid,
     name character varying(255),
     email_address character varying(255),

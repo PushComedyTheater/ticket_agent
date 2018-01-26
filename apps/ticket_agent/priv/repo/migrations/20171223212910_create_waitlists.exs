@@ -4,8 +4,8 @@ defmodule TicketAgent.Repo.Migrations.CreateWaitlists do
   def change do
     create table(:waitlists, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :listing_id, references(:listings, on_delete: :nothing, type: :binary_id), null: false
-      add :class_id, references(:classes, on_delete: :nothing, type: :binary_id), null: false
+      add :listing_id, references(:listings, on_delete: :nothing, type: :binary_id), null: true
+      add :class_id, references(:classes, on_delete: :nothing, type: :binary_id), null: true
       add :user_id, references(:users, on_delete: :nothing, type: :binary_id), null: true
       add :name, :string
       add :email_address, :string
