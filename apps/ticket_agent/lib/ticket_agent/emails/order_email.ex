@@ -14,7 +14,7 @@ defmodule TicketAgent.Emails.OrderEmail do
     ticket = Enum.at(order.tickets, 0)
     ticket_count = Enum.count(order.tickets)
 
-    listing = Repo.preload(ticket.listing, [:images])
+    listing = Repo.preload(ticket.listing, [:event])
     pdf_task = Task.async(fn -> generate_pdf(order.tickets, listing, order.slug) end)
     ical_task = Task.async(fn -> generate_ical(listing) end)
 

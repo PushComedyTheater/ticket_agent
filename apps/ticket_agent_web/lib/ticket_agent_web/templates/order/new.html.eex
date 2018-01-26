@@ -1,16 +1,5 @@
 <%= render TicketAgentWeb.LayoutView, "ticket_info.html", assigns %>
-<script id="entry-template" type="text/x-handlebars-template">
-  <tr>
-    <td class="g-color-black-opacity-0_8" scope="row">{{ticket_name}} Ticket For {{name}}</td>
-    <td>${{price}}</td>
-  </tr>
-</script>
-<script id="calculated-template" type="text/x-handlebars-template">
-  <tr>
-    <td class="g-color-black-opacity-0_8" align="right" style="text-align: right;" scope="row">{{title}}: </td>
-    <td>{{value}}</td>
-  </tr>
-</script>
+<%= render "partial/order_template.html", assigns %>
 
 <!-- Demo modal window -->
 <div id="modal-type-aftersometime" class="js-autonomous-popup text-left g-max-width-600 g-bg-white g-overflow-y-auto g-pa-20" style="display: none;" data-modal-type="aftersometime" data-open-effect="zoomIn" data-close-effect="zoomOut" data-delay="100" data-speed="500">

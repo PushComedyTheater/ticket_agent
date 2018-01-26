@@ -57,31 +57,4 @@ defmodule TicketAgent.Order do
   def change_user(%Order{} = order) do
     Order.changeset(order, %{})
   end
-
-  def listing_image(order, width \\ 1050) do
-    ticket = Enum.at(order.tickets, 0)
-
-    listing =
-      ticket.listing
-      |> TicketAgent.Repo.preload(:images)
-
-    image =
-      listing.images
-      |> hd
-
-    public_id =
-      image.url
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
-    Cloudinex.Url.for(public_id, %{
-      width: width,
-      height: 400,
-      gravity: "north",
-      crop: "fill",
-      flags: 'progressive'
-    })
-  end
 end
