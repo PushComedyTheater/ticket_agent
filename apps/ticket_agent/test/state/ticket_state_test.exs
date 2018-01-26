@@ -348,16 +348,17 @@ defmodule TicketAgent.State.TicketStateTest do
           order: nil,
           listing: listing,
           guest_name: nil,
-          guest_email: nil
+          guest_email: nil,
+          group: "group"
         ) 
       end)
-      multi = TicketState.lock_tickets(listing.id, order.id, 5, timestamp)
+      multi = TicketState.lock_tickets(listing.id, order.id, 5, "group", timestamp)
 
       assert [
         lock_tickets: {:update_all, query, updates, [returning: true]}
       ] = Multi.to_list(multi)
 
-      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  limit: ^5), on: t1.id == t0.id>"
+      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  where: t.group == ^\"group\",\n  limit: ^5), on: t1.id == t0.id>"
 
       assert updates == [set: [status: "locked", order_id: order.id, locked_until: timestamp]]
 
@@ -378,16 +379,17 @@ defmodule TicketAgent.State.TicketStateTest do
           order: nil,
           listing: listing,
           guest_name: nil,
-          guest_email: nil
+          guest_email: nil,
+          group: "group"
         ) 
       end)
-      multi = TicketState.lock_tickets(listing.id, order.id, 3, timestamp)
+      multi = TicketState.lock_tickets(listing.id, order.id, 3, "group", timestamp)
 
       assert [
         lock_tickets: {:update_all, query, updates, [returning: true]}
       ] = Multi.to_list(multi)
 
-      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  limit: ^3), on: t1.id == t0.id>"
+      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  where: t.group == ^\"group\",\n  limit: ^3), on: t1.id == t0.id>"
 
       assert updates == [set: [status: "locked", order_id: order.id, locked_until: timestamp]]
 
@@ -417,16 +419,17 @@ defmodule TicketAgent.State.TicketStateTest do
           order: nil,
           listing: listing,
           guest_name: nil,
-          guest_email: nil
+          guest_email: nil,
+          group: "group"
         ) 
       end)
-      multi = TicketState.lock_tickets(listing.id, order.id, 15, timestamp)
+      multi = TicketState.lock_tickets(listing.id, order.id, 15, "group", timestamp)
 
       assert [
         lock_tickets: {:update_all, query, updates, [returning: true]}
       ] = Multi.to_list(multi)
 
-      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  limit: ^15), on: t1.id == t0.id>"
+      assert inspect(query) == "#Ecto.Query<from t0 in TicketAgent.Ticket, join: t1 in subquery(from t in TicketAgent.Ticket,\n  where: t.listing_id == ^\"#{listing.id}\",\n  where: t.status == \"available\",\n  where: is_nil(t.locked_until),\n  where: is_nil(t.order_id),\n  where: is_nil(t.guest_name),\n  where: is_nil(t.guest_email),\n  where: t.group == ^\"group\",\n  limit: ^15), on: t1.id == t0.id>"
 
       assert updates == [set: [status: "locked", order_id: order.id, locked_until: timestamp]]
 
@@ -446,14 +449,22 @@ defmodule TicketAgent.State.TicketStateTest do
         :ticket, 
         guest_name: "patrick",
         guest_email: "patrick@veverka.net",
-        status: "locked", 
+        status: "locked",
         listing: listing, 
         order: order
       )
       
-      tickets = [%{"listing_id" => listing.id, "name" => ticket.guest_name, "email" => ticket.guest_email}]
+      tickets = [
+        %{
+          "listing_id" => listing.id, 
+          "name" => ticket.guest_name, 
+          "email" => ticket.guest_email, 
+          "group" => ticket.group,
+          "price" => ticket.price
+        }
+      ]
       count = 
-        TicketState.filter_created_tickets(order, listing.id, tickets)
+        TicketState.filter_created_tickets(order, listing.id, tickets, ticket.group)
         |> Enum.count
       
       assert count == 0
@@ -476,16 +487,20 @@ defmodule TicketAgent.State.TicketStateTest do
         %{
           "listing_id" => listing.id, 
           "name" => ticket.guest_name, 
-          "email" => ticket.guest_email
+          "email" => ticket.guest_email,
+          "group" => ticket.group,
+          "price" => ticket.price
         },
         %{
           "listing_id" => listing.id, 
           "name" => "James", 
-          "email" => "james@pushcomedytheater.com"
+          "email" => "james@pushcomedytheater.com",
+          "group" => ticket.group,
+          "price" => ticket.price
         }        
       ]
       count = 
-        TicketState.filter_created_tickets(order, listing.id, tickets)
+        TicketState.filter_created_tickets(order, listing.id, tickets, ticket.group)
         |> Enum.count
       
       assert count == 1
@@ -508,15 +523,25 @@ defmodule TicketAgent.State.TicketStateTest do
         %{
           "listing_id" => listing.id, 
           "name" => ticket.guest_name, 
-          "email" => ticket.guest_email
+          "email" => ticket.guest_email,
+          "group" => ticket.group,
+          "price" => ticket.price
         }      
       ]
 
       tickets = Enum.reduce(1..10, tickets, fn(counter, acc) ->
-        acc ++ [%{"listing_id" => listing.id, "name" => "James#{counter}", "email" => "james#{counter}@pushcomedytheater.com"}]
+        acc ++ [
+          %{
+            "listing_id" => listing.id, 
+            "name" => "James#{counter}", 
+            "email" => "james#{counter}@pushcomedytheater.com",
+            "group" => ticket.group,
+            "price" => ticket.price
+          }
+      ]
       end)
       count = 
-        TicketState.filter_created_tickets(order, listing.id, tickets)
+        TicketState.filter_created_tickets(order, listing.id, tickets, ticket.group)
         |> Enum.count
       
       assert count == 10
@@ -525,7 +550,7 @@ defmodule TicketAgent.State.TicketStateTest do
 
   describe "create_new_tickets" do
     test "doesn't create for empty tickets" do
-      assert [] == TicketState.create_new_tickets([], nil, nil)
+      assert :ok == TicketState.create_new_tickets([], nil, nil, "group")
     end
 
     test "creates when none exist" do
@@ -539,7 +564,8 @@ defmodule TicketAgent.State.TicketStateTest do
         order: nil,
         locked_until: nil,
         guest_name: nil,
-        guest_email: nil
+        guest_email: nil,
+        group: "group"
       )
 
       ticket = insert(
@@ -548,24 +574,28 @@ defmodule TicketAgent.State.TicketStateTest do
         guest_email: "patrick@veverka.net",
         status: "locked", 
         listing: listing, 
-        order: order
+        order: order,
+        group: "group"
       )
       
       tickets = [
         %{
           "listing_id" => listing.id, 
           "name" => ticket.guest_name, 
-          "email" => ticket.guest_email
+          "email" => ticket.guest_email,
+          "group" => ticket.group,
+          "price" => ticket.price
         },
         %{
           "listing_id" => listing.id, 
           "name" => "James", 
-          "email" => "james@pushcomedytheater.com"
+          "email" => "james@pushcomedytheater.com",
+          "group" => ticket.group,
+          "price" => ticket.price
         }        
       ]
       
-      response = TicketState.create_new_tickets(tickets, listing.id, order.id)
-      assert Enum.count(response) == 2
+      :ok = TicketState.create_new_tickets(tickets, listing.id, order.id, ticket.group)
 
       first = Repo.reload(first)
       assert first.status == "locked"
@@ -583,13 +613,21 @@ defmodule TicketAgent.State.TicketStateTest do
         guest_email: "patrick@veverka.net",
         status: "locked", 
         listing: listing, 
-        order: order
+        order: order,
+        group: "group"
       )
       
-      tickets = [%{"listing_id" => listing.id, "name" => ticket.guest_name, "email" => ticket.guest_email}]
-      {updated_order, updated_tickets, _} = TicketState.reserve_tickets(order, tickets)
-      assert order == updated_order
-      assert Enum.count(updated_tickets) == 1
+      tickets = [
+        %{
+          "listing_id" => listing.id, 
+          "name" => ticket.guest_name, 
+          "email" => ticket.guest_email,
+          "group" => ticket.group,
+          "price" => ticket.price
+        }
+      ]
+      :ok = TicketState.reserve_tickets(order, tickets, "group")
+  
     end
   end
 

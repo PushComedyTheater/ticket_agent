@@ -26,22 +26,27 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
 
     if slug == listing_id do
       conn
-      |> assign(:show_id, slug)
+      |> assign(:listing_id, slug)
       |> assign(:tickets, tickets)
-    # else
-    #   conn
-    #   |> delete_resp_cookie("ticket_data")
-    #   |> put_flash(:info, "Something went wrong with your request.")
-    #   |> redirect(to: "/")
+    else
+      conn
+      |> delete_resp_cookie("ticket_data")
+      |> put_flash(:error, "Something went wrong with your request.")
+      |> redirect(to: "/events/#{slug}")
     end
   end
 
+  def call(%Plug.Conn{params: %{"listing_id" => listing_id}} = conn, _) do
+      conn
+      |> delete_resp_cookie("ticket_data")
+      |> put_flash(:error, "Something went wrong with your request.")
+      |> redirect(to: "/events")
+  end
+
   def call(conn, _) do
-    IO.inspect conn.cookies
-    raise "FUCK"
     conn
     |> delete_resp_cookie("ticket_data")
-    |> put_flash(:info, "Something went wrong with your request.")
+    |> put_flash(:error, "Something went wrong with your request.")
     |> redirect(to: "/")
   end
 end

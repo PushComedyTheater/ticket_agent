@@ -8,7 +8,6 @@ defmodule TicketAgentWeb.TicketAuthController do
   alias TicketAgent.Emails.OneTimeLogin
   alias TicketAgent.Finders.UserFinder
   plug TicketAgentWeb.Plugs.TicketInfoLoader when action in [:new]
-  # plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
 
   def new(conn, %{"listing_id" => listing_id}) do
     if Coherence.logged_in?(conn) do

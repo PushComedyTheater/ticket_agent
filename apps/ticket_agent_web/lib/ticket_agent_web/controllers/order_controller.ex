@@ -6,8 +6,7 @@ defmodule TicketAgentWeb.OrderController do
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.Plugs.TicketInfoLoader when action in [:new]
   plug TicketAgentWeb.Plugs.ValidateShowRequest when action in [:new]
-  plug TicketAgentWeb.Plugs.ListingLoader when action in [:new]
-  # plug TicketAgentWeb.Plugs.ShowLoader when action in [:new]
+  plug TicketAgentWeb.Plugs.LoadListing when action in [:new]
 
   @host Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
 

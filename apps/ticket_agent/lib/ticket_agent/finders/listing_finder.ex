@@ -3,6 +3,12 @@ defmodule TicketAgent.Finders.ListingFinder do
   import Ecto.Query
   alias TicketAgent.{Listing, Repo}
 
+  def find_by_id(listing_id) do
+    Listing
+    |> Repo.get(listing_id)
+    |> Repo.preload(:event)
+  end
+
   def find_by_slug(slug) do
     query =
       from(

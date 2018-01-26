@@ -10,6 +10,7 @@ defmodule TicketAgent.Factory do
     Order,
     OrderDetail,
     Random,
+    Repo,
     Teacher,
     Ticket,
     User,
@@ -60,7 +61,11 @@ defmodule TicketAgent.Factory do
   end
 
   def event_factory do
-    %Event{}
+    %Event{
+      slug: Random.generate_slug(),
+      title: ExMachina.Sequence.next("title"),
+      description: @lorem,
+    }
   end
 
   def event_tag_factory do
@@ -75,13 +80,6 @@ defmodule TicketAgent.Factory do
       status: "active",
       start_at: DateTime.utc_now(),
       end_at: nil
-    }
-  end
-
-  def listing_image_factory do
-    %ListingImage{
-      listing: build(:listing),
-      url: "https://res.cloudinary.com/push-comedy-theater/image/upload/v1507293297/social/dxcfi6mfoag1mst2k0pr.png"
     }
   end
 
@@ -113,6 +111,7 @@ defmodule TicketAgent.Factory do
       listing: build(:listing),
       order: build(:order),
       name: sequence(:name, &"Ticket for It #{&1}"),
+      group: sequence(:group, &"group#{&1}"),
       status: "available",
       price: 500
     }

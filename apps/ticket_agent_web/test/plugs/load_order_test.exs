@@ -26,5 +26,14 @@ defmodule TicketAgentWeb.Plugs.LoadOrderTest do
 
       assert conn.assigns.order
     end
+
+    test "no order", %{conn: conn} do
+      conn =
+        conn
+        |> Map.put(:params, %{"order_id" => ""})
+        |> LoadOrder.call([])        
+
+      assert json_response(conn, 403)
+    end    
   end
 end

@@ -122,9 +122,7 @@ defmodule TicketAgent.State.TicketState do
   end
 
   # Locks a particular number of tickets
-  def lock_tickets(listing_id, order_id, tickets, group, timestamp \\ NaiveDateTime.utc_now()) do
-    quantity = Enum.count(tickets)
-
+  def lock_tickets(listing_id, order_id, quantity, group, timestamp \\ NaiveDateTime.utc_now()) do
     locked_until = timestamp |> Calendar.NaiveDateTime.add!(@seconds_to_add)
 
     Logger.info "lock_tickets->listing_id     = #{inspect listing_id}"
@@ -198,8 +196,11 @@ defmodule TicketAgent.State.TicketState do
   end
 
   def filter_created_tickets(order, listing_id, input_tickets, group) do
-    Logger.info "find_existing_tickets->order.id:         #{inspect order.id}"
-    Logger.info "find_existing_tickets->listing_id:       #{inspect listing_id}"
+    Logger.info "filter_created_tickets->order.id:         #{inspect order.id}"
+    Logger.info "filter_created_tickets->listing_id:       #{inspect listing_id}"
+    Logger.info "filter_created_tickets->group:            #{inspect group}"
+    # Logger.info "filter_created_tickets->input_tickets:    #{inspect input_tickets}"
+    
 
     existing_tickets = 
       listing_id
@@ -211,7 +212,9 @@ defmodule TicketAgent.State.TicketState do
     |> Enum.filter(fn(ticket) ->
       Enum.find(existing_tickets, fn(existing_ticket) -> 
         (
-          (existing_ticket.id == ticket["ticket_id"]) || 
+          (
+            existing_ticket.id == ticket["ticket_id"]
+          ) || 
           (
             (existing_ticket.guest_name == ticket["name"]) && 
             (existing_ticket.guest_email == ticket["email"]) && 
@@ -230,9 +233,11 @@ defmodule TicketAgent.State.TicketState do
   end
 
   def create_new_tickets(tickets, listing_id, order_id, group) when length(tickets) > 0 do
+    ticket_count = Enum.count(tickets)
+
     {:ok, item} =
       listing_id
-      |> lock_tickets(order_id, tickets, group)
+      |> lock_tickets(order_id, ticket_count, group)
       |> Repo.transaction()  
       
     available_tickets =

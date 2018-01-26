@@ -8,6 +8,7 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
       conn
       |> bypass_through(TicketAgentWeb.Router, :browser)
       |> get("/")
+
     {:ok, %{conn: conn}}
   end
 
@@ -15,9 +16,23 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
     test "redirects when there is nothing", %{conn: conn} do
       conn =
         conn
+        |> Map.put(:cookies, %{"ticket_data" => ""})
         |> ValidateShowRequest.call([])
 
       assert html_response(conn, 302)
+      refute conn.cookies["ticket_data"]
+    end
+
+    test "redirects when cookies aren't there", %{conn: conn} do
+      listing = insert(:listing)
+
+      conn =
+        conn
+        |> Map.put(:params, %{"listing_id" => listing.slug})
+        |> ValidateShowRequest.call([])
+
+      assert html_response(conn, 302)
+      refute conn.cookies["ticket_data"]
     end
 
     test "redirect if the show and slug don't match", %{conn: conn} do
@@ -35,7 +50,7 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
 
       conn =
         conn
-        |> Map.put(:params, %{"show_id" => listing.slug})
+        |> Map.put(:params, %{"listing_id" => listing.slug})
         |> Map.put(:cookies, %{"ticket_data" => cookies})
         |> ValidateShowRequest.call([])
 
@@ -57,11 +72,11 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
 
       conn =
         conn
-        |> Map.put(:params, %{"show_id" => listing.slug})
+        |> Map.put(:params, %{"listing_id" => listing.slug})
         |> Map.put(:cookies, %{"ticket_data" => cookies})
         |> ValidateShowRequest.call([])
 
-      assert conn.assigns.show_id == listing.slug
+      assert conn.assigns.listing_id == listing.slug
       assert conn.assigns.tickets == []
     end    
   end

@@ -101,8 +101,6 @@
   <% end %>
   };
 
-  console.log(tickets);
-
   window.details = {
     listing: {
       id: "<%= @listing.id %>",

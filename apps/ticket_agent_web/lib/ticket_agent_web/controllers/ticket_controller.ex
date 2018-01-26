@@ -3,8 +3,6 @@ defmodule TicketAgentWeb.TicketController do
   alias TicketAgent.Finders.TicketFinder
   plug TicketAgentWeb.Plugs.TicketAuthCheck when action in [:new]
   plug TicketAgentWeb.Plugs.TicketInfoLoader when action in [:new]
-  
-  # plug TicketAgentWeb.Plugs.TicketDetailsLoader when action in [:new]
 
   def new(conn, %{"listing_id" => listing_id}) do
     message = """

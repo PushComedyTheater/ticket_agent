@@ -56,12 +56,14 @@ defmodule TicketAgentWeb.SharedView do
     end
   end
 
+  def event_date(nil), do: ""
   def event_date(date) do
     date
     |> Calendar.DateTime.shift_zone!("America/New_York")
     |> Calendar.Strftime.strftime!("%m/%d/%Y")
   end
 
+  def event_time(nil), do: ""
   def event_time(date) do
     date
     |> Calendar.DateTime.shift_zone!("America/New_York")
