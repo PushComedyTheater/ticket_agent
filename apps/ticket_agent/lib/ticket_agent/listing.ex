@@ -103,9 +103,6 @@ defmodule TicketAgent.Listing do
   end
 
   def date_between(date, start_at, end_at) do
-    Logger.info "date     = #{date}"
-    Logger.info "start_at = #{start_at}"
-    Logger.info "end_at   = #{end_at}"
     (DateTime.compare(start_at, date) == :lt) && (DateTime.compare(end_at, date) == :gt)
   end  
 

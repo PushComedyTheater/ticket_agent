@@ -1,0 +1,31 @@
+<script id="ticket-template" type="text/x-handlebars-template">
+  <hr>
+  <div id="row_ticket_{{ticket_count}}" class="row form-group">
+    <div class="col-sm-5">
+      <label class="control-label">Ticket Name:</label>
+      <input type="text" class="form-control pull-right" value="" placeholder="e.g. General Admission">
+    </div>
+    <div class="col-sm-2">
+      <label class="control-label">Max Quantity:</label>
+      <input type="text" class="form-control pull-right" value="" placeholder="Number of tickets">    
+    </div> 
+    <div class="col-sm-2">
+      <label class="control-label">Price:</label>
+      <input type="text" class="form-control pull-right" value="" placeholder="Price without $">    
+    </div>          
+    <div class="col-sm-3">
+      <div class="btn-group">
+        <button type="button" class="btn btn-lg btn-default">
+          <i class="fa fa-cog"></i>
+        </button>
+        <button type="button" class="btn btn-lg btn-default">
+          <i class="fa fa-copy"></i>
+        </button>
+        <button type="button" class="btn btn-lg btn-default">
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+</script>

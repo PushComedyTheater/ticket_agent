@@ -20,7 +20,7 @@ defmodule TicketAgent.Finders.ListingFinder do
             left_join: listings in assoc(class, :listings),
             where: fragment("? < NOW()", listings.start_at),
             where: (is_nil(listings.end_at) or fragment("? > NOW()", listings.end_at)),
-            preload: [:prerequisite]
+            preload: [:prerequisite, :class_tickets]
 
     Repo.all(query)
   end    

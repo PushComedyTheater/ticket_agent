@@ -25,8 +25,21 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
     |> redirect(to: "/events")
   end
 
-  def setup_conn(%{start_at: start_at} = listing, conn) do
+  def setup_conn(%{start_at: start_at, class_id: nil, event_id: event_id} = listing, conn) do
     case past_date(start_at) do
+      true ->
+        conn
+        |> put_flash(:error, "The show #{listing.slug} has ended.")
+        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")        
+      false ->
+        conn
+        |> Plug.Conn.assign(:listing, listing)
+    end
+  end
+
+  def setup_conn(%{end_at: end_at, class_id: class_id, event_id: nil} = listing, conn) do
+    IO.inspect "CLAAS"
+    case past_date(end_at) do
       true ->
         conn
         |> put_flash(:error, "The show #{listing.slug} has ended.")
@@ -48,6 +61,4 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
 
     (DateTime.compare(start_at, utc_now) == :lt)
   end  
-
-
 end

@@ -1,3 +1,11 @@
+<span class="pull-right">
+<%= if is_nil(@show.event_id) do %>
+
+<%= link "View On Customer Site", to: class_path(@conn, :show, @show.class), class: "btn btn-info btn-md", target: "_blank" %>
+<% else %>
+<%= link "View On Customer Site", to: event_path(@conn, :show, @show), class: "btn btn-info btn-md", target: "_blank" %>
+<% end %>
+</span>
 <h2><%= @show.title %></h2>
 <div class="row">
   <div class="col-md-4 col-sm-6 col-xs-12">
@@ -65,11 +73,20 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body">
+       
         <table id="datatable" class="table table-bordered table-striped">
           <thead>
           <tr>
+            <th colspan="7">
+            Filter:&nbsp;
+            <input id="available_checkbox" type="checkbox"> Only Available
+            <input id="purchased_checkbox" type="checkbox"> Only Purchased
+            </th>
+          </tr>
+          <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Order</th>
             <th>Status</th>
             <th>Purchased</th>
             <th>Tickets Emailed</th>
@@ -81,6 +98,11 @@
           <tr>
             <td><%= ticket.slug %></td>
             <td><%= ticket.guest_name %></td>
+            <td><%= 
+              if ticket.order do
+                link ticket.order.slug, to: admin_order_path(@conn, :show, ticket.order), target: "_blank" 
+              end
+            %></td>
             <td><%= ticket.status %></td>
             <td><%= order_timestamp(ticket.purchased_at) %></td>
             <td><%= order_timestamp(ticket.emailed_at) %></td>
@@ -160,15 +182,31 @@
       }
     });
 
-    var table = $('#datatable').DataTable();
-    var filteredData = table
-    .column( 2 )
-    .data()
-    .filter( function ( value, index ) {
-        return value == "available" ? true : false;
-    } );      
-    console.log(filteredData);
-    table.data = filteredData;
+    $.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
+      if ($('#purchased_checkbox').is(':checked')) {
+        if (aData[3] == "purchased") {
+            return true;
+        } else {
+          return false;
+        }
+      }
+      if ($('#available_checkbox').is(':checked')) {
+        if (aData[3] == "available") {
+            return true;
+        } else {
+          return false;
+        }
+      }      
+      return true;
+    });
+    window.oTable = $('#datatable').DataTable( {
+        "lengthMenu": [[20, 25, 50, -1], [20, 25, 50, "All"]]
+    } );
+    $('#purchased_checkbox, #available_checkbox').on("click", function(e) {
+        console.log('click');
+        window.oTable.draw();
+    });
+    
   });
 
 </script>

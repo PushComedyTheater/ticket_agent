@@ -10,6 +10,4 @@ defmodule TicketAgentWeb.ClassView do
             select: c
     Repo.all(query)
   end
-
-  def current_class_listing(class), do: Listing.current_class_listing(class)  
 end

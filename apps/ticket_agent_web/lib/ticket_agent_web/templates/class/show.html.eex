@@ -47,10 +47,10 @@
       <% end %>
 
       <%= if listing do %>
-        <%= link "Enroll Now", to: event_path(@conn, :show, listing), class: "btn btn-xl u-btn-primary g-font-size-default" %>
+        <%= link "Register Now", to: ticket_path(@conn, :new, listing_id: listing.slug), class: "btn btn-xl u-btn-primary g-font-size-default" %>
+
       <% else %>
         <a class="btn btn-xl u-btn-success g-font-size-default" href="#waitlist_modal" data-modal-target="#waitlist_modal" data-modal-effect="slide">Not Currently Enrolling - Join Waitlist?</a>
-        
       <% end %>
     </div>
 

@@ -1,5 +1,8 @@
 defmodule TicketAgentWeb.SharedView do
   require Logger
+  alias TicketAgent.Listing
+
+  def current_class_listing(class), do: Listing.current_class_listing(class)  
 
   def google_calendar(listing) do
     url = "http://www.google.com/calendar/render?action=TEMPLATE"

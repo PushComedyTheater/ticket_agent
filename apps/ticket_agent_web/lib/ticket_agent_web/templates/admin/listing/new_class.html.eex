@@ -1,5 +1,8 @@
+<%= render "partial/listing_template.html", assigns %>
+<%= render "partial/ticket_template.html", assigns %>
 <%= form_for @changeset, admin_event_path(@conn, :create), [as: :listing], fn f -> %>
-<%= hidden_input f, :class_id %>
+  <%= hidden_input f, :class_id %>
+  <%= hidden_input f, :slug %>
   <div class="box box-primary">
     <div class="box-header with-border">
       <h3 class="box-title">New Class From <%= @class.title %></h3>
@@ -20,86 +23,80 @@
         <%= error_tag f, :description %>
         </div>
       </div>    
-
-      <div class="row form-group">
-        <div class="col-sm-2"><%= label f, :tags, class: "control-label" %></div>
-        <div class="col-sm-10">
-        <input type="text" id="tags" name="tags" placeholder="Comma Separated List Of Tags (e.g. improv, first-timers)" class="form-control">
-        <small>Any spaces will be converted into dashes</small>
-        </div>
-      </div>
     </div>
   </div>        
-     
-
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">When and where is your event?</h3>
+      <h3 class="box-title">When is your event?</h3>
+      <span class="pull-right">
+        <button id="add_another_time_btn" type="button" class="btn btn-block btn-success btn-flat"><i class="fa fa-fw fa-plus"></i> Add Another Time</button>
+      </span>
     </div>
     <!-- /.box-body -->
-    <div class="box-body">
-      <div class="row form-group">
-        <div class="col-sm-2"><label class="control-label" for="listing_start_time">Start time</label></div>
-        <div class="col-sm-10">
-          <div class="input-group">
-            <div class="input-group-addon">
-              <i class="fa fa-clock-o"></i>
-            </div>
-            <input type="text" class="form-control pull-right" id="start_time">
-          </div>        
-        </div>
-      </div>            
+    <div class="box-body" id="listing_times" data-counter="0">
     </div>
+    <hr>
   </div>
-
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Listing Images</h3>
-    </div>
-    <!-- /.box-body -->
-    <div class="box-body">
-      <div class="row">
-        <div class="col-sm-4">Event Image</div>
-        <div class="col-sm-4">
-          <img id="cover_image" src="<%= @class.image_url %>" style="zoom: 50%; padding: 5px;" /><br /><br />
-          <a href="#" id="upload_cover_photo" class="btn btn-primary">
-            Upload Photo
-          </a>
-          <a href="#" id="choose_cover_photo" class="btn btn-primary">
-            Choose Existing Photo
-          </a>
-          <!-- Button trigger modal -->
-        </div>
-      </div>
-    </div>
-  </div>   
-
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Tickets</h3>
-    </div>
-    <!-- /.box-body -->
-    <div class="box-body">
-      <div class="row">
-        <div class="col-sm-12">
-        <button id="add_paid_ticket" class="btn btn-block btn-primary btn-lg">Add Ticket</button>
-        </div>
-      </div>
-    </div>
-  </div>          
+        
 <% end %>
 
 <script type="text/javascript">
-  $(function () {
-    $('#start_time').daterangepicker({ timePicker: true, timePickerIncrement: 30, locale: {
-            format: 'MM/DD/YYYY h:mm A'
-        } });
+  window.current_date_time = new Date().toJSON().slice(0, 10) + " 00:00";
 
-$('#start_time').on('apply.daterangepicker', function(ev, picker) {
-  console.log(picker.startDate);
-  console.log(picker.endDate);
-  console.log(picker.startDate.format('MM/DD/YYYY h:mm A'));
-  console.log(picker.endDate.format('MM/DD/YYYY h:mm A'));
-});    
+  window.setup_date_pickers = function(counter) {
+    $('.listing_time').datetimepicker({
+      format: 'yyyy-mm-dd hh:ii',
+      showMeridian: true,
+      autoclose: true,
+      startDate: window.current_date_time,
+      todayBtn: true
+    })
+    .on('changeDate', function(ev){
+      var target = $(ev.target);
+      if (target.data("before")) {
+        var before = target.data("before");
+        $("#" + before).datetimepicker('setStartDate', target.val());
+        $("#" + before).datetimepicker('setInitialDate', target.val());
+      }
+    });
+  }
+
+  window.setup_delete_button = function(counter) {
+    $("#delete_" + counter).on("click", function(e) {
+      e.preventDefault();
+      if (confirm("Are you sure you want to remove this time and all associated tickets?")) {
+        $("#row_" + counter).remove();
+        $("#tickets_" + counter).remove();
+      }
+    });
+  };
+
+  window.setup_add_ticket_button = function(counter) {
+    $("#add_ticket_" + counter).on("click", function(e) {
+      e.preventDefault();
+      var detail = window.ticket_template({ticket_count: counter});
+      $("#tickets_" + counter).append(detail);
+    });
+  };  
+
+  window.add_listing_template = function() {
+    var times_counter = $(".listing_template").length;
+    var html = window.listing_template({times_counter: times_counter});
+    $("#listing_times").append(html);
+    window.setup_delete_button(times_counter);
+    window.setup_add_ticket_button(times_counter);
+    window.setup_date_pickers(times_counter);
+  }
+
+  $(function () {
+    window.listing_template = Handlebars.compile($("#listing-template").html());
+    window.ticket_template  = Handlebars.compile($("#ticket-template").html());
+
+    window.add_listing_template();
+
+    $("#add_another_time_btn").on("click", function(e) {
+      e.preventDefault();
+      window.add_listing_template();
+    });
   });
 </script>

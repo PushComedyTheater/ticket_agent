@@ -7,7 +7,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
   def index(conn, params) do
     params = cond do
       Map.has_key?(params, "status") ->
-        IO.inspect "yay"
         params
       true ->
         params
@@ -184,5 +183,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
     |> Repo.preload(:class)
     |> Repo.preload(:event)
     |> Repo.preload(:tickets)
+    |> Repo.preload(tickets: :order)
   end
 end
