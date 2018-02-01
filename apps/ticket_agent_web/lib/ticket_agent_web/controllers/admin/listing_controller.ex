@@ -18,7 +18,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def new(conn, %{"class_id" => "new"}) do
-
     conn
     |> render("new_class.html")
   end
@@ -29,10 +28,8 @@ defmodule TicketAgentWeb.Admin.ListingController do
       Class
       |> Repo.get(class_id)
 
-    changeset = Listing.from_class(current_user, class)
-
     conn
-    |> render("new_class.html", changeset: changeset, class: class)    
+    |> render("new_class.html", class: class)    
   end
 
   def new(conn, %{"event_id" => "new"}) do
