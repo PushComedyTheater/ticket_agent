@@ -1,0 +1,20 @@
+  <!-- BEGIN LISTING TEMPLATE -->
+  <div id="row_{{listing_counter}}" class="row form-group listing_template">
+     {{> listing_group listing_counter=listing_counter typer="start_time" }}
+     {{> listing_group listing_counter=listing_counter typer="end_time" }}    
+    <div class="col-sm-1">
+      <div id="add_ticket_group_{{listing_counter}}" class="input-group">
+        <a href="#" onclick="window.delete_listing({{listing_counter}}); return false;" class="btn btn-med">
+          <span class="glyphicon glyphicon-trash"></span> Delete Time
+        </a>
+        <a href="#" onclick="window.add_ticket(this); return false;" data-iterator="{{listing_counter}}" data-ticket-count="0" id="add_ticket_{{listing_counter}}" class="btn btn-block btn-primary btn-sm ticket_btn">
+          <i class="fa fa-ticket"></i> Add Ticket
+        </a>
+        <span id="ticket_missing_{{listing_counter}}" style="display: none;" class="help-block">You must create tickets for this listing..</span>
+      </div>
+    </div>
+  </div>
+  <div id="tickets_{{listing_counter}}">  
+  </div>
+  <hr>
+  <!-- BEGIN LISTING TEMPLATE -->

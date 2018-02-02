@@ -1,0 +1,14 @@
+<div class="col-sm-5" id="listing_{{typer}}_group_{{listing_counter}}">
+  <label class="control-label" for="listing_{{typer}}_{{listing_counter}}">Event Starts:</label>
+  <div class="input-group">
+    <div class="input-group-addon">
+      <i class="fa fa-clock-o"></i>
+    </div>
+    <input type="text" class="form-control pull-right listing_time" value="" id="listing_{{typer}}_{{listing_counter}}">
+    <div class="input-group-addon">
+      EST
+    </div>
+  </div>
+  <span id="listing_{{typer}}_error_{{listing_counter}}" style="display: none;" class="help-block">This field is required</span>
+  <span id="listing_time_error_{{listing_counter}}" style="display: none;" class="help-block">Start time must be before end time.</span>
+</div>

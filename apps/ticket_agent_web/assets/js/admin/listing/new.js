@@ -1,47 +1,41 @@
-window.PopupCenter = function(url, title, w, h) {
-  var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-  var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+import _ from './validation'
+import _ from './templates'
+window.current_date_time = new Date().toJSON().slice(0, 10) + " 00:00";
 
-  var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-  var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-  var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-  var top = ((height / 2) - (h / 2)) + dualScreenTop;
-
-  var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-
-  if (window.focus) {
-    newWindow.focus();
-  }
+window.delete_listing = function(listing_id) {
+  if (confirm("Are you sure you want to remove this time and all associated tickets?")) {
+    $("#row_" + listing_id).remove();
+    $("#tickets_" + listing_id).remove();
+  }  
 }
 
-window.set_image = function(type, url, thumbnail) {
-  $("#listing_" + type + "_image").val(url);
-  $("#" + type + "_image").attr("src", thumbnail).after("<br /><br />").css("zoom", "100%");
+window.add_ticket = function(item) {
+  var iterator = parseInt($(item).data("iterator"));
+  $("#tickets_0 .ticket_row").length
+
+
+
+  var current_ticket_count = parseInt($(item).data("ticket-count"));
+  console.log("current_ticket_count = " + current_ticket_count);
+
+  var detail = window.ticket_template({
+    ticket_count: iterator + "_" + current_ticket_count
+  });
+
+  $(item).data("ticket-count", current_ticket_count + 1);
+  $("#tickets_" + iterator).append(detail);
 }
 
-$("#choose_cover_photo").on("click", function() {
-  window.PopupCenter("/admin/images?tag=cover", "Images", "800", "500")
-  return false;
-});
+window.toggle_ticket_settings = function(ticket_counter_id) {
+  console.log("toggle_ticket_settings -> " + ticket_counter_id);
+  $("#row_ticket_settings_" + ticket_counter_id).toggle();
+}
 
-$("#choose_social_photo").on("click", function() {
-  window.PopupCenter("/admin/images?tag=social", "Images", "800", "500")
-  return false;
-});
-
-$("#upload_cover_photo").on("click", function() {
-  cloudinary.openUploadWidget(
-  {
-    cloud_name: 'push-comedy-theater',
-    upload_preset: 'upload_cover',
-    sources: ["local", "url", "facebook", "dropbox", "google_photos", "instagram"],
-    thumbnails: "#cover_image",
-    field_name: "listing[cover_image]"
-  },
-  function(error, result) { console.log(error, result) });
-})
-
-$(document).on('cloudinarywidgetfileuploadsuccess', function(e, data) {
-  window.set_cover_image(data.secure_url);
+window.delete_ticket = function(ticket_counter_id) {
+  console.log("delete_ticket -> " + ticket_counter_id);
+  $("#row_ticket_settings_" + counter).remove();
+  $("#row_ticket_" + counter).remove();
+}
+$(function () {
+  window.add_listing_template();
 });

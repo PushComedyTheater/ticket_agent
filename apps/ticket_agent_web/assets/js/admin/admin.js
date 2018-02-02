@@ -1,2 +1,2 @@
 import "phoenix_html"
-import "./listing/new"
+import { Socket } from "phoenix";
