@@ -1,3 +1,6 @@
+<script type="text/javascript">
+window.class_id = "<%= @class.id %>";
+</script>
 <%= form_for @conn, admin_event_path(@conn, :create), [as: :listing], fn f -> %>
   <%= hidden_input f, :class_id, value: @class.id %>
   <div class="box box-primary">
@@ -28,7 +31,9 @@
     <div class="box-header with-border">
       <h3 class="box-title">When is your event?</h3>
       <span class="pull-right">
-        <button id="add_another_time_btn" type="button" class="btn btn-block btn-success btn-flat"><i class="fa fa-fw fa-plus"></i> Add Another Time</button>
+        <button onclick="window.add_listing_template(); return false;" type="button" class="btn btn-block btn-success btn-flat">
+          <i class="fa fa-fw fa-plus"></i> Add Another Time
+        </button>
       </span>
     </div>
     <!-- /.box-body -->

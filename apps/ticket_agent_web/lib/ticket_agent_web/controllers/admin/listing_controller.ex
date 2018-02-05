@@ -115,6 +115,60 @@ defmodule TicketAgentWeb.Admin.ListingController do
     )
   end
 
+  def create(conn, %{"class_id" => class_id, "title" => title, "description" => description, "listings" => listings} = params) do
+    base = %{
+      slug: TicketAgent.Random.generate_slug(),
+      title: title,
+      description: description      
+    }
+
+    Enum.each(listings, fn(input_listing) ->
+
+      item = Map.merge(base, %{
+        status: "active",
+        start_at: input_listing["start_time"],
+        end_at: Map.get(input_listing, "end_time", nil),
+        slug: input_listing["slug"]
+      })   
+
+      listing = 
+        Listing.changeset(%Listing{}, item)
+        |> Repo.insert!
+
+      Enum.each(input_listing["tickets"], fn(input_ticket) ->
+        ticket = 
+          Ticket.changeset(
+            %Ticket{
+              slug: TicketAgent.Random.generate_slug(),
+              status: "available",
+            }, 
+            input_ticket
+          )
+
+
+        IO.puts "FUD"
+        IO.inspect ticket
+      end)
+
+      raise "dafsd"
+    end)
+
+
+    conn
+    |> render("new.html")
+  end  
+
+  def create(conn, params) do
+    IO.inspect params
+    conn
+  end
+
+  def edit(conn, %{"titled_slug" => titled_slug}) do
+    show = load_show(titled_slug)
+    changeset = Listing.changeset(show, %{})
+    render(conn, "edit.html", show: show, changeset: changeset)
+  end
+
   def count_by_day(query, date_field) do
     query
     |> group_by(
@@ -167,11 +221,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
     )
   end
 
-  def edit(conn, %{"titled_slug" => titled_slug}) do
-    show = load_show(titled_slug)
-    changeset = Listing.changeset(show, %{})
-    render(conn, "edit.html", show: show, changeset: changeset)
-  end
 
   def load_show(titled_slug) do
     [slug|_] = titled_slug |> String.split("-")

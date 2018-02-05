@@ -2,8 +2,8 @@ defmodule TicketAgent.Listing do
   require Logger
   use TicketAgent.Schema
 
-  @required ~w(slug title description status start_at end_at)a
-  @fields ~w(pass_fees_to_buyer)a
+  @required ~w(slug title description status start_at)a
+  @fields ~w(pass_fees_to_buyer end_at)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -53,8 +53,6 @@ defmodule TicketAgent.Listing do
   end  
 
   def get_cloudinary(image_url, width, height) do
-    IO.inspect image_url
-  
     public_id = get_public_id(image_url)
 
     Cloudinex.Url.for(public_id, %{

@@ -1,66 +1,45 @@
-<div id="row_ticket_{{ticket_count}}" class="row form-group ticket_row">
+<div id="row_ticket_{{iterator}}_{{current_ticket_count}}" class="row form-group ticket_row">
   <div class="col-sm-1">&nbsp;</div>
-  <div class="col-sm-4">
+  <div class="col-sm-4" id="ticket_name_{{iterator}}_{{current_ticket_count}}_group">
     <label class="control-label">Ticket Name:</label>
-    <input id="ticket_name_{{ticket_count}}" type="text" class="form-control pull-right" value="{{ticket_name}}" placeholder="e.g. General Admission">
+    <input id="ticket_name_{{iterator}}_{{current_ticket_count}}" type="text" class="form-control pull-right" value="{{ticket_name}}" placeholder="e.g. General Admission">
+    <span id="ticket_name_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
+    <span id="ticket_name_used_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This name has already been used.</span>
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2" id="ticket_quantity_{{iterator}}_{{current_ticket_count}}_group">
     <label class="control-label">Max Quantity:</label>
-    <input id="ticket_quantity_{{ticket_count}}" type="text" class="form-control pull-right" value="{{ticket_quantity}}" placeholder="Number of tickets">
+    <input id="ticket_quantity_{{iterator}}_{{current_ticket_count}}" type="number" class="form-control pull-right" value="{{ticket_quantity}}" placeholder="Number of tickets">
+    <span id="ticket_quantity_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
   </div>
-  <div class="col-sm-2">
+  <div class="col-sm-2" id="ticket_price_{{iterator}}_{{current_ticket_count}}_group">
     <label class="control-label">Price:</label>
-    <input id="ticket_price_{{ticket_count}}" class="form-control pull-right" value="{{ticket_price}}" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
+    <input id="ticket_price_{{iterator}}_{{current_ticket_count}}" class="form-control pull-right" value="{{ticket_price}}" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
+    <span id="ticket_price_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
   </div>
   <div class="col-sm-3">
     <div class="btn-group" style="margin-top: 15px;">
-      <button type="button" class="btn btn-lg btn-default" onclick="window.toggle_ticket_settings('{{ticket_count}}'); return false;">
+      <button type="button" class="btn btn-lg btn-default" onclick="window.toggle_ticket_settings('{{iterator}}_{{current_ticket_count}}'); return false;">
         <i class="fa fa-cog"></i>
       </button>
-      <button type="button" class="btn btn-lg btn-default ticket_copy" data-counter="{{ticket_count}}">
+      <button type="button" class="btn btn-lg btn-default" onclick="window.copy_ticket('{{iterator}}_{{current_ticket_count}}'); return false;">
         <i class="fa fa-copy"></i>
       </button>
-      <button type="button" class="btn btn-lg btn-default" onclick="window.delete_ticket('{{ticket_count}}'); return false;">
+      <button type="button" class="btn btn-lg btn-default" onclick="window.delete_ticket('{{iterator}}_{{current_ticket_count}}'); return false;">
         <i class="fa fa-trash"></i>
       </button>
     </div>
   </div>
 </div>
-<div id="row_ticket_settings_{{ticket_count}}" style="display: none;">
+<div id="row_ticket_settings_{{iterator}}_{{current_ticket_count}}" style="display: none;">
   <hr />
   <div class="row form-group">
     <div class="col-sm-12">
       <label>Description</label>
-      <textarea id="ticket_description_{{ticket_count}}" class="form-control" rows="3" placeholder="Additional ticket information."></textarea>
+      <textarea id="ticket_description_{{iterator}}_{{current_ticket_count}}" class="form-control" rows="3" placeholder="Additional ticket information."></textarea>
     </div>
   </div>
   <div class="row form-group">
-    <div class="col-sm-6" id="ticket_start_time_group_{{ticket_count}}">
-      <label class="control-label" for="ticket_start_time_{{ticket_count}}">Ticket Sale Starts:</label>
-      <div class="input-group">
-        <div class="input-group-addon">
-          <i class="fa fa-clock-o"></i>
-        </div>
-        <input type="text" class="form-control pull-right" value="" id="ticket_start_time_{{ticket_count}}">
-        <div class="input-group-addon">
-          EST
-        </div>
-      </div>
-      <span id="ticket_start_time_error_{{ticket_count}}" style="display: none;" class="help-block">This field is required</span>
-      <span id="ticket_time_error_{{ticket_count}}" style="display: none;" class="help-block">Start time must be before end time.</span>
-    </div>
-    <div class="col-sm-5" id="ticket_end_time_group_{{ticket_count}}">
-      <label class="control-label" for="ticket_end_time_{{ticket_count}}">Ticket Sale Ends:</label>
-      <div class="input-group">
-        <div class="input-group-addon">
-          <i class="fa fa-clock-o"></i>
-        </div>
-        <input type="text" class="form-control pull-right" value="" id="ticket_end_time_{{ticket_count}}">
-        <div class="input-group-addon">
-          EST
-        </div>
-      </div>
-      <span id="ticket_end_time_error_{{ticket_count}}" style="display: none;" class="help-block">This field is required</span>
-    </div>
+    {{> listing_group listing_counter=(concater iterator current_ticket_count) typer="start_time" label="Ticket Sale Starts:" }}
+    {{> listing_group listing_counter=(concater iterator current_ticket_count) typer="end_time" label="Ticket Sale Ends:"}}
   </div>
 </div>

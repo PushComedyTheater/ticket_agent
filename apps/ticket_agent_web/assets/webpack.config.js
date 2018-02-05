@@ -50,7 +50,15 @@ module.exports = {
   ],
   module: {
     rules: [
-      { test: /\.handlebars$/, loader: "handlebars-loader" }
+      { 
+        test: /\.handlebars$/, 
+        loader: "handlebars-loader?helperDirs[]=./helpers",
+        query: {
+          precompileOptions: {
+            knownHelpersOnly: false
+          }
+        } 
+      }
     ]
   }  
 };

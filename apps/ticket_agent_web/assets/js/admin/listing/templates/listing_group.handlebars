@@ -1,10 +1,12 @@
 <div class="col-sm-5" id="listing_{{typer}}_group_{{listing_counter}}">
-  <label class="control-label" for="listing_{{typer}}_{{listing_counter}}">Event Starts:</label>
+  <label class="control-label" for="listing_{{typer}}_{{listing_counter}}">
+    {{label}}
+  </label>
   <div class="input-group">
     <div class="input-group-addon">
       <i class="fa fa-clock-o"></i>
     </div>
-    <input type="text" class="form-control pull-right listing_time" value="" id="listing_{{typer}}_{{listing_counter}}">
+    <input type="text" class="form-control pull-right listing_time" value="{{value}}" id="listing_{{typer}}_{{listing_counter}}">
     <div class="input-group-addon">
       EST
     </div>

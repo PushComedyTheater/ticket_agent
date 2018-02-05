@@ -2,6 +2,8 @@ defmodule TicketAgent.Ticket do
   @moduledoc false
   use TicketAgent.Schema
 
+  @required ~w(slug name group status price)a
+  @fields ~w(description guest_name guest_email sale_start sale_end locked_until purchased_at emailed_at checked_in_at checked_in_by)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -29,7 +31,10 @@ defmodule TicketAgent.Ticket do
   @doc false
   def changeset(%Ticket{} = ticket, attrs) do
     ticket
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, @required ++ @fields)
+    |> validate_required(@required)
+    |> validate_inclusion(:status, ~w(available locked processing purchased emailed checkedin))
+    |> cast_assoc(:listing)
+    |> unique_constraint(:slug)    
   end
 end
