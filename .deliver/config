@@ -1,10 +1,10 @@
 APP="ticket_agent"
 
-BUILD_HOST="pushcomedytheater.com"
+BUILD_HOST="newpushers"
 BUILD_USER="pushers"
 BUILD_AT="/home/pushers/app_build"
 
-PRODUCTION_HOSTS="pushcomedytheater.com" 
+PRODUCTION_HOSTS="newpushers" 
 PRODUCTION_USER="pushers" 
 DELIVER_TO="/home/pushers/app_release" 
 

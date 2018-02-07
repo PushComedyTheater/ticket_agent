@@ -6,9 +6,8 @@ jobs:
   build:
     working_directory: ~/repo
     docker:
-      - image: circleci/elixir:1.5.2
-      - image: redis:3.2-alpine
-      - image: circleci/postgres:9.5
+      - image: circleci/elixir:1.6.1
+      - image: circleci/postgres:10-alpine-ram
         env:
           - POSTGRES_USER=ubuntu
           - POSTGRES_DB=ticket_agent_test
