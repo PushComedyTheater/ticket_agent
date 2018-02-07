@@ -12,7 +12,7 @@ defmodule TicketAgent.Application do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
     # if Mix.env != :test do
-      # :ok = :error_logger.add_report_handler(Sentry.Logger)
+    # :ok = :error_logger.add_report_handler(Sentry.Logger)
     # end
 
     Supervisor.start_link([
