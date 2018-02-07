@@ -1,7 +1,7 @@
 # TicketAgent
 
 [![CircleCI](https://circleci.com/bb/veverkap/ticket_agent.svg?style=svg&circle-token=83ca2abbfaf30749e60671e9c34fc4c5bb05b365)](https://circleci.com/bb/veverkap/ticket_agent)
-
+[![Twitter: @veverkap](https://img.shields.io/badge/contact-@veverkap-blue.svg?style=flat)](https://twitter.com/veverkap)
 title
 description
 start
