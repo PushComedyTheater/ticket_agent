@@ -49,6 +49,7 @@ release :ticket_agent do
   set version: "0.1.0"
   set applications: [
     :runtime_tools,
+    :misc_random,
     ticket_agent: :permanent,
     ticket_agent_web: :permanent
   ]

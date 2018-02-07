@@ -22,6 +22,7 @@ defmodule TicketAgent.Order do
     field :started_at, :utc_datetime
     field :processing_at, :utc_datetime
     field :completed_at, :utc_datetime
+    field :emailed_at, :utc_datetime
     field :errored_at, :utc_datetime
     field :cancelled_at, :utc_datetime
     timestamps(type: :utc_datetime)
@@ -56,5 +57,25 @@ defmodule TicketAgent.Order do
 
   def change_user(%Order{} = order) do
     Order.changeset(order, %{})
+  end
+
+  def additional_ticket_emails(%Order{} = order) do
+    order = case Ecto.assoc_loaded?(order.tickets) do
+      true -> order
+      false -> Repo.preload(order, :tickets)
+    end
+    order = case Ecto.assoc_loaded?(order.user) do
+      true -> order
+      false -> Repo.preload(order, :user)
+    end  
+    
+    order.tickets
+    |> Enum.filter(fn(ticket) -> 
+      ticket.status == "purchased" && 
+      ticket.guest_email != order.user.email 
+    end)
+    |> Enum.map(fn(ticket) ->
+      {ticket.guest_name, ticket.guest_email}
+    end)
   end
 end

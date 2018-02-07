@@ -1,4 +1,5 @@
 Logger.info "=========== BEGIN Processing Universe Event <%= String.replace(@title, "\"", "'") %> ==========="
+utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 <%= if @type == :class do %>
 <%= EEx.eval_file "./apps/ticket_agent/lib/mix/tasks/templates/class_listing.eex", assigns: assigns %>
 <% else %>

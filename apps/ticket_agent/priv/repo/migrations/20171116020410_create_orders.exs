@@ -17,6 +17,7 @@ defmodule TicketAgent.Repo.Migrations.CreateOrders do
       add :started_at, :timestamptz, default: nil
       add :processing_at, :timestamptz, default: nil
       add :completed_at, :timestamptz, default: nil
+      add :emailed_at, :timestamptz, default: nil
       add :errored_at, :timestamptz, default: nil
       add :cancelled_at, :timestamptz, default: nil
       timestamps(type: :timestamptz)

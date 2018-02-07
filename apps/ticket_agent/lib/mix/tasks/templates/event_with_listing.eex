@@ -23,7 +23,7 @@ listing = SeedHelpers.create_listing(
     title: "<%= String.replace(@title, "\"", "'") %>",
     description: """
     <%= @description %>
-    """,
+""",
     status: "active",
     start_at:  NaiveDateTime.from_iso8601!("<%= @start_time %>"),
     end_at:  NaiveDateTime.from_iso8601!("<%= @end_time %>")

@@ -8,7 +8,7 @@ defmodule Mix.Tasks.LoadEvents do
 
     non_words = File.read!("./apps/ticket_agent/lib/mix/tasks/ignore.txt")
                 |> String.split("\n")
-    parse_current(non_words)
+    # parse_current(non_words)
     parse_history_files(non_words)
   end
 
@@ -44,35 +44,6 @@ defmodule Mix.Tasks.LoadEvents do
       File.write!(uri, item) |> IO.inspect
     end)
   end
-
-  def generate_ticket(true, "purchased", price) do
-    guest_name = FakerElixir.Name.name()
-    guest_email = FakerElixir.Internet.email(:popular, guest_name)
-    """
-    sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-    {:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-    purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
-
-    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, \\"name\\", \\"group\\", status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'default', 'purchased', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', NULL, NULL, NULL, NOW(), NOW());\"
-
-    TicketAgent.Repo.query(sql)
-    """
-  end
-
-  def generate_ticket(true, "emailed", price) do
-    guest_name = FakerElixir.Name.name()
-    guest_email = FakerElixir.Internet.email(:popular, guest_name)    
-    """
-    sale_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800)
-    {:ok, seconds, _, _} = Calendar.NaiveDateTime.diff(listing.start_at, NaiveDateTime.utc_now())
-    purchased_at = NaiveDateTime.utc_now |> Calendar.NaiveDateTime.subtract!(FakerElixir.Number.between(86400, seconds))
-    emailed_at =  (purchased_at |> Calendar.NaiveDateTime.add!(FakerElixir.Number.between(0, 500)))
-
-    sql = \"INSERT INTO tickets (id, slug, listing_id, order_id, \\"name\\", \\"group\\", status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{TicketAgent.Random.generate_slug()}', '\#{listing.id}', '\#{order_id}', '\#{ticket_name}', 'default', 'emailed', '\#{ticket_name}', #{price * 100}, '#{guest_name}', '#{guest_email}', '\#{sale_start}', NULL, NULL, '\#{purchased_at}', '\#{emailed_at}', NULL, NULL, NOW(), NOW());\"
-
-    TicketAgent.Repo.query(sql)
-    """
-  end  
 
   def generate_ticket(false, _, price) do
     """
@@ -233,7 +204,7 @@ defmodule Mix.Tasks.LoadEvents do
       :class ->
         12
       _ ->
-        80
+        85
     end
     event = body["events"] |> hd
     listing = body["listing"]

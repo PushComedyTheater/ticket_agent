@@ -1,12 +1,17 @@
 Logger.info "=========== Writing <%= @ticket_count %> tickets for #{listing.id} ==========="
-sql = "INSERT INTO orders (id, user_id, credit_card_id, slug, status, subtotal, credit_card_fee, processing_fee, total_price, started_at, processing_at, completed_at, errored_at, cancelled_at, inserted_at, updated_at) VALUES (uuid_generate_v4(), '#{user.id}', '#{card.id}', '#{TicketAgent.Random.generate_slug()}', 'completed', 5000, 500, 500, 6000, NULL, NULL, NOW(), NULL, NULL, NOW(), NOW()) RETURNING cast(id as text);"
+ticket_name = "Ticket for <%= String.replace(@title, "'", "''") %>"
+listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
-%Postgrex.Result{rows: [[order_id]]} = TicketAgent.Repo.query!(sql)
-
-ticket_name = "Ticket for <%= String.replace(@title, "\"", "'") %>"
+sale_start = case DateTime.compare(listing_start, utc_now) do
+  :lt ->
+    listing_start
+  :gt ->
+    utc_now
+end
+rows = []
+sql = "INSERT INTO tickets (id, slug, listing_id, order_id, \"name\", \"group\", status, description, price, guest_name, guest_email, sale_start, sale_end, locked_until, purchased_at, emailed_at, checked_in_at, checked_in_by, inserted_at, updated_at) VALUES "
 <%= for number <- (1..@ticket_count) do %>
-<%= Mix.Tasks.LoadEvents.generate_ticket(
-  TicketAgent.Random.sample([true, true, false, true, false, true, true]),
-  TicketAgent.Random.sample(["purchased", "emailed"]),
-  @price) %>
+rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as text), '-', ''), 0, 11), '#{listing.id}', NULL, '#{ticket_name}', 'default', 'available', '#{ticket_name}', #{<%= @price %> * 100}, NULL, NULL, '#{sale_start}', NULL, NULL, NULL, NULL, NULL, NULL, NOW(), NOW())"]
 <% end %>
+sql = sql <> Enum.join(rows, ", ")
+{:ok, result} = TicketAgent.Repo.query(sql)
