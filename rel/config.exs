@@ -37,6 +37,7 @@ environment :prod do
   set include_erts: true
   set include_src: false
   set cookie: :"ts79:gDyQxY&6l=9~HV$8]tajqaRjVin{kz!RY?8vCHg*T@F3RpCgJdlfyd/3E7P"
+  set output_dir: "rel/ticket_agent"
 end
 
 # You may define one or more releases in this file.
