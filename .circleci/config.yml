@@ -19,6 +19,10 @@ jobs:
       - restore_cache:
           key: myapp-deps-{{ checksum "mix.lock" }}
       - run:
+          name: Install psql
+          command: |
+            sudo apt install postgresql-client
+      - run:
           name: Setup Hex/Rebar
           command: |
             mix local.hex --force
