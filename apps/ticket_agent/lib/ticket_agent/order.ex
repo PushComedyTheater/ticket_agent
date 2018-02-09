@@ -75,7 +75,7 @@ defmodule TicketAgent.Order do
       ticket.guest_email != order.user.email 
     end)
     |> Enum.map(fn(ticket) ->
-      {ticket.guest_name, ticket.guest_email}
+      {ticket.id, ticket.guest_name, ticket.guest_email}
     end)
   end
 end

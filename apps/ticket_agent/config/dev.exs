@@ -11,3 +11,4 @@ config :ticket_agent, TicketAgent.Repo,
   log: true
 
 config :ticket_agent, :email_base_url, "https://veverka.ngrok.io"
+config :ticket_agent, :pdf_generator, TicketAgent.PdfGenerator.Generator

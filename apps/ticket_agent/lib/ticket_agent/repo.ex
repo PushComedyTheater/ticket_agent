@@ -12,5 +12,5 @@ defmodule TicketAgent.Repo do
 
   def reload(%module{id: id}) do
     get(module, id)
-  end  
+  end
 end

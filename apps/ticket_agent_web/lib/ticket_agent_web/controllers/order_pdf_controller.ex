@@ -13,7 +13,7 @@ defmodule TicketAgentWeb.OrderPdfController do
         |> put_status(404)
         |> render(TicketAgentWeb.ErrorView, "404.html")
       order ->
-        value = OrderPdfGenerator.generate_pdf_binary(order)
+        value = OrderPdfGenerator.generate_order_pdf_binary(order)
 
         conn
         |> put_resp_content_type("application/pdf")

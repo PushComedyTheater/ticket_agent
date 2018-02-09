@@ -29,6 +29,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -305,6 +319,7 @@ CREATE TABLE orders (
     started_at timestamp with time zone,
     processing_at timestamp with time zone,
     completed_at timestamp with time zone,
+    emailed_at timestamp with time zone,
     errored_at timestamp with time zone,
     cancelled_at timestamp with time zone,
     inserted_at timestamp with time zone NOT NULL,
@@ -1098,6 +1113,14 @@ ALTER TABLE ONLY versions
 
 
 --
+-- Name: waitlists waitlists_class_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY waitlists
+    ADD CONSTRAINT waitlists_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id);
+
+
+--
 -- Name: waitlists waitlists_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1117,5 +1140,5 @@ ALTER TABLE ONLY waitlists
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO "schema_migrations" (version) VALUES (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180102135330);
+INSERT INTO "schema_migrations" (version) VALUES (20170724134755), (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180102135330);
 

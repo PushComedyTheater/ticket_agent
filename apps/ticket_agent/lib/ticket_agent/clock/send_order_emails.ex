@@ -65,8 +65,8 @@ defmodule TicketAgent.Clock.SendOrderEmails do
         Logger.info "Sending additional emails #{order.id}"
         order
         |> Order.additional_ticket_emails()
-        |> Enum.each(fn({name, email}) ->
-          Logger.info "Sending email to #{email}"
+        |> Enum.each(fn({ticket_id, name, email}) ->
+          Logger.info "Sending email to #{ticket_id} #{email}"
           IO.inspect name
           IO.inspect email
         end)
