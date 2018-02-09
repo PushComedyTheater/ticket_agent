@@ -8,33 +8,33 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Improv 101 Grad Show ==========="
+Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Class Dismissed: The Improv 101 Grad Show ==========="
+Logger.info "=========== Writing Event Tales from the Campfire: The Improvised Ghost Story ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "KZCMX1",
-    title: "Class Dismissed: The Improv 101 Grad Show",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/87dc866e-46e3-4d6e-9494-46cc076c3e6d",
+    slug: "G8KV4Z",
+    title: "Tales from the Campfire: The Improvised Ghost Story",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf",
     description: """
-    <p>Dust off those caps and gowns... because it's graduation time at the Push.
+    <p>I ain't afraid of no ghost!<br>
 </p>
-<p>Check out the Push Comedy Theater's Improv 101 class as they show off their comedy chops.
+<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
 </p>
-<p>You won't believe what these improv newcomers have in store for you!!!
+<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
 </p>
-<p>Class Dismissed: The Improv 101 Graduation Show<br>Tuesday, January 16th at 7pm<br>Tickets are $5
+<p><strong><br></strong>
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p><br>
 </p>
-<p>--
+<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
 </p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts will host live sketch and improv comedy on Friday and Saturday nights. During the week classes are offered in sketch writing, improv comedy and acting.
+<p>Friday, February 16th at 8pm
 </p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+<p>Tickets are $5
 </p>
     """,
     status: "normal",
@@ -43,37 +43,37 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Class Dismissed: The Improv 101 Grad Show ==========="
+Logger.info "=========== Writing Event Listing Tales from the Campfire: The Improvised Ghost Story ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "KZCMX1",
-    title: "Class Dismissed: The Improv 101 Grad Show",
+    slug: "G8KV4Z",
+    title: "Tales from the Campfire: The Improvised Ghost Story",
     description: """
-    <p>Dust off those caps and gowns... because it's graduation time at the Push.
+    <p>I ain't afraid of no ghost!<br>
 </p>
-<p>Check out the Push Comedy Theater's Improv 101 class as they show off their comedy chops.
+<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
 </p>
-<p>You won't believe what these improv newcomers have in store for you!!!
+<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
 </p>
-<p>Class Dismissed: The Improv 101 Graduation Show<br>Tuesday, January 16th at 7pm<br>Tickets are $5
+<p><strong><br></strong>
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p><br>
 </p>
-<p>--
+<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
 </p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts will host live sketch and improv comedy on Friday and Saturday nights. During the week classes are offered in sketch writing, improv comedy and acting.
+<p>Friday, February 16th at 8pm
 </p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+<p>Tickets are $5
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-17 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-17 01:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-02-17 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-17 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -94,25 +94,17 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert graduation
+# Insert ghost
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "graduation"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert students
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "students"
+  tag: "ghost"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Class Dismissed: The Improv 101 Grad Show"
+ticket_name = "Ticket for Tales from the Campfire: The Improvised Ghost Story"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -296,4 +288,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Class Dismissed: The Improv 101 Grad Show ==========="
+Logger.info "=========== END Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="

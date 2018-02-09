@@ -8,30 +8,32 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== BEGIN Processing Universe Event Couples Therapy ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== Writing Event Couples Therapy ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "LM4GXV",
-    title: "Class Dismissed: The Improv 201 Graduation Show",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/8b5822d7-25d6-4a77-a774-ff0916f5db49",
+    slug: "SXNJHF",
+    title: "Couples Therapy",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/496fbc13-a69a-41cb-82ca-5d4cbcc3e5a2",
     description: """
-    <p><strong></strong><strong>Dust off those caps and gowns... because it's graduation time at the Push.</strong>
+    <p>You think your relationship has problems?!?
 </p>
-<p>Check out the Push Comedy Theater's Improv 201 class as they show off their comedy chops.
+<p><br><br>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, Sean and Heather take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
 </p>
-<p>Watch as these brave 201 souls dive head first into the wonderful world of The Harold. So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+<p><br><br>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
 </p>
-<p>The Harold is perhaps the best know style of long form improv. It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+<p><br><br>Two Improvisers... One Scene!!!
 </p>
-<p><strong>Class Dismissed: The Improv 201 Graduation Show </strong><br>Monday, January 22nd at 7pm<br>Tickets are $5
+<p><br><br>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, January 20th at 8pm<br>Tickets are $5
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
+<p><br><br>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p><br>
     """,
     status: "normal",
     account_id: account.id,
@@ -39,33 +41,35 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== Writing Event Listing Couples Therapy ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "LM4GXV",
-    title: "Class Dismissed: The Improv 201 Graduation Show",
+    slug: "SXNJHF",
+    title: "Couples Therapy",
     description: """
-    <p><strong></strong><strong>Dust off those caps and gowns... because it's graduation time at the Push.</strong>
+    <p>You think your relationship has problems?!?
 </p>
-<p>Check out the Push Comedy Theater's Improv 201 class as they show off their comedy chops.
+<p><br><br>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, Sean and Heather take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
 </p>
-<p>Watch as these brave 201 souls dive head first into the wonderful world of The Harold. So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+<p><br><br>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
 </p>
-<p>The Harold is perhaps the best know style of long form improv. It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+<p><br><br>Two Improvisers... One Scene!!!
 </p>
-<p><strong>Class Dismissed: The Improv 201 Graduation Show </strong><br>Monday, January 22nd at 7pm<br>Tickets are $5
+<p><br><br>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, January 20th at 8pm<br>Tickets are $5
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
+<p><br><br>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p><br>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-23 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-23 01:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-21 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-21 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -86,33 +90,33 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert graduation
+# Insert couple
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "graduation"
+  tag: "couple"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert students
+# Insert therapy
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "students"
+  tag: "therapy"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert harold
+# Insert couples
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "harold"
+  tag: "couples"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Class Dismissed: The Improv 201 Graduation Show"
+ticket_name = "Ticket for Couples Therapy"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -296,4 +300,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== END Processing Universe Event Couples Therapy ==========="

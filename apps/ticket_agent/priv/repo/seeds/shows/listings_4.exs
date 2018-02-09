@@ -8,33 +8,31 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== BEGIN Processing Universe Event Musical Improv with Double Treble ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== Writing Event Musical Improv with Double Treble ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "2H9JZ3",
-    title: "Monocle: Style Glamour Sophistication Comedy",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6d12e202-9751-4905-b307-1f75327c98bf",
+    slug: "V68WJ4",
+    title: "Musical Improv with Double Treble",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/27884f84-c5fe-414b-ad7c-2ed7b10519e8",
     description: """
-    <p><strong>Monocle</strong>
+    <p>Double Treble is back for more musical improv fun!<br>
 </p>
-<p><strong>Style. Glamour. Sophistication. Comedy.</strong>
+<p>Get ready for the musical stylings of Hampton Roads' new Musical Improv Duo: Double Treble!!!
 </p>
-<p>With a single one word suggestion, this team of elegant improvisers will fill each act with a single 25 minute long scene of profound characters under spectacular circumstances. All made up on the spot before your very eyes!
+<p>You read right: MUSICAL IMPROV!
 </p>
-<p><br>
+<p>Sit back in amazement as Kate Baldwin and Alba Woolard dazzle you as they create 2 completely improvised musicals before your very eyes!
 </p>
-<p><strong>Monocle</strong>
+<p>The duo are joined by the amazing and talented Andy Poindexter on the keyboard! Don't miss this spectacular event!
 </p>
-<p><strong>Saturday, December 2nd at the Push Comedy Theater</strong>
+<p>Double Treble: 2 Women, 2 Musicals, All Improv
 </p>
-<p>The show starts at 10pm, tickets are $5
+<p>Saturday, February 17th at 8pm
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p>Tickets are $5
 </p>
 <p>---
 </p>
@@ -51,32 +49,30 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== Writing Event Listing Musical Improv with Double Treble ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "2H9JZ3",
-    title: "Monocle: Style Glamour Sophistication Comedy",
+    slug: "V68WJ4",
+    title: "Musical Improv with Double Treble",
     description: """
-    <p><strong>Monocle</strong>
+    <p>Double Treble is back for more musical improv fun!<br>
 </p>
-<p><strong>Style. Glamour. Sophistication. Comedy.</strong>
+<p>Get ready for the musical stylings of Hampton Roads' new Musical Improv Duo: Double Treble!!!
 </p>
-<p>With a single one word suggestion, this team of elegant improvisers will fill each act with a single 25 minute long scene of profound characters under spectacular circumstances. All made up on the spot before your very eyes!
+<p>You read right: MUSICAL IMPROV!
 </p>
-<p><br>
+<p>Sit back in amazement as Kate Baldwin and Alba Woolard dazzle you as they create 2 completely improvised musicals before your very eyes!
 </p>
-<p><strong>Monocle</strong>
+<p>The duo are joined by the amazing and talented Andy Poindexter on the keyboard! Don't miss this spectacular event!
 </p>
-<p><strong>Saturday, December 2nd at the Push Comedy Theater</strong>
+<p>Double Treble: 2 Women, 2 Musicals, All Improv
 </p>
-<p>The show starts at 10pm, tickets are $5
+<p>Saturday, February 17th at 8pm
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p>Tickets are $5
 </p>
 <p>---
 </p>
@@ -88,8 +84,8 @@ listing = SeedHelpers.create_listing(
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-20 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-20 02:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-02-18 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-18 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -110,9 +106,25 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
+# Insert music
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  event_id: event.id,
+  tag: "music"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert musical
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  event_id: event.id,
+  tag: "musical"
+})
+Logger.info "=========== Wrote tag ==========="
+
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Monocle: Style Glamour Sophistication Comedy"
+ticket_name = "Ticket for Musical Improv with Double Treble"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -296,4 +308,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Monocle: Style Glamour Sophistication Comedy ==========="
+Logger.info "=========== END Processing Universe Event Musical Improv with Double Treble ==========="

@@ -8,32 +8,52 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Couples Therapy ==========="
+Logger.info "=========== BEGIN Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Couples Therapy ==========="
+Logger.info "=========== Writing Event Date Night: With Brad McMurran and Alba Woolard ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "SXNJHF",
-    title: "Couples Therapy",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/496fbc13-a69a-41cb-82ca-5d4cbcc3e5a2",
+    slug: "8N56FR",
+    title: "Date Night: With Brad McMurran and Alba Woolard",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824",
     description: """
-    <p>You think your relationship has problems?!?
+    <p><strong>Get ready as we improvise your relationship.</strong>
 </p>
-<p><br><br>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, Sean and Heather take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
+<p>It's the most fun you'll ever have on date night!
 </p>
-<p><br><br>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
+<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
 </p>
-<p><br><br>Two Improvisers... One Scene!!!
+<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
 </p>
-<p><br><br>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
+<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
 </p>
-<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, January 20th at 8pm<br>Tickets are $5
+<p><br>
 </p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><strong>Date Night: With Brad and Alba</strong>
 </p>
-<p><br><br>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p><br>
+<p>Friday, March 2nd at 8pm
+</p>
+<p>Tickets are $5
+</p>
+<p>---
+</p>
+<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
+</p>
+<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
+</p>
+<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
+</p>
+<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
+</p>
+<p>---
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
     """,
     status: "normal",
     account_id: account.id,
@@ -41,35 +61,55 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Couples Therapy ==========="
+Logger.info "=========== Writing Event Listing Date Night: With Brad McMurran and Alba Woolard ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "SXNJHF",
-    title: "Couples Therapy",
+    slug: "8N56FR",
+    title: "Date Night: With Brad McMurran and Alba Woolard",
     description: """
-    <p>You think your relationship has problems?!?
+    <p><strong>Get ready as we improvise your relationship.</strong>
 </p>
-<p><br><br>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, Sean and Heather take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
+<p>It's the most fun you'll ever have on date night!
 </p>
-<p><br><br>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
+<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
 </p>
-<p><br><br>Two Improvisers... One Scene!!!
+<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
 </p>
-<p><br><br>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
+<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
 </p>
-<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, January 20th at 8pm<br>Tickets are $5
+<p><br>
 </p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><strong>Date Night: With Brad and Alba</strong>
 </p>
-<p><br><br>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p><br>
+<p>Friday, March 2nd at 8pm
+</p>
+<p>Tickets are $5
+</p>
+<p>---
+</p>
+<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
+</p>
+<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
+</p>
+<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
+</p>
+<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
+</p>
+<p>---
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
+</p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-21 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-21 02:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-03-03 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-03-03 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -90,19 +130,19 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert couple
+# Insert date-night
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "couple"
+  tag: "date-night"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert therapy
+# Insert sketch
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "therapy"
+  tag: "sketch"
 })
 Logger.info "=========== Wrote tag ==========="
 
@@ -116,7 +156,7 @@ Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Couples Therapy"
+ticket_name = "Ticket for Date Night: With Brad McMurran and Alba Woolard"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -300,4 +340,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Couples Therapy ==========="
+Logger.info "=========== END Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="

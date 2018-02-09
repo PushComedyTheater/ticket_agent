@@ -8,29 +8,41 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== BEGIN Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== Writing Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "LM4GXV",
-    title: "Class Dismissed: The Improv 201 Graduation Show",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/8b5822d7-25d6-4a77-a774-ff0916f5db49",
+    slug: "K3CQGB",
+    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6a654ad0-cfee-43a6-9c35-dc86dfd97340",
     description: """
-    <p><strong></strong><strong>Dust off those caps and gowns... because it's graduation time at the Push.</strong>
+    <p>Prepare for Glory!!
 </p>
-<p>Check out the Push Comedy Theater's Improv 201 class as they show off their comedy chops.
+<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
 </p>
-<p>Watch as these brave 201 souls dive head first into the wonderful world of The Harold. So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
 </p>
-<p>The Harold is perhaps the best know style of long form improv. It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
 </p>
-<p><strong>Class Dismissed: The Improv 201 Graduation Show </strong><br>Monday, January 22nd at 7pm<br>Tickets are $5
+<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
+</p>
+<p><br>Let the final war for comedic supremacy begin!
+</p>
+<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
+</p>
+<p>The show starts at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
 </p>
     """,
     status: "normal",
@@ -39,33 +51,45 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== Writing Event Listing IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "LM4GXV",
-    title: "Class Dismissed: The Improv 201 Graduation Show",
+    slug: "K3CQGB",
+    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
     description: """
-    <p><strong></strong><strong>Dust off those caps and gowns... because it's graduation time at the Push.</strong>
+    <p>Prepare for Glory!!
 </p>
-<p>Check out the Push Comedy Theater's Improv 201 class as they show off their comedy chops.
+<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
 </p>
-<p>Watch as these brave 201 souls dive head first into the wonderful world of The Harold. So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
 </p>
-<p>The Harold is perhaps the best know style of long form improv. It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
 </p>
-<p><strong>Class Dismissed: The Improv 201 Graduation Show </strong><br>Monday, January 22nd at 7pm<br>Tickets are $5
+<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
+</p>
+<p><br>Let the final war for comedic supremacy begin!
+</p>
+<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
+</p>
+<p>The show starts at 10pm
+</p>
+<p>Tickets are $5
+</p>
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+</p>
+<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-23 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-23 01:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-21 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-21 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -86,33 +110,33 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert graduation
+# Insert improvageddon
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "graduation"
+  tag: "improvageddon"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert students
+# Insert contest
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "students"
+  tag: "contest"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert harold
+# Insert final
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "harold"
+  tag: "final"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Class Dismissed: The Improv 201 Graduation Show"
+ticket_name = "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -296,4 +320,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Class Dismissed: The Improv 201 Graduation Show ==========="
+Logger.info "=========== END Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="

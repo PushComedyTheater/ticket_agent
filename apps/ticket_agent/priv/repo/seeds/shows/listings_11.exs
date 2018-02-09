@@ -8,14 +8,14 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== BEGIN Processing Universe Event Date Night ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== Writing Event Date Night ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "P42DB7",
-    title: "Date Night: With Brad McMurran and Alba Woolard",
+    slug: "W4SZ35",
+    title: "Date Night",
     image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824",
     description: """
     <p><strong>Get ready as we improvise your relationship.</strong>
@@ -32,7 +32,7 @@ event = SeedHelpers.create_event(
 </p>
 <p><strong>Date Night: With Brad and Alba</strong>
 </p>
-<p>Friday, February 2nd at 8pm
+<p>Friday, January 5th at 8pm
 </p>
 <p>Tickets are $5
 </p>
@@ -61,14 +61,14 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== Writing Event Listing Date Night ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "P42DB7",
-    title: "Date Night: With Brad McMurran and Alba Woolard",
+    slug: "W4SZ35",
+    title: "Date Night",
     description: """
     <p><strong>Get ready as we improvise your relationship.</strong>
 </p>
@@ -84,7 +84,7 @@ listing = SeedHelpers.create_listing(
 </p>
 <p><strong>Date Night: With Brad and Alba</strong>
 </p>
-<p>Friday, February 2nd at 8pm
+<p>Friday, January 5th at 8pm
 </p>
 <p>Tickets are $5
 </p>
@@ -108,8 +108,8 @@ listing = SeedHelpers.create_listing(
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-02-03 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-03 02:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-06 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -156,7 +156,7 @@ Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Date Night: With Brad McMurran and Alba Woolard"
+ticket_name = "Ticket for Date Night"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -340,4 +340,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== END Processing Universe Event Date Night ==========="

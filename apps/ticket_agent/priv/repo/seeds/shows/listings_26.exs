@@ -8,41 +8,35 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== BEGIN Processing Universe Event Teacher's Pet ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== Writing Event Teacher's Pet ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "K3CQGB",
-    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6a654ad0-cfee-43a6-9c35-dc86dfd97340",
+    slug: "D96S1T",
+    title: "Teacher's Pet",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bc96f7b9-01c2-4ac8-9566-5bfdfa7f658d",
     description: """
-    <p>Prepare for Glory!!
+    <p><strong>The Students Become The Masters!!!</strong>
 </p>
-<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
+<p>Teachers and students will join forces for a good old fashioned improv jam!!!
 </p>
-<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
+<p>Don't miss it! Some of the Push Comedy's Theater's funniest students share the stage with their teachers, The Pushers. Ordinarily we frown upon fraternization between teachers and students... but for one night only all bets are off!!!
 </p>
-<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
+<p><strong>Teachers Pet</strong><br>Friday, January 12th, 10pm<br>Tickets are $5
 </p>
-<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
+<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
-<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
+<p>--<br>
 </p>
-<p><br>Let the final war for comedic supremacy begin!
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
 </p>
-<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
+<p>The Push Comedy Theater will host live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes will be offered in stand-up, sketch and improv comedy as well as acting and film production.
 </p>
-<p>The show starts at 10pm
-</p>
-<p>Tickets are $5
-</p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
     """,
     status: "normal",
@@ -51,45 +45,39 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== Writing Event Listing Teacher's Pet ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "K3CQGB",
-    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    slug: "D96S1T",
+    title: "Teacher's Pet",
     description: """
-    <p>Prepare for Glory!!
+    <p><strong>The Students Become The Masters!!!</strong>
 </p>
-<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
+<p>Teachers and students will join forces for a good old fashioned improv jam!!!
 </p>
-<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
+<p>Don't miss it! Some of the Push Comedy's Theater's funniest students share the stage with their teachers, The Pushers. Ordinarily we frown upon fraternization between teachers and students... but for one night only all bets are off!!!
 </p>
-<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
+<p><strong>Teachers Pet</strong><br>Friday, January 12th, 10pm<br>Tickets are $5
 </p>
-<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
+<p><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
-<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
+<p>--<br>
 </p>
-<p><br>Let the final war for comedic supremacy begin!
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
 </p>
-<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
+<p>The Push Comedy Theater will host live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes will be offered in stand-up, sketch and improv comedy as well as acting and film production.
 </p>
-<p>The show starts at 10pm
-</p>
-<p>Tickets are $5
-</p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
-</p>
-<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-21 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-21 04:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-13 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-13 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -110,33 +98,25 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert improvageddon
+# Insert graduation-show
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "improvageddon"
+  tag: "graduation-show"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert contest
+# Insert students
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "contest"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert final
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "final"
+  tag: "students"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION"
+ticket_name = "Ticket for Teacher''s Pet"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -320,4 +300,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== END Processing Universe Event Teacher's Pet ==========="

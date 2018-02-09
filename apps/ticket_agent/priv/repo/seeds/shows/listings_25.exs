@@ -8,39 +8,47 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Harold Night ==========="
+Logger.info "=========== BEGIN Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Harold Night ==========="
+Logger.info "=========== Writing Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "RPB6JG",
-    title: "Harold Night",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4",
+    slug: "N0VHXG",
+    title: "SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/83a0c1e9-fd2e-4b82-9e5b-a1edaf6416c9",
     description: """
-    <p>It's Harold Night at the Push Comedy Theater!
+    <p><strong>Don't miss this epic sketch comedy showdown, where truly anything can happen.</strong><br>
 </p>
-<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+<p>And we do mean anything!!!  Sometimes it's funny, sometimes it's weird, it's always entertaining.
 </p>
-<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+<p>SKETCHMAGEDDON
 </p>
-<p>Harold Night
+<p><br>
 </p>
-<p>Friday, November 24th at 10:00pm
+<p>--
+</p>
+<p>Get ready for a sketch comedy show like no other!!!
+</p>
+<p><strong>SKETCHMAGEDDON</strong> takes three groups and forces them to compete in an all-out comedy deathmatch!
+</p>
+<p>Each team will be given 15 minutes to dazzle you with their comedy prowess. It's Saturday Night Live meets Thunderdome!!!!
+</p>
+<p>Unlike its improvised sister show IMPROVAGEDDON, SKETCHMAGEDDON features all written and rehearsed material.  Props, costumes, and special effects are all legal in SKETCHMAGEDDON.
+</p>
+<p>This is a completely experimental show.  You never know what you are going to see.
+</p>
+<p><strong>SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition</strong>
+</p>
+<p>Friday, January 5th at 10pm
 </p>
 <p>Tickets are $5
+</p>
+<p>------------
 </p>
 <p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
 <p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
-</p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
     """,
     status: "normal",
@@ -49,43 +57,51 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Harold Night ==========="
+Logger.info "=========== Writing Event Listing SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "RPB6JG",
-    title: "Harold Night",
+    slug: "N0VHXG",
+    title: "SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition",
     description: """
-    <p>It's Harold Night at the Push Comedy Theater!
+    <p><strong>Don't miss this epic sketch comedy showdown, where truly anything can happen.</strong><br>
 </p>
-<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
+<p>And we do mean anything!!!  Sometimes it's funny, sometimes it's weird, it's always entertaining.
 </p>
-<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
+<p>SKETCHMAGEDDON
 </p>
-<p>Harold Night
+<p><br>
 </p>
-<p>Friday, November 24th at 10:00pm
+<p>--
+</p>
+<p>Get ready for a sketch comedy show like no other!!!
+</p>
+<p><strong>SKETCHMAGEDDON</strong> takes three groups and forces them to compete in an all-out comedy deathmatch!
+</p>
+<p>Each team will be given 15 minutes to dazzle you with their comedy prowess. It's Saturday Night Live meets Thunderdome!!!!
+</p>
+<p>Unlike its improvised sister show IMPROVAGEDDON, SKETCHMAGEDDON features all written and rehearsed material.  Props, costumes, and special effects are all legal in SKETCHMAGEDDON.
+</p>
+<p>This is a completely experimental show.  You never know what you are going to see.
+</p>
+<p><strong>SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition</strong>
+</p>
+<p>Friday, January 5th at 10pm
 </p>
 <p>Tickets are $5
+</p>
+<p>------------
 </p>
 <p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
 <p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
-<p>--
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-25 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-11-25 04:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-06 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-06 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -106,17 +122,25 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert harold
+# Insert sketch
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "harold"
+  tag: "sketch"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert sketchmageddon
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  event_id: event.id,
+  tag: "sketchmageddon"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Harold Night"
+ticket_name = "Ticket for SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -300,4 +324,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Harold Night ==========="
+Logger.info "=========== END Processing Universe Event SKETCHMAGEDDON: The Ultimate Sketch Comedy Competition ==========="
