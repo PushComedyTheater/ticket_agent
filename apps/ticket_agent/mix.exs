@@ -49,7 +49,7 @@ defmodule TicketAgent.Mixfile do
       {:gen_smtp, "~> 0.12.0"},
       # {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode", runtime: false},
       {:qrcode, github: "sunboshan/qrcode"},
-      {:pdf_generator, ">= 0.3.6"},
+      {:pdf_generator, github: "PushComedyTheater/elixir-pdf-generator"},
       {:curtail, "~> 0.1"},
       {:icalendar, "~> 0.6.0"},
       {:paper_trail, "~> 0.7.7"},
