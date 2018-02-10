@@ -13,3 +13,4 @@ config :ticket_agent, TicketAgent.Repo,
 config :logger, level: :warn
 config :ticket_agent, :ticket_lock_length, 0
 config :ticket_agent, :pdf_generator, TicketAgent.PdfGenerator.Mock
+config :pdf_generator, raise_on_missing_wkhtmltopdf_binary: false
