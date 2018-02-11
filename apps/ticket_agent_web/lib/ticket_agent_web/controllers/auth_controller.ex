@@ -69,7 +69,6 @@ defmodule TicketAgentWeb.AuthController do
     Logger.info "provider = #{provider} with code #{code}"
 
     with {:ok, client} <- get_token!(provider, code),
-         IO.inspect(client),
          {:ok, %{name: name, email: email, extra_details: extra_details}} <- get_user(provider, client) do
 
       user = User.find_or_create_with_credentials(
