@@ -15,19 +15,19 @@ defmodule TicketAgentWeb.ChargeControllerTest do
     bypass = Bypass.open
     Application.put_env(:ticket_agent, :stripe_api_url, "http://localhost:#{bypass.port}")
 
-    {:ok, %{conn: conn, bypass: bypass}}
+    {:ok, %{conn: conn, bypass: bypass, user: user}}
   end
 
-  test "happy path", %{conn: conn, bypass: bypass}do
+  test "happy path", %{conn: conn, bypass: bypass} do
+    user = insert(:user, stripe_customer_id: "ldskafj")
     locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(600) |> NaiveDateTime.to_string()
     event = insert(:event)
-    listing = insert(:listing, event: event )
-    IO.inspect listing.start_at
-    order = insert(:order, status: "started")
+    listing = insert(:listing, event: event, start_at: Calendar.NaiveDateTime.add!(NaiveDateTime.utc_now(), 400))
+    order = insert(:order, status: "started", user: user)
     ticket = insert(:ticket, order: order, status: "locked", locked_until: locked_until, price: 8000)
     order = OrderState.calculate_order_cost(order)
 
-    user = insert(:user, stripe_customer_id: "ldskafj")
+    
     conn =
       conn
       |> assign(:current_user, user)
