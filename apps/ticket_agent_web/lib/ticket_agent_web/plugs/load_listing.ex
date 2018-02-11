@@ -26,8 +26,11 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
   end
 
   def setup_conn(%{start_at: start_at, class_id: nil, event_id: event_id} = listing, conn) do
+    IO.inspect start_at
     case past_date(start_at) do
       true ->
+        IO.puts "PAST DATE"
+        IO.inspect listing
         conn
         |> put_flash(:error, "The show #{listing.slug} has ended.")
         |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")        
@@ -54,10 +57,14 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
     utc_now =
       DateTime.utc_now()
       |> Calendar.NaiveDateTime.to_date_time_utc
+
+    IO.inspect utc_now
     
     start_at =
       start_at
       |> Calendar.NaiveDateTime.to_date_time_utc
+
+    IO.inspect start_at
 
     (DateTime.compare(start_at, utc_now) == :lt)
   end  

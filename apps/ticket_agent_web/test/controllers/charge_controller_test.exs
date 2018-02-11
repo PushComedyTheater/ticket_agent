@@ -20,7 +20,9 @@ defmodule TicketAgentWeb.ChargeControllerTest do
 
   test "happy path", %{conn: conn, bypass: bypass}do
     locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(600) |> NaiveDateTime.to_string()
-    listing = insert(:listing)
+    event = insert(:event)
+    listing = insert(:listing, event: event )
+    IO.inspect listing.start_at
     order = insert(:order, status: "started")
     ticket = insert(:ticket, order: order, status: "locked", locked_until: locked_until, price: 8000)
     order = OrderState.calculate_order_cost(order)
@@ -30,54 +32,67 @@ defmodule TicketAgentWeb.ChargeControllerTest do
       conn
       |> assign(:current_user, user)
     
-    params = %{
-      "listing" => %{
-        "id" => listing.id,
-        "slug" => listing.slug
-      }, 
-      "locked_until" => locked_until, 
-      "method_name" => "basic-card", 
-      "order_id" => order.slug, 
-      "payer_email" => conn.assigns.current_user.email, 
-      "payer_name" => conn.assigns.current_user.name, 
-      "payer_phone" => "+17577453485", 
-      "pricing" => %{
-        "processing_fee" => order.processing_fee, 
-        "subtotal" => order.subtotal, 
-        "total" => order.total_price
-      }, 
-      "shippingOption" => nil, 
-      "shipping_address" => nil, 
-      "tickets" => [], 
-      "token" => %{
-        "card" => %{
-          "card_country" => "US", 
-          "card_type" => "Visa", 
-          "city" => "Virginia Beach", 
-          "country" => "US", 
-          "cvc_check" => "unchecked", 
-          "exp_month" => 12, 
-          "exp_year" => 2022, 
-          "funding" => "credit", 
-          "id" => "card_1BivrgBwsbTzoyHbaYq6EcsS", 
-          "last4" => "4242", 
-          "line1" => "824 Moultrie Court", 
-          "line1_check" => "unchecked", 
-          "line2" => "", 
-          "metadata" => %{}, 
-          "name" => "Patrick Test", 
-          "state" => "VA", 
-          "zip" => "23455", 
-          "zip_check" => "unchecked"
+      params = %{
+        "listing" => %{
+          "id" => listing.id,
+          "slug" => listing.slug
         }, 
-        "client_ip" => "71.120.226.187", 
-        "created" => 1515637945, 
-        "email" => "patrick.veverka@gmail.com", 
-        "livemode" => false, 
-        "token_id" => "tok_1BivrhBwsbTzoyHbTyrlUduC", 
-        "used" => false
+        "locked_until" => locked_until, 
+        "order_id" => order.slug, 
+        "pricing" => %{
+          "processing_fee" => order.processing_fee, 
+          "subtotal" => order.subtotal, 
+          "total" => order.total_price
+        },         
+        "tickets" => [
+          %{
+            "ticket_name" => ticket.name,
+            "status" => ticket.status,
+            "price" => ticket.price,
+            "name" => ticket.guest_name,
+            "locked_until" => locked_until,
+            "id" => ticket.id,
+            "group" => "default",
+            "email" => ticket.guest_email
+          }
+        ],         
+        "method_name" => "basic-card", 
+        "payer_email" => conn.assigns.current_user.email, 
+        "payer_name" => conn.assigns.current_user.name, 
+        "payer_phone" => "+17577453485", 
+        "shipping_address" => nil, 
+        "shippingOption" => nil, 
+        
+
+        "token" => %{
+          "card" => %{
+            "card_country" => "US", 
+            "card_type" => "Visa", 
+            "city" => "Virginia Beach", 
+            "country" => "US", 
+            "cvc_check" => "unchecked", 
+            "exp_month" => 12, 
+            "exp_year" => 2022, 
+            "funding" => "credit", 
+            "id" => "card_1BivrgBwsbTzoyHbaYq6EcsS", 
+            "last4" => "4242", 
+            "line1" => "824 Moultrie Court", 
+            "line1_check" => "unchecked", 
+            "line2" => "", 
+            "metadata" => %{}, 
+            "name" => "Patrick Test", 
+            "state" => "VA", 
+            "zip" => "23455", 
+            "zip_check" => "unchecked"
+          }, 
+          "client_ip" => "71.120.226.187", 
+          "created" => 1515637945, 
+          "email" => "patrick.veverka@gmail.com", 
+          "livemode" => false, 
+          "token_id" => "tok_1BivrhBwsbTzoyHbTyrlUduC", 
+          "used" => false
+        }
       }
-    }
     action = charge_path(conn, :create)
 
     response = ~s<{
@@ -119,19 +134,32 @@ defmodule TicketAgentWeb.ChargeControllerTest do
           "slug" => listing.slug
         }, 
         "locked_until" => locked_until, 
-        "method_name" => "basic-card", 
         "order_id" => order.slug, 
-        "payer_email" => conn.assigns.current_user.email, 
-        "payer_name" => conn.assigns.current_user.name, 
-        "payer_phone" => "+17577453485", 
         "pricing" => %{
           "processing_fee" => order.processing_fee, 
           "subtotal" => order.subtotal, 
           "total" => order.total_price
-        }, 
-        "shippingOption" => nil, 
+        },         
+        "tickets" => [
+          %{
+            "ticket_name" => ticket.name,
+            "status" => ticket.status,
+            "price" => ticket.price,
+            "name" => ticket.guest_name,
+            "locked_until" => locked_until,
+            "id" => ticket.id,
+            "group" => "default",
+            "email" => ticket.guest_email
+          }
+        ],         
+        "method_name" => "basic-card", 
+        "payer_email" => conn.assigns.current_user.email, 
+        "payer_name" => conn.assigns.current_user.name, 
+        "payer_phone" => "+17577453485", 
         "shipping_address" => nil, 
-        "tickets" => [], 
+        "shippingOption" => nil, 
+        
+
         "token" => %{
           "card" => %{
             "card_country" => "US", 
