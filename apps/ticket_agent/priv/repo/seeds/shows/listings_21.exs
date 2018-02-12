@@ -8,49 +8,31 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== BEGIN Processing Universe Event Class Dismissed: The Improv 101 Grad Show ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== Writing Event Class Dismissed: The Improv 101 Grad Show ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "8N56FR",
-    title: "Date Night: With Brad McMurran and Alba Woolard",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824",
+    slug: "KZCMX1",
+    title: "Class Dismissed: The Improv 101 Grad Show",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/87dc866e-46e3-4d6e-9494-46cc076c3e6d",
     description: """
-    <p><strong>Get ready as we improvise your relationship.</strong>
+    <p>Dust off those caps and gowns... because it's graduation time at the Push.
 </p>
-<p>It's the most fun you'll ever have on date night!
+<p>Check out the Push Comedy Theater's Improv 101 class as they show off their comedy chops.
 </p>
-<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
+<p>You won't believe what these improv newcomers have in store for you!!!
 </p>
-<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
+<p>Class Dismissed: The Improv 101 Graduation Show<br>Tuesday, January 16th at 7pm<br>Tickets are $5
 </p>
-<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p><br>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
-<p><strong>Date Night: With Brad and Alba</strong>
+<p>--
 </p>
-<p>Friday, March 2nd at 8pm
-</p>
-<p>Tickets are $5
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts will host live sketch and improv comedy on Friday and Saturday nights. During the week classes are offered in sketch writing, improv comedy and acting.
 </p>
 <p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
@@ -61,55 +43,37 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== Writing Event Listing Class Dismissed: The Improv 101 Grad Show ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "8N56FR",
-    title: "Date Night: With Brad McMurran and Alba Woolard",
+    slug: "KZCMX1",
+    title: "Class Dismissed: The Improv 101 Grad Show",
     description: """
-    <p><strong>Get ready as we improvise your relationship.</strong>
+    <p>Dust off those caps and gowns... because it's graduation time at the Push.
 </p>
-<p>It's the most fun you'll ever have on date night!
+<p>Check out the Push Comedy Theater's Improv 101 class as they show off their comedy chops.
 </p>
-<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
+<p>You won't believe what these improv newcomers have in store for you!!!
 </p>
-<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
+<p>Class Dismissed: The Improv 101 Graduation Show<br>Tuesday, January 16th at 7pm<br>Tickets are $5
 </p>
-<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p><br>
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
 </p>
-<p><strong>Date Night: With Brad and Alba</strong>
+<p>--
 </p>
-<p>Friday, March 2nd at 8pm
-</p>
-<p>Tickets are $5
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts. <br>The Push Comedy Theater hosts will host live sketch and improv comedy on Friday and Saturday nights. During the week classes are offered in sketch writing, improv comedy and acting.
 </p>
 <p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-03-03 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-03-03 02:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-17 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-17 01:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -130,33 +94,25 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert date-night
+# Insert graduation
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "date-night"
+  tag: "graduation"
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert sketch
+# Insert students
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "sketch"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert couples
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "couples"
+  tag: "students"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Date Night: With Brad McMurran and Alba Woolard"
+ticket_name = "Ticket for Class Dismissed: The Improv 101 Grad Show"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -340,4 +296,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== END Processing Universe Event Class Dismissed: The Improv 101 Grad Show ==========="

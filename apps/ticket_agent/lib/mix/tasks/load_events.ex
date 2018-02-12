@@ -20,12 +20,10 @@ defmodule Mix.Tasks.LoadEvents do
       url = "https://www.universe.com/api/v2/listings/#{id}.json"
       item = load_json_no_decode(url)
       title = String.trim(listing["title"])
-      base = "/Users/patrickveverka/Code/ticket_agent/apps/ticket_agent/lib/mix/tasks/data"
       IO.inspect title
-      uri = if title == "Workshop: Tales from the Campfire" do
-        raise "FUCk"
-        "#{base}/workshops/#{id}.json"
-      else
+      base = File.cwd! <> "/apps/ticket_agent/lib/mix/tasks/data"
+      IO.inspect base
+      uri = 
         if String.contains?(title, "Class Dismissed") do
             IO.puts "show"
             "#{base}/newstuff/shows/#{id}.json"          
@@ -39,7 +37,6 @@ defmodule Mix.Tasks.LoadEvents do
               "#{base}/newstuff/shows/#{id}.json"
           end
         end
-      end
       IO.inspect uri
       File.write!(uri, item) |> IO.inspect
     end)

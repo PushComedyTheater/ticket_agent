@@ -8,46 +8,32 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
+Logger.info "=========== BEGIN Processing Universe Event Couples Therapy ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event The Improv Riot: The Short Form Improv Show ==========="
+Logger.info "=========== Writing Event Couples Therapy ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "25RJ0Q",
-    title: "The Improv Riot: The Short Form Improv Show",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/bdd1ac16-4eaa-4a83-87eb-eb7d4aadbd35",
+    slug: "K6NBWZ",
+    title: "Couples Therapy",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/496fbc13-a69a-41cb-82ca-5d4cbcc3e5a2",
     description: """
-    <p>Get ready for short form (Whose Line is it Anyway?) improv at the Push Comedy Theater.
+    <p>You think your relationship has problems?!?
 </p>
-<p>You demanded it! So now it's here!!! Our very own short form improv show. All the fun of Whose Line is it Anyway... right here in Downtown Norfolk.
+<p><br><br>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, they take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
 </p>
-<p><strong>The Improv Riot: The Short Form Improv Show</strong>
+<p><br><br>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
 </p>
-<p>Friday, November 24th, 8pm
+<p><br><br>Two Improvisers... One Scene!!!
 </p>
-<p>Tickets are $5
+<p><br><br>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, February 24th at 8pm<br>Tickets are $5
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the parking lot directly across from the theater.
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened The Push Comedy Theater, located in the Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>--<br>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
+<p><br><br>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p><br>
     """,
     status: "normal",
     account_id: account.id,
@@ -55,49 +41,35 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing The Improv Riot: The Short Form Improv Show ==========="
+Logger.info "=========== Writing Event Listing Couples Therapy ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "25RJ0Q",
-    title: "The Improv Riot: The Short Form Improv Show",
+    slug: "K6NBWZ",
+    title: "Couples Therapy",
     description: """
-    <p>Get ready for short form (Whose Line is it Anyway?) improv at the Push Comedy Theater.
+    <p>You think your relationship has problems?!?
 </p>
-<p>You demanded it! So now it's here!!! Our very own short form improv show. All the fun of Whose Line is it Anyway... right here in Downtown Norfolk.
+<p><br><br>In Couples Therapy you'll meet a couple on the rocks... be it newlyweds on a honeymoon from hell or an elderly couple at the end of their rope.<br>Based on an audience suggestion, they take you through a roller coaster ride of emotions as they whisk you the trials and tribulations of couple they create right before your eyes.
 </p>
-<p><strong>The Improv Riot: The Short Form Improv Show</strong>
+<p><br><br>Oh yeah, and they do it all in a single, 25 minute long improvised scene.
 </p>
-<p>Friday, November 24th, 8pm
+<p><br><br>Two Improvisers... One Scene!!!
 </p>
-<p>Tickets are $5
+<p><br><br>Couples Therapy... is sometimes hilarious, sometimes poignant, always magical.
 </p>
-<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p><br>Couples Therapy with Alan Johnson and the Alan Johnson Quintet<br>Saturday, February 24th at 8pm<br>Tickets are $5
 </p>
-<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street and in the parking lot directly across from the theater.
+<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For nearly ten years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened The Push Comedy Theater, located in the Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>--<br>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
+<p><br><br>Free parking available behind Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p><br>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2017-11-25 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2017-11-25 02:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-02-25 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-25 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -118,17 +90,33 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert sketch
+# Insert couple
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "sketch"
+  tag: "couple"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert therapy
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  event_id: event.id,
+  tag: "therapy"
+})
+Logger.info "=========== Wrote tag ==========="
+
+# Insert couples
+Logger.info "=========== Writing tag ==========="
+SeedHelpers.create_tag(%{
+  event_id: event.id,
+  tag: "couples"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for The Improv Riot: The Short Form Improv Show"
+ticket_name = "Ticket for Couples Therapy"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -312,4 +300,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event The Improv Riot: The Short Form Improv Show ==========="
+Logger.info "=========== END Processing Universe Event Couples Therapy ==========="

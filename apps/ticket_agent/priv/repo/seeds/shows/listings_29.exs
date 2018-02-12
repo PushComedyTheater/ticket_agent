@@ -14,23 +14,29 @@ utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 Logger.info "=========== Writing Event Good Talk: The Brad McMurran Show ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "3J9BTZ",
+    slug: "JN8VR3",
     title: "Good Talk: The Brad McMurran Show",
     image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/de52f7d0-daa6-4b61-b647-322e1c8b9958",
     description: """
-    <p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.<br>
+    <p style="text-align: center;">***DUE TO SNOW, THIS SHOW IS MOVED TO NEXT SUNDAY, JANUARY 14TH***
 </p>
-<p style="text-align: center;">Crazy for Love
+<p style="text-align: center;">IF YOU WOULD LIKE A REFUND, PLEASE CONTACT US
 </p>
-<p style="text-align: center;">This is the show you've all been waiting for!!!
+<p><br>
 </p>
-<p style="text-align: center;">In this one man show, Bradford McMurran will bring you honestly about his love, relationships, sex life, breakups and more!
+<p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
+</p>
+<p style="text-align: center;">New Years Resolutions and Regrets
+</p>
+<p style="text-align: center;">This month's show is all about growth, regret, change, remorse, reinvention, and most importantly, New Years Resolutions... or at least attempts at those things.
+</p>
+<p style="text-align: center;">Brad has made repeated efforts to change into a new man, and year after year, he finds himself meeting regret with a commitment to self-evolution. And year after year, it's a wild ride!
 </p>
 <p style="text-align: center;"><strong>Good Talk: The Brad McMurran Show</strong>
 </p>
-<p style="text-align: center;">Crazy for Love
+<p style="text-align: center;">New Years Resolutions and Regrets
 </p>
-<p style="text-align: center;">Sunday, February 4th at 7pm
+<p style="text-align: center;">Sunday, January 14th at 7pm
 </p>
 <p style="text-align: center;">Tickets are $12
 </p>
@@ -43,6 +49,8 @@ event = SeedHelpers.create_event(
 <p style="text-align: center;">The show is going to be an unpredictable, wild and borderline-insane ride... just like Brad's life.
 </p>
 <p style="text-align: center;">Upcoming episodes of Good Talk: The Brad McMurran Show will include -
+</p>
+<p style="text-align: center;">Crazy for Love
 </p>
 <p style="text-align: center;">My Life in Comedy
 </p>
@@ -67,22 +75,28 @@ listing = SeedHelpers.create_listing(
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "3J9BTZ",
+    slug: "JN8VR3",
     title: "Good Talk: The Brad McMurran Show",
     description: """
-    <p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.<br>
+    <p style="text-align: center;">***DUE TO SNOW, THIS SHOW IS MOVED TO NEXT SUNDAY, JANUARY 14TH***
 </p>
-<p style="text-align: center;">Crazy for Love
+<p style="text-align: center;">IF YOU WOULD LIKE A REFUND, PLEASE CONTACT US
 </p>
-<p style="text-align: center;">This is the show you've all been waiting for!!!
+<p><br>
 </p>
-<p style="text-align: center;">In this one man show, Bradford McMurran will bring you honestly about his love, relationships, sex life, breakups and more!
+<p style="text-align: center;">Get ready for a night of comedy from the Pushers' own Brad McMurran.
+</p>
+<p style="text-align: center;">New Years Resolutions and Regrets
+</p>
+<p style="text-align: center;">This month's show is all about growth, regret, change, remorse, reinvention, and most importantly, New Years Resolutions... or at least attempts at those things.
+</p>
+<p style="text-align: center;">Brad has made repeated efforts to change into a new man, and year after year, he finds himself meeting regret with a commitment to self-evolution. And year after year, it's a wild ride!
 </p>
 <p style="text-align: center;"><strong>Good Talk: The Brad McMurran Show</strong>
 </p>
-<p style="text-align: center;">Crazy for Love
+<p style="text-align: center;">New Years Resolutions and Regrets
 </p>
-<p style="text-align: center;">Sunday, February 4th at 7pm
+<p style="text-align: center;">Sunday, January 14th at 7pm
 </p>
 <p style="text-align: center;">Tickets are $12
 </p>
@@ -96,6 +110,8 @@ listing = SeedHelpers.create_listing(
 </p>
 <p style="text-align: center;">Upcoming episodes of Good Talk: The Brad McMurran Show will include -
 </p>
+<p style="text-align: center;">Crazy for Love
+</p>
 <p style="text-align: center;">My Life in Comedy
 </p>
 <p style="text-align: center;">The College Years
@@ -108,8 +124,8 @@ listing = SeedHelpers.create_listing(
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-02-12 00:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-12 01:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-01-15 00:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-01-15 02:00:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -130,11 +146,11 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert love
+# Insert resolutions
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "love"
+  tag: "resolutions"
 })
 Logger.info "=========== Wrote tag ==========="
 

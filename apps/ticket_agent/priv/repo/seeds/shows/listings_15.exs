@@ -8,51 +8,33 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== BEGIN Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== Writing Event Tales from the Campfire: The Improvised Ghost Story ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "P42DB7",
-    title: "Date Night: With Brad McMurran and Alba Woolard",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/7e2ff30f-6b86-488e-8838-cfc9912b6824",
+    slug: "G8KV4Z",
+    title: "Tales from the Campfire: The Improvised Ghost Story",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/fbca7042-3e12-4e21-9cff-98a451943cdf",
     description: """
-    <p><strong>Get ready as we improvise your relationship.</strong>
+    <p>I ain't afraid of no ghost!<br>
 </p>
-<p>It's the most fun you'll ever have on date night!
+<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
 </p>
-<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
+<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
 </p>
-<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
+<p><strong><br></strong>
 </p>
-<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
+<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
 </p>
 <p><br>
 </p>
-<p><strong>Date Night: With Brad and Alba</strong>
+<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
 </p>
-<p>Friday, February 2nd at 8pm
+<p>Friday, February 16th at 8pm
 </p>
 <p>Tickets are $5
-</p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
     """,
     status: "normal",
@@ -61,55 +43,37 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== Writing Event Listing Tales from the Campfire: The Improvised Ghost Story ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "P42DB7",
-    title: "Date Night: With Brad McMurran and Alba Woolard",
+    slug: "G8KV4Z",
+    title: "Tales from the Campfire: The Improvised Ghost Story",
     description: """
-    <p><strong>Get ready as we improvise your relationship.</strong>
+    <p>I ain't afraid of no ghost!<br>
 </p>
-<p>It's the most fun you'll ever have on date night!
+<p>The Push presents a frightful night of comedy (or is it a hilarious night of frights).<br>
 </p>
-<p>Two lucky couples will see their love unfold on stage through the interpretation of 2 of Hampton Roads' wackiest improvisers!
+<p><strong>Tales from the Campfire is quickly becoming one of the Push's biggest hits.</strong>
 </p>
-<p>The couples will be selected at random and interviewed on stage in front of the audience. Using the information they learn, and their imagination, Brad and Alba will show the story of the couples' love.
+<p><strong><br></strong>
 </p>
-<p>For years, The Pushers have been getting to know diverse couples all across Hampton Roads with this signature piece. Normally this is a piece within a larger show. This time, Brad and Alba are out to explore as much as possible by bringing it to you as its own show!
+<p>With an audience suggestion, this talented group of improvisers will make up a series of gut-busting ghost story right before your eyes.<br>
 </p>
 <p><br>
 </p>
-<p><strong>Date Night: With Brad and Alba</strong>
+<p><strong>Tales from the Campfire: The Improvised Ghost Story</strong>
 </p>
-<p>Friday, February 2nd at 8pm
+<p>Friday, February 16th at 8pm
 </p>
 <p>Tickets are $5
 </p>
-<p>---
-</p>
-<p>The Pushers are Virginia's premiere sketch and improv comedy group. For more than 11 years they have thrilled (and shocked) audiences with their wild antics both on and off stage. The group puts on a racy, high-octane, energetic show that is guaranteed to have audiences howling with laughter. In November of 2014, they opened their own theater, The Push Comedy Theater, located in the new Norfolk Arts District.
-</p>
-<p>In 2013 The Pushers' Off-Broadway musical Cuff Me: The Unauthorized Fifty Shades of Grey Musical Parody debuted in New York City. It ran for over a year in both New York and Chicago. A third production is currently touring the country.
-</p>
-<p>The Pushers have appeared at both The Charleston Comedy Festival and The North Carolina Comedy Arts Festival. In New York, they have performed at The People's Improv Theater, The Upright Citizen's Brigade and at The Kraine Theater in New York's East Village.
-</p>
-<p>Here in Hampton Roads the group have performed most notably at The Jewish Mother, The NorVa and The Virginia Beach Funnybone.
-</p>
-<p>---
-</p>
-<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
-</p>
-<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classes are offered in stand-up, sketch and improv comedy as well as acting.
-</p>
-<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
-</p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-02-03 01:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-02-03 02:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2018-02-17 01:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2018-02-17 02:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -130,33 +94,17 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert date-night
+# Insert ghost
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "date-night"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert sketch
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "sketch"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert couples
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "couples"
+  tag: "ghost"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for Date Night: With Brad McMurran and Alba Woolard"
+ticket_name = "Ticket for Tales from the Campfire: The Improvised Ghost Story"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -340,4 +288,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event Date Night: With Brad McMurran and Alba Woolard ==========="
+Logger.info "=========== END Processing Universe Event Tales from the Campfire: The Improvised Ghost Story ==========="

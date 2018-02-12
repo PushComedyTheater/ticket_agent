@@ -8,41 +8,39 @@
   card = SeedHelpers.create_credit_card(user)
   user = SeedHelpers.create_user("concierge@veverka.net", account, "concierge")
   Logger.info "Seeding shows"
-Logger.info "=========== BEGIN Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== BEGIN Processing Universe Event Harold Night ==========="
 utc_now = Calendar.NaiveDateTime.to_date_time_utc(DateTime.utc_now())
 
-Logger.info "=========== Writing Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== Writing Event Harold Night ==========="
 event = SeedHelpers.create_event(
   %{
-    slug: "K3CQGB",
-    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
-    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/6a654ad0-cfee-43a6-9c35-dc86dfd97340",
+    slug: "RPB6JG",
+    title: "Harold Night",
+    image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/49cb7b83-12f7-40fe-a963-5ad538df05a4",
     description: """
-    <p>Prepare for Glory!!
+    <p>It's Harold Night at the Push Comedy Theater!
 </p>
-<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
+<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
 </p>
-<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
+<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
 </p>
-<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
+<p>Harold Night
 </p>
-<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
-</p>
-<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
-</p>
-<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
-</p>
-<p><br>Let the final war for comedic supremacy begin!
-</p>
-<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
-</p>
-<p>The show starts at 10pm
+<p>Friday, November 24th at 10:00pm
 </p>
 <p>Tickets are $5
 </p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
     """,
     status: "normal",
@@ -51,45 +49,43 @@ event = SeedHelpers.create_event(
   }
 )
 Logger.info "=========== Inserted Event #{event.id} ==========="
-Logger.info "=========== Writing Event Listing IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== Writing Event Listing Harold Night ==========="
 listing = SeedHelpers.create_listing(
   %{
     user_id: user.id,
     event_id: event.id,
     class_id: nil,
-    slug: "K3CQGB",
-    title: "IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION",
+    slug: "RPB6JG",
+    title: "Harold Night",
     description: """
-    <p>Prepare for Glory!!
+    <p>It's Harold Night at the Push Comedy Theater!
 </p>
-<p><br>Prepare for IMPROVAGEDDON: The Ultimate Improv Competition!!!
+<p>So who the heck is Harold? More accurately the question should be... what the heck is a Harold?
 </p>
-<p>Who will raise the Hammer of Lowell in final victory? <br><br>You'll have to come to this month's show to find out!
+<p>The Harold is the big, bad grand daddy of all long form improv! It starts with an audience suggestion, then improvisers weave together scenes, characters and group games to create a seamless piece. It can be bizarre and magical, baffling and amazing... it definitely needs to be seen.
 </p>
-<p><br><br>3 teams will be given just 15 minutes to perform any style of improv comedy they choose... all in a quest to be declared Improvageddon champ and raise the Hammer of Lowell in final victory.
+<p>Harold Night
 </p>
-<p><br>This ain't your daddy's Improv cage match! If you think you've seen Improv competitions before then you ain't seen nothin yet!
-</p>
-<p><br><br>Improvageddon combines Improv Comedy with stylistic elements of Professional Wrestling to create a truly unique, and most definitely over-the-top Improv contest.
-</p>
-<p><br>Gimmicks will be displayed! <br>Trash will be talked! <br>Feats of comedic strength will be performed!
-</p>
-<p><br>Let the final war for comedic supremacy begin!
-</p>
-<p><br>IMPROVAGEDDON: The Ultimate Improv Competition!<br>Saturday, December 30th
-</p>
-<p>The show starts at 10pm
+<p>Friday, November 24th at 10:00pm
 </p>
 <p>Tickets are $5
 </p>
-<p><br><br>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
+<p>The Push Comedy Theater only has 99 seats, so we recommend you get your tickets in advance.
 </p>
-<p><br><br>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street, and in the lot directly in front of the theater.
+<p>Free parking available at Slone Chiropractic (111 W Virginia Beach) just one block from the theater. There is also limited parking on the street.
+</p>
+<p>--
+</p>
+<p>The Push Comedy Theater is a 99 seat venue in the heart of Norfolk's brand new Arts District. Founded by local comedy group The Pushers, the Push Comedy Theater is dedicated to bringing you live comedy from the best local and national acts.
+</p>
+<p>The Push Comedy Theater hosts live sketch, improv and stand-up comedy on Friday and Saturday nights. During the week classesare offered in stand-up, sketch and improv comedy as well as acting.
+</p>
+<p>Whether you're a die-hard comedy lover or a casual fan... a seasoned performer or someone who's never stepped foot on stage... the Push Comedy Theater has something for you.
 </p>
 """,
     status: "active",
-    start_at:  NaiveDateTime.from_iso8601!("2018-01-21 03:00:00Z"),
-    end_at:  NaiveDateTime.from_iso8601!("2018-01-21 04:30:00Z")
+    start_at:  NaiveDateTime.from_iso8601!("2017-11-25 03:00:00Z"),
+    end_at:  NaiveDateTime.from_iso8601!("2017-11-25 04:30:00Z")
   }
 )
 Logger.info "=========== Inserted Event Listing #{listing.id} ==========="
@@ -110,33 +106,17 @@ SeedHelpers.create_tag(%{
 })
 Logger.info "=========== Wrote tag ==========="
 
-# Insert improvageddon
+# Insert harold
 Logger.info "=========== Writing tag ==========="
 SeedHelpers.create_tag(%{
   event_id: event.id,
-  tag: "improvageddon"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert contest
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "contest"
-})
-Logger.info "=========== Wrote tag ==========="
-
-# Insert final
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "final"
+  tag: "harold"
 })
 Logger.info "=========== Wrote tag ==========="
 
 
 Logger.info "=========== Writing 85 tickets for #{listing.id} ==========="
-ticket_name = "Ticket for IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION"
+ticket_name = "Ticket for Harold Night"
 listing_start = listing.start_at |> Calendar.NaiveDateTime.subtract!(604800) |> Calendar.NaiveDateTime.to_date_time_utc
 
 sale_start = case DateTime.compare(listing_start, utc_now) do
@@ -320,4 +300,4 @@ rows = rows ++ ["(uuid_generate_v4(), substr(replace(CAST(gen_random_uuid() as t
 
 sql = sql <> Enum.join(rows, ", ")
 {:ok, result} = TicketAgent.Repo.query(sql)
-Logger.info "=========== END Processing Universe Event IMPROVAGEDDON: THE ULTIMATE IMPROV COMPETITION ==========="
+Logger.info "=========== END Processing Universe Event Harold Night ==========="
