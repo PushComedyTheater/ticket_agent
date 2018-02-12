@@ -1,4 +1,5 @@
 defmodule TicketAgent.OrderHelpers do
+  alias TicketAgent.Repo
   def google_calendar_link(listing) do
     url = "http://www.google.com/calendar/render?action=TEMPLATE"
     url = url <> "&dates=#{calendar_timestamp(listing.start_at)}/#{calendar_timestamp(listing.end_at)}"
@@ -22,6 +23,25 @@ defmodule TicketAgent.OrderHelpers do
   def calendar_timestamp(date) do
     date
     |> Calendar.Strftime.strftime!("%Y%m%dT%H%M%SZ")
+  end
+
+  def ticket_count(%{tickets: tickets}) when length(tickets) > 1, do: "#{Enum.count(tickets)} tickets"
+  def ticket_count(%{tickets: tickets}), do: "1 ticket"
+
+  def listing_ticket_count(listing) do
+    tickets = case Ecto.assoc_loaded?(listing.tickets) do
+      true -> listing.tickets
+      false ->
+        listing
+        |> Repo.preload(:tickets)
+        |> Map.get(:tickets)
+    end
+
+    tickets = 
+      tickets
+      |> Enum.filter(fn(ticket) -> ticket.status == "purchased" end)
+
+    ticket_count(%{tickets: tickets})
   end
 
   def listing_image_with_dimensions(show, width, height) do

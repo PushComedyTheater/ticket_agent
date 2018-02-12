@@ -39,9 +39,47 @@ defmodule TicketAgent.Emails.OrderEmail do
     |> attachment(ical_file_name)
   end
 
+  def admin_order_receipt_email(order_id) do
+    order =
+      Order
+      |> Repo.get(order_id)
+      |> Repo.preload([:user, :credit_card, :tickets, :listing])
+
+    ticket = order.tickets |> hd
+
+    listing = Repo.preload(ticket.listing, [:event])
+
+    html = load_admin_content(listing, order)
+
+    %Email{}
+    |> to({"Push Team", "web@pushcomedytheater.com"})
+    |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
+    |> subject("Order for #{admin_ticket_subject(order.tickets)} for #{listing.title}")
+    |> html_body(html)
+  end  
+
+  defp admin_ticket_subject(tickets) when length(tickets) > 1, do: "#{Enum.count(tickets)} tickets"
+  defp admin_ticket_subject(tickets), do: "1 ticket"
+
+  defp load_admin_content(listing, order) do
+    admin_order_html_template = @template_dir <> "/admin_order.html.eex"
+    html_layout_template = @template_dir <> "/layout.html.eex"
+
+    admin_html = 
+      admin_order_html_template
+      |> EEx.eval_file([
+        listing: listing, 
+        order: order, 
+        host: @host
+      ])    
+
+    EEx.eval_file(html_layout_template, [body: admin_html])
+  end
+
   defp load_content(listing, ticket_count, order) do
     customer_order_html_template = @template_dir <> "/customer_order.html.eex"
     customer_order_text_template = @template_dir <> "/customer_order.txt.eex"
+    
     html_layout_template = @template_dir <> "/layout.html.eex"
     text_layout_template = @template_dir <> "/layout.txt.eex"
 

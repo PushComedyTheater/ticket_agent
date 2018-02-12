@@ -1,8 +1,11 @@
 defmodule TicketAgentWeb.OrderPdfController do
   require Logger
   use TicketAgentWeb, :controller
+  alias TicketAgent.{Order, Repo}
   alias TicketAgent.Finders.OrderFinder
   alias TicketAgent.Generators.OrderPdfGenerator
+
+  @root_dir File.cwd!
 
   def show(conn, %{"order_id" => order_id}) do
     current_user = Coherence.current_user(conn)

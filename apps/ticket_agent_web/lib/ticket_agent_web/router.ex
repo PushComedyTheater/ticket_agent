@@ -118,6 +118,7 @@ defmodule TicketAgentWeb.Router do
   scope "/admin", TicketAgentWeb.Admin do
     pipe_through [:protected, :ensure_admin, :admin_layout]
     get "/dashboard", DashboardController, :index, as: :admin_dashboard
+    get "/config", ConfigController, :index, as: :admin_config
 
     resources "/classes", ClassController, as: :admin_class
     resources "/listings", ListingController, as: :admin_event, param: "titled_slug"
@@ -127,6 +128,7 @@ defmodule TicketAgentWeb.Router do
     resources "/tickets", TicketController, as: :admin_ticket
     resources "/users", UserController, as: :admin_user
     resources "/webhooks", WebHookController, as: :admin_webhook
+
 
     get "/", Redirect, to: "/admin/dashboard"
   end  

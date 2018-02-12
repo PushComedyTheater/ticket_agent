@@ -22,12 +22,12 @@ defmodule TicketAgent.State.OrderStateTest do
 
       assert order.subtotal        == 500
       assert order.credit_card_fee == 48
-      assert order.processing_fee  == 50
-      assert order.total_price     == 598
+      assert order.processing_fee  == 55
+      assert order.total_price     == 603
 
       assert pricing.subtotal == 500
-      assert pricing.processing_fee == 98
-      assert pricing.total == 598
+      assert pricing.processing_fee == 103
+      assert pricing.total == 603
     end
   end
 
@@ -40,8 +40,8 @@ defmodule TicketAgent.State.OrderStateTest do
 
       assert order.subtotal        == 500
       assert order.credit_card_fee == 48
-      assert order.processing_fee  == 50
-      assert order.total_price     == 598
+      assert order.processing_fee  == 55
+      assert order.total_price     == 603
     end
 
     test "calculates 5 ticket price" do
@@ -56,8 +56,8 @@ defmodule TicketAgent.State.OrderStateTest do
 
       assert order.subtotal        == 2400
       assert order.credit_card_fee == 105
-      assert order.processing_fee  == 50
-      assert order.total_price     == 2555
+      assert order.processing_fee  == 74
+      assert order.total_price     == 2579
     end    
   end  
 
@@ -65,25 +65,25 @@ defmodule TicketAgent.State.OrderStateTest do
     test "calculates price for 1 dollar" do
       price = 100 #1 dollar
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
-      assert total == 186
-      assert processing_fee == 50
+      assert total == 187
+      assert processing_fee == 51
       assert stripe_fee == 36
     end
 
     test "calculates price for 100 dollar" do
       price = 10000 #100 dollar
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
-      assert total == 10382
-      assert processing_fee == 50
-      assert stripe_fee == 332
+      assert total == 10485
+      assert processing_fee == 150
+      assert stripe_fee == 335
     end
 
     test "calculates price for 2100 dollar" do
       price = 210000 #1 dollar
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
-      assert total == 216355
-      assert processing_fee == 50
-      assert stripe_fee == 6305.0
+      assert total == 218517
+      assert processing_fee == 2150
+      assert stripe_fee == 6367
     end    
   end
 

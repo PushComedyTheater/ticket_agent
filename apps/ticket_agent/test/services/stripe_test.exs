@@ -228,7 +228,7 @@ defmodule TicketAgent.Services.StripeTest do
         assert "/charges" == conn.request_path
         assert "POST" == conn.method
         {:ok, body, conn} = Plug.Conn.read_body(conn, length: 1_000_000)
-        assert body == "amount=598&application_fee=50&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+        assert body == "amount=603&application_fee=55&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
         Plug.Conn.resp(conn, 200, response)
       end
 
@@ -260,7 +260,7 @@ defmodule TicketAgent.Services.StripeTest do
         assert "/charges" == conn.request_path
         assert "POST" == conn.method
         {:ok, body, conn} = Plug.Conn.read_body(conn, length: 1_000_000)
-        assert body == "amount=598&application_fee=50&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+        assert body == "amount=603&application_fee=55&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
         Plug.Conn.resp(conn, 400, response)
       end
 
