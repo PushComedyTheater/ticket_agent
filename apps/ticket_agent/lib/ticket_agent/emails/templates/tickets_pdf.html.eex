@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>PushComedyTheater</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%3A400">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha256-NuCn4IvuZXdBaFKJOAcsU2Q3ZpwbdFisd5dux4jkQ5w=" crossorigin="anonymous" />
     <style type="text/css">
     body {
-      font-family:"Open Sans", Helvetica, Arial, sans-serif;
-      font-size: 28pt;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 18pt;
       font-weight: 400;
-      line-height: 1.9;
+      line-height: 1.7;
     }
     </style>
   </head>
@@ -65,7 +64,7 @@
     </td>
     <td style="text-align: center; width: 500px;">
       <center>
-        <img src="<%= url %>" /><br />
+        <img src="<%= url %>" width="200" /><br />
         <%= ticket.slug %>
       </center>
     </td>

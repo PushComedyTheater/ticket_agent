@@ -54,7 +54,7 @@ defmodule SeedHelpers do
         Logger.info "Seeds->create_credit_card: Creating card"
         %CreditCard{
           user_id: user_id,
-          stripe_id: FakerElixir.Commerce.coupon(),
+          stripe_id: "abc123"a,
           type: "Visa",
           name: user.name,
           line_1_check: "pass",
