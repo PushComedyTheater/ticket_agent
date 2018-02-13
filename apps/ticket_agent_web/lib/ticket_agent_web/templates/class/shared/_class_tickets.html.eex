@@ -1,0 +1,3 @@
+<%= if Enum.count(@listings) > 0 do %>
+  <%= render "shared/_buy_multiple.html", assigns %>
+<% end %>

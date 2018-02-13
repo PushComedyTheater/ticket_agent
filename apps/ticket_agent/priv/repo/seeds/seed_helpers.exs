@@ -54,7 +54,7 @@ defmodule SeedHelpers do
         Logger.info "Seeds->create_credit_card: Creating card"
         %CreditCard{
           user_id: user_id,
-          stripe_id: "abc123"a,
+          stripe_id: "abc123",
           type: "Visa",
           name: user.name,
           line_1_check: "pass",
