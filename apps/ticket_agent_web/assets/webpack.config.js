@@ -1,6 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const SentryPlugin = require('@sentry/webpack-plugin');
+// const SentryPlugin = require('@sentry/webpack-plugin');
 const path = require('path');
 
 // the path(s) that should be cleaned
@@ -40,13 +40,13 @@ module.exports = {
         to: '../.well-known/'
       }
     ]),
-    new SentryPlugin({
-        release: function (hash) {
-          return hash.slice(0, 5)
-        },
-        include: './dist',
-        ignore: ['node_modules', 'webpack.config.js'],
-    })
+    // new SentryPlugin({
+    //     release: function (hash) {
+    //       return hash.slice(0, 5)
+    //     },
+    //     include: './dist',
+    //     ignore: ['node_modules', 'webpack.config.js'],
+    // }),
   ],
   module: {
     rules: [
@@ -58,7 +58,17 @@ module.exports = {
             knownHelpersOnly: false
           }
         } 
-      }
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }      
     ]
   }  
 };

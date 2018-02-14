@@ -1,6 +1,6 @@
-import _ from './validation'
-import _ from './templates'
-import _ from './serializer'
+import validation from './validation'
+import templates from './templates'
+import serializer from './serializer'
 
 window.current_date_time = new Date().toJSON().slice(0, 10) + " 00:00";
 
