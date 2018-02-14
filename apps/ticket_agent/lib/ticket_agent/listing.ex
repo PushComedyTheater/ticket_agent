@@ -79,34 +79,27 @@ defmodule TicketAgent.Listing do
 
     class = case Ecto.assoc_loaded?(class.listings) do
       true -> class
-      false -> Repo.preload(class, :listings)
+      false -> 
+        Repo.preload(class, :listings)
     end
+
     Enum.filter(class.listings, fn(listing) ->
-      start_at = convert_to_date_time_utc(listing.start_at)
       end_at = convert_to_date_time_utc(listing.end_at)
-      date_between(utc_now, start_at, end_at)
+      date_after(utc_now, end_at)
     end)
-    |> Enum.at(0)
+    |> Enum.sort(fn(x,y) ->
+      DateTime.compare(
+        Calendar.NaiveDateTime.to_date_time_utc(x.start_at),
+        Calendar.NaiveDateTime.to_date_time_utc(y.start_at)
+      ) == :lt
+    end)
   end    
 
   def convert_to_date_time_utc(nil), do: nil
   def convert_to_date_time_utc(date), do: Calendar.NaiveDateTime.to_date_time_utc(date)
 
-  def date_between(_, nil, _), do: false
-  def date_between(date, start_at, nil) do
-    Logger.info "date     = #{date}"
-    Logger.info "start_at = #{start_at}"
-    Logger.info "end_at   = nil"
-    (DateTime.compare(start_at, date) == :lt)
-  end
-
-  def date_between(date, start_at, end_at) do
-    (DateTime.compare(start_at, date) == :lt) && (DateTime.compare(end_at, date) == :gt)
-  end  
-
-  def date_between(_, _, _) do
-    ""
-  end
+  def date_after(_, nil), do: false
+  def date_after(date, end_at), do: (DateTime.compare(end_at, date) == :gt)
 
   def list_listings(params) do
     Listing

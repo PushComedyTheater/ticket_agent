@@ -37,6 +37,7 @@ defmodule TicketAgentWeb.ClassController do
   def show(conn, %{"id" => "currently_offered"}) do
     render conn, "show.html"
   end
+  
   def show(conn, params) do
     slug = params["id"]
     query = from c in Class,

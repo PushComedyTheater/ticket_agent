@@ -30,7 +30,7 @@
   </div>
 </section>
 <!-- End Breadcrumbs -->
-<% listing = current_class_listing(@class) %>
+<% listings = current_class_listing(@class) %>
 <!-- Section -->
 <section class="container g-pt-50 g-pb-40">
   <div class="row">
@@ -42,20 +42,16 @@
       <div class="mb-5">
         <%= @class.description |> raw() %>
       </div>
-      <%= link to: class_type_path(@conn, :class, @class.type), id: "nav-link--workshop", class: "btn btn-xl u-btn-outline-black g-font-size-default mr-2" do %>
-        More <%= @class.type |> String.capitalize %> Classes
-      <% end %>
-
-      <%= if listing do %>
-        <%= link "Register Now", to: ticket_path(@conn, :new, listing_id: listing.slug), class: "btn btn-xl u-btn-primary g-font-size-default" %>
-
-      <% else %>
-        <a class="btn btn-xl u-btn-success g-font-size-default" href="#waitlist_modal" data-modal-target="#waitlist_modal" data-modal-effect="slide">Not Currently Enrolling - Join Waitlist?</a>
-      <% end %>
+      <%= render "shared/_class_tickets.html", Map.put(assigns, :listings, listings) %>
     </div>
 
     <div class="col-lg-4 g-mb-60">
       <%= img_tag(@class.image_url, class: "img-fluid") %>
+      <br />
+      <br />
+      <%= link to: class_type_path(@conn, :class, @class.type), id: "nav-link--workshop", class: "btn btn-block btn-xl u-btn-outline-black g-font-size-default mr-2" do %>
+        View More <%= @class.type |> String.capitalize %> Classes
+      <% end %>      
     </div>
   </div>
 </section>
