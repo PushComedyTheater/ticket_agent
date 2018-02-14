@@ -1,4 +1,4 @@
-<section class="g-bg-cover g-bg-pos-top-center g-bg-img-hero g-bg-black-opacity-0_3--after g-min-height-100vh g-flex-centered g-py-100" style="background-image: url(<%= header_image() %>);">
+<section class="g-bg-cover g-bg-pos-top-center g-bg-img-hero g-bg-black-opacity-0_3--after g-min-height-100vh g-flex-centered g-py-100" style="background-image: url(https://cdn.rawgit.com/PushComedyTheater/assets/3981f84b/images/headers/push.jpg);">
   <div class="container g-color-white text-center g-z-index-1">
     <div class="mb-5">
       <h2 class="g-font-weight-700 g-font-size-40 g-font-size-70--md text-uppercase g-mb-30">
