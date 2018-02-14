@@ -1,6 +1,8 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const SentryPlugin = require('@sentry/webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+
 const path = require('path');
 
 // the path(s) that should be cleaned
@@ -12,6 +14,7 @@ let pathsToClean = [
 let cleanOptions = {
   verbose: true,
   dry: false,
+  allowExternal: true,
   root: '/Users/patrickveverka/Code/ticket_agent/apps/ticket_agent_web/'
 }
 
@@ -40,6 +43,9 @@ module.exports = {
         to: '../.well-known/'
       }
     ]),
+    new ManifestPlugin({
+      fileName: '../cache_manifest.json',
+    })
     // new SentryPlugin({
     //     release: function (hash) {
     //       return hash.slice(0, 5)
