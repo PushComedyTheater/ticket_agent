@@ -4,7 +4,7 @@ defmodule TicketAgentWeb.Mixfile do
   def project do
     [
       app: :ticket_agent_web,
-      version: append_revision("0.0.1"),
+      version: append_revision("0.0.2"),
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -19,7 +19,7 @@ defmodule TicketAgentWeb.Mixfile do
   end
 
   def append_revision(version) do
-    "#{version}+#{revision}"
+    "#{version}+#{revision()}"
   end
 
   defp revision() do

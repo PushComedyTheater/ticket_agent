@@ -60,7 +60,7 @@ config :ticket_agent_web, TicketAgentWeb.Endpoint,
 #     config :ticket_agent_web, TicketAgentWeb.Endpoint, server: true
 #
 
-config :ticket_agent_web, :email_base_url, "https://pushcomedytheater.com"
+config :ticket_agent_web, :email_base_url, "https://hah.pushcomedytheater.com"
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.

@@ -12,7 +12,7 @@ config :ticket_agent, TicketAgent.Repo,
 
 config :ticket_agent, :ticket_lock_length, 5000
 config :ticket_agent, :stripe_key, "${STRIPE_KEY}"
-config :ticket_agent, :email_base_url, "https://pushcomedytheater.com"
+config :ticket_agent, :email_base_url, "https://hah.pushcomedytheater.com"
 config :ticket_agent, :pdf_generator, TicketAgent.PdfGenerator.Generator
 
 config :pdf_generator,
