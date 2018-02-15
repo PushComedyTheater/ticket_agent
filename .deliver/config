@@ -1,8 +1,8 @@
 APP="ticket_agent"
 
-BUILD_HOST="newpushers"
-BUILD_USER="pushers"
-BUILD_AT="/home/pushers/app_build"
+BUILD_HOST="localhost"
+BUILD_USER="builder"
+BUILD_AT="/home/builder/app_build"
 
 PRODUCTION_HOSTS="newpushers" 
 PRODUCTION_USER="pushers" 
