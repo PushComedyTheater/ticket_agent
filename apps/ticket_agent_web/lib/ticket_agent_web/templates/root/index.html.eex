@@ -14,7 +14,7 @@
 <script>
   $(document).on('ready', function () {
       var typed = new Typed('.u-text-animation.u-text-animation--typing', {
-        strings: ["improvisational", "funny", "musical", "dramatic", "comedy"],
+        strings: ["improvisational", "funny", "musical", "dramatic"],
         typeSpeed: 60,
         loop: true,
         backDelay: 1500,
