@@ -51,9 +51,9 @@ release :ticket_agent do
     :runtime_tools,
     :misc_random,
     :elixir_make,
-    :oauther,    
+    :oauther,
+    :edeliver,
     ticket_agent: :permanent,
     ticket_agent_web: :permanent
   ]
 end
-

@@ -4,7 +4,7 @@ defmodule TicketAgentWeb.Mixfile do
   def project do
     [
       app: :ticket_agent_web,
-      version: append_revision("0.0.3"),
+      version: append_revision("0.0.4"),
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -26,7 +26,7 @@ defmodule TicketAgentWeb.Mixfile do
     System.cmd("git", ["rev-parse", "--short", "HEAD"])
     |> elem(0)
     |> String.trim_trailing
-  end  
+  end
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
