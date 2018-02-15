@@ -16,7 +16,7 @@ use Mix.Config
 config :ticket_agent_web, TicketAgentWeb.Endpoint,
   # load_from_system_env: true,
   http: [port: 4000],
-  url: [host: "newdev.pushcomedytheater.com", port: 80],
+  url: [host: "hah.pushcomedytheater.com", port: 80],
   # force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true,
