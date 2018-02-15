@@ -19,13 +19,15 @@ defmodule TicketAgentWeb.Mixfile do
   end
 
   def append_revision(version) do
+    IO.puts "append_revision #{version}"
     "#{version}+#{revision()}"
   end
 
   defp revision() do
     System.cmd("git", ["rev-parse", "--short", "HEAD"])
     |> elem(0)
-    |> String.rstrip
+    |> String.trim_trailing
+    |> IO.inspect
   end  
   # Configuration for the OTP application.
   #

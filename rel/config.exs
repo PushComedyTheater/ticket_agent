@@ -46,10 +46,12 @@ end
 # will be used by default
 
 release :ticket_agent do
-  set version: "0.1.0"
+  set version: "0.2.0"
   set applications: [
     :runtime_tools,
     :misc_random,
+    :elixir_make
+    :oauther,    
     ticket_agent: :permanent,
     ticket_agent_web: :permanent
   ]
