@@ -33,7 +33,7 @@ defmodule TicketAgentWeb.Plugs.LoadOrderTest do
         |> Map.put(:params, %{"order_id" => ""})
         |> LoadOrder.call([])        
 
-      assert json_response(conn, 403)
+      assert json_response(conn, 422)
     end    
   end
 end

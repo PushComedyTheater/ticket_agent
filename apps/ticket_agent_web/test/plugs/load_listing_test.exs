@@ -38,7 +38,7 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
         |> LoadListing.call([])        
 
       refute Map.has_key?(conn.assigns, :listing)
-      assert html_response(conn, 302)
+      assert json_response(conn, 422)
     end    
 
     test "returns conn with listing when params have listing_id and start > now", %{conn: conn} do
@@ -66,7 +66,7 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
         |> LoadListing.call([])        
 
       refute Map.has_key?(conn.assigns, :listing)
-      assert html_response(conn, 302)
+      assert json_response(conn, 422)
     end    
 
     test "no listing", %{conn: conn} do
@@ -76,7 +76,7 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
         |> LoadListing.call([])        
 
       refute Map.has_key?(conn.assigns, :listing)
-      assert html_response(conn, 302)
+      assert json_response(conn, 422)
     end
 
     test "no params", %{conn: conn} do
@@ -85,7 +85,7 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
         |> LoadListing.call([])        
 
       refute Map.has_key?(conn.assigns, :listing)
-      assert html_response(conn, 302)
+      assert json_response(conn, 422)
     end    
   end
 end

@@ -4,6 +4,8 @@ defmodule TicketAgentWeb.Plugs.LoadOrder do
   alias TicketAgent.Finders.OrderFinder
   alias TicketAgent.State.OrderState
   alias TicketAgentWeb.ErrorView
+  import Plug.Conn
+  import Phoenix.Controller
 
   def init(opts), do: opts
 
@@ -20,12 +22,10 @@ defmodule TicketAgentWeb.Plugs.LoadOrder do
         nil ->
           Logger.error "load_order_plug->Cannot find order with slug #{order_id}"
           conn
-          |> Plug.Conn.put_status(403)
-          |> Phoenix.Controller.render(
-                TicketAgentWeb.ErrorView,
-                "error.json",
-                message: "Order missing.")
-          |> Plug.Conn.halt()
+          |> put_status(422)
+          |> put_view(TicketAgentWeb.ErrorView)
+          |> render("error.json", %{code: "reset", reason: "Order missing."})
+          |> halt()
         order ->
           conn
           |> Plug.Conn.assign(:order, order)        

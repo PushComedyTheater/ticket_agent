@@ -65,7 +65,18 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
           %{
             "slug" => listing.slug
           },
-          "tickets" => []
+          "tickets" => 
+            %{
+              "default_0" => 
+              %{
+                "email" => "patrick@pushcomedytheater.com",
+                "group" => "default",
+                "listing_id" => listing.id,
+                "name" => "Patrick Veverka",
+                "price" => 500,
+                "valid" => true
+              }
+            }
       }
       |> Poison.encode!()
       |> Base.encode64()
@@ -77,7 +88,7 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
         |> ValidateShowRequest.call([])
 
       assert conn.assigns.listing_id == listing.slug
-      assert conn.assigns.tickets == []
+      assert conn.assigns.tickets == %{"default" => [%{"email" => "patrick@pushcomedytheater.com", "group" => "default", "listing_id" => listing.id, "name" => "Patrick Veverka", "price" => 500, "valid" => true}]}
     end    
   end
 end

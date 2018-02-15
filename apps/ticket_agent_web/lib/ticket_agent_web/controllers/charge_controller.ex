@@ -7,8 +7,9 @@ defmodule TicketAgentWeb.ChargeController do
   alias TicketAgent.Mailer
   alias TicketAgentWeb.ExceptionSender
   use Coherence.Config
-  plug TicketAgentWeb.Plugs.LoadListing when action in [:create]
   plug TicketAgentWeb.Plugs.LoadOrder when action in [:create]
+  plug TicketAgentWeb.Plugs.LoadListing when action in [:create]
+  
 
   # logged in user
   def create(conn, %{"token" => token}) do

@@ -101,7 +101,6 @@
     tickets: tickets
   }
 
-  console.log(window.details);
   window.csrf_token = $('meta[name="csrf-token"]').attr('content');
   $(document).on('ready', function () {
     var modal = new Custombox.modal({

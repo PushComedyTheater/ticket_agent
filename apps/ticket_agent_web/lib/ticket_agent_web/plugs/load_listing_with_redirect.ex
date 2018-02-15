@@ -1,4 +1,4 @@
-defmodule TicketAgentWeb.Plugs.LoadListing do
+defmodule TicketAgentWeb.Plugs.LoadListingWithRedirect do
   import Plug.Conn
   import Phoenix.Controller
   alias TicketAgent.{Listing, Repo}
@@ -20,23 +20,18 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
   def call(conn, _), do: setup_conn(nil, conn)
 
   def setup_conn(nil, conn) do
-    message = "Could not find that listing"
     conn
-    |> put_status(422)
-    |> put_view(TicketAgentWeb.ErrorView)
-    |> render("error.json", %{code: "reset", reason: message})
-    |> halt()
+    |> put_flash(:error, "We could not find that listing.")
+    |> redirect(to: "/events")
   end
 
   def setup_conn(%{start_at: start_at, class_id: nil, event_id: event_id} = listing, conn) do
     case past_date(start_at) do
       true ->
-        message = "That listing has expired."
         conn
-        |> put_status(422)
-        |> put_view(TicketAgentWeb.ErrorView)
-        |> render("error.json", %{code: "reset", reason: message})
-        |> halt()
+        |> put_flash(:error, "The show #{listing.slug} has ended.")
+        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")       
+        |> halt() 
       false ->
         conn
         |> Plug.Conn.assign(:listing, listing)
@@ -46,12 +41,9 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
   def setup_conn(%{end_at: end_at, class_id: class_id, event_id: nil} = listing, conn) do
     case past_date(end_at) do
       true ->
-        message = "That listing has expired."
         conn
-        |> put_status(422)
-        |> put_view(TicketAgentWeb.ErrorView)
-        |> render("error.json", %{code: "reset", reason: message})
-        |> halt()
+        |> put_flash(:error, "The show #{listing.slug} has ended.")
+        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")        
       false ->
         conn
         |> Plug.Conn.assign(:listing, listing)

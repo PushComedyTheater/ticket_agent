@@ -118,12 +118,13 @@ defmodule TicketAgentWeb.ChargeControllerTest do
   describe "ChargeProcessingState errors setting processing" do
     test "ticket not locked", %{conn: conn}do
       locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(600) |> NaiveDateTime.to_string()
-      listing = insert(:listing)
-      order = insert(:order, status: "started")
+      user = insert(:user, stripe_customer_id: "ldskafj")
+      event = insert(:event)
+      listing = insert(:listing, event: event, start_at: locked_until)
+      order = insert(:order, status: "started", user: user)
       ticket = insert(:ticket, order: order, status: "available", locked_until: locked_until, price: 8000)
       order = OrderState.calculate_order_cost(order)
 
-      user = insert(:user, stripe_customer_id: "ldskafj")
       conn =
         conn
         |> assign(:current_user, user)
@@ -203,7 +204,8 @@ defmodule TicketAgentWeb.ChargeControllerTest do
 
     test "order not started", %{conn: conn}do
       locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(600) |> NaiveDateTime.to_string()
-      listing = insert(:listing)
+      event = insert(:event)
+      listing = insert(:listing, event: event)
       order = insert(:order, status: "processing")
       ticket = insert(:ticket, order: order, status: "locked", locked_until: locked_until, price: 8000)
       order = OrderState.calculate_order_cost(order)
@@ -264,25 +266,21 @@ defmodule TicketAgentWeb.ChargeControllerTest do
       action = charge_path(conn, :create)
 
       conn = post(conn, action, params)
-      assert %{"code" => "reset", "reason" => "There was an error.  Please try again."} == json_response(conn, 422)
-      
-      order = Repo.reload(order)
-      ticket = Repo.reload(ticket)
+      assert %{"code" => "reset", "reason" => "Order missing."} == json_response(conn, 422)
 
-      assert order.status == "cancelled"
-      assert ticket.status == "available"
     end
   end
 
   describe "getting stripe details errors" do
     test "cannot get stripe token", %{conn: conn, bypass: bypass} do
       locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(600) |> NaiveDateTime.to_string()
-      listing = insert(:listing)
-      order = insert(:order, status: "started")
+      user = insert(:user)
+      event = insert(:event)
+      listing = insert(:listing, event: event, start_at: locked_until)
+      order = insert(:order, status: "started", user: user)
       ticket = insert(:ticket, order: order, status: "locked", locked_until: locked_until, price: 8000)
       order = OrderState.calculate_order_cost(order)
 
-      user = insert(:user)
       conn =
         conn
         |> assign(:current_user, user)
@@ -361,12 +359,14 @@ defmodule TicketAgentWeb.ChargeControllerTest do
     
     test "failed charge", %{conn: conn, bypass: bypass}do
       locked_until = NaiveDateTime.utc_now() |> Calendar.NaiveDateTime.add!(600) |> NaiveDateTime.to_string()
-      listing = insert(:listing)
-      order = insert(:order, status: "started")
+      user = insert(:user, stripe_customer_id: "ldskafj")
+      event = insert(:event)
+      listing = insert(:listing, event: event, start_at: locked_until)
+      order = insert(:order, status: "started", user: user)
       ticket = insert(:ticket, order: order, status: "locked", locked_until: locked_until, price: 8000)
       order = OrderState.calculate_order_cost(order)
 
-      user = insert(:user, stripe_customer_id: "ldskafj")
+      
       conn =
         conn
         |> assign(:current_user, user)
