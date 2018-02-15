@@ -17,7 +17,7 @@ pre_erlang_get_and_update_deps() {
   fi
 }
 pre_erlang_clean_compile() {
-  status "Preparing assets with: brunch build and phoenix.digest"
+  status "Preparing assets"
   __sync_remote "
     # fail if any command fails (recommended)
     set -e
@@ -32,8 +32,7 @@ pre_erlang_clean_compile() {
 
     # building brunch
     npm run deploy
-
-    # run your custom task
-    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phx.digest $SILENCE
+    
+    cat ../priv/static/cache_manifest.json
   "
 } 
