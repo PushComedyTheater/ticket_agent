@@ -3,7 +3,6 @@ defmodule TicketAgent.Umbrella.Mixfile do
 
   def project do
     [
-      app: :ticket_agent_umbrella,
       apps_path: "apps",
       version: append_revision("0.0.2"),
       build_embedded: Mix.env == :prod,

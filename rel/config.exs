@@ -46,7 +46,7 @@ end
 # will be used by default
 
 release :ticket_agent do
-  set version: current_version(:ticket_agent_umbrella)
+  set version: current_version(:ticket_agent)
   set applications: [
     :runtime_tools,
     :misc_random,
