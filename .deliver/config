@@ -4,9 +4,9 @@ BUILD_HOST="localhost"
 BUILD_USER="builder"
 BUILD_AT="/home/builder/app_build"
 
-PRODUCTION_HOSTS="newpushers" 
-PRODUCTION_USER="pushers" 
-DELIVER_TO="/home/pushers/app_release" 
+PRODUCTION_HOSTS="newpushers"
+PRODUCTION_USER="pushers"
+DELIVER_TO="/home/pushers/app_release"
 
 pre_erlang_get_and_update_deps() {
   local _prod_secret_path="/home/pushers/app_config/prod.secret.exs"
@@ -32,7 +32,7 @@ pre_erlang_clean_compile() {
 
     # building brunch
     npm run deploy
-    
+
     cat ../priv/static/cache_manifest.json
   "
-} 
+}
