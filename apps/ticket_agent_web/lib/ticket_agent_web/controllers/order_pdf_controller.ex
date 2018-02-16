@@ -1,7 +1,6 @@
 defmodule TicketAgentWeb.OrderPdfController do
   require Logger
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Order, Repo}
   alias TicketAgent.Finders.OrderFinder
   alias TicketAgent.Generators.OrderPdfGenerator
 

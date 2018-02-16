@@ -9,8 +9,8 @@ defmodule TicketAgentWeb.Api.ListingTicketsController do
 
     page = TicketFinder.paginate_tickets_for_listing(listing.id, params)
     render(
-      conn, 
-      "show.json", 
+      conn,
+      "show.json",
       page: page
     )
   end

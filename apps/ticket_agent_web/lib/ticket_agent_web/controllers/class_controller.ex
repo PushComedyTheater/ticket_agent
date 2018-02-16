@@ -1,6 +1,6 @@
 defmodule TicketAgentWeb.ClassController do
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Class, Listing, Repo}
+  alias TicketAgent.{Class, Repo}
   alias TicketAgent.Finders.ListingFinder
   import Ecto.Query
 
@@ -12,14 +12,14 @@ defmodule TicketAgentWeb.ClassController do
     classes = query
               |> Repo.all()
               |> Repo.preload(:prerequisite)
-              |> Repo.preload(:listings)   
-             
+              |> Repo.preload(:listings)
+
     render conn, "index.html", classes: classes
   end
 
   def class(conn, %{"type" => "currently_offered"}) do
     render conn, "class_list.html", classes: ListingFinder.active_class_listings, type: "Currently Offered"
-  end  
+  end
 
   def class(conn, %{"type" => type}) do
     query = from c in Class,
@@ -37,7 +37,7 @@ defmodule TicketAgentWeb.ClassController do
   def show(conn, %{"id" => "currently_offered"}) do
     render conn, "show.html"
   end
-  
+
   def show(conn, params) do
     slug = params["id"]
     query = from c in Class,
