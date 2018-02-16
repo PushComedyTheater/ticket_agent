@@ -1,6 +1,0 @@
-Logger.info "=========== Writing tag ==========="
-SeedHelpers.create_tag(%{
-  event_id: event.id,
-  tag: "<%= @tag %>"
-})
-Logger.info "=========== Wrote tag ==========="

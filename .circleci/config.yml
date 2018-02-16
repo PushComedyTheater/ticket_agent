@@ -52,7 +52,7 @@ jobs:
           name: Execute Tests
           command: |
             MIX_ENV="test" mix test
-      - run:
-          name: Execute Credo
-          command: |
-            MIX_ENV="test" mix credo
+      # - run:
+      #     name: Execute Credo
+      #     command: |
+      #       MIX_ENV="test" mix credo

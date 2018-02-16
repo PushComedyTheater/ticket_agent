@@ -66,7 +66,7 @@ defmodule TicketAgent.Mixfile do
       {:scrivener_ecto, "~> 1.0"},
 
       {:bypass, "~> 0.7", only: :test},
-      {:credo, "~> 0.8", only: [:dev, :test]},
+      {:credo, "~> 0.9.0-rc3", only: [:dev, :test]},
       {:ex_guard, "~> 1.2", only: :dev},
       {:ex_machina, "~> 2.0", only: :test},
       {:junit_formatter, "~> 1.1", only: :test},
