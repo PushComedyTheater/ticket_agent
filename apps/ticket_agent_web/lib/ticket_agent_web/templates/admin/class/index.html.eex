@@ -23,11 +23,11 @@
                 </td>
                 <td><%= class.title %></td>
                 <td>
-                  <% current_listing = current_class_listing(class) %>
-                  <%= if current_listing do %>
+                  <% current_listings = current_class_listing(class) %>
+                  <%= for listing <- current_listings do %>
                     <i class="fa fa-fw fa-check"></i>
-                    <%= link "View Admin Details", to: admin_event_path(@conn, :show, current_listing) %> /
-                    <%= link "View On Customer Site", to: event_path(@conn, :show, current_listing), target: "_blank" %>
+                    <%= link "View Admin Details", to: admin_event_path(@conn, :show, listing) %> /
+                    <%= link "View On Customer Site", to: class_path(@conn, :show, class.slug), target: "_blank" %><br />
                   <% end %>
 
                 </td>

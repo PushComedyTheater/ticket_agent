@@ -2,7 +2,7 @@
 <br />
 <br />
 <%= for listing <- @listings do %>
-  <%= link to: ticket_path(@conn, :new, listing_id: listing), class: "btn btn-md u-btn-primary g-mr-10 g-mb-15" do %>
+  <%= link to: ticket_path(@conn, :new, listing_id: listing.slug), class: "btn btn-md u-btn-primary g-mr-10 g-mb-15" do %>
   <i class="fa fa-check-circle g-mr-5"></i>
   <%= class_buy_timestamp(listing) %>
   <% end %>

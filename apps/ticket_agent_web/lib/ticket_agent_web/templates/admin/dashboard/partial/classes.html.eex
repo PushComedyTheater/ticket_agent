@@ -15,9 +15,13 @@
       </thead>
       <tbody>
       <%= for {class, index} <- Enum.with_index(@classes) do %>
-      <% 
-        listing = current_class_listing(class)
-        sold_count = Enum.count(listing.tickets, fn(x) -> x.status != "available" end) 
+      <%
+        listing =
+          class
+          |> current_class_listing
+          |> hd
+
+        sold_count = Enum.count(listing.tickets, fn(x) -> x.status != "available" end)
         total = Enum.count(listing.tickets)
         percentage = (sold_count / total) * 100
       %>
