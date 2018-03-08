@@ -1,0 +1,55 @@
+# Basic terminology
+
+There was an attempt to keep as much of the nomenclature as possible from our previous incarnation.  However, now is a good time to go over some of the terminology of our application.
+
+We have two types of objects that we sell tickets for - **events** and **classes**.  Everything on our site comes from one of those types.  
+
+**Events** have many **listings** associated with them.  For example, we have an event called *"Who Dunnit? ... The Improvised Murder Mystery"*.  This event happens every month and we sell tickets to those individual occurrences of this show called **listings**.  
+
+Likewise, we have **classes** listed on our site.  These **classes** have **listings** which are the individual instances of a class.  For example, *Improv 101* is a **class** that we offer and it has a **listing** offered from March 4 - April 8th.
+
+# Homepage
+
+The homepage of our site has navigation items to Shows, Classes, Corporate Workshops and About us.
+
+![Homepage](homepage.png)
+
+Additionally, a user can login to the site and access parts of the site such as their dashboard and list of orders.  We will leverage this authentication later to add member only information.
+
+# Show Listing
+
+
+
+# Administration Panel
+
+The administration panel of the application can be reached by going to https://MAINURL/admin
+
+This part of the website is protected and will require an account.  If you are unable to see the administration panel after logging it, please contact Patrick.
+
+You can login to the site by clicking LOGIN in the upper right hand corner of the page.  
+
+![Login](login_header.png)
+
+After you are logged into the site, you can always return to the administration portion by clicking on the Admin button in the top right corner.
+
+![Admin Header](admin_header.png)
+
+Our administraton panel has a different visual layout than our normal site to help differentiate it.  That way you will know what page you are on.
+
+![admin panel](admin_panel.png)
+
+
+## Menu
+
+Along the left hand side of the administration panel is a menu that can lead you to different parts of the application.
+
+1. Classes
+2. Shows
+3. Orders
+4. Teachers
+5. Users
+6. Webhooks
+
+### Classes
+
+It is important to understand that there are a
