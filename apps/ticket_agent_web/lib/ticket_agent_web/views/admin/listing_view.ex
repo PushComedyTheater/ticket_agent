@@ -3,6 +3,12 @@ defmodule TicketAgentWeb.Admin.ListingView do
   use TicketAgentWeb, :view
   import Scrivener.HTML
 
+  def render("create.json", %{}) do
+    %{
+      message: "ok"
+    }
+  end
+
   def listing_type(true) do
     ["Class": "class", "Show": "show", "Workshop": "workshop"]
   end
@@ -44,7 +50,7 @@ defmodule TicketAgentWeb.Admin.ListingView do
   end
 
   def my_datetime_select(form, field, opts \\ []) do
-    
+
     builder = fn b ->
     ~e"""
     Date: <%= b.(:month, []) %> / <%= b.(:day, []) %> / <%= b.(:year, []) %>

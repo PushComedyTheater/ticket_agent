@@ -44,16 +44,26 @@ window.load_tickets = function(i) {
   console.log("there are " + ticket_count + " tickets");
   for (var j = 0; j < ticket_count; j++) {
     console.log("load_tickets -> checking ticket " + i + "_" + j);
+
+    var sale_start = $("#listing_start_time_" + i + "_" + j).val();
+    if (sale_start.length > 0) {
+      sale_start = moment.tz(sale_start, "America/New_York").clone().tz("Europe/London").format();
+    }
+
+    var sale_end = $("#listing_end_time_" + i + "_" + j).val();
+    if (sale_end.length > 0) {
+      sale_end = moment.tz(sale_end, "America/New_York").clone().tz("Europe/London").format();
+    }
+
     tickets.push({
       name: $("#ticket_name_" + i + "_" + j).val(),
       description: $("#ticket_description_" + i + "_" + j).val(),
       group: $("#ticket_name_" + i + "_" + j).val(),
       quantity:  parseInt($("#ticket_quantity_" + i + "_" + j).val()),
       price: parseInt($("#ticket_price_" + i + "_" + j).val().replace("$ ", "").replace(".", "")),
-      sale_start: $("#listing_start_time_" + i + "_" + j).val(),
-      sale_end: $("#listing_end_time_" + i + "_" + j).val(),
+      sale_start: sale_start,
+      sale_end: sale_end,
     })
   }
   return tickets;
 }
-

@@ -3,7 +3,7 @@ defmodule TicketAgent.Listing do
   use TicketAgent.Schema
 
   @required ~w(slug title description status start_at)a
-  @fields ~w(pass_fees_to_buyer end_at)a
+  @fields ~w(pass_fees_to_buyer end_at class_id user_id)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -31,14 +31,16 @@ defmodule TicketAgent.Listing do
     |> validate_inclusion(:status, ~w(unpublished active canceled deleted))
     |> cast_assoc(:event)
     |> cast_assoc(:user)
+    |> cast_assoc(:tickets)
     |> unique_constraint(:slug)
+    |> IO.inspect
   end
 
   def listing_image_with_dimensions(%Listing{event_id: nil, class_id: class_id} = listing, width, height) do
     listing = case Ecto.assoc_loaded?(listing.class) do
       true -> listing
       false -> Repo.preload(listing, :class)
-    end    
+    end
     listing.class.image_url
     |> get_cloudinary(width, height)
   end
@@ -47,10 +49,10 @@ defmodule TicketAgent.Listing do
     listing = case Ecto.assoc_loaded?(listing.event) do
       true -> listing
       false -> Repo.preload(listing, :event)
-    end    
+    end
     listing.event.image_url
     |> get_cloudinary(width, height)
-  end  
+  end
 
   def get_cloudinary(image_url, width, height) do
     public_id = get_public_id(image_url)
@@ -61,7 +63,7 @@ defmodule TicketAgent.Listing do
       gravity: "north",
       crop: "fill",
       flags: 'progressive'
-    })    
+    })
   end
 
   def get_public_id("https://res.cloudinary.com/push-comedy-theater/image/upload/covers/" <> item) do
@@ -70,7 +72,7 @@ defmodule TicketAgent.Listing do
 
   def get_public_id("https://res.cloudinary.com/push-comedy-theater/image/upload/" <> item) do
     String.replace(item, ".jpg", "")
-  end  
+  end
 
   def current_class_listing(%{id: class_id} = class) do
     utc_now =
@@ -79,7 +81,7 @@ defmodule TicketAgent.Listing do
 
     class = case Ecto.assoc_loaded?(class.listings) do
       true -> class
-      false -> 
+      false ->
         Repo.preload(class, :listings)
     end
 
@@ -93,7 +95,7 @@ defmodule TicketAgent.Listing do
         Calendar.NaiveDateTime.to_date_time_utc(y.start_at)
       ) == :lt
     end)
-  end    
+  end
 
   def convert_to_date_time_utc(nil), do: nil
   def convert_to_date_time_utc(date), do: Calendar.NaiveDateTime.to_date_time_utc(date)
@@ -126,7 +128,7 @@ defmodule TicketAgent.Listing do
 
   def change_listing(%Listing{} = listing) do
     Listing.changeset(listing, %{})
-  end  
+  end
 
   def from_class(current_user, %Class{} = class) do
     %Listing{}
@@ -153,10 +155,10 @@ defmodule TicketAgent.Listing do
         url: "http://pushcomedytheater.com/events/#{listing.slug}-#{Listing.slugified_title(listing.title)}"
       }
     ]
-    %ICalendar{ events: events } 
+    %ICalendar{ events: events }
     |> ICalendar.to_ics
-  end  
-  
+  end
+
   def upcoming_shows do
     query = from l in Listing,
             where: fragment("? >= NOW()", l.start_at),

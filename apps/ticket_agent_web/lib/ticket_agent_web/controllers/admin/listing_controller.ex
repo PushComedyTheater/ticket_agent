@@ -116,46 +116,11 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def create(conn, %{"class_id" => class_id, "title" => title, "description" => description, "listings" => listings} = params) do
-    base = %{
-      slug: TicketAgent.Random.generate_slug(),
-      title: title,
-      description: description
-    }
-
-    Enum.each(listings, fn(input_listing) ->
-
-      item = Map.merge(base, %{
-        status: "active",
-        start_at: input_listing["start_time"],
-        end_at: Map.get(input_listing, "end_time", nil),
-        slug: input_listing["slug"]
-      })
-
-      listing =
-        Listing.changeset(%Listing{}, item)
-        |> Repo.insert!
-
-      Enum.each(input_listing["tickets"], fn(input_ticket) ->
-        ticket =
-          Ticket.changeset(
-            %Ticket{
-              slug: TicketAgent.Random.generate_slug(),
-              status: "available",
-            },
-            input_ticket
-          )
-
-
-        IO.puts "FUD"
-        IO.inspect ticket
-      end)
-
-      raise "dafsd"
-    end)
-
+    current_user = Coherence.current_user(conn)
+    TicketAgent.ListingsGenerator.create_from_class(Map.put(params, "user", current_user))
 
     conn
-    |> render("new.html")
+    |> render("create.json")
   end
 
   def create(conn, params) do
