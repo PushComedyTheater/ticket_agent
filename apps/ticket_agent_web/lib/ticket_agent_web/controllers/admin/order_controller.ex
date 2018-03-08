@@ -5,7 +5,7 @@ defmodule TicketAgentWeb.Admin.OrderController do
 
   def index(conn, params) do
     orders = Order.list_orders(params)
-    
+
     conn
     |> assign(:orders, orders)
     |> render("index.html")
@@ -29,7 +29,7 @@ defmodule TicketAgentWeb.Admin.OrderController do
         |> redirect(to: admin_teacher_path(conn, :show, teacher))
       {:error, changeset} ->
         conn
-        |> assign(:changeset, changeset)        
+        |> assign(:changeset, changeset)
         |> render("new.html")
     end
   end
@@ -43,7 +43,7 @@ defmodule TicketAgentWeb.Admin.OrderController do
   end
 
   def edit(conn, %{"id" => id}) do
-    order = Repo.get!(Order, id)
+    order = Order.get_by_slug!(id)
     changeset = Order.changeset(order, %{})
 
     conn

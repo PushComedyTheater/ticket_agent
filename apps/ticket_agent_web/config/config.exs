@@ -13,7 +13,7 @@ config :ticket_agent_web,
 config :paper_trail, repo: TicketAgent.Repo,
                      item_type: Ecto.UUID,
                      originator_type: Ecto.UUID,
-                     originator: [name: :user, model: TicketAgent.User]  
+                     originator: [name: :user, model: TicketAgent.User]
 
 config :oauth2, debug: true
 
@@ -38,9 +38,9 @@ config :logger, :console,
 config :ticket_agent_web, :generators,
   context_app: :ticket_agent
 
-# {sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
-# sha = String.trim(sha)
-# config :ticket_agent_web, :release, sha
+{sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
+sha = String.trim(sha)
+config :ticket_agent_web, :release, sha
 
 # config :sentry,
 #   dsn: System.get_env("SENTRY_PRIVATE_DSN"),

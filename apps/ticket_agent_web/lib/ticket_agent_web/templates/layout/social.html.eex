@@ -15,3 +15,15 @@
 <meta name="twitter:title" content="<%= page_title(@conn) %>">
 <meta name="twitter:description" content="<%= raw page_description(@conn) %>">
 <meta name="twitter:image" content="<%= page_image(@conn) %>">
+<script type="application/ld+json"> {
+  "@context" : "http://schema.org",
+  "@type" : "Organization",
+  "name" : "Push Comedy Theater",
+  "url" : "https:/pushcomedytheater.com",
+  "sameAs" : [
+    "https://www.facebook.com/PushComedyTheater",
+    "https://twitter.com/pushcomedy",
+    "https://plus.google.com/u/0/b/111820986003170275262/+PushComedyTheaterNorfolk"
+  ]
+}
+</script>

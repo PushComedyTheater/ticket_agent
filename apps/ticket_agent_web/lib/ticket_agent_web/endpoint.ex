@@ -22,6 +22,8 @@ defmodule TicketAgentWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Logger
 
+  plug TicketAgentWeb.Plugs.GitSHA
+
   # plug TicketAgentWeb.AuthenticateStripe
 
   plug Plug.Parsers,

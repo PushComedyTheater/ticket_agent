@@ -10,9 +10,9 @@ defmodule TicketAgentWeb.Admin.ListingController do
         params
       true ->
         params
-        
+
     end
-    
+
     listings = Listing.list_listings(params)
     render conn, "index.html", listings: listings
   end
@@ -24,17 +24,17 @@ defmodule TicketAgentWeb.Admin.ListingController do
 
   def new(conn, %{"class_id" => class_id}) do
     current_user = Coherence.current_user(conn)
-    class = 
+    class =
       Class
       |> Repo.get(class_id)
 
     conn
-    |> render("new_class.html", class: class)    
+    |> render("new_class.html", class: class)
   end
 
   def new(conn, %{"event_id" => "new"}) do
     conn
-    |> render("new_event.html")    
+    |> render("new_event.html")
   end
 
   def new(conn, %{"event_id" => event_id}) do
@@ -51,8 +51,8 @@ defmodule TicketAgentWeb.Admin.ListingController do
     conn
     |> assign(:changeset, changeset)
     |> assign(:event, event)
-    |> render("new_event.html")    
-  end  
+    |> render("new_event.html")
+  end
 
   def new(conn, _params) do
     class_query = from c in Class,
@@ -71,7 +71,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
     |> assign(:events, events)
     |> render("new.html")
 
-  end  
+  end
 
   def show(conn, %{"titled_slug" => titled_slug}) do
     show = load_show(titled_slug)
@@ -105,58 +105,23 @@ defmodule TicketAgentWeb.Admin.ListingController do
     end)
 
     render(
-      conn, 
-      "show.html", 
-      show: show, 
-      sold_ticket_count: sold_ticket_count, 
-      labels: labels, 
-      data: data, 
+      conn,
+      "show.html",
+      show: show,
+      sold_ticket_count: sold_ticket_count,
+      labels: labels,
+      data: data,
       sold_ticket_price: sold_ticket_price
     )
   end
 
   def create(conn, %{"class_id" => class_id, "title" => title, "description" => description, "listings" => listings} = params) do
-    base = %{
-      slug: TicketAgent.Random.generate_slug(),
-      title: title,
-      description: description      
-    }
-
-    Enum.each(listings, fn(input_listing) ->
-
-      item = Map.merge(base, %{
-        status: "active",
-        start_at: input_listing["start_time"],
-        end_at: Map.get(input_listing, "end_time", nil),
-        slug: input_listing["slug"]
-      })   
-
-      listing = 
-        Listing.changeset(%Listing{}, item)
-        |> Repo.insert!
-
-      Enum.each(input_listing["tickets"], fn(input_ticket) ->
-        ticket = 
-          Ticket.changeset(
-            %Ticket{
-              slug: TicketAgent.Random.generate_slug(),
-              status: "available",
-            }, 
-            input_ticket
-          )
-
-
-        IO.puts "FUD"
-        IO.inspect ticket
-      end)
-
-      raise "dafsd"
-    end)
-
+    current_user = Coherence.current_user(conn)
+    TicketAgent.ListingsGenerator.create_from_class(Map.put(params, "user", current_user))
 
     conn
-    |> render("new.html")
-  end  
+    |> render("create.json")
+  end
 
   def create(conn, params) do
     IO.inspect params
@@ -204,7 +169,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
           )
         )
       )
-    )    
+    )
     |> select(
       [r],
       [
@@ -220,7 +185,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
       ]
     )
   end
-
 
   def load_show(titled_slug) do
     [slug|_] = titled_slug |> String.split("-")

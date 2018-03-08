@@ -8,14 +8,14 @@ window.delete_listing = function(listing_id) {
   if (confirm("Are you sure you want to remove this time and all associated tickets?")) {
     $("#row_" + listing_id).remove();
     $("#tickets_" + listing_id).remove();
-  }  
+  }
 }
 
 window.add_ticket = function(item) {
   var iterator = parseInt($(item).data("iterator"));
   var current_ticket_count = $("#tickets_" + iterator + " .ticket_row").length;
   console.log("add_ticket -> " + iterator + " / " + current_ticket_count);
-  
+
   var detail = window.ticket_template({
     iterator: iterator,
     current_ticket_count: current_ticket_count,
@@ -111,6 +111,7 @@ window.create_class = function (e) {
     }).done(function (response) {
       console.log("done");
       console.log(response);
+      window.location.href = "/admin/classes"
     }).fail(function (xhr, status, errorThrown) {
       // Code to run if the request fails; the raw request and
       // status codes are passed to the function

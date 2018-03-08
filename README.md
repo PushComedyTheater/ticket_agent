@@ -2,6 +2,14 @@
 
 [![CircleCI](https://circleci.com/bb/veverkap/ticket_agent.svg?style=svg&circle-token=83ca2abbfaf30749e60671e9c34fc4c5bb05b365)](https://circleci.com/bb/veverkap/ticket_agent)
 [![Twitter: @veverkap](https://img.shields.io/badge/contact-@veverkap-blue.svg?style=flat)](https://twitter.com/veverkap)
+
+docker build --tag=elixir-build -f Dockerfile .
+
+docker run -d -p 22:22 -P --name elixir-build --mount source=builder,target=/home/builder  elixir-build
+
+
+
+
 title
 description
 start

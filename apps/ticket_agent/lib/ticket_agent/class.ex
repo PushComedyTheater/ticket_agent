@@ -29,4 +29,6 @@ defmodule TicketAgent.Class do
     |> cast_assoc(:prerequisite)
     |> validate_required([:type, :title])
   end
+
+  def get_class!(id), do: Repo.get!(Class, id)
 end

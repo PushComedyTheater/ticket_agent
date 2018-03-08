@@ -270,7 +270,7 @@ CREATE TABLE listings (
     description text NOT NULL,
     status listing_status DEFAULT 'unpublished'::listing_status,
     start_at timestamp with time zone DEFAULT now(),
-    end_at timestamp with time zone DEFAULT now(),
+    end_at timestamp with time zone,
     pass_fees_to_buyer boolean DEFAULT true,
     user_id uuid,
     event_id uuid,
