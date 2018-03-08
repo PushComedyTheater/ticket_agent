@@ -1,7 +1,7 @@
 defmodule TicketAgent.Emails.UserWelcomeEmail do
   import Swoosh.Email
   alias Swoosh.Email
-  alias TicketAgent.{Listing, Order, Repo}
+  alias TicketAgent.{Listing}
 
   def welcome_email(name, email) do
     upcoming_html_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.html.eex"
