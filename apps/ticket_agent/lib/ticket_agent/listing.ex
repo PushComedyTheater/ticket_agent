@@ -33,7 +33,6 @@ defmodule TicketAgent.Listing do
     |> cast_assoc(:user)
     |> cast_assoc(:tickets)
     |> unique_constraint(:slug)
-    |> IO.inspect
   end
 
   def listing_image_with_dimensions(%Listing{event_id: nil, class_id: class_id} = listing, width, height) do
