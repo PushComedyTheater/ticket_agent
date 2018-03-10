@@ -103,9 +103,11 @@ defmodule TicketAgent.Listing do
   def date_after(date, end_at), do: (DateTime.compare(end_at, date) == :gt)
 
   def list_listings(params) do
-    Listing
-    |> order_by(asc: :start_at)
-    |> Repo.paginate(params)
+    query = from l in Listing,
+            where: is_nil(l.class_id),
+            order_by: [asc: :start_at]
+
+    Repo.paginate(query, params)
   end
   def get_listing!(id), do: Repo.get!(Listing, id)
 

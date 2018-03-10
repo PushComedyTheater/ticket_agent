@@ -11,6 +11,7 @@
             <tbody><tr>
               <th width="250px;">Actions</th>
               <th>Title</th>
+              <th>Status</th>
               <th>Start Time</th>
               <th>End Time</th>
             </tr>
@@ -22,6 +23,7 @@
                   <span><%= link "Delete", to: admin_event_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
                 </td>
                 <td><%= listing.title %></td>
+                <td><%= listing.status %></td>
                 <td><%= order_timestamp(listing.start_at) %></td>
                 <td><%= order_timestamp(listing.end_at) %></td>
               </tr>
@@ -32,8 +34,8 @@
 <div class="pull-right">
   <%= pagination_links @listings %>
   </div>
-            </div>        
-        
+            </div>
+
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
