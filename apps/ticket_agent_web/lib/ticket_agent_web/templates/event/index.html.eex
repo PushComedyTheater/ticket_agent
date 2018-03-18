@@ -2,7 +2,7 @@
 <br />
 <br />
 <br />
-<!-- News Block -->
+<!-- BEGIN SHOWS -->
   <br />
   <div class="text-center mb-4" style="margin-bottom: 0px; padding-bottom: 0px;">
     <h2 class="h3 text-uppercase mb-3">Upcoming Shows</h2>
@@ -67,3 +67,5 @@
       </div>
     </div>
   </section>
+
+<!-- END SHOW -->
