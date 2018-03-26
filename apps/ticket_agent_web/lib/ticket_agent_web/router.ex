@@ -3,6 +3,7 @@ defmodule TicketAgentWeb.Router do
   use Coherence.Router         # Add this
 
   pipeline :browser do
+    plug TicketAgentWeb.Plug.Timing
     plug :accepts, ["html", "ics"]
     plug :fetch_session
     plug :fetch_flash
@@ -32,7 +33,7 @@ defmodule TicketAgentWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Coherence.Authentication.Session, protected: true  # Add this
-  end  
+  end
 
   pipeline :admin_layout do
     plug :put_layout, {TicketAgentWeb.Admin.LayoutView, :admin}
@@ -131,7 +132,7 @@ defmodule TicketAgentWeb.Router do
 
 
     get "/", Redirect, to: "/admin/dashboard"
-  end  
+  end
 
   def ensure_admin(conn, _params) do
     case conn.assigns.current_user.role do

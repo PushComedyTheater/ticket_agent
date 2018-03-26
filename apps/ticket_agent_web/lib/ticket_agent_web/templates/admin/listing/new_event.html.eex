@@ -1,53 +1,27 @@
-<%= form_for @changeset, admin_event_path(@conn, :create), [as: :listing], fn f -> %>
-  <h4>New Show From <%= @event.title %></h4>
-  <br />
-  <%= hidden_input f, :event_id %>
-  <div class="form-group">
-    <%= label f, :title, class: "control-label" %>
-    <%= text_input f, :title, class: "form-control" %>
-    <%= error_tag f, :title %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :description, class: "control-label" %>
-    <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10) %>
-    <%= error_tag f, :description %>
-  </div>
-
-  <div class="form-group">
-    <label>Start Time</label>
-    <%= my_datetime_select f, :start_at %>
-  </div>
-
-  <div class="form-group">
-    <label>End Time</label>
-    <%= my_datetime_select f, :end_at %>
-  </div>
+<%= form_for @conn, admin_event_path(@conn, :create), [as: :listing], fn f -> %>
 
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">Listing Images</h3>
+      <h3 class="box-title">New Show</h3>
     </div>
     <!-- /.box-body -->
-
     <div class="box-body">
-      <div class="row">
-        <div class="col-sm-4">Event Image</div>
-        <div class="col-sm-4">
-          <img id="cover_image" src="" style="zoom: 50%; padding: 5px;" /><br /><br />
-          <a href="#" id="upload_cover_photo" class="btn btn-primary">
-            Upload Photo
-          </a>
-          <a href="#" id="choose_cover_photo" class="btn btn-primary">
-            Choose Existing Photo
-          </a>
-          <!-- Button trigger modal -->
+      <div id="listing_title_group" class="row form-group">
+        <div class="col-sm-2">
+          <%= label f, :title, class: "control-label" %>
+        </div>
+        <div class="col-sm-10">
+          <%= text_input f, :title, class: "form-control", placeholder: "Make it short and catchy" %>
+          <span id="listing_title_error" style="display: none;" class="help-block">This field is required</span>
+        </div>
+      </div>
+      <div id="listing_description_group" class="row form-group">
+        <div class="col-sm-2"><%= label f, :description, class: "control-label" %></div>
+        <div class="col-sm-10">
+        <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10) %>
+        <span id="listing_description_error" style="display: none;" class="help-block">This field is required</span>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
