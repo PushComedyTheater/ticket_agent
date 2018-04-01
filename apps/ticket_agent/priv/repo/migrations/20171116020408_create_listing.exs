@@ -4,12 +4,15 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Listing do
   def change do
     execute "CREATE TYPE listing_status AS ENUM ('unpublished', 'active', 'completed', 'canceled', 'deleted')"
 
+    execute "CREATE TYPE listing_type AS ENUM ('class', 'show', 'camp')"
+
     create table(:listings, primary_key: false) do
       add :id, :binary_id, primary_key: true
       add :slug, :text, null: false
       add :title, :text, null: false
       add :description, :text, null: false
       add :status, :listing_status, default: "unpublished"
+      add :type, :listing_type, default: "show"
       add :start_at, :timestamptz, default: fragment("now()")
       add :end_at, :timestamptz, null: true
       add :pass_fees_to_buyer, :boolean, default: true

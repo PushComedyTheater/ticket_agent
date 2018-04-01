@@ -24,6 +24,7 @@
               <%= render "home.html", assigns %>
               <%= render "shows.html", assigns %>
               <%= render "classes.html", assigns %>
+              <%= render "camps.html", assigns %>
               <%= render "workshops.html", assigns %>
               <%= render "about.html", assigns %>
 
@@ -32,7 +33,7 @@
                   <%= link "Dashboard", to: load_dashboard_path(@conn), class: "btn u-btn-outline-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
                   <ul class="hs-sub-menu list-unstyled g-brd-top g-brd-primary g-brd-top-2 g-min-width-220 g-py-7 g-mt-20 g-mt-15--lg--scrolling" id="nav-submenu--home">
                   <%= if !is_concierge(@conn.assigns) do %>
-                    <!-- Submenu -->  
+                    <!-- Submenu -->
                     <li class="dropdown-item">
                       <%= link "Your Orders", to: dashboard_path(@conn, :index), class: "nav-link" %>
                     </li>
@@ -41,7 +42,7 @@
                       <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "nav-link" %>
                     </li>
                   </ul>
-                  
+
                 </li>
               <% else %>
                 <li class="nav-item g-mx-10--lg g-mx-15--xl">

@@ -110,6 +110,17 @@ CREATE TYPE listing_status AS ENUM (
 
 
 --
+-- Name: listing_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE listing_type AS ENUM (
+    'class',
+    'show',
+    'camp'
+);
+
+
+--
 -- Name: order_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -269,6 +280,7 @@ CREATE TABLE listings (
     title text NOT NULL,
     description text NOT NULL,
     status listing_status DEFAULT 'unpublished'::listing_status,
+    type listing_type DEFAULT 'show'::listing_type,
     start_at timestamp with time zone DEFAULT now(),
     end_at timestamp with time zone,
     pass_fees_to_buyer boolean DEFAULT true,

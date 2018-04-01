@@ -1,8 +1,13 @@
 defmodule TicketAgentWeb.CampController do
+  alias TicketAgent.Listing
   use TicketAgentWeb, :controller
 
   def index(conn, _params) do
-    render conn, "index.html"
+    camps = Listing.camps
+
+    conn
+    |> assign(:camps, camps)
+    |> render("index.html")
   end
 
   def show(conn, %{"id" => camp}) when camp == "pre-teen" or camp == "teen" do

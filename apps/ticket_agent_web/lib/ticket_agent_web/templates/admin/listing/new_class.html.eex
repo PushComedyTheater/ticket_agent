@@ -24,9 +24,9 @@ window.class_id = "<%= @class.id %>";
         <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10, value: @class.description) %>
         <span id="listing_description_error" style="display: none;" class="help-block">This field is required</span>
         </div>
-      </div>    
+      </div>
     </div>
-  </div>        
+  </div>
   <div class="box box-primary">
     <div class="box-header with-border">
       <h3 class="box-title">When is your event?</h3>
@@ -51,6 +51,6 @@ window.class_id = "<%= @class.id %>";
     All classes inherit their image from the base class. This cannot be changed without changing for all.
     </div>
     <hr>
-  </div>     
+  </div>
   <button id="create_class" type="button" class="btn btn-block btn-success btn-flat">Create New Class Listing </button>
 <% end %>

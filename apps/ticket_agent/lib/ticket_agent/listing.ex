@@ -2,7 +2,7 @@ defmodule TicketAgent.Listing do
   require Logger
   use TicketAgent.Schema
 
-  @required ~w(slug title description status start_at)a
+  @required ~w(slug title description status type start_at)a
   @fields ~w(pass_fees_to_buyer end_at class_id user_id)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -18,6 +18,7 @@ defmodule TicketAgent.Listing do
     field :title, :string
     field :description, :string
     field :status, :string
+    field :type, :string
     field :pass_fees_to_buyer, :boolean
     field :start_at, :utc_datetime
     field :end_at, :utc_datetime
@@ -101,6 +102,15 @@ defmodule TicketAgent.Listing do
 
   def date_after(_, nil), do: false
   def date_after(date, end_at), do: (DateTime.compare(end_at, date) == :gt)
+
+  def camps do
+    query = from l in Listing,
+            where: l.type == "camp",
+            preload: [:event, :tickets],
+            order_by: [asc: :start_at]
+
+    Repo.all(query)
+  end
 
   def list_listings(params) do
     query = from l in Listing,

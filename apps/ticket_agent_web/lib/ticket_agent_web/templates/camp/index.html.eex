@@ -20,6 +20,32 @@
       </div>
     </div>
   </section>
-<br />
-<br />
-<br />
+<!-- BEGIN CLASSES -->
+<section id="dude" class="container g-pt-100">
+  <%= for camp <- @camps do %>
+    <div class="row justify-content-between g-mb-40">
+      <div class="col-lg-12 g-mb-30">
+        <!-- Clients -->
+        <div class="d-flex justify-content-between">
+          <div class="d-block mr-5">
+            <img class="g-width-170" src="<%= event_image(camp.event.image_url, 500) %>">
+            </div>
+          <div class="d-block">
+            <h2 class="h4 g-color-black g-font-weight-600">
+              <a class="g-color-black" href="#"><%= camp.title %></a>
+            </h2>
+            <p><%= raw camp.description %></p>
+            <br />
+            <div class="pull-right" id="acting101">
+
+              <a class="btn u-btn-primary g-font-size-13 text-uppercase g-py-10 g-px-15" href="<%= event_path(@conn, :show, camp) %>">Purchase Now</a>
+            </div>
+          </div>
+        </div>
+        <!-- End Clients -->
+        <hr class="g-my-20">
+      </div>
+    </div>
+  <% end %>
+</section>
+<!-- End CLASSES -->
