@@ -7,8 +7,7 @@
                 <h2 class="u-heading-v2__title h6 text-uppercase mb-0">About Us</h2>
               </div>
               <p>The Push Comedy Theater is a 90 seat venue in the heart of Norfolk's brand new Arts District.</p>
-              <p>Free parking available at Slone Chiropractic (<a href="http://goo.gl/9RC1KK" target="_blank">111 West Virginia Beach Blvd</a>) just one block from the theater.  There is also limited parking on the street and in the lot directly behind the theater.</p>
-              <p><script async defer src="https://pushcomedytheaterslacking.herokuapp.com/slackin.js"></script></p>
+              <p>Free parking available at Slone Chiropractic (<a href="http://goo.gl/9RC1KK" target="_blank">111 West Virginia Beach Blvd</a>) just one block from the theater.  There is also limited parking on the street and in the lot directly across from the theater.</p>
             </div>
             <!-- End Footer Content -->
 
@@ -76,10 +75,20 @@
                       <i class="fa fa-map-marker"></i>
                     </span>
                   </div>
-                  <p class="mb-0">763 Granby Street<br />Norfolk, VA 23510 <br /></p>
+                  <p class="mb-0">Push Comedy Theater<br /><a href="https://goo.gl/maps/uN3irYyoZPn" target="_blank">763 Granby Street<br />Norfolk, VA 23510</a><br /></p>
                 </div>
                 <!-- End Location -->
 
+                <!-- Location -->
+                <div class="d-flex g-mb-20">
+                  <div class="g-mr-10">
+                    <span class="u-icon-v3 u-icon-size--xs g-bg-white-opacity-0_1 g-color-white-opacity-0_6">
+                      <i class="fa fa-map-marker"></i>
+                    </span>
+                  </div>
+                  <p class="mb-0">Push Comedy Theater Training Center<br /><a href="https://goo.gl/maps/fpJqcZFFQM52" target="_blank">2710 Granby Street<br />Norfolk, VA 23517</a><br /></p>
+                </div>
+                <!-- End Location -->
                 <!-- Phone -->
                 <div class="d-flex g-mb-20">
                   <div class="g-mr-10">
