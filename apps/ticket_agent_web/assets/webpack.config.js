@@ -1,7 +1,7 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const SentryPlugin = require('@sentry/webpack-plugin');
-// const ManifestPlugin = require('webpack-manifest-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 const path = require('path');
 
@@ -43,9 +43,9 @@ module.exports = {
         to: '../.well-known/'
       }
     ]),
-    // new ManifestPlugin({
-    //   fileName: '../cache_manifest.json',
-    // })
+    new ManifestPlugin({
+      fileName: '../cache_manifest.json',
+    })
     // new SentryPlugin({
     //     release: function (hash) {
     //       return hash.slice(0, 5)
@@ -65,16 +65,16 @@ module.exports = {
           }
         } 
       },
-      // {
-      //   test: /\.js$/,
-      //   exclude: /(node_modules|bower_components)/,
-      //   use: {
-      //     loader: 'babel-loader',
-      //     options: {
-      //       presets: ['@babel/preset-env']
-      //     }
-      //   }
-      // }      
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }      
     ]
   }  
 };

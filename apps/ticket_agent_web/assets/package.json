@@ -9,22 +9,8 @@
     "@babel/core": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",
     "@sentry/webpack-plugin": "^1.1.0",
-    "admin-lte": "^2.4.2",
-    "bootstrap": "^3.3.7",
-    "chart.js": "^2.7.1",
-    "ckeditor": "^4.7.1",
-    "custombox": "^4.0.3",
-    "datatables": "^1.10.13",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.2.1",
-    "js-cookie": "^2.2.0",
-    "json2html": "0.0.8",
-    "moment": "^2.20.1",
-    "moment-timezone": "^0.5.14",
     "phoenix": "file:../../../deps/phoenix",
-    "phoenix_html": "file:../../../deps/phoenix_html",
-    "simple-line-icons": "^2.4.1",
-    "toastr": "^2.1.4"
+    "phoenix_html": "file:../../../deps/phoenix_html"
   },
   "devDependencies": {
     "babel-loader": "^8.0.0-beta.0",

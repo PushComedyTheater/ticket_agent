@@ -1,5 +1,6 @@
 import "phoenix_html"
 // import { Socket } from "phoenix";
+
 window.console_log = function (message) {
   if (window.console && window.console.log) {
     window.console.log(message);
