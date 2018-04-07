@@ -38,6 +38,11 @@
                       <%= link "Your Orders", to: dashboard_path(@conn, :index), class: "nav-link" %>
                     </li>
                   <% end %>
+                  <%= if is_admin(@conn.assigns) do %>
+                    <li class="dropdown-item">
+                      <%= link "Admin", to: admin_dashboard_path(@conn, :index), class: "nav-link" %>
+                    </li>
+                  <% end %>
                     <li class="dropdown-item">
                       <%= link "Logout", to: session_path(@conn, :delete), method: :delete, class: "nav-link" %>
                     </li>
@@ -47,11 +52,6 @@
               <% else %>
                 <li class="nav-item g-mx-10--lg g-mx-15--xl">
                   <%= link "Login", to: session_path(@conn, :new), class: "btn u-btn-outline-primary g-font-size-13 text-uppercase g-py-10 g-px-15" %>
-                </li>
-              <% end %>
-              <%= if is_admin(@conn.assigns) do %>
-                <li class="nav-item g-mx-10--lg g-mx-15--xl">
-                  <%= link "Admin", to: admin_dashboard_path(@conn, :index), class: "btn btn-md u-btn-darkgray g-brd-2 rounded-0" %>
                 </li>
               <% end %>
             </ul>

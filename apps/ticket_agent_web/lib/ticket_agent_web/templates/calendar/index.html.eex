@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" integrity="sha256-Tu3DN+5kwrhzlzhNUMuGht2h7cR6ARgKcYemB9u5SzA=" crossorigin="anonymous" />
+<br />
+<br />
+<br />
+<br />
+  <section class="g-bg-gray-light-v5 g-py-20">
+    <div class="container">
+      <div class="d-sm-flex text-center">
+
+        <div class="align-self-center ml-auto">
+          <ul class="u-list-inline">
+            <li class="list-inline-item g-mr-5">
+              <%= link "Home", to: root_path(@conn, :index), class: "u-link-v5 g-color-main g-color-primary--hover" %>
+              <i class="g-color-gray-light-v2 g-ml-5">/</i>
+            </li>
+            <li class="list-inline-item g-color-primary">
+              <span>Calendar</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- BEGIN CLASSES -->
+<div id="calendar" style="padding: 10px; text-align: center;" align="center">
+</div>
+<script type="text/javascript">
+$(function() {
+
+
+
+
+
+$('#calendar').fullCalendar(
+      {
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay,listWeek'
+        },
+        eventLimit: true, // allow "more" link when too many events
+        navLinks: true,
+        googleCalendarApiKey: 'AIzaSyDe0pnIYtMSxC7VEzq-oT5OljWfM_-7mxw',
+        events: 'pusherscomedy@gmail.com',
+        eventClick: function(event) {
+          // opens events in a popup window
+          window.open(event.url, 'gcalevent', 'width=700,height=600');
+          return false;
+        }});
+
+});
+</script>

@@ -190,7 +190,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha256-yNbKY1y6h2rbVcQtf0b8lq4a+xpktyFc3pSYoGAY1qQ=" crossorigin="anonymous"></script>
   <!-- JS Custom -->
   <script src="https://cdn.rawgit.com/PushComedyTheater/assets/master/js/custom.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js" integrity="sha256-QvhPq+evNjd8JyxSOU5KL3jPYTD7+gWVev1OH763SL0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/gcal.min.js" integrity="sha256-/YkXWsBu/AMYKqnXKF1qV8ip72BCiu8YVOsa/LXfmho=" crossorigin="anonymous"></script>
   <script src="<%= static_path(@conn, "/js/application.js") %>"></script>
 
 

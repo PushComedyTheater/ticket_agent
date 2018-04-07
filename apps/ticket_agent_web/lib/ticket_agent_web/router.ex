@@ -60,6 +60,7 @@ defmodule TicketAgentWeb.Router do
   scope "/", TicketAgentWeb do
     pipe_through :browser # Use the default browser stack
     resources "/about", AboutController, only: [:index, :show]
+    resources "/calendar", CalendarController, only: [:index, :show]
     resources "/camps", CampController, only: [:index, :show]
     resources "/charges", ChargeController, only: [:create]
     get "/event_calendar/:slug", EventCalendarController, :show, as: :event_ics
