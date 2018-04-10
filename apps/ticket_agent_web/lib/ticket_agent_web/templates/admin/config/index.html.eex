@@ -10,16 +10,132 @@
           <table class="table table-hover">
             <tbody>
             <tr>
-
+              <th>
+              ticket_agent_web.email_base_url
+              </th>
+              <td>
+                <%= Application.get_env(:ticket_agent_web, :email_base_url) %>
+              </td>
             </tr>
-            <%= for key <- @ticket_agent_config do %>
             <tr>
-            <td><%= key %></td>
+              <th>
+              ticket_agent_web.release.sha
+              </th>
+              <td>
+                <%= Application.get_env(:ticket_agent_web, :release) %>
+              </td>
             </tr>
-            <% end %>
+            <tr>
+              <td colspan="2">&nbsp;
+              </td>
+            </tr>
+            <tr>
+              <th>
+              ticket_agent.email_base_url
+              </th>
+              <td>
+                <%= Application.get_env(:ticket_agent, :email_base_url) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              ticket_agent.release.sha
+              </th>
+              <td>
+                <%= Application.get_env(:ticket_agent, :release) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              ticket_agent.stripe_api_url
+              </th>
+              <td>
+                <%= Application.get_env(:ticket_agent, :stripe_api_url) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              ticket_agent.ticket_lock_length
+              </th>
+              <td>
+                <%= Application.get_env(:ticket_agent, :ticket_lock_length) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Sentry
+              </th>
+              <td>
+                <%= raw Poison.encode!(Application.fetch_env!(:sentry, :dsn)) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Amazon
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Amazon, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Facebook
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Facebook, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Google
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Google, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              LinkedIn
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, LinkedIn, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Microsoft
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Microsoft, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Stripe
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Stripe, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Twitter
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Twitter, "")) %>
+              </td>
+            </tr>
+            <tr>
+              <th>
+              Universe
+              </th>
+              <td>
+                <%= raw Poison.encode!(get_application_env(:ticket_agent, Universe, "")) %>
+              </td>
+            </tr>
           </tbody></table>
         </div>
-       
+
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
