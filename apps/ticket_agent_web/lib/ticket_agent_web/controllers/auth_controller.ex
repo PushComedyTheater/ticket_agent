@@ -99,7 +99,7 @@ defmodule TicketAgentWeb.AuthController do
   end
 
   defp authorize_url!("amazon", _params), do: TicketAgent.Amazon.authorize_url!(scope: "profile")
-  defp authorize_url!("facebook", _params), do: TicketAgent.Facebook.authorize_url!(scope: "user_photos,user_about_me,user_birthday,user_website,user_location,email")
+  defp authorize_url!("facebook", _params), do: TicketAgent.Facebook.authorize_url!(scope: "email,public_profile,user_birthday,user_friends,user_location,user_photos")
   defp authorize_url!("google", _params),   do: TicketAgent.Google.authorize_url!(scope: "https://www.googleapis.com/auth/plus.profile.emails.read")
   defp authorize_url!("linkedin", _params), do: TicketAgent.LinkedIn.authorize_url!(scope: "r_basicprofile r_emailaddress")
   defp authorize_url!("microsoft", _params), do: TicketAgent.Microsoft.authorize_url!(scope: "wl.emails,wl.basic,wl.postal_addresses,wl.phone_numbers")
@@ -214,13 +214,13 @@ defmodule TicketAgentWeb.AuthController do
   end
 
   defp get_user("universe", client) do
-    with {:ok, 
+    with {:ok,
       %{
         body: %{
           "current_user" => %{
-            "first_name" => first_name, 
-            "last_name" => last_name, 
-            "email" => email, 
+            "first_name" => first_name,
+            "last_name" => last_name,
+            "email" => email,
             "cover_photo_url" => avatar
           } = current_user
         } = body}} <- OAuth2.Client.get(client, "https://www.universe.com/api/v2/current_user") do
