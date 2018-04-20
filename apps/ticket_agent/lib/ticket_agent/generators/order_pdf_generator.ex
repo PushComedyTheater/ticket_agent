@@ -26,13 +26,8 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
   defp generate_pdf_file(html, options), do: @pdf_generator.generate_file!(html, options)
 
   defp generate_order_html(order) do
-    Logger.info "template_dir = #{@template_dir}"
-    Logger.info "OK"
-
-    Path.join([priv_directory, "email_templates", "tickets_pdf.html.eex"])
-    |> Logger.info
-
-    ticket_pdf_template = @template_dir <> "/tickets_pdf.html.eex"
+    ticket_pdf_template = Path.join([priv_directory, "email_templates", "tickets_pdf.html.eex"])
+    Logger.info "ticket_pdf_template = #{ticket_pdf_template}"
 
     order =
       order
