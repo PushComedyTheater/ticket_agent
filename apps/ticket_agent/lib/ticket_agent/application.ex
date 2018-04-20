@@ -32,7 +32,6 @@ defmodule TicketAgent.Application do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    ...
     ensure_porcelain_init()
     :ok
   end
