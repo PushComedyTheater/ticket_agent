@@ -25,7 +25,7 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
 
   defp generate_order_html(order) do
     Logger.info "template_dir = #{@template_dir}"
-
+    Logger.info "OK"
     ticket_pdf_template = @template_dir <> "/tickets_pdf.html.eex"
 
     order =
