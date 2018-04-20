@@ -20,4 +20,20 @@ defmodule TicketAgent.Application do
       supervisor(TicketAgent.Clock, []),
     ], strategy: :one_for_one, name: TicketAgent.Supervisor)
   end
+
+  defp ensure_porcelain_init() do
+    Task.async(fn ->
+      # Wait ten seconds after deploy and then try to reinit porcelain
+      :timer.sleep(10000)
+      Porcelain.Init.init()
+    end)
+  end
+
+  # Tell Phoenix to update the endpoint configuration
+  # whenever the application is updated.
+  def config_change(changed, _new, removed) do
+    ...
+    ensure_porcelain_init()
+    :ok
+  end
 end
