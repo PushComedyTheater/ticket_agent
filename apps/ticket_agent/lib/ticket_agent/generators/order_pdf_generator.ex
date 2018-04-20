@@ -3,10 +3,12 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
   alias TicketAgent.Repo
 
   @root_dir       File.cwd!
-  @template_dir   Path.join(~w(#{@root_dir} lib ticket_agent emails templates))
+  @template_dir   Application.app_dir(:ticket_agent, "priv/email_templates")
   @host           Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
   @pdf_generator  Application.get_env(:ticket_agent, :pdf_generator)
   @base_options   [page_size: "A5", shell_params: [ "-O", "landscape"]]
+
+  def priv_directory, do: to_string(:code.priv_dir(:ticket_agent))
 
   def generate_order_pdf_binary(order) do
     order
@@ -18,15 +20,16 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
     order
     |> generate_order_html()
     |> generate_pdf_file(Keyword.merge(@base_options, [filename: "#{order.slug}"]))
-  end  
-    
+  end
+
   defp generate_pdf_binary(html), do: @pdf_generator.generate_binary!(html, Keyword.merge(@base_options, [delete_temporary: true]))
   defp generate_pdf_file(html, options), do: @pdf_generator.generate_file!(html, options)
 
   defp generate_order_html(order) do
-    ticket_pdf_template = @template_dir <> "/tickets_pdf.html.eex"
+    ticket_pdf_template = Path.join([priv_directory, "email_templates", "tickets_pdf.html.eex"])
+    Logger.info "ticket_pdf_template = #{ticket_pdf_template}"
 
-    order = 
+    order =
       order
       |> Repo.preload([:user, :credit_card, :tickets, :listing])
 
@@ -38,11 +41,11 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
     EEx.eval_file(
       ticket_pdf_template,
       [
-        tickets: order.tickets, 
-        listing: listing, 
-        ticket_count: ticket_count, 
+        tickets: order.tickets,
+        listing: listing,
+        ticket_count: ticket_count,
         host: @host
       ]
-    )    
+    )
   end
 end

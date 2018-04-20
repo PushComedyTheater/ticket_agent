@@ -5,8 +5,7 @@ defmodule TicketAgent.Emails.OrderEmail do
   alias TicketAgent.{Listing, Order, Repo}
 
   @host         Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
-  @root_dir     File.cwd!
-  @template_dir Path.join(~w(#{@root_dir} lib ticket_agent emails templates))
+  @template_dir Application.app_dir(:ticket_agent, "priv/email_templates")
 
   def order_receipt_email(order_id) do
     order =
@@ -15,7 +14,7 @@ defmodule TicketAgent.Emails.OrderEmail do
       |> Repo.preload([:user, :credit_card, :tickets, :listing])
 
     %{name: name, email: email} = order.user
-    
+
     ticket = Enum.at(order.tickets, 0)
     ticket_count = Enum.count(order.tickets)
 
@@ -24,7 +23,7 @@ defmodule TicketAgent.Emails.OrderEmail do
     pdf_task = Task.async(fn -> OrderPdfGenerator.generate_order_pdf_file(order) end)
 
     ical_file_name = generate_ical(listing)
-    
+
     {html, text} = load_content(listing, ticket_count, order)
 
     pdf_filename = Task.await(pdf_task, 20000)
@@ -56,7 +55,7 @@ defmodule TicketAgent.Emails.OrderEmail do
     |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
     |> subject("Order for #{admin_ticket_subject(order.tickets)} for #{listing.title}")
     |> html_body(html)
-  end  
+  end
 
   defp admin_ticket_subject(tickets) when length(tickets) > 1, do: "#{Enum.count(tickets)} tickets"
   defp admin_ticket_subject(tickets), do: "1 ticket"
@@ -65,13 +64,13 @@ defmodule TicketAgent.Emails.OrderEmail do
     admin_order_html_template = @template_dir <> "/admin_order.html.eex"
     html_layout_template = @template_dir <> "/layout.html.eex"
 
-    admin_html = 
+    admin_html =
       admin_order_html_template
       |> EEx.eval_file([
-        listing: listing, 
-        order: order, 
+        listing: listing,
+        order: order,
         host: @host
-      ])    
+      ])
 
     EEx.eval_file(html_layout_template, [body: admin_html])
   end
@@ -79,26 +78,26 @@ defmodule TicketAgent.Emails.OrderEmail do
   defp load_content(listing, ticket_count, order) do
     customer_order_html_template = @template_dir <> "/customer_order.html.eex"
     customer_order_text_template = @template_dir <> "/customer_order.txt.eex"
-    
+
     html_layout_template = @template_dir <> "/layout.html.eex"
     text_layout_template = @template_dir <> "/layout.txt.eex"
 
-    customer_order_html = 
+    customer_order_html =
       customer_order_html_template
       |> EEx.eval_file([
-        listing: listing, 
-        ticket_count: 
-        ticket_count, 
-        order: order, 
+        listing: listing,
+        ticket_count:
+        ticket_count,
+        order: order,
         host: @host
       ])
-    
-    customer_order_text = 
+
+    customer_order_text =
       customer_order_text_template
       |> EEx.eval_file([
-        listing: listing, 
-        ticket_count: ticket_count, 
-        order: order, 
+        listing: listing,
+        ticket_count: ticket_count,
+        order: order,
         host: @host
       ])
 
@@ -112,7 +111,7 @@ defmodule TicketAgent.Emails.OrderEmail do
     ical_file_name = Path.join(System.tmp_dir, "#{listing.slug}-#{Listing.slugified_title(listing.title)}.ics")
     ics = Listing.to_ical(listing)
     File.write!(ical_file_name, ics)
-    ical_file_name    
+    ical_file_name
   end
 
   def host do

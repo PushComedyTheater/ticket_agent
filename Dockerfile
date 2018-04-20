@@ -27,25 +27,25 @@ RUN update-locale LANG=$LANG
 
 RUN mkdir /var/run/sshd
 
-# Create Builder user
-RUN useradd --system --shell=/bin/bash --create-home builder
+# Create pushers user
+RUN useradd --system --shell=/bin/bash --create-home pushers
 
-#config builder user for public key authentication
-RUN mkdir /home/builder/.ssh/ && chmod 700 /home/builder/.ssh/
-COPY ./config/ssh_key.pub /home/builder/.ssh/authorized_keys
-RUN chown -R builder /home/builder/
-RUN chgrp -R builder /home/builder/
-RUN chmod 700 /home/builder/.ssh/
-RUN chmod 644 /home/builder/.ssh/authorized_keys
+#config pushers user for public key authentication
+RUN mkdir /home/pushers/.ssh/ && chmod 700 /home/pushers/.ssh/
+COPY ./config/ssh_key.pub /home/pushers/.ssh/authorized_keys
+RUN chown -R pushers /home/pushers/
+RUN chgrp -R pushers /home/pushers/
+RUN chmod 700 /home/pushers/.ssh/
+RUN chmod 644 /home/pushers/.ssh/authorized_keys
 
-RUN mix local.hex
-RUN mix local.rebar
+RUN mix local.hex --force
+RUN mix local.rebar --force
 
 #Configure public keys for sshd
 RUN  echo "AuthorizedKeysFile  %h/.ssh/authorized_keys" >> /etc/ssh/sshd_config
 
-RUN mkdir -p /home/builder/config
-COPY apps/ticket_agent_web/config/prod.secret.exs /home/builder/config/prod.secret.exs
+RUN mkdir -p /home/pushers/config
+COPY apps/ticket_agent_web/config/prod.secret.exs /home/pushers/config/prod.secret.exs
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]

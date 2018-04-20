@@ -7,7 +7,7 @@ BUILD_AT="/home/builder/app_build"
 PRODUCTION_HOSTS="newpushers"
 PRODUCTION_USER="pushers"
 DELIVER_TO="/home/pushers/app_release"
-AUTO_VERSION=revision
+AUTO_VERSION=commit-count+git-revision+branch-unless-master
 
 pre_erlang_get_and_update_deps() {
   local _prod_secret_path="/home/pushers/app_config/prod.secret.exs"

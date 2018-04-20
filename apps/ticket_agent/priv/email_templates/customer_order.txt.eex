@@ -1,0 +1,20 @@
+<% import TicketAgent.OrderHelpers %>
+NICE WORK! You scored <%= ticket_word(ticket_count) %> to <%= listing.title %>!
+We'll see you on <%= event_date(listing.start_at) %> and we plan on starting the show around <%= event_time(listing.start_at) %>.
+
+Directions to the Push:
+The Push Comedy Theater is located at 763 Granby Street in the heart of Norfolk's brand new Arts District.
+Google Map: https://goo.gl/maps/jdQnFrxh8UJ2
+
+Free parking available at Slone Chiropractic (111 West Virginia Beach Blvd) just one block from the theater. 
+There is also limited parking on the street and in the lot directly behind the theater.
+
+<%= ticket_table_text(order) %>
+
+Subtotal:        <%= money(order.subtotal) %>
+Processing Fee:  <%= money(order.processing_fee) %>
+Total:           <%= money(order.total_price) %>
+
+<%= if order.credit_card do %>Payment Method:  <%= order.credit_card.type %> ending in <%= order.credit_card.last_4 %><% end %>
+
+View more at <%= host <> "/orders/" <> order.slug %>
