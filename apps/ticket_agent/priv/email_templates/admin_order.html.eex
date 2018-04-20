@@ -1,0 +1,73 @@
+<% import TicketAgent.OrderHelpers %>
+<div style="padding: 10px;">
+  <h2>Congrats!  You got a new order!</h2>
+  <%= order.user.name %> (<%= order.user.email %>) bought <%= ticket_count(order) %> for <em>"<%= listing.title %>"</em> on <%= event_date(listing.start_at) %> at <%= event_time(listing.start_at) %>.
+  <br />
+  <br />
+  So far, you have sold <%= listing_ticket_count(listing) %> for this show!
+</div>
+<br />
+<hr />
+
+<div style="text-align: center; padding: 5px; margin-top: 15px; font-weight: bold; font-size: 24px; text-decoration: underline;">
+Tickets
+</div>
+<table style="width: 100%; margin: 5px;">
+<%= for ticket <- order.tickets do %>
+<tr>
+  <td style="text-align: left; padding: 5px; border-bottom: 1px solid #d2d2d2;">
+    <%= ticket.description %>
+    <br />
+    <small>Ticket for <%= ticket.guest_name %></small>
+  </td>
+  <td style="text-align: right; padding: 5px;">
+    <%= money(ticket.price) %>
+  </td>
+</tr>
+<% end %>
+<tr>
+  <td colspan="2">&nbsp;<br /></td>
+</tr>
+<tr>
+<td style="text-align: left; padding: 5px;">
+  <b>Subtotal:</b>
+</td>
+<td style="text-align: right; padding: 5px;">
+  <%= money(order.subtotal) %></td>
+</tr>
+<tr>
+<td style="text-align: left; padding: 5px;">
+  <b>Processing Fee:</b>
+</td>
+<td style="text-align: right; padding: 5px;">
+  <%= money(order.total_price - order.subtotal) %></td>
+</tr>
+<tr>
+<td style="text-align: left; padding: 5px;">
+  <b>Total:</b>
+</td>
+<td style="text-align: right; padding: 5px;">
+  <%= money(order.total_price) %>
+</td>
+</tr>
+</table>
+<br />
+<table class="callout" style="width: 100%;">
+  <tr>
+    <th class="callout-inner secondary" style="border-right: 0px;">
+    <%= if order.credit_card do %>
+    <p>
+    <strong>Payment Method</strong><br>
+      <%= order.credit_card.type %> ending in <%= order.credit_card.last_4 %>
+    </p>
+    <% end %>
+    </th>
+    <th class="callout-inner secondary" style="border-left: 0px;">
+    <p>
+    <strong>Order ID</strong><br>
+    <a href="<%= host <> "/admin/orders/" <> order.slug %>"><%= order.slug %></a>
+    </p>
+
+    </th>
+  </tr>
+</table>

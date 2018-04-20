@@ -1,0 +1,77 @@
+<% import TicketAgent.OrderHelpers %>
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>PushComedyTheater</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha256-NuCn4IvuZXdBaFKJOAcsU2Q3ZpwbdFisd5dux4jkQ5w=" crossorigin="anonymous" />
+    <style type="text/css">
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 18pt;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+    </style>
+  </head>
+  <body>
+<%= for {ticket, index} <- Enum.with_index(tickets) do %>
+  <%
+    link = "#{host}/concierge/single_checkin/#{ticket.id}"
+    url = "https://chart.googleapis.com/chart?cht=qr&chl=#{link}/&chs=500x500"
+  %>
+  <%= if index + 1 == ticket_count do %>
+    <table style="width: 100%; padding: 3px; height: 800px; border: 3px solid #d2d2d2;">
+  <% else %>
+    <table style="width: 100%; padding: 3px; height: 800px; border: 3px solid #d2d2d2; page-break-after: always;">
+  <% end %>
+  <tr>
+    <td style="padding-left: 15px; width: 520px;">
+      <table style="width: 100%; padding: 8px;">
+        <tr>
+          <td colspan="2">
+            <center>
+              <img src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/logo.png" style="padding: 35px; width: 400px;">
+            </center>
+          </td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-link" aria-hidden="true"></i></td>
+          <td> http://pushcomedytheater.com</td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-location-arrow" aria-hidden="true"></i></td>
+          <td> 763 Granby Street, Norfolk, VA 23510</td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-mobile" aria-hidden="true"></i></td>
+          <td>757.333.7442</td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-envelope-o" aria-hidden="true"></i></td>
+          <td>support@pushcomedytheater.com</td>
+        </tr>
+      </table>
+    </td>
+
+    <td style="padding-right: 15px; margin-right: 15px; width: 1100px;">
+      <center><img src="<%= listing_image_with_dimensions(listing, 950, 450) %>" style="border-radius: 5px; width: 100%; padding-top: 15px;" /></center>
+      <h2 style="padding: 1px; margin: 1px; text-align: center;"><%= listing.title %></h3>
+      <div align="center"><i class="fa fa-calendar" aria-hidden="true"></i>  <%= event_date(listing.start_at) %> at <%= event_time(listing.start_at) %></div>
+
+      <h2 style="padding: 1px; margin: 1px; text-align: center;"><%= ticket.guest_name %>
+    </td>
+    <td style="text-align: center; width: 500px;">
+      <center>
+        <img src="<%= url %>" width="200" /><br />
+        <%= ticket.slug %>
+      </center>
+    </td>
+  </tr>
+
+  </table>
+  <br />
+<% end %>
+</body>
+</html>

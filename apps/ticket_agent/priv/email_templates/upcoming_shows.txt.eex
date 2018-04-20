@@ -1,0 +1,12 @@
+UPCOMING SHOWS
+
+<%= for show <- shows do %>
+#########################################################################
+<%= show.title %>
+
+<%= Curtail.truncate(show.description, length: 200) %>
+
+View More at <%= host %>/events/<%= show.slug %>?utm_source=welcome_email&utm_medium=email
+#########################################################################
+
+<% end %>

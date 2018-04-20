@@ -3,7 +3,7 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
   alias TicketAgent.Repo
 
   @root_dir       File.cwd!
-  @template_dir   Path.join(~w(#{@root_dir} lib ticket_agent emails templates))
+  @template_dir   Application.app_dir(:ticket_agent, "priv/email_templates")
   @host           Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
   @pdf_generator  Application.get_env(:ticket_agent, :pdf_generator)
   @base_options   [page_size: "A5", shell_params: [ "-O", "landscape"]]
