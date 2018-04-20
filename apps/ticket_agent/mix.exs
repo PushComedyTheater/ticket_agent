@@ -33,7 +33,7 @@ defmodule TicketAgent.Mixfile do
   def application do
     [
       mod: {TicketAgent.Application, []},
-      extra_applications: [:logger, :runtime_tools, :porcelain]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 

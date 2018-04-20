@@ -53,6 +53,7 @@ release :ticket_agent do
     :elixir_make,
     :oauther,
     :edeliver,
+    :porcelain,
     ticket_agent: :permanent,
     ticket_agent_web: :permanent
   ]
