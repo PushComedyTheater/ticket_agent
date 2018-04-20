@@ -3,10 +3,13 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
   alias TicketAgent.Repo
 
   @root_dir       File.cwd!
+
   @template_dir   Application.app_dir(:ticket_agent, "priv/email_templates")
   @host           Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
   @pdf_generator  Application.get_env(:ticket_agent, :pdf_generator)
   @base_options   [page_size: "A5", shell_params: [ "-O", "landscape"]]
+
+  def priv_directory, do: to_string(:code.priv_dir(:ticket_agent))
 
   def generate_order_pdf_binary(order) do
     order
@@ -27,11 +30,9 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
     Logger.info "template_dir = #{@template_dir}"
     Logger.info "OK"
 
-    priv_dir = to_string(:code.priv_dir(:ticket_agent))
-    |> Logger.info
-
     Path.join([priv_dir, "email_templates", "tickets_pdf.html.eex"])
     |> Logger.info
+
     ticket_pdf_template = @template_dir <> "/tickets_pdf.html.eex"
 
     order =
