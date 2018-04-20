@@ -54,6 +54,7 @@ release :ticket_agent do
     :oauther,
     :edeliver,
     :porcelain,
+    :pdf_generator,
     ticket_agent: :permanent,
     ticket_agent_web: :permanent
   ]
