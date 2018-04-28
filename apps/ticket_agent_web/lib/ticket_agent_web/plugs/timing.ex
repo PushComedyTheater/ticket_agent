@@ -11,8 +11,8 @@ defmodule TicketAgentWeb.Plug.Timing do
       stop = System.monotonic_time()
       diff = System.convert_time_unit(stop - start, :native, :micro_seconds) / 1000
       conn
-      |> put_resp_header("Server-TimIng", ~s|plug, db;dur=53, plug;desc="#{conn.private[:phoenix_endpoint]}";dur=#{diff}|)
-      |> put_resp_header("server-Timing", ~s(database;desc="Cache Read";dur=23.2))
+      |> put_resp_header("server-timing", ~s|plug, db;dur=53, plug;desc="#{conn.private[:phoenix_endpoint]}";dur=#{diff}|)
+      |> put_resp_header("server-timing", ~s(database;desc="Cache Read";dur=23.2))
     end)
   end
 end

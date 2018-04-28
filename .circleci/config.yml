@@ -8,9 +8,6 @@ jobs:
     docker:
       - image: circleci/elixir:1.6.1
       - image: circleci/postgres:10-alpine-ram
-        env:
-          - POSTGRES_USER=ubuntu
-          - POSTGRES_DB=ticket_agent_test
     steps:
       - checkout
       - run:
