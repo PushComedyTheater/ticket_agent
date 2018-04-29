@@ -69,7 +69,7 @@ defmodule TicketAgent.Mixfile do
       {:credo, "~> 0.9.0-rc3", only: [:dev, :test]},
       {:ex_guard, "~> 1.2", only: :dev},
       {:ex_machina, "~> 2.0", only: :test},
-      {:junit_formatter, "~> 1.1", only: :test},
+      {:junit_formatter, "~> 2.2", only: :test},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:faker_elixir_octopus, "~> 1.0.0",  only: [:dev, :test]},
       {:mox, "~> 0.3", only: :test}
