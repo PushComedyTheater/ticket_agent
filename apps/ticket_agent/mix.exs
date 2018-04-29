@@ -61,7 +61,7 @@ defmodule TicketAgent.Mixfile do
       {:qrcode, github: "sunboshan/qrcode"},
       {:pdf_generator, github: "PushComedyTheater/elixir-pdf-generator"},
       {:curtail, "~> 0.1"},
-      {:icalendar, "~> 0.6.0"},
+      {:icalendar, "~> 0.7.0"},
       {:paper_trail, "~> 0.7.7"},
       {:scrivener_ecto, "~> 1.0"},
 
