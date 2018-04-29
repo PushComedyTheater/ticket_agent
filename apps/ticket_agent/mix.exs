@@ -55,7 +55,7 @@ defmodule TicketAgent.Mixfile do
       {:oauth2, "~> 0.9"},
       {:poison, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-      {:swoosh, "~> 0.12.0"},
+      {:swoosh, "~> 0.13.0"},
       {:gen_smtp, "~> 0.12.0"},
       # {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode", runtime: false},
       {:qrcode, github: "sunboshan/qrcode"},
