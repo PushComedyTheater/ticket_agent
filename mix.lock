@@ -36,7 +36,7 @@
   "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [:rebar3], [], "hexpm"},
   "misc_random": {:hex, :misc_random, "0.2.6", "959981142c96005731ed8b7df2440f5563a31c3a159edd5769fe28c77e3e0af7", [:mix], [], "hexpm"},
   "mochiweb": {:hex, :mochiweb, "2.15.0", "e1daac474df07651e5d17cc1e642c4069c7850dc4508d3db7263a0651330aacc", [:rebar3], [], "hexpm"},
-  "mox": {:hex, :mox, "0.3.1", "2ab1dce006387a91fbe1e727ba468d3e0691eacfd4e2fc7308d53676ec335c46", [:mix], [], "hexpm"},
+  "mox": {:hex, :mox, "0.3.2", "3b9b8364fd4f28628139de701d97c636b27a8f925f57a8d5a1b85fbd620dad3a", [:mix], [], "hexpm"},
   "oauth2": {:hex, :oauth2, "0.9.1", "cac86d87f35ec835bfe4c791263bdb88c0d8bf1617d64f555ede4e9d913e35ef", [:mix], [{:hackney, "~> 1.7", [hex: :hackney, repo: "hexpm", optional: false]}], "hexpm"},
   "oauther": {:hex, :oauther, "1.1.0", "c9a56e200507ce64e069f5273143db0cddd7904cd5d1fe46920388a48f22441b", [:mix], [], "hexpm"},
   "paper_trail": {:hex, :paper_trail, "0.7.7", "05ee6cbf5e3693c74be48a6b4724aea76a72798aa754cbfea021f0fd29ea1fc9", [:mix], [{:ecto, ">= 2.1.0", [hex: :ecto, repo: "hexpm", optional: false]}, {:poison, ">= 3.1.0 or >= 2.0.0", [hex: :poison, repo: "hexpm", optional: false]}, {:postgrex, "~> 0.13.0", [hex: :postgrex, repo: "hexpm", optional: false]}], "hexpm"},
