@@ -36,7 +36,7 @@ defmodule TicketAgent.Umbrella.Mixfile do
   # and cannot be accessed from applications inside the apps folder
   defp deps do
     [
-      {:edeliver, "~> 1.4.5"},
+      {:edeliver, "~> 1.5.0"},
       {:distillery, "~> 1.5", warn_missing: false},
     ]
   end

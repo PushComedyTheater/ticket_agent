@@ -52,6 +52,7 @@ defmodule TicketAgent.ListingsGenerator do
               slug: TicketAgent.Random.generate_slug(),
               title: title,
               class_id: class_id,
+              type: "class",
               description: description,
               status: "unpublished",
               start_at: listing_start_at,
