@@ -48,6 +48,7 @@ end
 release :ticket_agent do
   set version: current_version(:ticket_agent)
   set applications: [
+    :parse_trans,
     :runtime_tools,
     :misc_random,
     :elixir_make,
