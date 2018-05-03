@@ -39,6 +39,10 @@ defmodule TicketAgentWeb.Router do
     plug :put_layout, {TicketAgentWeb.Admin.LayoutView, :admin}
   end
 
+  pipeline :backend_layout do
+    plug :put_layout, {TicketAgentWeb.Backend.LayoutView, :backend}
+  end
+
  # Add this block
   scope "/" do
     pipe_through :browser
@@ -132,6 +136,11 @@ defmodule TicketAgentWeb.Router do
 
 
     get "/", Redirect, to: "/admin/dashboard"
+  end
+
+  scope "/backend", TicketAgentWeb.Backend do
+    pipe_through [:protected, :ensure_concierge, :backend_layout]
+    get "/", DashboardController, :index, as: :backend_dashboard
   end
 
   def ensure_admin(conn, _params) do

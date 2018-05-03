@@ -14,7 +14,7 @@ defmodule TicketAgent.State.OrderStateTest do
       order = insert(:order)
       ticket = insert(:ticket, price: 500, order: order)
       timestamp = NaiveDateTime.utc_now()
-      
+
       {order, tickets, locked_until, pricing} = OrderState.calculate_price({order, [ticket], timestamp})
 
       assert Enum.count(tickets) == 1
@@ -58,10 +58,18 @@ defmodule TicketAgent.State.OrderStateTest do
       assert order.credit_card_fee == 105
       assert order.processing_fee  == 74
       assert order.total_price     == 2579
-    end    
-  end  
+    end
+  end
 
   describe "calculate_fees" do
+    test "calculates price for 0 dollar" do
+      price = 0 #1 dollar
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
+      assert total == 0
+      assert processing_fee == 0
+      assert stripe_fee == 0
+    end
+
     test "calculates price for 1 dollar" do
       price = 100 #1 dollar
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
@@ -84,7 +92,7 @@ defmodule TicketAgent.State.OrderStateTest do
       assert total == 218517
       assert processing_fee == 2150
       assert stripe_fee == 6367
-    end    
+    end
   end
 
   describe "set_order_started" do
@@ -108,10 +116,10 @@ defmodule TicketAgent.State.OrderStateTest do
       refute is_nil(order.started_at)
     end
 
-    test "does not affect others" do 
+    test "does not affect others" do
       Enum.each(~w(started completed errored cancelled), fn(status) ->
         order = insert(:order, status: status)
-        {:ok, %{order_started: {0, _}}} = 
+        {:ok, %{order_started: {0, _}}} =
           order
           |> OrderState.set_order_started()
           |> Repo.transaction
@@ -120,7 +128,7 @@ defmodule TicketAgent.State.OrderStateTest do
         assert order.status == status
       end)
     end
-  end  
+  end
 
   describe "set_order_processing" do
     test "affects started", %{timestamp: timestamp} do
@@ -143,10 +151,10 @@ defmodule TicketAgent.State.OrderStateTest do
       refute is_nil(order.processing_at)
     end
 
-    test "does not affect others" do 
+    test "does not affect others" do
       Enum.each(~w(processing completed errored cancelled), fn(status) ->
         order = insert(:order, status: status)
-        {:ok, %{order_processing: {0, _}}} = 
+        {:ok, %{order_processing: {0, _}}} =
           order
           |> OrderState.set_order_processing()
           |> Repo.transaction
@@ -155,8 +163,8 @@ defmodule TicketAgent.State.OrderStateTest do
         assert order.status == status
       end)
     end
-  end   
-  
+  end
+
   describe "set_order_completed" do
     test "affects started", %{timestamp: timestamp} do
       order = insert(:order, status: "started")
@@ -196,12 +204,12 @@ defmodule TicketAgent.State.OrderStateTest do
       order = Repo.reload(order)
       assert order.status == "completed"
       refute is_nil(order.completed_at)
-    end    
+    end
 
-    test "does not affect others" do 
+    test "does not affect others" do
       Enum.each(~w(errored cancelled), fn(status) ->
         order = insert(:order, status: status)
-        {:ok, %{order_completed: {0, _}}} = 
+        {:ok, %{order_completed: {0, _}}} =
           order
           |> OrderState.set_order_completed()
           |> Repo.transaction
@@ -210,8 +218,8 @@ defmodule TicketAgent.State.OrderStateTest do
         assert order.status == status
       end)
     end
-  end    
-  
+  end
+
   describe "release_order" do
     test "affects started", %{timestamp: timestamp} do
       order = insert(:order, status: "started")
@@ -253,10 +261,10 @@ defmodule TicketAgent.State.OrderStateTest do
       refute is_nil(order.cancelled_at)
     end
 
-    test "does not affect others" do 
+    test "does not affect others" do
       Enum.each(~w(completed errored cancelled), fn(status) ->
         order = insert(:order, status: status)
-        {:ok, %{order_released: {0, _}}} = 
+        {:ok, %{order_released: {0, _}}} =
           order
           |> OrderState.release_order()
           |> Repo.transaction
@@ -265,5 +273,5 @@ defmodule TicketAgent.State.OrderStateTest do
         assert order.status == status
       end)
     end
-  end     
+  end
 end

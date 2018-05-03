@@ -7,7 +7,7 @@ defmodule TicketAgent.State.OrderState do
   @stripe_percentage_fee 0.029
   @processing_fixed_fee 50
   @processing_percentage_fee 0.01
-  
+
   def calculate_price({order, tickets, locked_until}) do
     order = calculate_order_cost(order)
     {
@@ -43,6 +43,7 @@ defmodule TicketAgent.State.OrderState do
     |> Repo.update!()
   end
 
+  def calculate_fees(0), do: {0, 0, 0}
   def calculate_fees(price) do
     total_with_processing = price + @processing_fixed_fee + (@processing_percentage_fee * price)
     total_to_charge = Float.ceil((total_with_processing + @stripe_fixed_fee) / (1 - @stripe_percentage_fee))
@@ -55,7 +56,7 @@ defmodule TicketAgent.State.OrderState do
     Logger.info "calculate_fees->pv_processing             = #{pv_fees}"
     Logger.info "calculate_fees->total_with_processing     = #{total_with_processing}"
     Logger.info "calculate_fees->stripe_percentage_fee     = #{@stripe_percentage_fee}"
-    Logger.info "calculate_fees->stripe_fixed_fee          = #{@stripe_fixed_fee}"    
+    Logger.info "calculate_fees->stripe_fixed_fee          = #{@stripe_fixed_fee}"
     Logger.info "calculate_fees->total_to_charge           = #{total_to_charge}"
     Logger.info "calculate_fees->stripe_fees               = #{stripe_fees}"
 

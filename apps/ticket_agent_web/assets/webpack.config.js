@@ -24,7 +24,6 @@ module.exports = {
     stripe_related: ['./js/stripe_response_parser.js', './js/stripe_related.js'],
     ticket_related: ['./js/ticket_related.js'],
     admin: ['./js/admin/admin.js', './js/admin/listing/new.js'],
-
     concierge: './js/concierge/checkin.js'
   },
   output: {
@@ -56,14 +55,14 @@ module.exports = {
   ],
   module: {
     rules: [
-      { 
-        test: /\.handlebars$/, 
+      {
+        test: /\.handlebars$/,
         loader: "handlebars-loader?helperDirs[]=./helpers",
         query: {
           precompileOptions: {
             knownHelpersOnly: false
           }
-        } 
+        }
       },
       {
         test: /\.js$/,
@@ -74,7 +73,7 @@ module.exports = {
             presets: ['@babel/preset-env']
           }
         }
-      }      
+      }
     ]
-  }  
+  }
 };
