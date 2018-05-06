@@ -2,7 +2,7 @@ defmodule TicketAgentWeb.Backend.ClassController do
   alias TicketAgent.{Class, Repo}
   import Ecto.Query
   use TicketAgentWeb, :controller
-  # plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "classes"}
+  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "classes"}
 
   def index(conn, _params) do
     query = from c in Class,

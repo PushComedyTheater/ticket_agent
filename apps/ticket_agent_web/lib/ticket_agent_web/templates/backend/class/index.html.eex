@@ -3,7 +3,6 @@
       <div class="alert alert-primary">
       These are the class templates that are used to create new listings of a class.  When you create a new listing for a class, it copies the data from this  class.  Changing things here will only affect future listings.
       </div>
-
       <div class="card">
         <div class="table-responsive">
           <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
@@ -21,13 +20,13 @@
                   <div class="item-action dropdown">
                     <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <%= link to: admin_class_path(@conn, :show, class), class: "dropdown-item" do %>
+                      <%= link to: backend_class_path(@conn, :show, class), class: "dropdown-item" do %>
                         <i class="dropdown-icon fe fe-search"></i> View Class
                       <% end %>
-                      <%= link to: admin_class_path(@conn, :edit, class), class: "dropdown-item" do %>
+                      <%= link to: backend_class_path(@conn, :edit, class), class: "dropdown-item" do %>
                         <i class="dropdown-icon fe fe-edit-2"></i> Edit Class
                       <% end %>
-                      <%= link to: admin_event_path(@conn, :new, class_id: class.id), class: "dropdown-item" do %>
+                      <%= link to: backend_event_path(@conn, :new, class_id: class.id), class: "dropdown-item" do %>
                         <i class="dropdown-icon fe fe-plus"></i> New Listing
                       <% end %>
                     </div>

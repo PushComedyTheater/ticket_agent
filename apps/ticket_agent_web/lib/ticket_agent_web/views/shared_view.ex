@@ -2,7 +2,7 @@ defmodule TicketAgentWeb.SharedView do
   require Logger
   alias TicketAgent.Listing
 
-  def current_class_listing(class), do: Listing.current_class_listing(class)  
+  def current_class_listing(class), do: Listing.current_class_listing(class)
 
   def google_calendar(listing) do
     url = "http://www.google.com/calendar/render?action=TEMPLATE"
@@ -16,7 +16,7 @@ defmodule TicketAgentWeb.SharedView do
     date
     |> Calendar.Strftime.strftime!("%Y%m%dT%H%M%SZ")
   end
-  
+
   def treeview_root(conn, path_combined) do
     treeview_root = Map.get(conn.assigns, :treeview_root, "unknown")
     cond do
@@ -27,14 +27,17 @@ defmodule TicketAgentWeb.SharedView do
     end
   end
 
-  def treeview_action(conn, path_combined) do
+  def treeview_action(conn, path_combined, existing \\ "") do
     treeview_action = Map.get(conn.assigns, :treeview_action, "unknown")
+    Logger.info "shared_view -> path_combined   = #{path_combined}"
+    Logger.info "shared_view -> treeview_action = #{treeview_action}"
+    Logger.info "shared_view -> existing        = #{existing}"
     cond do
       treeview_action == path_combined ->
-        " class=\"active\""
+        "#{existing} active"
       true ->
-        ""
-    end    
+        "#{existing}"
+    end
   end
 
   def cc_icon("Visa"), do: "visa"
