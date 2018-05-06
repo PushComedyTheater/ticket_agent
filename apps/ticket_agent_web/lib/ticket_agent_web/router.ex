@@ -141,6 +141,7 @@ defmodule TicketAgentWeb.Router do
   scope "/backend", TicketAgentWeb.Backend do
     pipe_through [:protected, :ensure_concierge, :backend_layout]
     get "/", DashboardController, :index, as: :backend_dashboard
+    resources "/classes", ClassController, as: :backend_class
   end
 
   def ensure_admin(conn, _params) do

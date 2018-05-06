@@ -128,10 +128,10 @@ defmodule TicketAgent.User do
   end
 
   def update_stripe_customer_id(user, stripe_customer_id) do
-    changeset = 
+    changeset =
       user
       |> User.changeset(%{stripe_customer_id: stripe_customer_id}, :stripe_customer_id)
-      
+
     case Repo.update(changeset) do
       {:ok, user} ->
         {:ok, user}

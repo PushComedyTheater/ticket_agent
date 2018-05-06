@@ -1,0 +1,52 @@
+<div class="row row-cards row-deck">
+    <div class="col-12">
+      <div class="alert alert-primary">
+      These are the class templates that are used to create new listings of a class.  When you create a new listing for a class, it copies the data from this  class.  Changing things here will only affect future listings.
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+            <thead>
+              <tr>
+                <th class="text-center"><i class="icon-settings"></i></th>
+                <th>Title</th>
+                <th class="text-center">Currently Offered?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= for class <- @classes do %>
+              <tr>
+                <td class="text-center">
+                  <div class="item-action dropdown">
+                    <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <%= link to: admin_class_path(@conn, :show, class), class: "dropdown-item" do %>
+                        <i class="dropdown-icon fe fe-search"></i> View Class
+                      <% end %>
+                      <%= link to: admin_class_path(@conn, :edit, class), class: "dropdown-item" do %>
+                        <i class="dropdown-icon fe fe-edit-2"></i> Edit Class
+                      <% end %>
+                      <%= link to: admin_event_path(@conn, :new, class_id: class.id), class: "dropdown-item" do %>
+                        <i class="dropdown-icon fe fe-plus"></i> New Listing
+                      <% end %>
+                    </div>
+                </td>
+                <td>
+                  <div><%= class.title %></div>
+                </td>
+                <td class="text-center">
+                  <% current_listings = current_class_listing(class) %>
+                  <%= for listing <- current_listings do %>
+                    <%= link "View On Customer Site", to: class_path(@conn, :show, class.slug), class: "btn btn-green btn-outline-primary btn-sm", target: "_blank" %>
+                  <% end %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
