@@ -9,8 +9,8 @@ defmodule TicketAgentWeb.Plugs.MenuLoader do
       |> Atom.to_string()
       |> match_controller()
 
-    Logger.info "action = #{action}"
-    Logger.info "controller = #{controller}"
+    # Logger.info "action = #{action}"
+    # Logger.info "controller = #{controller}"
 
     conn
     |> assign(:treeview_root, controller)
@@ -22,6 +22,7 @@ defmodule TicketAgentWeb.Plugs.MenuLoader do
   defp match_controller("Elixir.TicketAgentWeb.Backend.ListingController"), do: "listings"
   defp match_controller("Elixir.TicketAgentWeb.Backend.OrderController"), do: "orders"
   defp match_controller("Elixir.TicketAgentWeb.Backend.TeacherController"), do: "teachers"
+  defp match_controller("Elixir.TicketAgentWeb.Backend.WebHookController"), do: "webhooks"
   defp match_controller("Elixir.TicketAgentWeb.Admin.UserController"), do: "users"
   defp match_controller("Elixir.TicketAgentWeb.Admin.WebHookController"), do: "webhooks"
   defp match_controller(_), do: "dashboard"

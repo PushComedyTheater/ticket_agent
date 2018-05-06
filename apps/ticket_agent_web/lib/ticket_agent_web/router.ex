@@ -143,6 +143,7 @@ defmodule TicketAgentWeb.Router do
     get "/", DashboardController, :index, as: :backend_dashboard
     resources "/classes", ClassController, as: :backend_class
     resources "/listings", ListingController, as: :backend_event, param: "titled_slug"
+    resources "/webhooks", WebHookController, as: :backend_webhook
   end
 
   def ensure_admin(conn, _params) do

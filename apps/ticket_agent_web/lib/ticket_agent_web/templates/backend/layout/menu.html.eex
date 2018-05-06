@@ -24,6 +24,8 @@
   <a href="/backend" class="nav-link"><i class="fa fa-users"></i> Users </a>
 </li>
 <li class="nav-item">
-  <a href="/backend" class="nav-link"><i class="fa fa-wrench"></i> Webhooks </a>
+  <%= link to: backend_webhook_path(@conn, :index), class: raw(treeview_action(@conn, "webhooks_index", "nav-link")) do %>
+    <i class="fa fa-wrench"></i> Webhooks
+  <% end %>
 </li>
 </ul>
