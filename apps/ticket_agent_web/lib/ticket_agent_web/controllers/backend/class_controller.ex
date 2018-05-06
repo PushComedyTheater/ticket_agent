@@ -35,7 +35,7 @@ defmodule TicketAgentWeb.Backend.ClassController do
       {:ok, class} ->
         conn
         |> put_flash(:info, "Class updated successfully.")
-        |> redirect(to: admin_class_path(conn, :show, class))
+        |> redirect(to: backend_class_path(conn, :index))
       {:error, _} ->
         render(conn, "edit.html", load_form_details(class))
     end

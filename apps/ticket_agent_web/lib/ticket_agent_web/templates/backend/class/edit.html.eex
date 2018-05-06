@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <%= form_for @changeset, backend_class_path(@conn, :update, @class), [class: "card"], fn f -> %>
+        <div class="card-header">
+          <h3 class="card-title">Edit Class</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <%= label f, :title, class: "form-label" %>
+                <%= text_input f, :title, class: "form-control" %>
+                <%= error_tag f, :title %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <%= label f, :type, class: "form-label" %>
+                <%= select f, :type, @class_types, selected: f.data.type, prompt: "None", class: "form-control custom-select" %>
+                <%= error_tag f, :type %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <%= label f, :description, class: "form-label" %>
+                <%= textarea(f, :description, class: "form-control ckeditor", cols: 80, rows: 6) %>
+                <%= error_tag f, :description %>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <%= label f, :prerequisite, class: "form-label" %>
+                <%= select f, :prerequisite_id, @classes, selected: f.data.prerequisite_id, prompt: "None", class: "form-control custom-select" %>
+                <%= error_tag f, :prerequisite %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-right">
+          <div class="d-flex">
+            <a href="javascript:void(0)" class="btn btn-link">Cancel</a>
+            <%= submit "Submit", class: "btn btn-primary ml-auto" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

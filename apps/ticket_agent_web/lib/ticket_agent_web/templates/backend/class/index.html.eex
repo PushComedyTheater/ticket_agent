@@ -1,5 +1,11 @@
 <div class="row row-cards row-deck">
     <div class="col-12">
+        <%= if get_flash(@conn, :info) do %>
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <% end %>
+      <%= if get_flash(@conn, :error) do %>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <% end %>
       <div class="alert alert-primary">
       These are the class templates that are used to create new listings of a class.  When you create a new listing for a class, it copies the data from this  class.  Changing things here will only affect future listings.
       </div>
@@ -8,7 +14,7 @@
           <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
             <thead>
               <tr>
-                <th class="text-center"><i class="icon-settings"></i></th>
+                <th class="text-center"><i class="icon-settings"></i> Action</th>
                 <th>Title</th>
                 <th class="text-center">Currently Offered?</th>
               </tr>
@@ -20,7 +26,7 @@
                   <div class="item-action dropdown">
                     <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <%= link to: backend_class_path(@conn, :show, class), class: "dropdown-item" do %>
+                      <%= link to: class_path(@conn, :show, class.slug), class: "dropdown-item", target: "_blank" do %>
                         <i class="dropdown-icon fe fe-search"></i> View Class
                       <% end %>
                       <%= link to: backend_class_path(@conn, :edit, class), class: "dropdown-item" do %>
@@ -36,8 +42,8 @@
                 </td>
                 <td class="text-center">
                   <% current_listings = current_class_listing(class) %>
-                  <%= for listing <- current_listings do %>
-                    <%= link "View On Customer Site", to: class_path(@conn, :show, class.slug), class: "btn btn-green btn-outline-primary btn-sm", target: "_blank" %>
+                  <%= if Enum.count(current_listings) > 0 do %>
+                  Yes
                   <% end %>
                 </td>
               </tr>

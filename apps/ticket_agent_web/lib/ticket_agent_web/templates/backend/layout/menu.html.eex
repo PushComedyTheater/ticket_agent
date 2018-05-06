@@ -10,7 +10,9 @@
   <% end %>
 </li>
 <li class="nav-item">
-  <a href="/backend/shows" class="nav-link"><i class="fa fa-calendar"></i> Shows</a>
+  <%= link to: backend_event_path(@conn, :index), class: raw(treeview_action(@conn, "listings_index", "nav-link")) do %>
+    <i class="fa fa-calendar"></i> Shows
+  <% end %>
 </li>
 <li class="nav-item">
   <a href="/backend" class="nav-link"><i class="fa fa-shopping-cart"></i> Orders</a>
