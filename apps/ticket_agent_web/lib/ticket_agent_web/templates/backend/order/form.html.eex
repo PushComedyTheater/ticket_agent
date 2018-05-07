@@ -1,0 +1,5 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

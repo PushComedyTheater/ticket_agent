@@ -143,6 +143,10 @@ defmodule TicketAgentWeb.Router do
     get "/", DashboardController, :index, as: :backend_dashboard
     resources "/classes", ClassController, as: :backend_class
     resources "/listings", ListingController, as: :backend_event, param: "titled_slug"
+    resources "/orders", OrderController, as: :backend_order
+    resources "/teachers", TeacherController, as: :backend_teacher
+    resources "/tickets", TicketController, as: :backend_ticket
+    resources "/users", UserController, as: :backend_user
     resources "/webhooks", WebHookController, as: :backend_webhook
   end
 
