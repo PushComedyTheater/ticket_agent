@@ -1,29 +1,46 @@
-<div class="box">
-  <div class="box-header with-border">
-    <h3 class="box-title">Teachers</h3>
-  </div>
-  <!-- /.box-header -->
-  <div class="box-body">
-    <table class="table table-bordered">
-      <tr>
-        <th style="width: 150px"></th>
-        <th>Name</th>
-        <th>Email</th>
-      </tr>
-      <%= for context <- @teachers do %>
-      <tr>
-        <td>
-          <span><%= link "Show", to: admin_teacher_path(@conn, :show, context), class: "btn btn-default btn-xs" %></span>
-          <span><%= link "Edit", to: admin_teacher_path(@conn, :edit, context), class: "btn btn-default btn-xs" %></span>
-          <span><%= link "Delete", to: admin_teacher_path(@conn, :delete, context), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-        </td>
-        <td><%= context.name %></td>
-        <td><%= context.email %></td>
-      </tr>
+<div class="row row-cards row-deck">
+    <div class="col-12">
+        <%= if get_flash(@conn, :info) do %>
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <% end %>
-    </table>
+      <%= if get_flash(@conn, :error) do %>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <% end %>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th class="text-center"><i class="icon-settings"></i> Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= for context <- @teachers do %>
+              <tr>
+                <td><%= context.name %></td>
+                <td><%= context.email %></td>
+                <td class="text-center">
+                  <%= link to: backend_teacher_path(@conn, :show, context) do %>
+                    <i class="fe fe-search"></i>
+                  <% end %>
+                  <%= link to: backend_teacher_path(@conn, :edit, context) do %>
+                    <i class="fe fe-edit"></i>
+                  <% end %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer text-left">
+          <%= link "Create New Teacher", to: backend_teacher_path(@conn, :new), class: "btn btn-primary ml-auto" %>
+          <div class="pull-right">
+            <%= pagination_links @teachers %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
 </div>
-<!-- /.box -->
-<span><%= link "Create New Teacher", to: admin_teacher_path(@conn, :new), class: "btn btn-default" %></span>

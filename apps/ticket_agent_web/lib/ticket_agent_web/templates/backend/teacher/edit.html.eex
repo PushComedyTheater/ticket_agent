@@ -1,6 +1,10 @@
-<h2>Edit teacher</h2>
 
-<%= render "form.html", changeset: @changeset,
-                        action: admin_teacher_path(@conn, :update, @teacher) %>
-
-<span><%= link "Back", to: admin_teacher_path(@conn, :index) %></span>
+<div class="my-3 my-md-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <%= render "form.html", changeset: @changeset, action: backend_teacher_path(@conn, :update, @teacher) %>
+      </div>
+    </div>
+  </div>
+</div>

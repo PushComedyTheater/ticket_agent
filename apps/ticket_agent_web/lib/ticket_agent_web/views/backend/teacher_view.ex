@@ -1,5 +1,6 @@
 defmodule TicketAgentWeb.Backend.TeacherView do
   use TicketAgentWeb, :view
+  import Scrivener.HTML
 
   def social_links(nil) do
     ""
