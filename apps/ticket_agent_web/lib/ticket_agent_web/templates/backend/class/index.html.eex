@@ -16,7 +16,7 @@
               <tr>
                 <th class="text-center"><i class="icon-settings"></i> Action</th>
                 <th>Title</th>
-                <th class="text-center">Currently Offered?</th>
+                <th class="text-center">Current Listing</th>
               </tr>
             </thead>
             <tbody>
@@ -25,7 +25,7 @@
               <tr>
                 <td class="text-center">
                   <div class="item-action dropdown">
-                    <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                    <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-secondary btn-sm">Manage</a>
                     <div class="dropdown-menu dropdown-menu-right">
                       <%= link to: class_path(@conn, :show, class.slug), class: "dropdown-item", target: "_blank" do %>
                         <i class="dropdown-icon fe fe-search"></i> View Class On Site
@@ -36,20 +36,27 @@
                       <%= link to: backend_event_path(@conn, :new, class_id: class.id), class: "dropdown-item" do %>
                         <i class="dropdown-icon fe fe-plus"></i> New Listing
                       <% end %>
-                      <%= if Enum.count(current_listings) > 0 do %>
-                        <% listing = Enum.at(current_listings, 0) %>
-                        <%= link to: backend_event_path(@conn, :edit, listing), class: "dropdown-item" do %>
-                          <i class="dropdown-icon fe fe-edit-2"></i> Edit Listing
-                        <% end %>
-                      <% end %>
-                    </div>
+                  </div>
                 </td>
                 <td>
                   <div><%= class.title %></div>
                 </td>
                 <td class="text-center">
                   <%= if Enum.count(current_listings) > 0 do %>
-                  Yes
+                    <%= for listing <- current_listings do %>
+
+                  <div class="item-action dropdown">
+                    <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-secondary btn-sm">Manage <%= listing.slug %></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <%= link to: backend_event_path(@conn, :show, listing.slug), class: "dropdown-item" do %>
+                        <i class="dropdown-icon fe fe-search"></i> View Class Details
+                      <% end %>
+                      <%= link to: backend_event_path(@conn, :edit, listing), class: "dropdown-item" do %>
+                        <i class="dropdown-icon fe fe-edit-2"></i> Edit Listing <%= listing.slug %>
+                      <% end %>
+                  </div>
+
+                    <% end %>
                   <% end %>
                 </td>
               </tr>

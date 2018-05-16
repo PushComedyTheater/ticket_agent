@@ -1,6 +1,5 @@
 <span class="pull-right">
 <%= if is_nil(@show.event_id) do %>
-
 <%= link "View On Customer Site", to: class_path(@conn, :show, @show.class), class: "btn btn-info btn-md", target: "_blank" %>
 <% else %>
 <%= link "View On Customer Site", to: event_path(@conn, :show, @show), class: "btn btn-info btn-md", target: "_blank" %>
@@ -73,7 +72,7 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body">
-       
+
         <table id="datatable" class="table table-bordered table-striped">
           <thead>
           <tr>
@@ -98,9 +97,9 @@
           <tr>
             <td><%= ticket.slug %></td>
             <td><%= ticket.guest_name %></td>
-            <td><%= 
+            <td><%=
               if ticket.order do
-                link ticket.order.slug, to: admin_order_path(@conn, :show, ticket.order), target: "_blank" 
+                link ticket.order.slug, to: admin_order_path(@conn, :show, ticket.order), target: "_blank"
               end
             %></td>
             <td><%= ticket.status %></td>
@@ -196,7 +195,7 @@
         } else {
           return false;
         }
-      }      
+      }
       return true;
     });
     window.oTable = $('#datatable').DataTable( {
@@ -206,7 +205,8 @@
         console.log('click');
         window.oTable.draw();
     });
-    
+
   });
 
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha256-yNbKY1y6h2rbVcQtf0b8lq4a+xpktyFc3pSYoGAY1qQ=" crossorigin="anonymous"></script>

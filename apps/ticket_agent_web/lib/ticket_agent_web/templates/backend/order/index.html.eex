@@ -1,41 +1,48 @@
-<div class="box">
-  <div class="box-header with-border">
-    <h3 class="box-title">Orders</h3>
-    <div class="box-tools">
-      <div class="input-group input-group-sm" style="width: 150px;">
-        <input type="text" id="table_search" name="table_search" class="form-control pull-right" placeholder="Search">
-        <div class="input-group-btn">
-          <button id="btn_search" type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+<div class="row row-cards row-deck">
+    <div class="col-12">
+        <%= if get_flash(@conn, :info) do %>
+        <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <% end %>
+      <%= if get_flash(@conn, :error) do %>
+        <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <% end %>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th class="text-center"><i class="icon-settings"></i> Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= for order <- @orders do %>
+              <tr>
+                <td><%= link order.user.name, to: backend_order_path(@conn, :show, order), class: "text-inherit" %></td>
+                <td><%= order.status %></td>
+                <td>$<%= cost(order.total_price / 100) %></td>
+                <td align="center">
+                  <%= link "Manage", to: backend_order_path(@conn, :show, order), class: "btn btn-secondary btn-sm" %>
+                </td>
+              </tr>
+              <% end %>
+              <tr>
+              <td colspan="5">
+              </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <td colspan="5">
+                <div class="pull-right">
+                  <%= pagination_links @orders %>
+                </div>
+              </td>
+             </tfoot>
+          </table>
         </div>
       </div>
     </div>
   </div>
-  <!-- /.box-header -->
-  <div class="box-body">
-    <table class="table table-bordered">
-      <tr>
-        <th style="width: 150px"></th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Total</th>
-      </tr>
-      <%= for context <- @orders do %>
-      <tr>
-        <td>
-          <span><%= link "Show", to: admin_order_path(@conn, :show, context), class: "btn btn-info btn-xs" %></span>
-          <span><%= link "Edit", to: admin_order_path(@conn, :edit, context), class: "btn btn-warning btn-xs" %></span>
-        </td>
-        <td><%= context.user.name %></td>
-        <td><%= context.status %></td>
-        <td>$<%= cost(context.total_price / 100) %>
-      </tr>
-      <% end %>
-    </table>
-  </div>
-  <div class="box-footer clearfix">
-    <div class="pull-right">
-      <%= pagination_links @orders %>
-    </div>
-  </div>        
-<!-- /.box-body -->
 </div>

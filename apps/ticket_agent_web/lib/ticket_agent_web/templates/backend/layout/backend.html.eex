@@ -12,8 +12,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
     <!-- Generated: 2018-04-16 09:29:05 +0200 -->
     <title>push comedy theater backend</title>
     <script type="text/javascript">
@@ -27,6 +25,7 @@
           baseUrl: 'https://cdn.rawgit.com/PushComedyTheater/assets/master/tabler'
       });
     </script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
     <!-- Dashboard Core -->
     <link href="https://cdn.rawgit.com/PushComedyTheater/assets/master/tabler/assets/css/dashboard.css" rel="stylesheet" />
     <script src="https://cdn.rawgit.com/PushComedyTheater/assets/master/tabler/assets/js/dashboard.js"></script>

@@ -32,10 +32,20 @@ defmodule TicketAgentWeb.SharedView do
     Logger.info "shared_view -> path_combined   = #{path_combined}"
     Logger.info "shared_view -> treeview_action = #{treeview_action}"
     Logger.info "shared_view -> existing        = #{existing}"
+    [treeview_action_head, _] = String.split(treeview_action, "_")
+    [path_combined_head, _] = String.split(path_combined, "_")
     cond do
       treeview_action == path_combined ->
+        Logger.info "shared_view -> match           = full"
+        Logger.info "-------"
+        "#{existing} active"
+      treeview_action_head == path_combined_head ->
+        Logger.info "shared_view -> match           = partial"
+        Logger.info "-------"
         "#{existing} active"
       true ->
+        Logger.info "shared_view -> match           = none"
+        Logger.info "-------"
         "#{existing}"
     end
   end

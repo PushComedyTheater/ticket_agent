@@ -36,6 +36,6 @@
     <div class="pull-right">
       <%= pagination_links @orders %>
     </div>
-  </div>        
+  </div>
 <!-- /.box-body -->
 </div>
