@@ -42,6 +42,11 @@ defmodule TicketAgentWeb.Endpoint do
     key: "_ticket_agent_web_key",
     signing_salt: "a8mpc4X/"
 
+  # Add Timber plugs for capturing HTTP context and events
+  plug Timber.Integrations.SessionContextPlug
+  plug Timber.Integrations.HTTPContextPlug
+  plug Timber.Integrations.EventPlug
+
   plug TicketAgentWeb.Router
 
   @doc """

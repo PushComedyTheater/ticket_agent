@@ -21,19 +21,26 @@
             </thead>
             <tbody>
               <%= for class <- @classes do %>
+              <% current_listings = current_class_listing(class) %>
               <tr>
                 <td class="text-center">
                   <div class="item-action dropdown">
                     <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                     <div class="dropdown-menu dropdown-menu-right">
                       <%= link to: class_path(@conn, :show, class.slug), class: "dropdown-item", target: "_blank" do %>
-                        <i class="dropdown-icon fe fe-search"></i> View Class
+                        <i class="dropdown-icon fe fe-search"></i> View Class On Site
                       <% end %>
                       <%= link to: backend_class_path(@conn, :edit, class), class: "dropdown-item" do %>
-                        <i class="dropdown-icon fe fe-edit-2"></i> Edit Class
+                        <i class="dropdown-icon fe fe-edit-2"></i> Edit Class Template
                       <% end %>
                       <%= link to: backend_event_path(@conn, :new, class_id: class.id), class: "dropdown-item" do %>
                         <i class="dropdown-icon fe fe-plus"></i> New Listing
+                      <% end %>
+                      <%= if Enum.count(current_listings) > 0 do %>
+                        <% listing = Enum.at(current_listings, 0) %>
+                        <%= link to: backend_event_path(@conn, :edit, listing), class: "dropdown-item" do %>
+                          <i class="dropdown-icon fe fe-edit-2"></i> Edit Listing
+                        <% end %>
                       <% end %>
                     </div>
                 </td>
@@ -41,7 +48,6 @@
                   <div><%= class.title %></div>
                 </td>
                 <td class="text-center">
-                  <% current_listings = current_class_listing(class) %>
                   <%= if Enum.count(current_listings) > 0 do %>
                   Yes
                   <% end %>

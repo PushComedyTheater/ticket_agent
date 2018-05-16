@@ -50,4 +50,16 @@ defmodule Coherence.Redirects do
   # Example usage
   # Uncomment the following line to return the user to the login form after logging out
   # def session_delete(conn, _), do: redirect(conn, to: session_path(conn, :new))
+  def session_create(%{assigns: %{current_user: current_user}} = conn, _) do
+    %Timber.Contexts.UserContext{id: current_user.id, name: current_user.name, email: current_user.email}
+    |> Timber.add_context()
+
+    url = case get_session(conn, "user_return_to") do
+      nil -> "/"
+      value -> value
+    end
+    conn
+    |> put_session("user_return_to", nil)
+    |> redirect(to: url)
+  end
 end

@@ -30,9 +30,16 @@
                 </td>
               </tr>
               <% end %>
+              <tr>
+              <td colspan="5">
+              </td>
+              </tr>
             </tbody>
             <tfoot>
-              <td colspan="5" class="text-right" align="right">
+              <td colspan="5">
+                <div class="pull-left">
+                  <button type="submit" class="btn btn-primary ml-auto">Create New Listing</button>
+                </div>
                 <div class="pull-right">
                   <%= pagination_links @listings %>
                 </div>
