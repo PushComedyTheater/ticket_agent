@@ -38,7 +38,7 @@
             <tfoot>
               <td colspan="5">
                 <div class="pull-left">
-                  <button type="submit" class="btn btn-primary ml-auto">Create New Listing</button>
+                  <%= link "Create New Listing", to: backend_event_path(@conn, :new), class: "btn btn-primary ml-auto" %>
                 </div>
                 <div class="pull-right">
                   <%= pagination_links @listings %>
