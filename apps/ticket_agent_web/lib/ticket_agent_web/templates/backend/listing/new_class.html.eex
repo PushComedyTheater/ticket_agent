@@ -1,0 +1,53 @@
+<%= form_for @conn, admin_event_path(@conn, :create), [as: :listing], fn f -> %>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Listing Details</h3>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <%= label f, :title, class: "form-label" %>
+              <%= text_input f, :title, class: "form-control", placeholder: "Make it short and catchy", value: @class.title %>
+              <span id="listing_title_error" style="display: none;" class="help-block">This field is required</span>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <%= label f, :description, class: "form-label" %>
+              <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10, value: @class.description) %>
+              <span id="listing_title_error" style="display: none;" class="help-block">This field is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Listing Details</h3>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <%= label f, :title, class: "form-label" %>
+              <%= text_input f, :title, class: "form-control", placeholder: "Make it short and catchy", value: @class.title %>
+              <span id="listing_title_error" style="display: none;" class="help-block">This field is required</span>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <%= label f, :description, class: "form-label" %>
+              <%= textarea(f, :description, class: "ckeditor", cols: 80, rows: 10, value: @class.description) %>
+              <span id="listing_title_error" style="display: none;" class="help-block">This field is required</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% end %>
