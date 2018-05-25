@@ -10,7 +10,7 @@
     &nbsp;
     <%= link "Watch A Show", to: event_path(@conn, :index), class: "btn u-btn-outline-white g-color-white g-bg-white-opacity-0_1 g-color-black--hover g-bg-white--hover g-font-weight-600 text-uppercase g-rounded-50 g-px-30 g-py-13" %>
     &nbsp;
-    <%= link "Corporate Workshops", to: event_path(@conn, :index), class: "btn u-btn-outline-white g-color-white g-bg-white-opacity-0_1 g-color-black--hover g-bg-white--hover g-font-weight-600 text-uppercase g-rounded-50 g-px-30 g-py-13" %>
+    <%= link "Corporate Workshops", to: workshop_path(@conn, :index), class: "btn u-btn-outline-white g-color-white g-bg-white-opacity-0_1 g-color-black--hover g-bg-white--hover g-font-weight-600 text-uppercase g-rounded-50 g-px-30 g-py-13" %>
   </div>
 </section>
 <script>
