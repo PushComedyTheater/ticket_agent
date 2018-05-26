@@ -2,7 +2,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
   alias TicketAgent.{Class, Event, Listing, Random, Repo, Ticket}
   import Ecto.Query
   use TicketAgentWeb, :controller
-  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "listings"}
+  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "listings"}
 
   def index(conn, params) do
     params = cond do

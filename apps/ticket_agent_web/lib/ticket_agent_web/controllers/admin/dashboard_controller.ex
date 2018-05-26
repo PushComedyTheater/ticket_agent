@@ -1,6 +1,7 @@
 defmodule TicketAgentWeb.Admin.DashboardController do
   alias TicketAgent.Finders.ListingFinder
   use TicketAgentWeb, :controller
+  plug TicketAgentWeb.Plugs.MenuLoader
 
   def index(conn, _params) do
     conn

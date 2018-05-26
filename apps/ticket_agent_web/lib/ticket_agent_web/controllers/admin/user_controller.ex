@@ -2,14 +2,14 @@ defmodule TicketAgentWeb.Admin.UserController do
   require Logger
   use TicketAgentWeb, :controller
   alias TicketAgent.User
-  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "teachers"}
+  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "teachers"}
 
   def index(conn, params) do
     page = User.list_users(params)
     render(
-      conn, 
-      "index.html", 
-      users: page    
+      conn,
+      "index.html",
+      users: page
     )
   end
 

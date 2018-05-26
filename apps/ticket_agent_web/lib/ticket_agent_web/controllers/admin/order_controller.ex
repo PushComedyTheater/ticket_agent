@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.Admin.OrderController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Order}
-  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "orders"}
+  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "orders"}
 
   def index(conn, params) do
     orders = Order.list_orders(params)

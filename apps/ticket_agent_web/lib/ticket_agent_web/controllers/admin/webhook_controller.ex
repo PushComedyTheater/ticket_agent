@@ -1,11 +1,11 @@
 defmodule TicketAgentWeb.Admin.WebHookController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, WebhookDetail}
-  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "webooks"}
+  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "webooks"}
 
   def index(conn, params) do
     details = Repo.paginate(WebhookDetail, params)
-    
+
     conn
     |> assign(:details, details)
     |> render("index.html")

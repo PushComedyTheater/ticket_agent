@@ -1,11 +1,11 @@
 defmodule TicketAgentWeb.Admin.TeacherController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Teacher}
-  plug TicketAgentWeb.Plugs.Admin.MenuLoader, %{root: "teachers"}
+  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "teachers"}
 
   def index(conn, _params) do
     teachers = Repo.all(Teacher)
-    
+
     conn
     |> assign(:teachers, teachers)
     |> render("index.html")
@@ -29,7 +29,7 @@ defmodule TicketAgentWeb.Admin.TeacherController do
         |> redirect(to: admin_teacher_path(conn, :show, teacher))
       {:error, changeset} ->
         conn
-        |> assign(:changeset, changeset)        
+        |> assign(:changeset, changeset)
         |> render("new.html")
     end
   end
