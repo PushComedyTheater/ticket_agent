@@ -13,15 +13,17 @@
 
   <div class="form-group">
     <%= label f, :email, class: "control-label" %>
-    <%= text_input f, :email, class: "form-control", disabled: true %>
+    <%= text_input f, :email, class: "form-control", disabled: assigns.conn.private.phoenix_action != :new %>
     <%= error_tag f, :email %>
   </div>
 
-  <div class="form-group">
-    <%= label f, :stripe_customer_id, class: "control-label" %>
-    <%= text_input f, :stripe_customer_id, class: "form-control" %>
-    <%= error_tag f, :stripe_customer_id %>
-  </div>
+  <%= if assigns.conn.private.phoenix_action != :new do %>
+    <div class="form-group">
+      <%= label f, :stripe_customer_id, class: "control-label" %>
+      <%= text_input f, :stripe_customer_id, class: "form-control" %>
+      <%= error_tag f, :stripe_customer_id %>
+    </div>
+  <% end %>
 
   <div class="form-group">
     <%= label f, :role, class: "control-label" %>
@@ -31,11 +33,11 @@
       "Customer": "customer",
       "3rd Party Customer": "oauth_customer",
       "Guest": "guest"
-    ], selected: f.data.role, prompt: "None" %>    
+    ], selected: f.data.role, prompt: "None" %>
     <%= error_tag f, :role %>
   </div>
 
-    
+
 
   <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>

@@ -62,7 +62,7 @@ defmodule TicketAgent.Mixfile do
       {:pdf_generator, github: "PushComedyTheater/elixir-pdf-generator"},
       {:curtail, "~> 0.1"},
       {:icalendar, "~> 0.7.0"},
-      {:paper_trail, "~> 0.7.7"},
+      {:paper_trail, "~> 0.8"},
       {:scrivener_ecto, "~> 1.0"},
 
       {:bypass, "~> 0.7", only: :test},

@@ -2,8 +2,7 @@ defmodule Repo.Migrations.AddVersions do
   use Ecto.Migration
 
   def change do
-    create table(:versions, primary_key: false) do
-      add :id,           :binary_id, primary_key: true
+    create table(:versions) do
       add :event,        :string, null: false, size: 10
       add :item_type,    :string, null: false
       add :item_id,      :uuid
@@ -11,10 +10,6 @@ defmodule Repo.Migrations.AddVersions do
       add :originator_id, references(:users, on_delete: :nothing, type: :binary_id)
       add :origin,       :string, size: 50
       add :meta,         :map
-
-      # add :inserted_at,  :timestamptz, default: fragment("clock_timestamp()")
-      # add :updated_at,  :timestamptz, default: "clock_timestamp()"
-
       timestamps(type: :timestamptz, default: fragment("clock_timestamp()"))
     end
 

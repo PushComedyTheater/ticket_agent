@@ -42,7 +42,6 @@ defmodule TicketAgentWeb.Admin.UserController do
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = User.get_user!(id)
-
     if user.role != user_params["role"] do
       Logger.warn "Role for user #{user.id} is changing from #{user.role} to #{user_params["role"]}"
     end

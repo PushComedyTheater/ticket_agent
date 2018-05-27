@@ -20,6 +20,14 @@ defmodule TicketAgent.User do
     timestamps(type: :utc_datetime)
   end
 
+  def admin_changeset(model, params \\ %{}) do
+    model
+    |> cast(params, [:id, :name, :email, :role, :stripe_customer_id])
+    |> validate_required([:name, :email])
+    |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:email)
+  end
+
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:name, :email, :account_id, :role, :stripe_customer_id, :one_time_token, :one_time_token_at] ++ coherence_fields())
@@ -52,6 +60,12 @@ defmodule TicketAgent.User do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def admin_update_user(%User{} = user, attrs, originator) do
+    user
+    |> User.admin_changeset(attrs)
+    |> PaperTrail.update(originator: originator, origin: "admin")
   end
 
   def update_user(%User{} = user, attrs, originator) do
