@@ -9,8 +9,8 @@ defmodule TicketAgentWeb.Plugs.MenuLoader do
       |> Atom.to_string()
       |> match_controller()
 
-    Logger.info "action = #{action}"
-    Logger.info "controller = #{controller}"
+    # Logger.info "action = #{action}"
+    # Logger.info "controller = #{controller}"
 
     conn
     |> assign(:treeview_root, controller)

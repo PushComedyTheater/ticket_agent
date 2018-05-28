@@ -31,7 +31,7 @@ defmodule TicketAgent.User do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:name, :email, :account_id, :role, :stripe_customer_id, :one_time_token, :one_time_token_at] ++ coherence_fields())
-    |> validate_required([:name, :email])
+    |> validate_required([:name, :email, :role])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
     |> validate_coherence(params)
@@ -59,7 +59,7 @@ defmodule TicketAgent.User do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
-    |> Repo.insert()
+    |> PaperTrail.insert()
   end
 
   def admin_update_user(%User{} = user, attrs, originator) do

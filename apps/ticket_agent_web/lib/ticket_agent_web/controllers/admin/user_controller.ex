@@ -19,12 +19,21 @@ defmodule TicketAgentWeb.Admin.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+    user_params = Map.merge(
+      user_params,
+      %{
+        "password" => "supersecret",
+        "password_confirmation" => "supersecret"
+      }
+    )
     case User.create_user(user_params) do
-      {:ok, user} ->
+      {:ok, %{model: user}} ->
         conn
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: admin_user_path(conn, :show, user))
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect "BLAH"
+        IO.inspect changeset
         render(conn, "new.html", changeset: changeset)
     end
   end
