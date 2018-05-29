@@ -5,7 +5,7 @@ BUILD_HOST="localhost"
 BUILD_USER="builder"
 BUILD_AT="/home/builder/app_build"
 
-RELEASE_STORE="${BUILD_USER}@${BUILD_HOST}:/build/"
+# RELEASE_STORE="${BUILD_USER}@${BUILD_HOST}:/build/"
 
 PRODUCTION_HOSTS="newpushers"
 PRODUCTION_USER="pushers"
