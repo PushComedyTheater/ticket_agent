@@ -5,3 +5,5 @@ erl_crash.dump
 *.ez
 .env
 ssh_key.pub
+releases
+prod.secret.exs
