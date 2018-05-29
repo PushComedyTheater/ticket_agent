@@ -3,6 +3,7 @@ APP="ticket_agent"
 BUILD_HOST="localhost"
 BUILD_USER="builder"
 BUILD_AT="/home/builder/app_build"
+RELEASE_STORE="/home/builder/build"
 
 PRODUCTION_HOSTS="newpushers"
 PRODUCTION_USER="pushers"
