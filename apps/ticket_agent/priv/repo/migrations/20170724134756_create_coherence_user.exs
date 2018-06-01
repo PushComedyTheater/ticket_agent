@@ -23,6 +23,12 @@ defmodule TicketAgent.Repo.Migrations.CreateCoherenceUser do
       add :unlock_token, :string
       add :stripe_customer_id, :string
 
+      # confirmable
+      add :confirmation_token, :string
+      add :confirmed_at, :utc_datetime
+      add :confirmation_sent_at, :utc_datetime
+
+
       add :one_time_token, :string
       add :one_time_token_at, :utc_datetime
       timestamps(type: :timestamptz)

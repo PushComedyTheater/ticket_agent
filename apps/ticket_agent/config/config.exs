@@ -40,7 +40,7 @@ config :coherence,
   user_token: true,
   email_from_name: "Push Comedy Theater",
   email_from_email: "support@pushcomedytheater.com",
-  opts: [:registerable, :authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token]
+  opts: [:confirmable, :registerable, :authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token]
 
 # config :oauth2, debug: true
 
