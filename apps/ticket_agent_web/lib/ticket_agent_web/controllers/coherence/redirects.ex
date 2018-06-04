@@ -43,7 +43,7 @@ defmodule Coherence.Redirects do
   """
   use Redirects
   # Uncomment the import below if adding overrides
-  # import TicketAgentWeb.Router.Helpers
+  import TicketAgentWeb.Router.Helpers
 
   # Add function overrides below
 
@@ -55,11 +55,19 @@ defmodule Coherence.Redirects do
     |> Timber.add_context()
 
     url = case get_session(conn, "user_return_to") do
-      nil -> "/"
+      nil -> "/dashboard"
       value -> value
     end
     conn
     |> put_session("user_return_to", nil)
     |> redirect(to: url)
   end
+
+  # override the log out action back to the log in page
+  # def session_delete(conn, _), do: redirect(conn, to: session_path(conn, :new))
+
+  # redirect the user to the login page after registering
+  def registration_create(conn, _), do: redirect(conn, to: session_path(conn, :new))
+
+  def confirmation_edit(conn, _), do: redirect(conn, to: session_path(conn, :new))
 end

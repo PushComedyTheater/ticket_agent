@@ -29,7 +29,7 @@ defmodule TicketAgentWeb.Coherence.Messages do
   def already_logged_in, do: dgettext(@domain, "Already logged in.")
   def cant_be_blank, do: dgettext(@domain, "can't be blank")
   def cant_find_that_token, do: dgettext(@domain, "Can't find that token")
-  def confirmation_email_sent, do: dgettext(@domain, "Confirmation email sent.")
+  def confirmation_email_sent, do: dgettext(@domain, "We have sent a confirmation email to your registered address.  Please follow the link in that email to confirm your account.")
   def confirmation_token_expired, do: dgettext(@domain, "Confirmation token expired.")
   def could_not_find_that_email_address, do: dgettext(@domain, "Could not find that email address")
   def forgot_your_password, do: dgettext(@domain, "Forgot your password?")
