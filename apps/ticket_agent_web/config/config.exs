@@ -57,6 +57,7 @@ config :ticket_agent_web, :release, sha
 #   release: sha
 
 config :coherence,
+  site_name: "push comedy theater",
   user_token: true
 
   # config :coherence, TicketAgentWeb.Coherence.Mailer,
