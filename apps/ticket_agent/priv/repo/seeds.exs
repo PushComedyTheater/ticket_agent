@@ -38,7 +38,10 @@ defmodule Seeds do
           password: "supersecret",
           password_confirmation: "supersecret",
           account_id: account_id,
-          role: role
+          role: role,
+          confirmation_token: "supersecret",
+          confirmed_at: NaiveDateTime.utc_now,
+          confirmation_sent_at: NaiveDateTime.utc_now
         }
 
         user =
