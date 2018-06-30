@@ -46,7 +46,6 @@ window.copy_ticket = function(ticket_counter_id) {
   console.log("copy_ticket -> " + ticket_counter_id);
   var iterator = ticket_counter_id.split("_")[0];
 
-
   var values = {
     iterator: iterator,
     current_ticket_count: parseInt(ticket_counter_id.split("_")[1]) + 1,

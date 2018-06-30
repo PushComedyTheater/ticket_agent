@@ -59,7 +59,7 @@ window.load_tickets = function(i) {
     tickets.push({
       name: $("#ticket_name_" + i + "_" + j).val(),
       description: $("#ticket_description_" + i + "_" + j).val(),
-      group: $("#ticket_name_" + i + "_" + j).val(),
+      group: window.random.hex(15),
       quantity:  parseInt($("#ticket_quantity_" + i + "_" + j).val()),
       price: parseInt($("#ticket_price_" + i + "_" + j).val().replace("$ ", "").replace(".", "")),
       pass_fees: $("#ticket_fees_" + i + "_" + j).prop("checked"),
