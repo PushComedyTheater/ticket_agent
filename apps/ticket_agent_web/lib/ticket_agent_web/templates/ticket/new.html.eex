@@ -34,7 +34,7 @@ $(document).on('ready', function () {
   window.attendee_template = Handlebars.compile(source);
   window.guest_name        = "<%= Coherence.current_user_name(@conn, :name) %>";
   window.guest_email       = "<%= Coherence.current_user_name(@conn, :email) %>";
-  
+
   Cookies.remove("ticket_data");
 
   window.details = {
@@ -46,21 +46,22 @@ $(document).on('ready', function () {
   }
 
   window.save_ticket = function(counter, individual_button, e) {
+    console.log("SAVING");
     e.preventDefault();
     var valid_form = true;
     var name  = $("#attendee_name_" + counter).val();
     var email = $("#attendee_email_" + counter).val();
     var group = $("#guest_" + counter).data("group");
-    var price = $("#guest_" + counter).data("price");    
-    
+    var price = $("#guest_" + counter).data("price");
+
     window.console_group("window.save_ticket");
     window.console_log("counter               = " + counter);
     window.console_log("individual_button     = " + individual_button);
     window.console_log("group                 = " + group);
     window.console_log("price                 = " + price);
-    
+
     if ($("#attendee_div_" + counter).css("display") == "block") {
-      window.console_log("validate attendee_div_" + counter); 
+      window.console_log("validate attendee_div_" + counter);
       if (name.length == 0) {
         window.console_log("name is 0");
         $("#name_required_" + counter).show();
@@ -96,7 +97,7 @@ $(document).on('ready', function () {
       if (valid_form) {
         window.console_log("validated successfully attendee_div_" + counter);
         $("#attendee_div_" + counter).hide();
-        $("#guest_" + counter).html("Edit Ticket For " + name);      
+        $("#guest_" + counter).html("Edit Ticket For " + name);
       }
 
       window.details.tickets[counter] = {
@@ -115,7 +116,7 @@ $(document).on('ready', function () {
     }
     window.console_group_end();
     return valid_form;
-  }  
+  }
 
   window.save_details_to_cookie = function() {
     var encodedData = window.btoa(JSON.stringify(window.details));
@@ -139,7 +140,7 @@ $(document).on('ready', function () {
       var redirect_url = "/orders/new?listing_id=" + window.details.listing.slug;
       window.location.href = redirect_url;
     }
-  }  
+  }
 
   $("#continue").on("click", function(e) {
     window.save_all_tickets_and_redirect(e);
@@ -176,6 +177,7 @@ $(document).on('ready', function () {
             name: "",
             email: ""
           };
+          console.log(ticket);
           //if (i == 0) {
             ticket.name = window.guest_name;
             ticket.email = window.guest_email;

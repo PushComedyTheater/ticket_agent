@@ -42,6 +42,7 @@ window.load_tickets = function(i) {
   console.log("current_ticket_count " + current_ticket_count);
   var tickets = []
   console.log("there are " + ticket_count + " tickets");
+
   for (var j = 0; j < ticket_count; j++) {
     console.log("load_tickets -> checking ticket " + i + "_" + j);
 
@@ -61,6 +62,7 @@ window.load_tickets = function(i) {
       group: $("#ticket_name_" + i + "_" + j).val(),
       quantity:  parseInt($("#ticket_quantity_" + i + "_" + j).val()),
       price: parseInt($("#ticket_price_" + i + "_" + j).val().replace("$ ", "").replace(".", "")),
+      pass_fees: $("#ticket_fees_" + i + "_" + j).prop("checked"),
       sale_start: sale_start,
       sale_end: sale_end,
     })

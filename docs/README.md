@@ -32,6 +32,24 @@ We allow the user to also use their social network accounts so that they don't h
 
 ![Login to buy](login_to_buy.png)
 
+After logging in, the user must select how many tickets they would like and fill out basic information (name and email) for each ticket.  Unlike our previous solution, we do not send emails to people in this flow.
+
+![tikets](tickets.png)
+
+On the next page, the user is prompted to enter their credit card details.  Alternatively, users may instead use the built-in payment details from their browser by clicking on the Pay Now button. 
+
+![checkout](checkout.png)
+
+If they choose to use the builtin payment button, they will be prompted by their browser.
+
+![payment](checkoutform.png)
+
+What is nice about this is that it has built-in Apple Pay and Android Pay if they are on their phones.
+
+We require the user to complete their checkout in 5 minutes.
+
+![countdown](countdown.png)
+
 # Administration Panel
 
 The administration panel of the application can be reached by going to https://MAINURL/admin

@@ -19,9 +19,10 @@ window.add_ticket = function(item) {
   var detail = window.ticket_template({
     iterator: iterator,
     current_ticket_count: current_ticket_count,
-    ticket_name: "TEST - REMOVE",
+    ticket_name: "",
     ticket_quantity: 80,
-    ticket_price: 100
+    ticket_price: 0,
+    ticket_fees: true
   });
 
   $(item).data("ticket-count", current_ticket_count + 1);
@@ -45,13 +46,17 @@ window.copy_ticket = function(ticket_counter_id) {
   console.log("copy_ticket -> " + ticket_counter_id);
   var iterator = ticket_counter_id.split("_")[0];
 
+
   var values = {
     iterator: iterator,
     current_ticket_count: parseInt(ticket_counter_id.split("_")[1]) + 1,
     ticket_name: $("#ticket_name_" + ticket_counter_id).val(),
     ticket_quantity: $("#ticket_quantity_" + ticket_counter_id).val(),
-    ticket_price: $("#ticket_price_" + ticket_counter_id).val()
+    ticket_price: $("#ticket_price_" + ticket_counter_id).val(),
+    ticket_fees: $("#ticket_fees_" + ticket_counter_id).prop("checked")
   }
+
+  console.log(values);
 
   var detail = window.ticket_template(values);
   $("#tickets_" + iterator).append(detail);
@@ -60,7 +65,6 @@ window.copy_ticket = function(ticket_counter_id) {
 }
 
 window.setup_date_pickers = function () {
-  console.log("setup_date_pickers");
   $('.listing_time').datetimepicker({
     format: 'yyyy-mm-dd hh:ii',
     showMeridian: true,
@@ -84,7 +88,7 @@ window.create_class = function (e) {
   valid_form = window.validate_listings(valid_form);
 
   if (valid_form) {
-    console.log("Loading up values");
+
     var details = {
       class_id: window.class_id,
       event_id: window.event_id,
@@ -92,8 +96,8 @@ window.create_class = function (e) {
       description: window.load_description(),
       listings: window.load_listings()
     }
-    console.log(details);
 
+    console.log(details);
     $.ajax({
       // The URL for the request
       url: "/admin/listings",
@@ -124,10 +128,48 @@ window.create_class = function (e) {
   e.preventDefault();
 }
 
+window.PopupCenter = function (url, title, w, h) {
+  var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+  var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+  var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+  var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+  var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+  var top = ((height / 2) - (h / 2)) + dualScreenTop;
+
+  var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+  if (window.focus) {
+    newWindow.focus();
+  }
+}
+
+
+
 
 $(function () {
   window.add_listing_template();
   $("#create_class").on("click", function(e) {
     window.create_class(e);
   })
+
+$("#choose_photo").on("click", function () {
+  window.PopupCenter("/admin/images?tag=social", "Images", "800", "500")
+  return false;
+});
+
+
+$("#upload_cover_photo").on("click", function () {
+  cloudinary.openUploadWidget({
+      cloud_name: 'push-comedy-theater',
+      upload_preset: 'upload_cover',
+      sources: ["local", "url", "facebook", "dropbox", "google_photos", "instagram"],
+      thumbnails: "#cover_image",
+      field_name: "listing[cover_image]"
+    },
+    function (error, result) {
+      console.log(error, result)
+    });
+})
 });

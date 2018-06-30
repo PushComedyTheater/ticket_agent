@@ -1,13 +1,12 @@
 <div id="row_ticket_{{iterator}}_{{current_ticket_count}}" class="row form-group ticket_row">
-  <div class="col-sm-1">&nbsp;</div>
-  <div class="col-sm-4" id="ticket_name_{{iterator}}_{{current_ticket_count}}_group">
+  <div class="col-sm-3" id="ticket_name_{{iterator}}_{{current_ticket_count}}_group" style="margin-left: 10px;">
     <label class="control-label">Ticket Name:</label>
     <input id="ticket_name_{{iterator}}_{{current_ticket_count}}" type="text" class="form-control pull-right" value="{{ticket_name}}" placeholder="e.g. General Admission">
     <span id="ticket_name_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
     <span id="ticket_name_used_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This name has already been used.</span>
   </div>
-  <div class="col-sm-2" id="ticket_quantity_{{iterator}}_{{current_ticket_count}}_group">
-    <label class="control-label">Max Quantity:</label>
+  <div class="col-sm-1" id="ticket_quantity_{{iterator}}_{{current_ticket_count}}_group">
+    <label class="control-label">Quantity:</label>
     <input id="ticket_quantity_{{iterator}}_{{current_ticket_count}}" type="number" class="form-control pull-right" value="{{ticket_quantity}}" placeholder="Number of tickets">
     <span id="ticket_quantity_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
   </div>
@@ -15,6 +14,12 @@
     <label class="control-label">Price:</label>
     <input id="ticket_price_{{iterator}}_{{current_ticket_count}}" class="form-control pull-right" value="{{ticket_price}}" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
     <span id="ticket_price_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
+  </div>
+  <div class="col-sm-2 checkbox" id="ticket_fees_{{iterator}}_{{current_ticket_count}}_group">
+    <br />
+    <label class="control-label">
+      <input id="ticket_fees_{{iterator}}_{{current_ticket_count}}" type="checkbox" {{#if ticket_fees}}checked{{/if}} />Pass Fees To Buyer
+    </label>
   </div>
   <div class="col-sm-3">
     <div class="btn-group" style="margin-top: 15px;">

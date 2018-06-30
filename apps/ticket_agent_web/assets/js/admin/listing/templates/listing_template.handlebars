@@ -1,12 +1,13 @@
   <!-- BEGIN LISTING TEMPLATE -->
   <div id="row_{{listing_counter}}" class="row form-group listing_template">
     {{> listing_group listing_counter=listing_counter typer="start_time" label="Event Starts:" value=window.current_date_time }}
-    {{> listing_group listing_counter=listing_counter typer="end_time" label="Event Ends:" }}    
+    {{> listing_group listing_counter=listing_counter typer="end_time" label="Event Ends:" }}
     <div class="col-sm-1">
       <div id="add_ticket_group_{{listing_counter}}" class="has-error input-group">
-        <a href="#" onclick="window.delete_listing({{listing_counter}}); return false;" class="btn btn-med">
+        <a href="#" onclick="window.delete_listing({{listing_counter}}); return false;" class="btn btn-med delete_time">
           <span class="glyphicon glyphicon-trash"></span> Delete Time
         </a>
+        <br />
         <a href="#" onclick="window.add_ticket(this); return false;" data-iterator="{{listing_counter}}" data-ticket-count="0" id="add_ticket_{{listing_counter}}" class="btn btn-block btn-primary btn-sm ticket_btn">
           <i class="fa fa-ticket"></i> Add Ticket
         </a>
@@ -14,7 +15,7 @@
       </div>
     </div>
   </div>
-  <div id="tickets_{{listing_counter}}">  
+  <div id="tickets_{{listing_counter}}">
   </div>
   <hr>
   <!-- BEGIN LISTING TEMPLATE -->

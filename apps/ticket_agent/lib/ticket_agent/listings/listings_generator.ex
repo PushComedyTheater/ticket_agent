@@ -35,7 +35,8 @@ defmodule TicketAgent.ListingsGenerator do
               status: "available",
               price: ticket["price"],
               sale_start: ticket_start_at,
-              sale_end: ticket_end_at
+              sale_end: ticket_end_at,
+              pass_fees_to_buyer: ticket["pass_fees"]
             }
           end)
         end)

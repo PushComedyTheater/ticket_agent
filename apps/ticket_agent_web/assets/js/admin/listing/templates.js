@@ -7,4 +7,8 @@ window.add_listing_template = function () {
   var html = window.listing_template({ listing_counter: listing_template_length });
   $("#listing_times").append(html);
   window.setup_date_pickers();
+
+  if (window.class_id != undefined) {
+    $(".delete_time").hide();
+  }
 }

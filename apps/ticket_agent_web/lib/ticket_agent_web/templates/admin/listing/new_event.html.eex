@@ -48,10 +48,10 @@
         <div class="col-sm-4">Event Image</div>
         <div class="col-sm-4">
           <img id="social_image" src="" style="zoom: 50%; padding: 5px;" /><br /><br />
-          <a href="#" id="upload_social_photo" class="btn btn-primary">
+          <a href="#" id="upload_photo" class="btn btn-primary">
             Upload Photo
           </a>
-          <a href="#" id="choose_social_photo" class="btn btn-primary">
+          <a href="#" id="choose_photo" class="btn btn-primary">
             Choose Existing Photo
           </a>
           <!-- Button trigger modal -->

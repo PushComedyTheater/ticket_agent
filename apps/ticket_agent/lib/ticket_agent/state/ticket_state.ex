@@ -95,7 +95,7 @@ defmodule TicketAgent.State.TicketState do
       ],
       returning: true
     )
-  end  
+  end
 
   # Tickets can go from purchased/email -> checkedin
   def set_ticket_checkedin(ticket_id, user_id, timestamp \\ NaiveDateTime.utc_now()) do
@@ -129,10 +129,10 @@ defmodule TicketAgent.State.TicketState do
     Logger.info "lock_tickets->order_id       = #{inspect order_id}"
     Logger.info "lock_tickets->quantity       = #{inspect quantity}"
     Logger.info "lock_tickets->group          = #{inspect group}"
-    Logger.info "lock_tickets->timestamp      = #{inspect timestamp}" 
-    Logger.info "lock_tickets->seconds_to_add = #{inspect @seconds_to_add}"  
-    Logger.info "lock_tickets->locked_until   = #{inspect locked_until}"   
-    
+    Logger.info "lock_tickets->timestamp      = #{inspect timestamp}"
+    Logger.info "lock_tickets->seconds_to_add = #{inspect @seconds_to_add}"
+    Logger.info "lock_tickets->locked_until   = #{inspect locked_until}"
+
     subset_query =
       from(
         t in Ticket,
@@ -162,7 +162,7 @@ defmodule TicketAgent.State.TicketState do
       ],
       returning: true
     )
-  end  
+  end
 
   # Reserves tickets for a particular order
   def reserve_tickets(%{id: order_id} = order, input_tickets, group) do
@@ -200,25 +200,25 @@ defmodule TicketAgent.State.TicketState do
     Logger.info "filter_created_tickets->listing_id:       #{inspect listing_id}"
     Logger.info "filter_created_tickets->group:            #{inspect group}"
     # Logger.info "filter_created_tickets->input_tickets:    #{inspect input_tickets}"
-    
 
-    existing_tickets = 
+
+    existing_tickets =
       listing_id
       |> TicketFinder.find_by_listing_and_order_and_group(order.id, group)
-      
+
     Logger.info "find_existing_tickets->existing_tickets count: #{inspect Enum.count(existing_tickets)}"
 
     input_tickets
     |> Enum.filter(fn(ticket) ->
-      Enum.find(existing_tickets, fn(existing_ticket) -> 
+      Enum.find(existing_tickets, fn(existing_ticket) ->
         (
           (
             existing_ticket.id == ticket["ticket_id"]
-          ) || 
+          ) ||
           (
-            (existing_ticket.guest_name == ticket["name"]) && 
-            (existing_ticket.guest_email == ticket["email"]) && 
-            (existing_ticket.group == ticket["group"]) && 
+            (existing_ticket.guest_name == ticket["name"]) &&
+            (existing_ticket.guest_email == ticket["email"]) &&
+            (existing_ticket.group == ticket["group"]) &&
             (existing_ticket.price == ticket["price"])
           )
         )
@@ -238,8 +238,8 @@ defmodule TicketAgent.State.TicketState do
     {:ok, item} =
       listing_id
       |> lock_tickets(order_id, ticket_count, group)
-      |> Repo.transaction()  
-      
+      |> Repo.transaction()
+
     available_tickets =
       listing_id
       |> TicketFinder.find_by_listing_and_order_and_group(order_id, group)
@@ -258,7 +258,8 @@ defmodule TicketAgent.State.TicketState do
     tickets =
       listing_id
       |> TicketFinder.find_by_listing_and_order(order.id)
-    
+
+    IO.inspect tickets
     minimum_ticket = Enum.min_by(tickets, fn(ticket) -> ticket.locked_until end)
     {order, tickets, minimum_ticket.locked_until}
   end
