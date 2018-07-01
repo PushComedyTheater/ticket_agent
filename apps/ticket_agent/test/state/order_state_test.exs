@@ -29,6 +29,26 @@ defmodule TicketAgent.State.OrderStateTest do
       assert pricing.processing_fee == 103
       assert pricing.total == 603
     end
+
+    test "calculates single ticket price absorbing fees" do
+      order = insert(:order)
+      ticket = insert(:ticket, price: 500, order: order, pass_fees_to_buyer: false)
+      timestamp = NaiveDateTime.utc_now()
+
+      {order, tickets, locked_until, pricing} = OrderState.calculate_price({order, [ticket], timestamp})
+
+      assert Enum.count(tickets) == 1
+      assert locked_until == timestamp
+
+      assert order.subtotal        == 500
+      assert order.credit_card_fee == 0
+      assert order.processing_fee  == 0
+      assert order.total_price     == 500
+
+      assert pricing.subtotal == 500
+      assert pricing.processing_fee == 103
+      assert pricing.total == 603
+    end
   end
 
   describe "calculate_order_cost" do
