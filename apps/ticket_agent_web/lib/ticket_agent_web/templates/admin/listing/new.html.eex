@@ -54,10 +54,10 @@
       e.preventDefault();
       var value = $("#class_select").val();
       if (value == "") {
-        alert("Please select a class")
-      } else {   
+        alert("Please select a class");
+      } else {
         window.location.href = "/admin/listings/new?class_id=" + value;
       }
-    });    
+    });
   })
 </script>
