@@ -149,7 +149,13 @@ window.release_tickets = function (redirect) {
     ////window.console_group_end();
     if (redirect) {
       window.removeEventListener("beforeunload", window.unloader);
-      window.location.href = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
+      var location = "";
+      if (window.details.listing.type == "class") {
+        location = "/class/" + window.details.listing.class_slug + "?msg=cancelled_order"
+      } else {
+        location = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
+      }
+      window.location.href = location;
     }
   }).fail(function (xhr, status, errorThrown) {
     // Code to run if the request fails; the raw request and

@@ -25,9 +25,9 @@
                 <td>
                   <% current_listings = current_class_listing(class) %>
                   <%= for listing <- current_listings do %>
-                    <i class="fa fa-fw fa-check"></i>
-                    <%= link "View Admin Details", to: admin_event_path(@conn, :show, listing) %> /
-                    <%= link "View On Customer Site", to: class_path(@conn, :show, class.slug), target: "_blank" %><br />
+                    <%= link "View Listing", to: admin_event_path(@conn, :show, listing), class: "btn btn-info btn-xs" %>
+                    <%= link "Edit Listing", to: admin_event_path(@conn, :edit, listing), class: "btn btn-warning btn-xs" %>
+                    <%= link "View Customer", to: class_path(@conn, :show, class.slug), class: "btn btn-success btn-xs", target: "_blank" %><br />
                   <% end %>
 
                 </td>

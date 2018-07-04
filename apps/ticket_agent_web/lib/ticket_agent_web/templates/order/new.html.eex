@@ -93,7 +93,9 @@
   window.details = {
     listing: {
       id: "<%= @listing.id %>",
-      slug: "<%= @listing.slug %>"
+      slug: "<%= @listing.slug %>",
+      type: "<%= @listing.type %>",
+      class_slug: "<%= class_slug(@listing.class_id) %>"
     },
     locked_until: null,
     order_id: null,

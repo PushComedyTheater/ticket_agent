@@ -113,6 +113,15 @@ defmodule TicketAgent.Listing do
     Repo.all(query)
   end
 
+  def list_listings(%{"status" => "active"} = params) do
+    query = from l in Listing,
+            where: is_nil(l.class_id),
+            where: l.status == "active",
+            order_by: [asc: :start_at]
+
+    Repo.paginate(query, params)
+  end
+
   def list_listings(params) do
     query = from l in Listing,
             where: is_nil(l.class_id),

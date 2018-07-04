@@ -1,5 +1,5 @@
 <h2>Edit Class</h2>
-
+<p class="alert alert-warning" role="alert">Any changes here will affect all instances of this class</p>
 <%= render "form.html", changeset: @changeset, classes: @classes, class_types: @class_types,
                         action: admin_class_path(@conn, :update, @class) %>
 

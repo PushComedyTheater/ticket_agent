@@ -32,13 +32,13 @@
                     <ul class="list-inline mb-0">
                       <li class="list-inline-item">
                         <%= link to: about_path(@conn, :show, teacher.slug), class: "u-icon-v1 u-icon-size--sm g-color-gray-light-v1 g-color-dribbble--hover g-bg-transparent" do %>
-                            <i class="fa fa-info"></i>
+                            <i class="fas fa-info"></i>
                         <% end %>
                       </li>
                       <%= for {name, link} <- teacher.social do %>
                         <li class="list-inline-item">
                           <a href="<%= link %>" class="u-icon-v1 u-icon-size--sm g-color-gray-light-v1 g-color-twitter--hover g-bg-transparent">
-                            <i class="fa fa-<%= name %>"></i>
+                            <i class="fab fa-<%= name %>"></i>
                           </a>
                         </li>
                       <% end %>

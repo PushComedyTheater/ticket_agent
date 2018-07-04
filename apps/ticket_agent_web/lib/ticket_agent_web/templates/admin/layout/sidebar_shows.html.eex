@@ -9,7 +9,12 @@
   <ul class="treeview-menu">
     <li<%= raw treeview_action(@conn, "listings_index") %>>
       <%= link to: admin_event_path(@conn, :index) do %>
-        <i class="fa fa-list"></i> <span>List</span>
+        <i class="fa fa-list"></i> <span>All</span>
+      <% end %>
+    </li>
+    <li<%= raw treeview_action(@conn, "listings_index") %>>
+      <%= link to: admin_event_path(@conn, :index, status: "active") do %>
+        <i class="fa fa-list"></i> <span>Active</span>
       <% end %>
     </li>
     <li<%= raw treeview_action(@conn, "listings_new") %>>

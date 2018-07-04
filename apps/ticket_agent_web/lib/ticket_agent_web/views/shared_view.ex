@@ -1,7 +1,12 @@
 defmodule TicketAgentWeb.SharedView do
   require Logger
-  alias TicketAgent.Listing
+  alias TicketAgent.{Class, Listing}
 
+  def class_slug(nil), do: ""
+  def class_slug(class_id) do
+    class = Class.get_class!(class_id)
+    class.slug
+  end
   def current_class_listing(class), do: Listing.current_class_listing(class)
 
   def google_calendar(listing) do
@@ -60,7 +65,7 @@ defmodule TicketAgentWeb.SharedView do
 
   def credit_card_details(nil), do: ""
   def credit_card_details(card) do
-    "<i class=\"fa fa-cc-#{cc_icon(card.type)}\"></i> #{card.type} ending in #{card.last_4}<br />"
+    "<i class=\"fab fa-cc-#{cc_icon(card.type)}\"></i> #{card.type} ending in #{card.last_4}<br />"
   end
 
   def ticket_details(ticket) do

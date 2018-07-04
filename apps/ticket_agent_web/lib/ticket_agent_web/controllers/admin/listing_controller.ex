@@ -12,7 +12,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
         params
 
     end
-
     listings = Listing.list_listings(params)
     render conn, "index.html", listings: listings
   end

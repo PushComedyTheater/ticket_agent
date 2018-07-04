@@ -22,6 +22,8 @@ defmodule TicketAgent.Class do
     timestamps(type: :utc_datetime)
   end
 
+  def get_class!(id), do: Repo.get!(Class, id)
+
   @doc false
   def changeset(%Class{} = class, attrs) do
     class
