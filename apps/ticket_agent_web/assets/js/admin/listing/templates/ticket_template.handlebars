@@ -15,12 +15,6 @@
     <input id="ticket_price_{{iterator}}_{{current_ticket_count}}" class="form-control pull-right" value="{{ticket_price}}" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
     <span id="ticket_price_{{iterator}}_{{current_ticket_count}}_error" style="display: none;" class="help-block">This field is required</span>
   </div>
-  <div class="col-sm-2 checkbox" id="ticket_fees_{{iterator}}_{{current_ticket_count}}_group">
-    <br />
-    <label class="control-label">
-      <input id="ticket_fees_{{iterator}}_{{current_ticket_count}}" type="checkbox" {{#if ticket_fees}}checked{{/if}} />Pass Fees To Buyer
-    </label>
-  </div>
   <div class="col-sm-3">
     <div class="btn-group" style="margin-top: 15px;">
       <button type="button" class="btn btn-lg btn-default" onclick="window.toggle_ticket_settings('{{iterator}}_{{current_ticket_count}}'); return false;">

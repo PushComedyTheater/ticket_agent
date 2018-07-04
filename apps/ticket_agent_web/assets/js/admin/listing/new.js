@@ -21,8 +21,7 @@ window.add_ticket = function(item) {
     current_ticket_count: current_ticket_count,
     ticket_name: "",
     ticket_quantity: 80,
-    ticket_price: 0,
-    ticket_fees: true
+    ticket_price: 0
   });
 
   $(item).data("ticket-count", current_ticket_count + 1);
@@ -51,8 +50,7 @@ window.copy_ticket = function(ticket_counter_id) {
     current_ticket_count: parseInt(ticket_counter_id.split("_")[1]) + 1,
     ticket_name: $("#ticket_name_" + ticket_counter_id).val(),
     ticket_quantity: $("#ticket_quantity_" + ticket_counter_id).val(),
-    ticket_price: $("#ticket_price_" + ticket_counter_id).val(),
-    ticket_fees: $("#ticket_fees_" + ticket_counter_id).prop("checked")
+    ticket_price: $("#ticket_price_" + ticket_counter_id).val()
   }
 
   console.log(values);
