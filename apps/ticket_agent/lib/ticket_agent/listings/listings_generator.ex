@@ -12,6 +12,7 @@ defmodule TicketAgent.ListingsGenerator do
       Logger.info "ListingsGenerator.create_from_class->processing listing #{inspect listing}"
       listing_start_at = load_time(listing["start_time"])
       listing_end_at = load_time(listing["end_time"])
+      pass_fees_to_buyer = listing["pass_fees_to_buyer"]
 
       Logger.info "listing_end_at = #{listing_end_at}"
 
@@ -35,8 +36,7 @@ defmodule TicketAgent.ListingsGenerator do
               status: "available",
               price: ticket["price"],
               sale_start: ticket_start_at,
-              sale_end: ticket_end_at,
-              pass_fees_to_buyer: ticket["pass_fees"]
+              sale_end: ticket_end_at
             }
           end)
         end)
@@ -58,6 +58,7 @@ defmodule TicketAgent.ListingsGenerator do
               status: "unpublished",
               start_at: listing_start_at,
               end_at: listing_end_at,
+              pass_fees_to_buyer: pass_fees_to_buyer,
               tickets: tickets,
               user_id: user.id
             }

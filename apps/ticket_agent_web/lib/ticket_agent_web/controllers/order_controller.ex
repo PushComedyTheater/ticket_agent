@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.OrderController do
   require Logger
   use TicketAgentWeb, :controller
-  alias TicketAgent.{Repo}
+  alias TicketAgent.{Listing, Repo}
   alias TicketAgent.State.{OrderState, TicketState}
   alias TicketAgent.Finders.OrderFinder
   plug TicketAgentWeb.Plugs.TicketInfoLoader when action in [:new]
@@ -17,11 +17,11 @@ defmodule TicketAgentWeb.OrderController do
 
   def show(conn, %{"id" => order_id} = params) do
     current_user = Coherence.current_user(conn)
-    order = 
+    order =
       order_id
       |> OrderFinder.find_order(current_user.id)
-      |> Repo.preload([:credit_card, :tickets])
-    
+      |> Repo.preload([:credit_card, :tickets, :listing])
+
     if order do
       conn = case params["msg"] do
         nil -> conn
@@ -37,7 +37,7 @@ defmodule TicketAgentWeb.OrderController do
       |> put_status(404)
       |> render(TicketAgentWeb.ErrorView, :"404", message: "Cannot find that order.")
       |> halt()
-    end      
+    end
   end
 
   def new(conn, params) do
@@ -49,12 +49,13 @@ defmodule TicketAgentWeb.OrderController do
   end
 
   def create(conn, %{"listing" => %{"id" => listing_id}} = params) do
-    order = 
+    listing = Listing.get_listing!(listing_id)
+    order =
       conn
       |> Coherence.current_user()
       |> OrderFinder.find_or_create_order()
-    
-    tickets_stored = 
+
+    tickets_stored =
       params["tickets"]
       |> Enum.map(fn({group, tickets}) ->
         Logger.info "Processing group #{group}"
@@ -65,7 +66,7 @@ defmodule TicketAgentWeb.OrderController do
 
     if tickets_stored do
       Logger.info "All tickets were stored"
-       {order, tickets, locked_until, pricing} = 
+       {order, tickets, locked_until, pricing} =
         order
         |> Repo.reload()
         |> TicketState.load_minimum_locked_until(listing_id)
@@ -79,16 +80,17 @@ defmodule TicketAgentWeb.OrderController do
           order: order,
           tickets: tickets,
           locked_until: locked_until,
-          pricing: pricing
+          pricing: pricing,
+          pass_fees: listing.pass_fees_to_buyer
         }
-      )        
+      )
     else
       conn
       |> put_status(500)
       |> render(
         "create.json",
         %{}
-      )      
+      )
     end
   end
 

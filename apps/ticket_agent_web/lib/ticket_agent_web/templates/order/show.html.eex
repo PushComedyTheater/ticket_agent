@@ -55,14 +55,17 @@
       <tr>
         <td colspan="2">&nbsp;<br /></td>
       </tr>
-      <tr>
-        <td style="padding: 5px; text-align: right;"><b>Subtotal:</b></td>
-        <td style="padding: 5px;"><%= money(@order.subtotal) %></td>
-      </tr>
-      <tr>
-        <td style="padding: 5px; text-align: right;"><b>Processing Fee:</b></td>
-        <td style="padding: 5px;"><%= money(@order.total_price - @order.subtotal) %></td>
-      </tr>
+      <% if @order.listing.pass_fees_to_buyer do %>
+        <tr>
+          <td style="padding: 5px; text-align: right;"><b>Subtotal:</b></td>
+          <td style="padding: 5px;"><%= money(@order.subtotal) %></td>
+        </tr>
+
+        <tr>
+          <td style="padding: 5px; text-align: right;"><b>Processing Fee:</b></td>
+          <td style="padding: 5px;"><%= money(@order.total_price - @order.subtotal) %></td>
+        </tr>
+      <% end %>
       <tr>
         <td style="padding: 5px; text-align: right;"><b>Total:</b></td>
         <td style="padding: 5px;"><%= money(@order.total_price) %></td>

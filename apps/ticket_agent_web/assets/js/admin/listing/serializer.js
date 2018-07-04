@@ -31,7 +31,8 @@ window.load_listing = function(i) {
     slug: window.random.hex(10),
     start_time: start_time,
     end_time: end_time,
-    tickets: window.load_tickets(i)
+    tickets: window.load_tickets(i),
+    pass_fees_to_buyer: $("#listing_pass_fees_to_buyer").val() == "true"
   }
 }
 

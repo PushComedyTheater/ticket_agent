@@ -52,6 +52,29 @@ defmodule TicketAgent.State.OrderStateTest do
       assert pricing.processing_fee == 55
       assert pricing.total == 500
     end
+
+    test "calculates single free ticket price absorbing fees" do
+      order = insert(:order)
+      listing = insert(:listing, pass_fees_to_buyer: false)
+      ticket = insert(:ticket, order: order, listing: listing, price: 0, order: order)
+
+      timestamp = NaiveDateTime.utc_now()
+
+      order = Repo.reload(order)
+
+      {order, tickets, locked_until, pricing} = OrderState.calculate_price({order, [ticket], timestamp})
+      assert Enum.count(tickets) == 1
+      assert locked_until == timestamp
+
+      assert order.subtotal        == 0
+      assert order.credit_card_fee == 0
+      assert order.processing_fee  == 0
+      assert order.total_price     == 0
+
+      assert pricing.subtotal == 0
+      assert pricing.processing_fee == 0
+      assert pricing.total == 0
+    end
   end
 
   describe "calculate_order_cost" do
@@ -84,37 +107,79 @@ defmodule TicketAgent.State.OrderStateTest do
     end
   end
 
-  describe "calculate_fees" do
+  describe "calculate_fees passing fees to buyer" do
     test "calculates price for 0 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: true)
       price = 0 #1 dollar
-      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 0
       assert processing_fee == 0
       assert stripe_fee == 0
     end
 
     test "calculates price for 1 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: true)
       price = 100 #1 dollar
-      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 187
       assert processing_fee == 51
       assert stripe_fee == 36
     end
 
     test "calculates price for 100 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: true)
       price = 10000 #100 dollar
-      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 10485
       assert processing_fee == 150
       assert stripe_fee == 335
     end
 
     test "calculates price for 2100 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: true)
       price = 210000 #1 dollar
-      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price)
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 218517
       assert processing_fee == 2150
       assert stripe_fee == 6367
+    end
+  end
+
+  describe "calculate_fees absorbing fees" do
+    test "calculates price for 0 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: false)
+      price = 0 #1 dollar
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
+      assert total == 0
+      assert processing_fee == 0
+      assert stripe_fee == 0
+    end
+
+    test "calculates price for 1 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: false)
+      price = 100 #1 dollar
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
+      assert total == 100
+      assert processing_fee == 51
+      assert stripe_fee == 0
+    end
+
+    test "calculates price for 100 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: false)
+      price = 10000 #100 dollar
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
+      assert total == 10000
+      assert processing_fee == 150
+      assert stripe_fee == 0
+    end
+
+    test "calculates price for 2100 dollar" do
+      listing = insert(:listing, pass_fees_to_buyer: false)
+      price = 210000 #1 dollar
+      {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
+      assert total == 210000
+      assert processing_fee == 2150
+      assert stripe_fee == 0
     end
   end
 

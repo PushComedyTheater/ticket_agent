@@ -26,11 +26,19 @@ window.load_order_table = function() {
   }
   var pricing = window.details.pricing;
 
-  var subtotal = (pricing.subtotal / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
-  output += window.calculated_template({title: "Subtotal", value: "$" + subtotal})
+  if (window.details.pass_fees) {
+    var subtotal = (pricing.subtotal / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+    output += window.calculated_template({
+      title: "Subtotal",
+      value: "$" + subtotal
+    })
 
-  var processing_fee = (pricing.processing_fee / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
-  output += window.calculated_template({title: "Processing Fee", value: "$" + processing_fee})
+    var processing_fee = (pricing.processing_fee / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+    output += window.calculated_template({
+      title: "Processing Fee",
+      value: "$" + processing_fee
+    })
+  }
 
   var total = (pricing.total / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
   $("#submit_button").html("Submit Payment For $" + total);
@@ -66,6 +74,7 @@ window.reserve_tickets = function () {
     window.details.order_id     = response.order_slug;
     window.details.tickets      = response.tickets;
     window.details.pricing      = response.pricing;
+    window.details.pass_fees    = response.pass_fees;
 
     window.load_order_table();
     //window.console_group("setting countdown")
@@ -221,10 +230,14 @@ window.generate_payment_request_button = function() {
     }
   });
 
-  items.push({
-    label: "Processing Fee",
-    amount: window.details.pricing.processing_fee
-  });
+  if (window.details.pass_fees) {
+    items.push({
+      label: "Processing Fee",
+      amount: window.details.pricing.processing_fee
+    });
+  }
+
+
 
   return window.stripe_instance.paymentRequest({
     country: 'US',

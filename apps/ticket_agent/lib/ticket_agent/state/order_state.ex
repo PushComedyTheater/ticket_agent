@@ -70,9 +70,7 @@ defmodule TicketAgent.State.OrderState do
   end
 
   def calculate_fees(price, %Listing{pass_fees_to_buyer: false} = listing) do
-    IO.inspect "FALSE"
     processing = @processing_fixed_fee + (@processing_percentage_fee * price)
-    IO.inspect processing
     {price, 0, round(processing)}
   end
 
