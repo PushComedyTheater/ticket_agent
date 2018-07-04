@@ -3,7 +3,7 @@ defmodule TicketAgent.Listing do
   use TicketAgent.Schema
 
   @required ~w(slug title description status type start_at)a
-  @fields ~w(end_at class_id user_id)a
+  @fields ~w(end_at class_id user_id pass_fees_to_buyer)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -21,6 +21,8 @@ defmodule TicketAgent.Listing do
     field :type, :string
     field :start_at, :utc_datetime
     field :end_at, :utc_datetime
+
+    field :pass_fees_to_buyer, :boolean
     timestamps(type: :utc_datetime)
   end
 

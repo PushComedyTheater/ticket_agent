@@ -1,7 +1,7 @@
 defmodule TicketAgent.State.OrderState do
   require Logger
   alias Ecto.Multi
-  alias TicketAgent.{Order, Repo}
+  alias TicketAgent.{Listing, Order, Repo}
   import Ecto.{Query}
   @stripe_fixed_fee 30
   @stripe_percentage_fee 0.029
@@ -29,9 +29,15 @@ defmodule TicketAgent.State.OrderState do
       true -> order
       false -> Repo.preload(order, :tickets)
     end
+
+    order = case Ecto.assoc_loaded?(order.listing) do
+      true ->  order
+      false -> Repo.preload(order, :listing)
+    end
+
     subtotal = Enum.reduce(order.tickets, 0, fn(ticket, acc) -> acc + ticket.price end)
 
-    {total, credit_card_fee, processing_fee} = calculate_fees(subtotal)
+    {total, credit_card_fee, processing_fee} = calculate_fees(subtotal, order.listing)
 
     order
     |> Order.changeset(%{
@@ -43,8 +49,8 @@ defmodule TicketAgent.State.OrderState do
     |> Repo.update!()
   end
 
-  def calculate_fees(0), do: {0, 0, 0}
-  def calculate_fees(price) do
+  def calculate_fees(0, _), do: {0, 0, 0}
+  def calculate_fees(price, %Listing{pass_fees_to_buyer: true} = listing) do
     total_with_processing = price + @processing_fixed_fee + (@processing_percentage_fee * price)
     total_to_charge = Float.ceil((total_with_processing + @stripe_fixed_fee) / (1 - @stripe_percentage_fee))
     stripe_fees = total_to_charge - total_with_processing
@@ -61,6 +67,13 @@ defmodule TicketAgent.State.OrderState do
     Logger.info "calculate_fees->stripe_fees               = #{stripe_fees}"
 
     {round(total_to_charge), round(stripe_fees), round(pv_fees)}
+  end
+
+  def calculate_fees(price, %Listing{pass_fees_to_buyer: false} = listing) do
+    IO.inspect "FALSE"
+    processing = @processing_fixed_fee + (@processing_percentage_fee * price)
+    IO.inspect processing
+    {price, 0, round(processing)}
   end
 
   def set_credit_card_for_order(order, credit_card) do

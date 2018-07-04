@@ -29,7 +29,7 @@ defmodule TicketAgent.Repo.Migrations.CreateTicketAgent.Ticket do
       add :checked_in_at, :timestamptz, null: true
       add :checked_in_by, references(:users, on_delete: :nothing, type: :binary_id), null: true
 
-      add :pass_fees_to_buyer, :boolean, default: true
+
 
       timestamps(type: :timestamptz)
     end

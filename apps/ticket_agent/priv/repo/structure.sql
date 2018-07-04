@@ -2,14 +2,15 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.2
--- Dumped by pg_dump version 10.2
+-- Dumped from database version 10.4
+-- Dumped by pg_dump version 10.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -56,13 +57,11 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
 
 
-SET search_path = public, pg_catalog;
-
 --
 -- Name: class_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE class_type AS ENUM (
+CREATE TYPE public.class_type AS ENUM (
     'improvisation',
     'sketch',
     'standup',
@@ -74,7 +73,7 @@ CREATE TYPE class_type AS ENUM (
 -- Name: credit_card_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE credit_card_type AS ENUM (
+CREATE TYPE public.credit_card_type AS ENUM (
     'Visa',
     'American Express',
     'MasterCard',
@@ -89,7 +88,7 @@ CREATE TYPE credit_card_type AS ENUM (
 -- Name: event_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE event_status AS ENUM (
+CREATE TYPE public.event_status AS ENUM (
     'hidden',
     'draft',
     'normal'
@@ -100,7 +99,7 @@ CREATE TYPE event_status AS ENUM (
 -- Name: listing_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE listing_status AS ENUM (
+CREATE TYPE public.listing_status AS ENUM (
     'unpublished',
     'active',
     'completed',
@@ -113,7 +112,7 @@ CREATE TYPE listing_status AS ENUM (
 -- Name: listing_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE listing_type AS ENUM (
+CREATE TYPE public.listing_type AS ENUM (
     'class',
     'show',
     'camp'
@@ -124,7 +123,7 @@ CREATE TYPE listing_type AS ENUM (
 -- Name: order_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE order_status AS ENUM (
+CREATE TYPE public.order_status AS ENUM (
     'started',
     'processing',
     'completed',
@@ -137,7 +136,7 @@ CREATE TYPE order_status AS ENUM (
 -- Name: ticket_status; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE ticket_status AS ENUM (
+CREATE TYPE public.ticket_status AS ENUM (
     'available',
     'locked',
     'processing',
@@ -151,7 +150,7 @@ CREATE TYPE ticket_status AS ENUM (
 -- Name: user_credential_provider; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE user_credential_provider AS ENUM (
+CREATE TYPE public.user_credential_provider AS ENUM (
     'facebook',
     'google',
     'linkedin',
@@ -165,7 +164,7 @@ CREATE TYPE user_credential_provider AS ENUM (
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE user_role AS ENUM (
+CREATE TYPE public.user_role AS ENUM (
     'admin',
     'concierge',
     'customer',
@@ -182,7 +181,7 @@ SET default_with_oids = false;
 -- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE accounts (
+CREATE TABLE public.accounts (
     id uuid NOT NULL,
     name text,
     description text,
@@ -199,9 +198,9 @@ CREATE TABLE accounts (
 -- Name: classes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE classes (
+CREATE TABLE public.classes (
     id uuid NOT NULL,
-    type class_type NOT NULL,
+    type public.class_type NOT NULL,
     title text NOT NULL,
     slug text NOT NULL,
     description text NOT NULL,
@@ -218,10 +217,10 @@ CREATE TABLE classes (
 -- Name: credit_cards; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE credit_cards (
+CREATE TABLE public.credit_cards (
     id uuid NOT NULL,
     user_id uuid,
-    type credit_card_type,
+    type public.credit_card_type,
     stripe_id text,
     name text,
     line_1_check text,
@@ -243,7 +242,7 @@ CREATE TABLE credit_cards (
 -- Name: event_tags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE event_tags (
+CREATE TABLE public.event_tags (
     id uuid NOT NULL,
     event_id uuid NOT NULL,
     tag text NOT NULL,
@@ -256,12 +255,12 @@ CREATE TABLE event_tags (
 -- Name: events; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE events (
+CREATE TABLE public.events (
     id uuid NOT NULL,
     slug text NOT NULL,
     title character varying(255) NOT NULL,
     description text NOT NULL,
-    status event_status DEFAULT 'normal'::event_status,
+    status public.event_status DEFAULT 'normal'::public.event_status,
     account_id uuid,
     user_id uuid,
     image_url text,
@@ -274,18 +273,19 @@ CREATE TABLE events (
 -- Name: listings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE listings (
+CREATE TABLE public.listings (
     id uuid NOT NULL,
     slug text NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
-    status listing_status DEFAULT 'unpublished'::listing_status,
-    type listing_type DEFAULT 'show'::listing_type,
+    status public.listing_status DEFAULT 'unpublished'::public.listing_status,
+    type public.listing_type DEFAULT 'show'::public.listing_type,
     start_at timestamp with time zone DEFAULT now(),
     end_at timestamp with time zone,
     user_id uuid,
     event_id uuid,
     class_id uuid,
+    pass_fees_to_buyer boolean DEFAULT true,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -295,7 +295,7 @@ CREATE TABLE listings (
 -- Name: order_details; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE order_details (
+CREATE TABLE public.order_details (
     id uuid NOT NULL,
     order_id uuid,
     charge_id text,
@@ -317,12 +317,12 @@ CREATE TABLE order_details (
 -- Name: orders; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE orders (
+CREATE TABLE public.orders (
     id uuid NOT NULL,
     user_id uuid,
     credit_card_id uuid,
     slug text NOT NULL,
-    status order_status DEFAULT 'started'::order_status,
+    status public.order_status DEFAULT 'started'::public.order_status,
     subtotal integer NOT NULL,
     credit_card_fee integer DEFAULT 0,
     processing_fee integer DEFAULT 0,
@@ -342,7 +342,7 @@ CREATE TABLE orders (
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version bigint NOT NULL,
     inserted_at timestamp without time zone
 );
@@ -352,7 +352,7 @@ CREATE TABLE schema_migrations (
 -- Name: teachers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE teachers (
+CREATE TABLE public.teachers (
     id uuid NOT NULL,
     slug character varying(255),
     name character varying(255),
@@ -368,14 +368,14 @@ CREATE TABLE teachers (
 -- Name: tickets; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE tickets (
+CREATE TABLE public.tickets (
     id uuid NOT NULL,
     slug text NOT NULL,
     listing_id uuid NOT NULL,
     order_id uuid,
     name text NOT NULL,
     "group" text NOT NULL,
-    status ticket_status DEFAULT 'available'::ticket_status,
+    status public.ticket_status DEFAULT 'available'::public.ticket_status,
     description text,
     price integer NOT NULL,
     guest_name text,
@@ -387,7 +387,6 @@ CREATE TABLE tickets (
     emailed_at timestamp with time zone,
     checked_in_at timestamp with time zone,
     checked_in_by uuid,
-    pass_fees_to_buyer boolean DEFAULT true,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -397,10 +396,10 @@ CREATE TABLE tickets (
 -- Name: user_credentials; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE user_credentials (
+CREATE TABLE public.user_credentials (
     id uuid NOT NULL,
     user_id uuid NOT NULL,
-    provider user_credential_provider NOT NULL,
+    provider public.user_credential_provider NOT NULL,
     token text NOT NULL,
     secret text,
     extra_details jsonb,
@@ -413,7 +412,7 @@ CREATE TABLE user_credentials (
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE users (
+CREATE TABLE public.users (
     id uuid NOT NULL,
     name character varying(255),
     email character varying(255),
@@ -437,7 +436,7 @@ CREATE TABLE users (
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL,
     account_id uuid,
-    role user_role DEFAULT 'customer'::user_role
+    role public.user_role DEFAULT 'customer'::public.user_role
 );
 
 
@@ -445,7 +444,7 @@ CREATE TABLE users (
 -- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE versions (
+CREATE TABLE public.versions (
     id bigint NOT NULL,
     event character varying(10) NOT NULL,
     item_type character varying(255) NOT NULL,
@@ -463,7 +462,7 @@ CREATE TABLE versions (
 -- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE versions_id_seq
+CREATE SEQUENCE public.versions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -475,14 +474,14 @@ CREATE SEQUENCE versions_id_seq
 -- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE versions_id_seq OWNED BY versions.id;
+ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
 -- Name: waitlists; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE waitlists (
+CREATE TABLE public.waitlists (
     id uuid NOT NULL,
     listing_id uuid,
     class_id uuid,
@@ -500,7 +499,7 @@ CREATE TABLE waitlists (
 -- Name: webhook_details; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE webhook_details (
+CREATE TABLE public.webhook_details (
     id uuid NOT NULL,
     source text,
     request jsonb,
@@ -513,14 +512,14 @@ CREATE TABLE webhook_details (
 -- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions ALTER COLUMN id SET DEFAULT nextval('versions_id_seq'::regclass);
+ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
 -- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
+ALTER TABLE ONLY public.accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
 
 
@@ -528,7 +527,7 @@ ALTER TABLE ONLY accounts
 -- Name: classes classes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY classes
+ALTER TABLE ONLY public.classes
     ADD CONSTRAINT classes_pkey PRIMARY KEY (id);
 
 
@@ -536,7 +535,7 @@ ALTER TABLE ONLY classes
 -- Name: credit_cards credit_cards_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY credit_cards
+ALTER TABLE ONLY public.credit_cards
     ADD CONSTRAINT credit_cards_pkey PRIMARY KEY (id);
 
 
@@ -544,7 +543,7 @@ ALTER TABLE ONLY credit_cards
 -- Name: event_tags event_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY event_tags
+ALTER TABLE ONLY public.event_tags
     ADD CONSTRAINT event_tags_pkey PRIMARY KEY (id);
 
 
@@ -552,7 +551,7 @@ ALTER TABLE ONLY event_tags
 -- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY events
+ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
 
 
@@ -560,7 +559,7 @@ ALTER TABLE ONLY events
 -- Name: listings listings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY listings
+ALTER TABLE ONLY public.listings
     ADD CONSTRAINT listings_pkey PRIMARY KEY (id);
 
 
@@ -568,7 +567,7 @@ ALTER TABLE ONLY listings
 -- Name: order_details order_details_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY order_details
+ALTER TABLE ONLY public.order_details
     ADD CONSTRAINT order_details_pkey PRIMARY KEY (id);
 
 
@@ -576,7 +575,7 @@ ALTER TABLE ONLY order_details
 -- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY orders
+ALTER TABLE ONLY public.orders
     ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
 
 
@@ -584,7 +583,7 @@ ALTER TABLE ONLY orders
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY schema_migrations
+ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
@@ -592,7 +591,7 @@ ALTER TABLE ONLY schema_migrations
 -- Name: teachers teachers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY teachers
+ALTER TABLE ONLY public.teachers
     ADD CONSTRAINT teachers_pkey PRIMARY KEY (id);
 
 
@@ -600,7 +599,7 @@ ALTER TABLE ONLY teachers
 -- Name: tickets tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tickets
+ALTER TABLE ONLY public.tickets
     ADD CONSTRAINT tickets_pkey PRIMARY KEY (id);
 
 
@@ -608,7 +607,7 @@ ALTER TABLE ONLY tickets
 -- Name: user_credentials user_credentials_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_credentials
+ALTER TABLE ONLY public.user_credentials
     ADD CONSTRAINT user_credentials_pkey PRIMARY KEY (id);
 
 
@@ -616,7 +615,7 @@ ALTER TABLE ONLY user_credentials
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
@@ -624,7 +623,7 @@ ALTER TABLE ONLY users
 -- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions
+ALTER TABLE ONLY public.versions
     ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
 
@@ -632,7 +631,7 @@ ALTER TABLE ONLY versions
 -- Name: waitlists waitlists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY waitlists
+ALTER TABLE ONLY public.waitlists
     ADD CONSTRAINT waitlists_pkey PRIMARY KEY (id);
 
 
@@ -640,7 +639,7 @@ ALTER TABLE ONLY waitlists
 -- Name: webhook_details webhook_details_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY webhook_details
+ALTER TABLE ONLY public.webhook_details
     ADD CONSTRAINT webhook_details_pkey PRIMARY KEY (id);
 
 
@@ -648,533 +647,533 @@ ALTER TABLE ONLY webhook_details
 -- Name: accounts_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX accounts_name_index ON accounts USING btree (name);
+CREATE UNIQUE INDEX accounts_name_index ON public.accounts USING btree (name);
 
 
 --
 -- Name: available_tickets; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX available_tickets ON tickets USING btree (listing_id, sale_start) WHERE ((status = 'available'::ticket_status) AND (locked_until IS NULL));
+CREATE INDEX available_tickets ON public.tickets USING btree (listing_id, sale_start) WHERE ((status = 'available'::public.ticket_status) AND (locked_until IS NULL));
 
 
 --
 -- Name: classes_prerequisite_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX classes_prerequisite_id_index ON classes USING btree (prerequisite_id);
+CREATE INDEX classes_prerequisite_id_index ON public.classes USING btree (prerequisite_id);
 
 
 --
 -- Name: classes_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX classes_slug_index ON classes USING btree (slug);
+CREATE UNIQUE INDEX classes_slug_index ON public.classes USING btree (slug);
 
 
 --
 -- Name: classes_type_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX classes_type_index ON classes USING btree (type);
+CREATE INDEX classes_type_index ON public.classes USING btree (type);
 
 
 --
 -- Name: credit_cards_stripe_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX credit_cards_stripe_id_index ON credit_cards USING btree (stripe_id);
+CREATE INDEX credit_cards_stripe_id_index ON public.credit_cards USING btree (stripe_id);
 
 
 --
 -- Name: credit_cards_type_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX credit_cards_type_index ON credit_cards USING btree (type);
+CREATE INDEX credit_cards_type_index ON public.credit_cards USING btree (type);
 
 
 --
 -- Name: credit_cards_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX credit_cards_user_id_index ON credit_cards USING btree (user_id);
+CREATE INDEX credit_cards_user_id_index ON public.credit_cards USING btree (user_id);
 
 
 --
 -- Name: events_account_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX events_account_id_index ON events USING btree (account_id);
+CREATE INDEX events_account_id_index ON public.events USING btree (account_id);
 
 
 --
 -- Name: events_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX events_slug_index ON events USING btree (slug);
+CREATE UNIQUE INDEX events_slug_index ON public.events USING btree (slug);
 
 
 --
 -- Name: events_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX events_user_id_index ON events USING btree (user_id);
+CREATE INDEX events_user_id_index ON public.events USING btree (user_id);
 
 
 --
 -- Name: index_locked_tickets_by_locked_until; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_locked_tickets_by_locked_until ON tickets USING btree (locked_until) WHERE (status = 'locked'::ticket_status);
+CREATE INDEX index_locked_tickets_by_locked_until ON public.tickets USING btree (locked_until) WHERE (status = 'locked'::public.ticket_status);
 
 
 --
 -- Name: listings_class_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX listings_class_id_index ON listings USING btree (class_id);
+CREATE INDEX listings_class_id_index ON public.listings USING btree (class_id);
 
 
 --
 -- Name: listings_end_at_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX listings_end_at_index ON listings USING btree (end_at);
+CREATE INDEX listings_end_at_index ON public.listings USING btree (end_at);
 
 
 --
 -- Name: listings_event_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX listings_event_id_index ON listings USING btree (event_id);
+CREATE INDEX listings_event_id_index ON public.listings USING btree (event_id);
 
 
 --
 -- Name: listings_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX listings_slug_index ON listings USING btree (slug);
+CREATE UNIQUE INDEX listings_slug_index ON public.listings USING btree (slug);
 
 
 --
 -- Name: listings_start_at_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX listings_start_at_index ON listings USING btree (start_at);
+CREATE INDEX listings_start_at_index ON public.listings USING btree (start_at);
 
 
 --
 -- Name: listings_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX listings_user_id_index ON listings USING btree (user_id);
+CREATE INDEX listings_user_id_index ON public.listings USING btree (user_id);
 
 
 --
 -- Name: order_details_charge_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX order_details_charge_id_index ON order_details USING btree (charge_id);
+CREATE INDEX order_details_charge_id_index ON public.order_details USING btree (charge_id);
 
 
 --
 -- Name: order_details_order_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX order_details_order_id_index ON order_details USING btree (order_id);
+CREATE INDEX order_details_order_id_index ON public.order_details USING btree (order_id);
 
 
 --
 -- Name: order_details_status_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX order_details_status_index ON order_details USING btree (status);
+CREATE INDEX order_details_status_index ON public.order_details USING btree (status);
 
 
 --
 -- Name: orders_credit_card_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX orders_credit_card_id_index ON orders USING btree (credit_card_id);
+CREATE INDEX orders_credit_card_id_index ON public.orders USING btree (credit_card_id);
 
 
 --
 -- Name: orders_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX orders_slug_index ON orders USING btree (slug);
+CREATE UNIQUE INDEX orders_slug_index ON public.orders USING btree (slug);
 
 
 --
 -- Name: orders_status_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX orders_status_index ON orders USING btree (status);
+CREATE INDEX orders_status_index ON public.orders USING btree (status);
 
 
 --
 -- Name: orders_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX orders_user_id_index ON orders USING btree (user_id);
+CREATE INDEX orders_user_id_index ON public.orders USING btree (user_id);
 
 
 --
 -- Name: teachers_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX teachers_slug_index ON teachers USING btree (slug);
+CREATE UNIQUE INDEX teachers_slug_index ON public.teachers USING btree (slug);
 
 
 --
 -- Name: tickets_group_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tickets_group_index ON tickets USING btree ("group");
+CREATE INDEX tickets_group_index ON public.tickets USING btree ("group");
 
 
 --
 -- Name: tickets_listing_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tickets_listing_id_index ON tickets USING btree (listing_id);
+CREATE INDEX tickets_listing_id_index ON public.tickets USING btree (listing_id);
 
 
 --
 -- Name: tickets_locked_until_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tickets_locked_until_index ON tickets USING btree (locked_until);
+CREATE INDEX tickets_locked_until_index ON public.tickets USING btree (locked_until);
 
 
 --
 -- Name: tickets_order_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tickets_order_id_index ON tickets USING btree (order_id);
+CREATE INDEX tickets_order_id_index ON public.tickets USING btree (order_id);
 
 
 --
 -- Name: tickets_slug_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX tickets_slug_index ON tickets USING btree (slug);
+CREATE UNIQUE INDEX tickets_slug_index ON public.tickets USING btree (slug);
 
 
 --
 -- Name: tickets_status_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX tickets_status_index ON tickets USING btree (status);
+CREATE INDEX tickets_status_index ON public.tickets USING btree (status);
 
 
 --
 -- Name: user_credentials_provider_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_credentials_provider_index ON user_credentials USING btree (provider);
+CREATE INDEX user_credentials_provider_index ON public.user_credentials USING btree (provider);
 
 
 --
 -- Name: user_credentials_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX user_credentials_user_id_index ON user_credentials USING btree (user_id);
+CREATE INDEX user_credentials_user_id_index ON public.user_credentials USING btree (user_id);
 
 
 --
 -- Name: users_email_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX users_email_index ON users USING btree (email);
+CREATE UNIQUE INDEX users_email_index ON public.users USING btree (email);
 
 
 --
 -- Name: users_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX users_name_index ON users USING btree (name);
+CREATE INDEX users_name_index ON public.users USING btree (name);
 
 
 --
 -- Name: users_stripe_customer_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX users_stripe_customer_id_index ON users USING btree (stripe_customer_id);
+CREATE INDEX users_stripe_customer_id_index ON public.users USING btree (stripe_customer_id);
 
 
 --
 -- Name: versions_event_item_type_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX versions_event_item_type_index ON versions USING btree (event, item_type);
+CREATE INDEX versions_event_item_type_index ON public.versions USING btree (event, item_type);
 
 
 --
 -- Name: versions_item_id_item_type_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX versions_item_id_item_type_index ON versions USING btree (item_id, item_type);
+CREATE INDEX versions_item_id_item_type_index ON public.versions USING btree (item_id, item_type);
 
 
 --
 -- Name: versions_item_type_inserted_at_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX versions_item_type_inserted_at_index ON versions USING btree (item_type, inserted_at);
+CREATE INDEX versions_item_type_inserted_at_index ON public.versions USING btree (item_type, inserted_at);
 
 
 --
 -- Name: versions_originator_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX versions_originator_id_index ON versions USING btree (originator_id);
+CREATE INDEX versions_originator_id_index ON public.versions USING btree (originator_id);
 
 
 --
 -- Name: waitlists_admin_notified_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX waitlists_admin_notified_index ON waitlists USING btree (admin_notified);
+CREATE INDEX waitlists_admin_notified_index ON public.waitlists USING btree (admin_notified);
 
 
 --
 -- Name: waitlists_class_id_email_address_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX waitlists_class_id_email_address_index ON waitlists USING btree (class_id, email_address);
+CREATE UNIQUE INDEX waitlists_class_id_email_address_index ON public.waitlists USING btree (class_id, email_address);
 
 
 --
 -- Name: waitlists_class_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX waitlists_class_id_index ON waitlists USING btree (class_id);
+CREATE INDEX waitlists_class_id_index ON public.waitlists USING btree (class_id);
 
 
 --
 -- Name: waitlists_class_id_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX waitlists_class_id_user_id_index ON waitlists USING btree (class_id, user_id);
+CREATE UNIQUE INDEX waitlists_class_id_user_id_index ON public.waitlists USING btree (class_id, user_id);
 
 
 --
 -- Name: waitlists_email_address_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX waitlists_email_address_index ON waitlists USING btree (email_address);
+CREATE INDEX waitlists_email_address_index ON public.waitlists USING btree (email_address);
 
 
 --
 -- Name: waitlists_listing_id_email_address_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX waitlists_listing_id_email_address_index ON waitlists USING btree (listing_id, email_address);
+CREATE UNIQUE INDEX waitlists_listing_id_email_address_index ON public.waitlists USING btree (listing_id, email_address);
 
 
 --
 -- Name: waitlists_listing_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX waitlists_listing_id_index ON waitlists USING btree (listing_id);
+CREATE INDEX waitlists_listing_id_index ON public.waitlists USING btree (listing_id);
 
 
 --
 -- Name: waitlists_listing_id_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX waitlists_listing_id_user_id_index ON waitlists USING btree (listing_id, user_id);
+CREATE UNIQUE INDEX waitlists_listing_id_user_id_index ON public.waitlists USING btree (listing_id, user_id);
 
 
 --
 -- Name: waitlists_user_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX waitlists_user_id_index ON waitlists USING btree (user_id);
+CREATE INDEX waitlists_user_id_index ON public.waitlists USING btree (user_id);
 
 
 --
 -- Name: webhook_details_source_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX webhook_details_source_index ON webhook_details USING btree (source);
+CREATE INDEX webhook_details_source_index ON public.webhook_details USING btree (source);
 
 
 --
 -- Name: accounts accounts_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY accounts
-    ADD CONSTRAINT accounts_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES users(id);
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES public.users(id);
 
 
 --
 -- Name: classes classes_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY classes
-    ADD CONSTRAINT classes_account_id_fkey FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT classes_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: classes classes_prerequisite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY classes
-    ADD CONSTRAINT classes_prerequisite_id_fkey FOREIGN KEY (prerequisite_id) REFERENCES classes(id);
+ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT classes_prerequisite_id_fkey FOREIGN KEY (prerequisite_id) REFERENCES public.classes(id);
 
 
 --
 -- Name: credit_cards credit_cards_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY credit_cards
-    ADD CONSTRAINT credit_cards_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.credit_cards
+    ADD CONSTRAINT credit_cards_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: event_tags event_tags_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY event_tags
-    ADD CONSTRAINT event_tags_event_id_fkey FOREIGN KEY (event_id) REFERENCES events(id);
+ALTER TABLE ONLY public.event_tags
+    ADD CONSTRAINT event_tags_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.events(id);
 
 
 --
 -- Name: events events_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_account_id_fkey FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT events_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: events events_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: listings listings_class_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY listings
-    ADD CONSTRAINT listings_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE ONLY public.listings
+    ADD CONSTRAINT listings_class_id_fkey FOREIGN KEY (class_id) REFERENCES public.classes(id);
 
 
 --
 -- Name: listings listings_event_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY listings
-    ADD CONSTRAINT listings_event_id_fkey FOREIGN KEY (event_id) REFERENCES events(id);
+ALTER TABLE ONLY public.listings
+    ADD CONSTRAINT listings_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.events(id);
 
 
 --
 -- Name: listings listings_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY listings
-    ADD CONSTRAINT listings_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.listings
+    ADD CONSTRAINT listings_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: order_details order_details_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY order_details
-    ADD CONSTRAINT order_details_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id);
+ALTER TABLE ONLY public.order_details
+    ADD CONSTRAINT order_details_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
 
 
 --
 -- Name: orders orders_credit_card_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_credit_card_id_fkey FOREIGN KEY (credit_card_id) REFERENCES credit_cards(id);
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_credit_card_id_fkey FOREIGN KEY (credit_card_id) REFERENCES public.credit_cards(id);
 
 
 --
 -- Name: orders orders_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY orders
-    ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: tickets tickets_checked_in_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tickets
-    ADD CONSTRAINT tickets_checked_in_by_fkey FOREIGN KEY (checked_in_by) REFERENCES users(id);
+ALTER TABLE ONLY public.tickets
+    ADD CONSTRAINT tickets_checked_in_by_fkey FOREIGN KEY (checked_in_by) REFERENCES public.users(id);
 
 
 --
 -- Name: tickets tickets_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tickets
-    ADD CONSTRAINT tickets_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tickets
+    ADD CONSTRAINT tickets_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES public.listings(id) ON DELETE CASCADE;
 
 
 --
 -- Name: tickets tickets_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tickets
-    ADD CONSTRAINT tickets_order_id_fkey FOREIGN KEY (order_id) REFERENCES orders(id);
+ALTER TABLE ONLY public.tickets
+    ADD CONSTRAINT tickets_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
 
 
 --
 -- Name: user_credentials user_credentials_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY user_credentials
-    ADD CONSTRAINT user_credentials_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.user_credentials
+    ADD CONSTRAINT user_credentials_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- Name: users users_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
-    ADD CONSTRAINT users_account_id_fkey FOREIGN KEY (account_id) REFERENCES accounts(id);
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
 -- Name: versions versions_originator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY versions
-    ADD CONSTRAINT versions_originator_id_fkey FOREIGN KEY (originator_id) REFERENCES users(id);
+ALTER TABLE ONLY public.versions
+    ADD CONSTRAINT versions_originator_id_fkey FOREIGN KEY (originator_id) REFERENCES public.users(id);
 
 
 --
 -- Name: waitlists waitlists_class_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY waitlists
-    ADD CONSTRAINT waitlists_class_id_fkey FOREIGN KEY (class_id) REFERENCES classes(id);
+ALTER TABLE ONLY public.waitlists
+    ADD CONSTRAINT waitlists_class_id_fkey FOREIGN KEY (class_id) REFERENCES public.classes(id);
 
 
 --
 -- Name: waitlists waitlists_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY waitlists
-    ADD CONSTRAINT waitlists_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES listings(id);
+ALTER TABLE ONLY public.waitlists
+    ADD CONSTRAINT waitlists_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES public.listings(id);
 
 
 --
 -- Name: waitlists waitlists_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY waitlists
-    ADD CONSTRAINT waitlists_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.waitlists
+    ADD CONSTRAINT waitlists_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

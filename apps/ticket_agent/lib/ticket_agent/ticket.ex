@@ -3,7 +3,7 @@ defmodule TicketAgent.Ticket do
   use TicketAgent.Schema
 
   @required ~w(slug name group status price)a
-  @fields ~w(description guest_name guest_email sale_start sale_end locked_until purchased_at emailed_at checked_in_at checked_in_by pass_fees_to_buyer)a
+  @fields ~w(description guest_name guest_email sale_start sale_end locked_until purchased_at emailed_at checked_in_at checked_in_by)a
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
@@ -26,7 +26,6 @@ defmodule TicketAgent.Ticket do
     field :emailed_at, :utc_datetime
     field :checked_in_at, :utc_datetime
 
-    field :pass_fees_to_buyer, :boolean
     timestamps(type: :utc_datetime)
   end
 

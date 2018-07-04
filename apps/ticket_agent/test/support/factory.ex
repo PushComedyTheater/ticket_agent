@@ -70,12 +70,13 @@ defmodule TicketAgent.Factory do
 
   def event_tag_factory do
     %EventTag{}
-  end  
+  end
 
   def listing_factory do
     %Listing{
       slug: Random.generate_slug(),
       title: ExMachina.Sequence.next("title"),
+      pass_fees_to_buyer: true,
       description: @lorem,
       status: "active",
       start_at: DateTime.utc_now(),
