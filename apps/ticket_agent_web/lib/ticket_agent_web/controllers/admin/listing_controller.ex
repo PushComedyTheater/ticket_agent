@@ -32,7 +32,14 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def new(conn, %{"event_id" => "new"}) do
+    changeset = Listing.change_listing(%Listing{
+      start_at: NaiveDateTime.utc_now,
+      end_at: NaiveDateTime.utc_now |> Calendar.NaiveDateTime.add!(86400),
+    })
+
     conn
+    |> assign(:changeset, changeset)
+    |> assign(:event_image_url, "")
     |> render("new_event.html")
   end
 
@@ -50,6 +57,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
     conn
     |> assign(:changeset, changeset)
     |> assign(:event, event)
+    |> assign(:event_image_url, event.image_url)
     |> render("new_event.html")
   end
 
