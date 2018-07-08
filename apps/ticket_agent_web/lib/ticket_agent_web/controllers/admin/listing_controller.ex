@@ -40,6 +40,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
     conn
     |> assign(:changeset, changeset)
     |> assign(:event_image_url, "")
+    |> assign(:event_id, nil)
     |> render("new_event.html")
   end
 
@@ -57,6 +58,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
     conn
     |> assign(:changeset, changeset)
     |> assign(:event, event)
+    |> assign(:event_id, event_id)
     |> assign(:event_image_url, event.image_url)
     |> render("new_event.html")
   end
@@ -122,7 +124,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
     )
   end
 
-  def create(conn, %{"class_id" => class_id, "title" => title, "description" => description, "listings" => listings} = params) do
+  def create(conn, %{"class_id" => class_id, "title" => _title, "description" => _description, "listings" => _listings} = params) do
     current_user = Coherence.current_user(conn)
     TicketAgent.ListingsGenerator.create_from_class(Map.put(params, "user", current_user))
 
@@ -131,8 +133,11 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def create(conn, params) do
-    IO.inspect params
+    current_user = Coherence.current_user(conn)
+    TicketAgent.ListingsGenerator.create_event(Map.put(params, "user", current_user))
+
     conn
+    |> render("create.json", %{redirect_url: "appole"})
   end
 
   def edit(conn, %{"titled_slug" => titled_slug}) do

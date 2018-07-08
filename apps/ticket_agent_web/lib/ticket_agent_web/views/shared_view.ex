@@ -164,22 +164,29 @@ defmodule TicketAgentWeb.SharedView do
   end
 
   def event_image(image_url, width \\ 1050) do
-    image = image_url
-
+    image = "#{image_url}"
+# https://res.cloudinary.com/push-comedy-theater/image/upload/v1531017452/cover/pojawwsiu4rdvtkcrho7.png
     public_id =
       image
+      |> IO.inspect
       |> String.split("/")
+      |> IO.inspect
       |> List.last()
+      |> IO.inspect
       |> String.split(".")
       |> List.first()
+      |> IO.inspect
 
     Cloudinex.Url.for(public_id, %{
       width: width,
       height: 400,
       gravity: "north",
       crop: "fill",
-      flags: 'progressive'
+      flags: 'progressive',
+      format: "jpg",
+      tag: "cover"
     })
+    |> IO.inspect
   end
 
   def open_graph_description(text, true) do

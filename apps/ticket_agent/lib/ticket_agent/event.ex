@@ -2,6 +2,9 @@ defmodule TicketAgent.Event do
   @derive {Phoenix.Param, key: :slug}
   use TicketAgent.Schema
 
+  @required ~w(slug title description status)a
+  @fields ~w(image_url account_id user_id)a
+
   @derive {Phoenix.Param, key: :slug}
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -14,6 +17,7 @@ defmodule TicketAgent.Event do
     field :image_url, :string
 
     has_many :event_tags, EventTag
+
     belongs_to :account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
 
@@ -27,10 +31,11 @@ defmodule TicketAgent.Event do
   @doc false
   def changeset(%Event{} = event, attrs) do
     event
-    |> cast(attrs, [:slug, :title, :description, :status])
+    |> cast(attrs, @required ++ @fields)
+    |> validate_required(@required)
     |> cast_assoc(:account)
     |> cast_assoc(:user)
-  end  
+  end
 
   defimpl Phoenix.Param, for: TicketAgent.Event do
     def to_param(%{slug: slug, title: title}) do
@@ -43,5 +48,5 @@ defmodule TicketAgent.Event do
       |> String.downcase
       |> String.replace(~r/[^a-z0-9\s-]/, "")
       |> String.replace(~r/(\s|-)+/, "-")
-  end  
+  end
 end

@@ -61,5 +61,5 @@ window.class_id = "<%= @class.id %>";
     </div>
     <hr>
   </div>
-  <button id="create_class" type="button" class="btn btn-block btn-success btn-flat">Create New Class Listing </button>
+  <button id="create_it" type="button" class="btn btn-block btn-success btn-flat">Create New Class Listing </button>
 <% end %>

@@ -1,5 +1,8 @@
-
+<script type="text/javascript">
+window.event_id = "<%= @event_id %>";
+</script>
 <%= form_for @changeset, admin_event_path(@conn, :create), fn f -> %>
+<%= hidden_input f, :event_id, value: @event_id %>
   <div class="box box-primary">
     <div class="box-header with-border">
       <h3 class="box-title">New Show</h3>
@@ -61,7 +64,7 @@
       <div class="row">
         <div class="col-sm-4">Event Image</div>
         <div class="col-sm-4">
-          <img id="social_image" src="<%= @event_image_url %>" style="zoom: 50%; padding: 5px;" /><br /><br />
+          <img id="the_image" src="<%= @event_image_url %>" style="zoom: 50%; padding: 5px;" /><br /><br />
           <a href="#" id="upload_photo" class="btn btn-primary">
             Upload Photo
           </a>
@@ -74,4 +77,5 @@
     </div>
     <hr>
   </div>
+  <button id="create_it" type="button" class="btn btn-block btn-success btn-flat">Create New Listing </button>
 <% end %>

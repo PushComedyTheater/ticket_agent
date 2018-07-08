@@ -62,7 +62,7 @@ window.validate_listing = function (i, valid_form) {
   if (end_time.length > 0) {
     console.log("validate_listing->" + i + ": end_time is there, lets check");
     $("#listing_end_time_group_" + i).removeClass("has-error");
-    $("#listing_end_time_error_" + i).hide();    
+    $("#listing_end_time_error_" + i).hide();
 
     var start_time = new Date(start_time);
     var end_time = new Date(end_time);
@@ -76,7 +76,7 @@ window.validate_listing = function (i, valid_form) {
       console.log("validate_listing->" + i + ": end time is cool");
       $("#listing_time_error_" + i).hide();
       $("#row_" + i).removeClass("has-error");
-    }    
+    }
   }
 
   var ticket_count = $("#tickets_" + i + " .ticket_row").length;
@@ -92,7 +92,7 @@ window.validate_listing = function (i, valid_form) {
     console.log("validate_listing->" + i + ": checking tickets");
     for (var j = 0; j < ticket_count; j++) {
       console.log("validate_listing->" + i + "/" + j + ": checking ticket");
-      
+
 
       var ticket_name        = $("#ticket_name_" + i + "_" + j).val();
       var ticket_quantity    = parseInt($("#ticket_quantity_" + i + "_" + j).val());
@@ -135,15 +135,23 @@ window.validate_listing = function (i, valid_form) {
       } else {
         console.log("validate_listing->" + i + "/" + j + ": ticket quantity is greater than zero");
         $("#ticket_quantity_" + i + "_" + j + "_error").hide();
-        $("#ticket_quantity_" + i + "_" + j + "_group").removeClass("has-error");         
+        $("#ticket_quantity_" + i + "_" + j + "_group").removeClass("has-error");
       }
 
       if (ticket_price == 0) {
-        console.log("validate_listing->" + i + "/" + j + ": ticket_price is 0");
-        $("#ticket_price_" + i + "_" + j + "_error").show();
-        $("#ticket_price_" + i + "_" + j + "_group").addClass("has-error");
-        $("#ticket_price_" + i + "_" + j).focus();
-        valid_form = false;
+        if (confirm("Are you sure you want to make this ticket free?")){
+          console.log("validate_listing->" + i + "/" + j + ": ticket_price is okay to be 0");
+          $("#ticket_price_" + i + "_" + j + "_error").hide();
+          $("#ticket_price_" + i + "_" + j + "_group").removeClass("has-error");
+        } else {
+          console.log("validate_listing->" + i + "/" + j + ": ticket_price is 0");
+          $("#ticket_price_" + i + "_" + j + "_error").show();
+          $("#ticket_price_" + i + "_" + j + "_group").addClass("has-error");
+          $("#ticket_price_" + i + "_" + j).focus();
+          valid_form = false;
+        }
+
+
       } else {
         console.log("validate_listing->" + i + "/" + j + ": ticket_price is > 0");
         $("#ticket_price_" + i + "_" + j + "_error").hide();

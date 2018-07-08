@@ -27,4 +27,8 @@ defmodule TicketAgent.Account do
     |> cast(params, [:name, :description, :url, :enabled, :creator_id])
     |> validate_required([:name])
   end
+
+  def push_theater do
+    Repo.one!(Account)
+  end
 end

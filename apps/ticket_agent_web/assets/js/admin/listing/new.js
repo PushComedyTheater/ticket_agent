@@ -78,7 +78,7 @@ window.setup_date_pickers = function () {
   });
 }
 
-window.create_class = function (e) {
+window.create_it = function (e) {
   var valid_form = true;
   valid_form = window.validate_title(valid_form);
   valid_form = window.validate_description(valid_form);
@@ -91,6 +91,7 @@ window.create_class = function (e) {
       event_id: window.event_id,
       title: $("#listing_title").val(),
       description: window.load_description(),
+      image: $("#the_image").attr("src"),
       listings: window.load_listings()
     }
 
@@ -112,7 +113,7 @@ window.create_class = function (e) {
     }).done(function (response) {
       console.log("done");
       console.log(response);
-      window.location.href = "/admin/classes"
+      // window.location.href = "/admin/classes"
     }).fail(function (xhr, status, errorThrown) {
       // Code to run if the request fails; the raw request and
       // status codes are passed to the function
@@ -142,13 +143,10 @@ window.PopupCenter = function (url, title, w, h) {
   }
 }
 
-
-
-
 $(function () {
   window.add_listing_template();
-  $("#create_class").on("click", function(e) {
-    window.create_class(e);
+  $("#create_it").on("click", function(e) {
+    window.create_it(e);
   })
 
 $("#choose_photo").on("click", function () {
@@ -156,17 +154,19 @@ $("#choose_photo").on("click", function () {
   return false;
 });
 
+$(document).on('cloudinarywidgetfileuploadsuccess', function (e, data) {;
+  $("#the_image").attr("src", data.secure_url);
+});
 
-$("#upload_cover_photo").on("click", function () {
+
+$("#upload_photo").on("click", function () {
   cloudinary.openUploadWidget({
-      cloud_name: 'push-comedy-theater',
-      upload_preset: 'upload_cover',
-      sources: ["local", "url", "facebook", "dropbox", "google_photos", "instagram"],
-      thumbnails: "#cover_image",
-      field_name: "listing[cover_image]"
-    },
-    function (error, result) {
-      console.log(error, result)
-    });
+    cloud_name: 'push-comedy-theater',
+    upload_preset: 'nxqcwxoc',
+    sources: ["local", "url", "facebook", "dropbox", "google_photos", "instagram"]
+  },
+  function (error, result) {
+    console.log(error, result)
+  });
 })
 });

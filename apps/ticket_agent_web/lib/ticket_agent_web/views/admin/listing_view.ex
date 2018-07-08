@@ -3,9 +3,10 @@ defmodule TicketAgentWeb.Admin.ListingView do
   use TicketAgentWeb, :view
   import Scrivener.HTML
 
-  def render("create.json", %{}) do
+  def render("create.json", %{redirect_url: url}) do
     %{
-      message: "ok"
+      message: "ok",
+      redirect_url: url
     }
   end
 
