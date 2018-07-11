@@ -14,12 +14,13 @@ window.load_order_table = function() {
   for (var i = 0; i < tickets.length; i++) {
     var ticket = tickets[i];
     var ticket_price = ticket.price;
+    var display_price = ticket_price == 0 ? "FREE" : "$" + (ticket_price / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
     subtotal += ticket_price;
     var context = {
       group: ticket.group,
       ticket_name: ticket.ticket_name,
       name: ticket.name,
-      price: (ticket_price / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')
+      price: display_price
     };
     var html    = window.attendee_template(context);
     output += html;
@@ -382,6 +383,12 @@ $(document).on('ready', function () {
   window.setup_card_cvc("#card-cvc");
   window.setup_submit_button("#payment-form");
 });
+
+if (typeof window.addEventListener === 'undefined') {
+  window.addEventListener = function (e, callback) {
+    return window.attachEvent('on' + e, callback);
+  }
+}
 
 window.unloader = function(e) {
   var confirmationMessage = "\o/";

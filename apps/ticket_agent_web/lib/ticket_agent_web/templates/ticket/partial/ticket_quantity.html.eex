@@ -7,7 +7,7 @@ ticket = Enum.at(@tickets, 0)
     <div class="col-md-10 align-self-center">
       <h3 class="h4"><%= ticket.name %></h3>
       <p class="lead g-mb-20 g-mb-0--md">
-      $<%= cost_smallest_unit(ticket.price) %>
+      <%= cost_smallest_unit_with_dollar_sign(ticket.price) %>
       </p>
     </div>
     <div class="col-md-2 align-self-center text-md-right">
@@ -20,6 +20,6 @@ ticket = Enum.at(@tickets, 0)
   </div>
   <br />
   <div class="row attendee-form" id="attendee_form_<%= @index %>" data-index="<%= @index %>">
-  </div>  
+  </div>
 </section>
 <br />

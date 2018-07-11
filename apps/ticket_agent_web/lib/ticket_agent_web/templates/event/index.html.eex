@@ -34,7 +34,7 @@
                     <%= link full_event_date(event), to: event_path(@conn, :show, event), class: "btn btn-med u-btn-primary rounded-0" %>
                   </figcaption>
                   <figcaption class="g-pos-abs g-bottom-0 g-right-0">
-                    <%= link "$" <> event_cost(event), to: event_path(@conn, :show, event), class: "btn btn-med u-btn-blue rounded-0" %>
+                    <%= link event_cost(event), to: event_path(@conn, :show, event), class: "btn btn-med u-btn-blue rounded-0" %>
                   </figcaption>
                 </figure>
 

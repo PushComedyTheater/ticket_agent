@@ -27,9 +27,9 @@ defmodule TicketAgentWeb.EventView do
   def event_buy_timestamp(date) do
     date
     |> Calendar.DateTime.shift_zone!("America/New_York")
-    |> Calendar.Strftime.strftime!("%m/%d/%Y at %l:%M%p")    
+    |> Calendar.Strftime.strftime!("%m/%d/%Y at %l:%M%p")
   end
-  
+
   def purchased_order_list(conn, orders) do
     Enum.map_join(orders, ", ", fn(order) ->
       safe_to_string(link(event_date(order.completed_at), to: order_path(conn, :show, order), target: "_blank"))
@@ -52,8 +52,15 @@ defmodule TicketAgentWeb.EventView do
   end
 
   def event_cost(event) do
-    TicketFinder.price_range(event.listing_ids)
-    |> cost_range
+    range =
+      event.listing_ids
+      |> TicketFinder.price_range()
+      |> cost_range
+
+    case range do
+      "FREE" -> "FREE"
+      range -> "$#{range}"
+    end
   end
 
   def listing_cost(listing) do
@@ -83,7 +90,8 @@ defmodule TicketAgentWeb.EventView do
     |> Enum.map_join(", ", fn tag -> tag.tag end)
   end
 
-  defp cost_range(%{min_price: nil, max_price: nil}), do: "0"
+  defp cost_range(%{min_price: nil, max_price: nil}), do: "FREE"
+  defp cost_range(%{min_price: 0, max_price: 0}), do: "FREE"
   defp cost_range(%{min_price: min, max_price: max}) when max == min do
     max / 100
     |> :erlang.float_to_binary(decimals: 2)
@@ -94,7 +102,7 @@ defmodule TicketAgentWeb.EventView do
       min / 100
       |> :erlang.float_to_binary(decimals: 2)
 
-    max = 
+    max =
       max / 100
       |> :erlang.float_to_binary(decimals: 2)
 

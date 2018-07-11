@@ -4,36 +4,37 @@ defmodule TicketAgent.Finders.ShowFinder do
   alias TicketAgent.{Event, Listing, Repo, ShowDetail, Ticket}
 
   def upcoming_listings do
-    listing_query = 
+    listing_query =
       from listing in Listing,
       where: listing.status == "active",
+      where: listing.type in ["class", "show"],
       where: fragment("? >= NOW() - interval '1 hour'", listing.start_at),
       where: not is_nil(listing.event_id),
       group_by: listing.event_id,
       order_by: [min(listing.start_at)],
       select: %{
-        listing_count: count(listing.id), 
-        event_id: listing.event_id, 
+        listing_count: count(listing.id),
+        event_id: listing.event_id,
         start_at: min(listing.start_at),
         listing_ids: fragment("json_agg(?)", listing.id)
       }
 
-    query = 
+    query =
       from event in Event,
       join: listing in subquery(listing_query), on: listing.event_id == event.id,
       where: event.status == "normal",
       order_by: listing.start_at,
       select: %{
-        event_slug: event.slug, 
-        event_title: event.title, 
-        event_description: event.description, 
-        event_image_url: event.image_url, 
+        event_slug: event.slug,
+        event_title: event.title,
+        event_description: event.description,
+        event_image_url: event.image_url,
         event_id: event.id,
-        listing_count: listing.listing_count, 
+        listing_count: listing.listing_count,
         start_at: listing.start_at,
         listing_ids: listing.listing_ids
       }
-            
+
     Repo.all(query)
     |> Enum.map(fn(detail) -> struct(ShowDetail, detail) end)
   end
@@ -44,7 +45,7 @@ defmodule TicketAgent.Finders.ShowFinder do
       |> String.split("-")
       |> hd
 
-     
+
     query = from event in Event,
             left_join: listing in assoc(event, :listings),
             preload: [:event_tags],
@@ -52,8 +53,8 @@ defmodule TicketAgent.Finders.ShowFinder do
             where: event.slug == ^slug,
             order_by: listing.start_at,
             select: event
-            
+
 
     Repo.one(query)
-  end  
+  end
 end

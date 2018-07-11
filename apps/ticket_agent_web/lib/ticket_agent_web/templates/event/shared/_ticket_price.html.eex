@@ -1,11 +1,11 @@
-<% 
+<%
 min_ticket_price = if is_nil(assigns[:min_ticket_price]), do: 0, else: assigns[:min_ticket_price]
 max_ticket_price = if is_nil(assigns[:max_ticket_price]), do: 0, else: assigns[:max_ticket_price]
 %>
 <span id="ticket_price" class="u-label g-rounded-20 g-bg-green g-px-15 g-mr-30 g-mb-15">
   <%= if min_ticket_price != max_ticket_price do %>
-    <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(min_ticket_price) %> - <%= cost_smallest_unit(max_ticket_price) %></strong>
+    <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit_with_dollar_sign(min_ticket_price) %> - <%= cost_smallest_unit_with_dollar_sign(max_ticket_price) %></strong>
   <% else %>
-    <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit(min_ticket_price) %></strong>
+    <i class="fa fa-dollar g-mr-3"></i><strong><%= cost_smallest_unit_with_dollar_sign(min_ticket_price) %></strong>
   <% end %>
 </span>

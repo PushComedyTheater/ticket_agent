@@ -1,7 +1,7 @@
 <script id="entry-template" type="text/x-handlebars-template">
   <tr>
     <td class="g-color-black-opacity-0_8" scope="row">{{ticket_name}} (Ticket For {{name}})</td>
-    <td>${{price}}</td>
+    <td>{{price}}</td>
   </tr>
 </script>
 <script id="calculated-template" type="text/x-handlebars-template">

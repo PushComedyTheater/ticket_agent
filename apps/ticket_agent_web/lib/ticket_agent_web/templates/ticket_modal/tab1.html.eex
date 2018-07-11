@@ -15,7 +15,7 @@
         <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
       </div>
     </div>
-    <h5 class="pull-right" style="text-align: right;">$<%= event_cost(@show) %></h5>
+    <h5 class="pull-right" style="text-align: right;"><%= event_cost(@show) %></h5>
   </div>
   <div id="ticket_count_error" class="alert alert-danger" role="alert" style="display: none;">
     <strong>Oh snap!</strong> Choose more than zero tickets.

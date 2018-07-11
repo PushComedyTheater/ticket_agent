@@ -108,6 +108,11 @@ defmodule TicketAgentWeb.SharedView do
     "$" <> :erlang.float_to_binary(price / 100, decimals: 2)
   end
 
+  def cost_smallest_unit_with_dollar_sign(ticket_price) when ticket_price == 0, do: "FREE"
+  def cost_smallest_unit_with_dollar_sign(ticket_price) do
+    "$#{cost_smallest_unit(ticket_price)}"
+  end
+
   def cost_smallest_unit(ticket_price) when is_integer(ticket_price), do: cost_smallest_unit(ticket_price / 1)
   def cost_smallest_unit(ticket_price) when is_float(ticket_price) do
     (ticket_price / 100)
@@ -154,6 +159,8 @@ defmodule TicketAgentWeb.SharedView do
       |> String.split(".")
       |> List.first()
 
+    Logger.info "Listing image public id = #{public_id}"
+
     Cloudinex.Url.for(public_id, %{
       width: width,
       height: 400,
@@ -168,14 +175,12 @@ defmodule TicketAgentWeb.SharedView do
 # https://res.cloudinary.com/push-comedy-theater/image/upload/v1531017452/cover/pojawwsiu4rdvtkcrho7.png
     public_id =
       image
-      |> IO.inspect
       |> String.split("/")
-      |> IO.inspect
       |> List.last()
-      |> IO.inspect
       |> String.split(".")
       |> List.first()
-      |> IO.inspect
+
+    Logger.info "Event image is #{public_id}"
 
     Cloudinex.Url.for(public_id, %{
       width: width,
