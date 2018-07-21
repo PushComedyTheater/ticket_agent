@@ -14,6 +14,6 @@ defmodule TicketAgent.WebhookDetail do
   @doc false
   def changeset(%WebhookDetail{} = webhook_detail, attrs) do
     webhook_detail
-    |> cast(attrs, [:request])
+    |> cast(attrs, [:source, :request])
   end
 end

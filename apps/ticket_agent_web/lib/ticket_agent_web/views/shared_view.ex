@@ -71,9 +71,9 @@ defmodule TicketAgentWeb.SharedView do
   def ticket_details(ticket) do
     cond do
       String.length(ticket.guest_name) > 0 ->
-        "#{ticket.description} (#{ticket.guest_name})"
+        "#{ticket.name} (#{ticket.guest_name})"
       true ->
-        ticket.description
+        ticket.name
     end
   end
 

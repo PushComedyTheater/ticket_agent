@@ -2,7 +2,7 @@
         <ul class="list-inline mb-0">
           <li class="list-inline-item mr-1">
             <a class="btn u-btn-outline-red g-rounded-25" href="<%= google_calendar(@listing) %>" target="_blank">
-              <i class="mr-1 fa fa-google"></i>
+              <i class="mr-1 fab fa-google"></i>
               Add to Google Calendar
             </a>
           </li>

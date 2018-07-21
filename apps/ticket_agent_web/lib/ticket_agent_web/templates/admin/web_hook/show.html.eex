@@ -12,16 +12,15 @@
       <tr>
         <th>Request</th>
         <td style="max-width: 250px;">
-        <blockquote class="blockquote" id="details">
-        </blockquote>
+        <pre id="details">
+        </pre>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.0.0/json2html.min.js"></script>
 <script type="text/javascript">
 window.request_details = <%= raw Poison.encode!(@detail.request) %>;
-$("#details").html(JSON.stringify(window.request_details));
+$("#details").html(JSON.stringify(window.request_details, null, 4));
 </script>

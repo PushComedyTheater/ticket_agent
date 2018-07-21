@@ -12,6 +12,7 @@ defmodule TicketAgent.Order do
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
     belongs_to :credit_card, CreditCard, references: :id, foreign_key: :credit_card_id, type: Ecto.UUID
     has_many :tickets, Ticket
+    has_many :order_details, OrderDetail
     has_one :listing, through: [:tickets, :listing]
     field :slug, :string
     field :status, :string
@@ -67,12 +68,12 @@ defmodule TicketAgent.Order do
     order = case Ecto.assoc_loaded?(order.user) do
       true -> order
       false -> Repo.preload(order, :user)
-    end  
-    
+    end
+
     order.tickets
-    |> Enum.filter(fn(ticket) -> 
-      ticket.status == "purchased" && 
-      ticket.guest_email != order.user.email 
+    |> Enum.filter(fn(ticket) ->
+      ticket.status == "purchased" &&
+      ticket.guest_email != order.user.email
     end)
     |> Enum.map(fn(ticket) ->
       {ticket.id, ticket.guest_name, ticket.guest_email}

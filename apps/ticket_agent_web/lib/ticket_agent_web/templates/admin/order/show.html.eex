@@ -8,19 +8,25 @@
       <tr>
         <th>User</th>
         <td>
-        <%= 
+        <%=
           link(
-            "#{@order.user.name} (#{@order.user.email})", 
+            "#{@order.user.name} (#{@order.user.email})",
             to: admin_user_path(@conn, :show, @order.user),
             target: "_blank"
-          ) 
+          )
         %>
+        <br />
+        <span>
+          <a href="https://dashboard.stripe.com<%= if (Mix.env != "prod"), do: "/test", else: "" %>/customers/<%= @order.user.stripe_customer_id %>" class="btn btn-info btn-xs" target="_blank">View On Stripe</a>
+        </span>
         </td>
       </tr>
       <tr>
         <th>Credit Card</th>
-        <td><%= raw credit_card_details(@order.credit_card) %></td>
-      </tr>      
+        <td>
+          <%= raw credit_card_details(@order.credit_card) %>
+        </td>
+      </tr>
       <tr>
         <th>Slug</th>
         <td><%= @order.slug %></td>
@@ -28,11 +34,11 @@
       <tr>
         <th>Status</th>
         <td><%= order_status(@order.status) %></td>
-      </tr> 
+      </tr>
       <tr>
         <th>Completed At</th>
         <td><%= order_timestamp(@order.completed_at) %></td>
-      </tr>                   
+      </tr>
     </table>
   </div>
   <div class="box-body">
@@ -57,10 +63,10 @@
       <tr>
         <td style="padding: 5px; text-align: right;"><b>Total:</b></td>
         <td style="padding: 5px;"><%= money(@order.total_price) %></td>
-      </tr>      
+      </tr>
     </table>
   </div>
-  <div class="box-footer clearfix">
+  <div class="box-footer clearfix" style="display: none;">
     <span><%= link "Edit", to: admin_order_path(@conn, :edit, @order) %></span>
     <span><%= link "Back", to: admin_order_path(@conn, :index) %></span>
   </div>
