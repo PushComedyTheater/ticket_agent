@@ -3,6 +3,10 @@ defmodule TicketAgent.Finders.ListingFinder do
   import Ecto.Query
   alias TicketAgent.{Class, Event, Listing, Repo}
 
+  def upcoming_listings do
+
+  end
+
   def active_show_listings do
     query = from listing in Listing,
             where: listing.status == "active",
@@ -25,7 +29,7 @@ defmodule TicketAgent.Finders.ListingFinder do
             group_by: class.id
 
     Repo.all(query)
-  end    
+  end
 
   def find_listing_by_slug(slug) do
     slug =
@@ -38,7 +42,7 @@ defmodule TicketAgent.Finders.ListingFinder do
             select: listing
 
     Repo.one(query)
-  end  
+  end
 
   def find_by_id(listing_id) do
     Listing
@@ -60,7 +64,7 @@ defmodule TicketAgent.Finders.ListingFinder do
 
   def load_listing_details_for_event(nil), do: {nil, []}
   def load_listing_details_for_event(%{id: event_id} = event) do
-    query = 
+    query =
       from listing in Listing,
       where: listing.status == "active",
       where: fragment("? >= NOW() - interval '1 hour'", listing.start_at),

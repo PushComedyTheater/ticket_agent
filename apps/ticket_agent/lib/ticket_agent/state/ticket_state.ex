@@ -259,7 +259,6 @@ defmodule TicketAgent.State.TicketState do
       listing_id
       |> TicketFinder.find_by_listing_and_order(order.id)
 
-    IO.inspect tickets
     minimum_ticket = Enum.min_by(tickets, fn(ticket) -> ticket.locked_until end)
     {order, tickets, minimum_ticket.locked_until}
   end

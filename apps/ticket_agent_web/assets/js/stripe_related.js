@@ -111,6 +111,12 @@ window.reserve_tickets = function () {
     } else {
       window.release_tickets(true);
     }
+
+    if (window.details.pricing.total == 0) {
+      $("#charge_form").hide();
+      $("#free_form").show();
+      $("#ticket_table").removeClass("col-md-6").addClass("col-md-12");
+    }
     // //window.console_group_end();
     // //window.console_group_end();
     window.setup_payment_request_button("#payment-request-button");
@@ -376,6 +382,13 @@ $(document).on('ready', function () {
     e.preventDefault();
     window.release_tickets(true);
   });
+
+  $("#free_button").on("click", function(e) {
+    console.log("DUDE");
+
+    window.send_token_for_charge(window.details, e);
+  });
+
   window.stripe_instance = Stripe(window.stripe_publishable_key);
   window.stripe_elements = window.stripe_instance.elements();
   window.setup_card_number("#card-number");

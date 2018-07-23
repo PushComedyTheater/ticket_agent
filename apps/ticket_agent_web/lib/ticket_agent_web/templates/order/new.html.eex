@@ -19,7 +19,7 @@
 
     </div>
     <div class="row">
-      <div class="table-responsive col-md-6">
+      <div id="ticket_table" class="table-responsive col-md-6">
         <table class="table table-bordered table-hover u-table--v2 text-center text-uppercase g-col-border-side-0">
           <thead>
             <tr class="g-bg-blue g-color-white g-col-border-top-0">
@@ -31,7 +31,7 @@
           </tbody>
         </table>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" id="charge_form">
         <form action="/charge" method="post" id="payment-form" class="g-brd-around g-brd-gray-light-v4 g-pa-30 g-mb-30">
           <div class="form-group row g-mb-25">
             <div id="payment-request-button" class="col-sm-12">
@@ -79,6 +79,13 @@
           </div>
         </form>
 
+      </div>
+      <div class="col-md-12" id="free_form" style="align: center; display: none;">
+        <center>
+          <button id="free_button" type="submit" class="btn btn-xxl u-btn-primary rounded-0">Reserve Tickets</button>
+        </center>
+        <br />
+        <br />
       </div>
     </div>
   </div>
