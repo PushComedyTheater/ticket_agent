@@ -13,6 +13,17 @@ defmodule TicketAgentWeb.ChargeController do
   def create(conn, %{"pricing" => %{"total" => 0}}) do
     Logger.info "THIS IS FREE"
 
+    description  = "Tickets for #{conn.assigns.listing.title}"
+    current_user = Coherence.current_user(conn)
+    order        = conn.assigns.order
+    token_id     = "FAKETOKEN"
+    metadata     = load_metadata(conn)
+
+    Logger.info "current_user = #{current_user.name}"
+    Logger.info "order        = #{inspect order.slug}"
+    Logger.info "metadata     = #{inspect metadata}"
+
+    raise "FUCK"
     conn
     |> render("create.json")
   end
