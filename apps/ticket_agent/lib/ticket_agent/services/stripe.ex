@@ -40,7 +40,7 @@ defmodule TicketAgent.Services.Stripe do
     uri = "#{api_url()}/customers"
 
     Logger.info "create_customer->Making POST request to #{uri}"
-    
+
     case request(:post, uri, [], body, hackney_opts()) do
       {:ok, %{"id" => stripe_customer_id}} ->
         Logger.info "create_customer->created stripe customer with stripe id: #{stripe_customer_id}"
@@ -54,15 +54,15 @@ defmodule TicketAgent.Services.Stripe do
   def create_charge(order, %{stripe_customer_id: stripe_id} = user, description, client_ip, metadata \\ %{}) when not is_nil(stripe_id) do
     Logger.info "create_charge->creating charge for order ##{order.slug}"
     order = OrderState.calculate_order_cost(order) #just in case
-    
-    body = 
+
+    body =
       order
       |> load_charge_values(user, description)
       |> load_body(metadata)
 
     uri = api_url() <> "/charges"
 
-    Logger.info "create_charge->Making POST request to #{uri}"    
+    Logger.info "create_charge->Making POST request to #{uri}"
 
     {status, response} =
       request(:post, uri, [], body, hackney_opts())
@@ -81,6 +81,39 @@ defmodule TicketAgent.Services.Stripe do
         end
       :ok ->
         Logger.info "create_charge->Charge created successfully"
+        {:ok, response}
+    end
+  end
+
+  def refund(order, client_ip, metadata \\ %{}) do
+    Logger.info "Processing refund for #{order.slug}"
+    order = case Ecto.assoc_loaded?(order.details) do
+      true -> order
+      false -> Repo.preload(order, :details)
+    end
+
+    details = Enum.at(order.details, 0)
+
+    body =
+      details
+      |> load_refund_values()
+      |> load_body(metadata)
+
+    uri = api_url() <> "/refunds"
+
+    Logger.info "uri = #{uri}"
+
+    {status, response} =
+      request(:post, uri, [], body, hackney_opts())
+      |> insert_order_details(order.id, client_ip)
+
+    case status do
+      :error ->
+        Logger.error "create_charge->There was an error submitting the post #{inspect response}"
+        message = get_in(response, ["error", "message"])
+        {:error, :unknown_error}
+      :ok ->
+        Logger.info "create_charge->Refund created successfully"
         {:ok, response}
     end
   end
@@ -108,12 +141,19 @@ defmodule TicketAgent.Services.Stripe do
     }
   end
 
+  defp load_refund_values(order_details) do
+    %{
+      "charge" => order_details.charge_id,
+      "refund_application_fee" => true
+    }
+  end
+
   defp load_body(values, metadata) do
     metadata
     |> Enum.reduce(values, fn({key, value}, acc) ->
       Map.put(acc, "metadata[#{key}]", value)
     end)
-    |> URI.encode_query()    
+    |> URI.encode_query()
   end
 
   defp request(method, url, headers, body, hackney_options) do

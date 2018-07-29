@@ -16,8 +16,8 @@
   </div>
   <!-- /.box-body -->
 </div>
-<%= render "partial/classes.html", assigns %>
 <%= render "partial/shows.html", assigns %>
+<%= render "partial/classes.html", assigns %>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" integrity="sha256-J2sc79NPV/osLcIpzL3K8uJyAD7T5gaEFKlLDM18oxY=" crossorigin="anonymous"></script>
 <script>

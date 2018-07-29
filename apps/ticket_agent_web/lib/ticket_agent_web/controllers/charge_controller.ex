@@ -23,6 +23,8 @@ defmodule TicketAgentWeb.ChargeController do
     Logger.info "order        = #{inspect order.slug}"
     Logger.info "metadata     = #{inspect metadata}"
 
+
+
     raise "FUCK"
     conn
     |> render("create.json")

@@ -199,10 +199,10 @@
       return true;
     });
     window.oTable = $('#datatable').DataTable( {
-        "lengthMenu": [[20, 25, 50, -1], [20, 25, 50, "All"]]
+        "lengthMenu": [[20, 25, 50, -1], [20, 25, 50, "All"]],
+        "order": [[ 3, "desc" ], [2, "desc"]]
     } );
     $('#purchased_checkbox, #available_checkbox').on("click", function(e) {
-        console.log('click');
         window.oTable.draw();
     });
 

@@ -12,7 +12,7 @@ defmodule TicketAgent.Order do
     belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
     belongs_to :credit_card, CreditCard, references: :id, foreign_key: :credit_card_id, type: Ecto.UUID
     has_many :tickets, Ticket
-    has_many :order_details, OrderDetail
+    has_many :details, OrderDetail
     has_one :listing, through: [:tickets, :listing]
     field :slug, :string
     field :status, :string
