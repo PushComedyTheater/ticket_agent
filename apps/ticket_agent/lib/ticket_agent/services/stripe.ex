@@ -1,6 +1,6 @@
 defmodule TicketAgent.Services.Stripe do
   require Logger
-  @stripe_api_version "2017-08-15"
+  @stripe_api_version "2018-07-27"
   @stripe_user_agent "TicketAgent 1.0"
   alias TicketAgent.{OrderDetail, Repo, User}
   alias TicketAgent.State.OrderState
@@ -85,6 +85,31 @@ defmodule TicketAgent.Services.Stripe do
     end
   end
 
+  def customer_details(user) do
+    uri = api_url() <> "/customers/" <> user.stripe_customer_id
+
+    Logger.info "uri = #{uri}"
+
+    {status, response} =
+      request(:get, uri, [], "", hackney_opts())
+
+    body =
+      user
+      |> load_customer_charge_values()
+      |> load_body(%{})
+      |> IO.inspect
+
+    uri = api_url() <> "/charges?" <> body
+
+    {status, response} =
+      request(:get, uri, [], "", hackney_opts())
+
+    # {status, response} =
+    #   request(:post, uri, [], body, hackney_opts())
+    #   |> insert_order_details(order.id, client_ip)
+
+  end
+
   def refund(order, client_ip, metadata \\ %{}) do
     Logger.info "Processing refund for #{order.slug}"
     order = case Ecto.assoc_loaded?(order.details) do
@@ -145,6 +170,13 @@ defmodule TicketAgent.Services.Stripe do
     %{
       "charge" => order_details.charge_id,
       "refund_application_fee" => true
+    }
+  end
+
+  defp load_customer_charge_values(user) do
+    %{
+      "customer" => user.stripe_customer_id,
+      "limit" => 100
     }
   end
 
