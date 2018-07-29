@@ -1,9 +1,9 @@
 APP="ticket_agent"
 AUTO_VERSION=mix-env+branch+commit-count-branch+revision
 
-BUILD_HOST="localhost"
-BUILD_USER="builder"
-BUILD_AT="/home/builder/app_build"
+BUILD_HOST="newpushers"
+BUILD_USER="pushers"
+BUILD_AT="/home/pushers/app_build"
 
 # RELEASE_STORE="${BUILD_USER}@${BUILD_HOST}:/build/"
 
