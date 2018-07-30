@@ -46,6 +46,9 @@ defmodule TicketAgent.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+
+      {:puppeteer_pdf, "~> 0.1.1"},
+
       {:calendar, "~> 0.17.0"},
       {:coherence, "~> 0.1"},
       {:cloudinex, "~> 0.1"},
