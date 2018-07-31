@@ -134,7 +134,7 @@ defmodule TicketAgentWeb.Router do
     resources "/users", UserController, as: :admin_user
     resources "/webhooks", WebHookController, as: :admin_webhook
 
-    get "/email_template/:type/:id", EmailTemplateController, :show, as: :admin_order_email
+    get "/email_template/:type/:id", EmailTemplateController, :show, as: :admin_email_template
 
 
     get "/", Redirect, to: "/admin/dashboard"
