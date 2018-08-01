@@ -1,4 +1,5 @@
 defmodule TicketAgent.Emails.OrderEmail do
+  require Logger
   import Swoosh.Email
   alias Swoosh.Email
   alias TicketAgent.Generators.OrderPdfGenerator
@@ -8,6 +9,7 @@ defmodule TicketAgent.Emails.OrderEmail do
   @template_dir Application.app_dir(:ticket_agent, "priv/email_templates")
 
   def order_receipt_email(order_id) do
+    Logger.info "order_receipt_email #{order_id}"
     order =
       order_id
       |> Order.get_order!()

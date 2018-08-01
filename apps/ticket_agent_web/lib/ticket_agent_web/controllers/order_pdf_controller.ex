@@ -3,6 +3,7 @@ defmodule TicketAgentWeb.OrderPdfController do
   use TicketAgentWeb, :controller
   alias TicketAgent.Finders.OrderFinder
   alias TicketAgent.Generators.OrderPdfGenerator
+  alias TicketAgent.Repo
 
   @root_dir File.cwd!
 
@@ -15,7 +16,11 @@ defmodule TicketAgentWeb.OrderPdfController do
         |> put_status(404)
         |> render(TicketAgentWeb.ErrorView, "404.html")
       order ->
-        value = OrderPdfGenerator.generate_order_pdf_binary(order)
+
+        value =
+          order
+          |> Repo.preload([:user, :credit_card, :tickets, listing: [:event]])
+          |> OrderPdfGenerator.generate_order_pdf_binary()
 
         conn
         |> put_resp_content_type("application/pdf")

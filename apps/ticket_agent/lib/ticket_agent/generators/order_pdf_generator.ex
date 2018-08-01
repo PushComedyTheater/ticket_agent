@@ -22,8 +22,31 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
     |> generate_pdf_file(Keyword.merge(@base_options, [filename: "#{order.slug}"]))
   end
 
-  defp generate_pdf_binary(html), do: @pdf_generator.generate_binary!(html, Keyword.merge(@base_options, [delete_temporary: true]))
-  defp generate_pdf_file(html, options), do: @pdf_generator.generate_file!(html, options)
+  defp generate_pdf_binary(html) do
+    {:ok, pdf_path} = Briefly.create(extname: ".pdf")
+    case PuppeteerPdf.generate_with_html(html, pdf_path, []) do
+      {:ok, _} ->
+        content = pdf_path |> File.read!
+        pdf_path |> File.rm
+        content
+      {:error, message} ->
+        Logger.error message
+        raise message
+    end
+  end
+
+  defp generate_pdf_file(html, options) do
+    filename = options[:filename] <> ".pdf"
+    pdf_path = Path.join(System.tmp_dir, filename)
+
+    case PuppeteerPdf.generate_with_html(html, pdf_path, []) do
+      {:ok, _} ->
+        pdf_path
+      {:error, message} ->
+        Logger.error message
+        raise message
+    end
+  end
 
   defp generate_order_html(order) do
     ticket_pdf_template = Path.join([priv_directory, "email_templates", "tickets_pdf.html.eex"])
@@ -33,17 +56,16 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
       order
       |> Repo.preload([:user, :credit_card, :tickets, :listing])
 
-    ticket = Enum.at(order.tickets, 0)
     ticket_count = Enum.count(order.tickets)
-
-    listing = Repo.preload(ticket.listing, :event)
+    listing = order.listing
 
     EEx.eval_file(
       ticket_pdf_template,
       [
         tickets: order.tickets,
-        listing: listing,
+        listing: order.listing,
         ticket_count: ticket_count,
+        order: order,
         host: @host
       ]
     )

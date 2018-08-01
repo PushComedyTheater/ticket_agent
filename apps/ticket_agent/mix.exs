@@ -10,8 +10,8 @@ defmodule TicketAgent.Mixfile do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.4",
-      elixirc_paths: elixirc_paths(Mix.env),
-      start_permanent: Mix.env == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
     ]
@@ -24,7 +24,7 @@ defmodule TicketAgent.Mixfile do
   defp revision() do
     System.cmd("git", ["rev-parse", "--short", "HEAD"])
     |> elem(0)
-    |> String.trim_trailing
+    |> String.trim_trailing()
   end
 
   # Configuration for the OTP application.
@@ -39,16 +39,14 @@ defmodule TicketAgent.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-
       {:puppeteer_pdf, "~> 0.1.1"},
-
       {:calendar, "~> 0.17.0"},
       {:coherence, "~> 0.1"},
       {:cloudinex, "~> 0.1"},
@@ -67,16 +65,14 @@ defmodule TicketAgent.Mixfile do
       {:icalendar, "~> 0.7.0"},
       {:paper_trail, "~> 0.8"},
       {:scrivener_ecto, "~> 1.0"},
-
       {:bypass, "~> 0.7", only: :test},
       {:credo, "~> 0.9.0-rc3", only: [:dev, :test]},
       {:ex_guard, "~> 1.2", only: :dev},
       {:ex_machina, "~> 2.0", only: :test},
       {:junit_formatter, "~> 2.2", only: :test},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:faker_elixir_octopus, "~> 1.0.0",  only: [:dev, :test]},
+      {:faker_elixir_octopus, "~> 1.0.0", only: [:dev, :test]},
       {:mox, "~> 0.3", only: :test}
-
     ]
   end
 
@@ -90,7 +86,7 @@ defmodule TicketAgent.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

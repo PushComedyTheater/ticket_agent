@@ -14,7 +14,6 @@
     }
 
     body {
-      display: flex;
       align-items: center;
       min-height: 100vh;
       color: #454f54;
@@ -24,8 +23,6 @@
 
     .ticket {
       margin: 0 auto;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
       max-width: 795px;
       width: 795px;
       align-content: center;
@@ -131,7 +128,6 @@
 
     .ticket__header,
     .ticket__footer {
-      display: flex;
       justify-content: space-between;
     }
 
@@ -142,7 +138,8 @@
   </style>
 </head>
 <body>
-  <article class="ticket">
+  <%= for ticket <- tickets do %>
+  <article class="ticket" style="page-break-after: always; clear: all;">
     <header class="ticket__wrapper">
       <div class="ticket__header">
         763 Granby Street, Norfolk, VA 23510<br />
@@ -163,17 +160,33 @@
           <h3>Here Are Your Tickets For <%= listing.title %></h3>
         </div>
         <br />
-        <p><i class="fa fa-calendar" aria-hidden="true"></i> Showtime: <%= event_date(listing.start_at) %> at <%= event_time(listing.start_at) %></p>
-        <p><i class="fa fa-user" aria-hidden="true"></i> Guest Name: <strong><%= ticket.guest_name %></strong></p>
       </section>
     </div>
-    <footer class="ticket__footer">
-      <div align="center" style="width: 100%">
-        <img src="<%= url %>">
-        <br />
-        <%= ticket.slug %>
-      </div>
-    </footer>
+
+      <footer class="ticket__footer">
+        <div style="width: 100%; clear: all;">
+          <div style="float:left;">
+            <p><i class="fa fa-calendar" aria-hidden="true"></i> Showtime: <%= event_date(listing.start_at) %> at <%= event_time(listing.start_at) %></p>
+          </div>
+          <div style="float:right;">
+            <p><i class="fa fa-user" aria-hidden="true"></i> Guest Name: <strong><%= ticket.guest_name %></strong></p>
+          </div>
+          <center>
+          <%
+            link = "#{host}/concierge/single_checkin/#{ticket.id}"
+            url = "https://chart.googleapis.com/chart?cht=qr&chl=#{link}/&chs=300x300"
+          %>
+            <img src="<%= url %>"><br />
+            <em><%= ticket.slug %></em>
+          </center>
+          <br />
+
+
+        </div>
+        </footer>
+
+
   </article>
+  <% end %>
 </body>
 </html>
