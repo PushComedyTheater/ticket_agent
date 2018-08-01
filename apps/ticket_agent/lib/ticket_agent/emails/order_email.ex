@@ -9,29 +9,26 @@ defmodule TicketAgent.Emails.OrderEmail do
 
   def order_receipt_email(order_id) do
     order =
-      Order
-      |> Repo.get(order_id)
-      |> Repo.preload([:user, :credit_card, :tickets, :listing])
+      order_id
+      |> Order.get_order!()
+      |> Repo.preload([:user, :credit_card, :tickets, listing: [:event]])
 
     %{name: name, email: email} = order.user
 
-    ticket = Enum.at(order.tickets, 0)
     ticket_count = Enum.count(order.tickets)
-
-    listing = Repo.preload(ticket.listing, [:event])
 
     pdf_task = Task.async(fn -> OrderPdfGenerator.generate_order_pdf_file(order) end)
 
-    ical_file_name = generate_ical(listing)
+    ical_file_name = generate_ical(order)
 
-    {html, text} = load_content(listing, ticket_count, order)
+    {html, text} = generate_content(order)
 
     pdf_filename = Task.await(pdf_task, 20000)
 
     %Email{}
     |> to({name, email})
     |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
-    |> subject("Here are your tickets for #{listing.title}")
+    |> subject("Here are your tickets for #{order.listing.title}")
     |> text_body(text)
     |> html_body(html)
     |> attachment(pdf_filename)
@@ -48,7 +45,7 @@ defmodule TicketAgent.Emails.OrderEmail do
 
     listing = Repo.preload(ticket.listing, [:event])
 
-    html = load_admin_content(listing, order)
+    html = load_admin_content(order)
 
     %Email{}
     |> to({"Push Team", "web@pushcomedytheater.com"})
@@ -60,7 +57,7 @@ defmodule TicketAgent.Emails.OrderEmail do
   defp admin_ticket_subject(tickets) when length(tickets) > 1, do: "#{Enum.count(tickets)} tickets"
   defp admin_ticket_subject(tickets), do: "1 ticket"
 
-  defp load_admin_content(listing, order) do
+  def load_admin_content(%Order{listing: %Listing{id: _} = listing, user: _, credit_card: _} = order) do
     admin_order_html_template = @template_dir <> "/admin_order.html.eex"
     html_layout_template = @template_dir <> "/layout.html.eex"
 
@@ -74,26 +71,28 @@ defmodule TicketAgent.Emails.OrderEmail do
 
     EEx.eval_file(html_layout_template, [body: admin_html])
   end
+  def load_admin_content(_), do: raise "Missing details"
 
-  defp load_content(listing, ticket_count, order) do
-    customer_order_html_template = @template_dir <> "/customer_order.html.eex"
-    customer_order_text_template = @template_dir <> "/customer_order.txt.eex"
+  def generate_content(%Order{tickets: tickets, listing: %Listing{id: _} = listing} = order) when is_list(tickets) do
+    html_template = @template_dir <> "/customer_order.html.eex"
+    text_template = @template_dir <> "/customer_order.txt.eex"
 
-    html_layout_template = @template_dir <> "/layout.html.eex"
-    text_layout_template = @template_dir <> "/layout.txt.eex"
+    html_layout = @template_dir <> "/layout.html.eex"
+    text_layout = @template_dir <> "/layout.txt.eex"
+
+    ticket_count = Enum.count(tickets)
 
     customer_order_html =
-      customer_order_html_template
+      html_template
       |> EEx.eval_file([
         listing: listing,
-        ticket_count:
-        ticket_count,
+        ticket_count: ticket_count,
         order: order,
         host: @host
       ])
 
     customer_order_text =
-      customer_order_text_template
+      text_template
       |> EEx.eval_file([
         listing: listing,
         ticket_count: ticket_count,
@@ -102,17 +101,19 @@ defmodule TicketAgent.Emails.OrderEmail do
       ])
 
     {
-      EEx.eval_file(html_layout_template, [body: customer_order_html]),
-      EEx.eval_file(text_layout_template, [body: customer_order_text])
+      EEx.eval_file(html_layout, [body: customer_order_html]),
+      EEx.eval_file(text_layout, [body: customer_order_text])
     }
   end
+  def generate_content(_), do: raise "Missing listing"
 
-  defp generate_ical(listing) do
-    ical_file_name = Path.join(System.tmp_dir, "#{listing.slug}-#{Listing.slugified_title(listing.title)}.ics")
+  def generate_ical(%Order{listing: %Listing{slug: slug, title: title} = listing} = _) do
+    ical_file_name = Path.join(System.tmp_dir, "#{slug}-#{Listing.slugified_title(title)}.ics")
     ics = Listing.to_ical(listing)
     File.write!(ical_file_name, ics)
     ical_file_name
   end
+  def generate_ical(_), do: raise "Missing listing"
 
   def host do
     Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
