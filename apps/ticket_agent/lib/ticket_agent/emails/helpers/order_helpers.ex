@@ -37,7 +37,7 @@ defmodule TicketAgent.OrderHelpers do
         |> Map.get(:tickets)
     end
 
-    tickets = 
+    tickets =
       tickets
       |> Enum.filter(fn(ticket) -> ticket.status == "purchased" end)
 
@@ -76,13 +76,14 @@ defmodule TicketAgent.OrderHelpers do
 
   def ticket_table(order) do
     Enum.map_join(order.tickets, "", fn(ticket) ->
-      "<tr><td>#{ticket.description}</td><td>$#{:erlang.float_to_binary(ticket.price / 100,decimals: 2)}</td></tr>"
+      IO.inspect ticket
+      "<tr><td>#{ticket.name}</td><td>$#{:erlang.float_to_binary(ticket.price / 100,decimals: 2)}</td></tr>"
     end)
   end
 
   def ticket_table_text(order) do
     Enum.map_join(order.tickets, "\n", fn(ticket) ->
-      "#{ticket.description}      $#{:erlang.float_to_binary(ticket.price / 100,decimals: 2)}"
+      "#{ticket.name}      $#{:erlang.float_to_binary(ticket.price / 100,decimals: 2)}"
     end)
-  end  
+  end
 end
