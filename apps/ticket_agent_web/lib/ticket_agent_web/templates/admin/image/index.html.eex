@@ -3,7 +3,7 @@
   <tr>
     <%= for item <- row do %>
       <td align="center" style="border: 1px solid #d2d2d2;">
-        <a href="#" onclick="window.opener.set_image('<%= @tag %>','<%= item["secure_url"] %>', '<%= item["secure_url"] %>'); self.close();">
+        <a href="#" onclick="window.opener.set_image('<%= item["secure_url"] %>'); self.close();">
           <img src="<%= Cloudinex.Url.for(item["public_id"], %{width: 150}) %>" />
           <br />
           SELECT
@@ -15,8 +15,8 @@
   <tfoot>
     <tr>
       <th align="center" colspan="5">
-        <a href="?pc=<%= @previous_cursor %>&tag=<%= @tag %>">Previous</a>
-        <a href="?pc=<%= @previous_cursor %>&nc=<%= @next_cursor %>&tag=<%= @tag %>">Next</a>
+        <a href="?pc=<%= @previous_cursor %>">Previous</a>
+        <a href="?pc=<%= @previous_cursor %>&nc=<%= @next_cursor %>">Next</a>
       </th>
     </tr>
   </tfoot>

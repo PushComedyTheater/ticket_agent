@@ -1,5 +1,8 @@
 <script type="text/javascript">
 window.event_id = "<%= @event_id %>";
+window.set_image = function(url) {
+  $("#the_image").attr("src", url);
+}
 </script>
 <%= form_for @changeset, admin_event_path(@conn, :create), fn f -> %>
 <%= hidden_input f, :event_id, value: @event_id %>
