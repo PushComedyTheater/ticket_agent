@@ -23,9 +23,19 @@ defmodule TicketAgentWeb.ChargeController do
     Logger.info "order        = #{inspect order.slug}"
     Logger.info "metadata     = #{inspect metadata}"
 
+    {:ok, {updated_order, _}} = ChargeProcessingState.set_order_processing_with_tickets(order)
+    {:ok, {_, _}} = ChargeProcessingState.set_order_completed_with_tickets(updated_order)
 
+    Task.start(fn ->
+      Logger.info "Sending order receipt email #{order.id}"
+      OrderEmail.order_receipt_email(order.id)
+      |> Mailer.deliver!
 
-    raise "FUCK"
+      Logger.info "Sending admin email #{order.id}"
+      OrderEmail.admin_order_receipt_email(order.id)
+      |> Mailer.deliver!
+    end)
+
     conn
     |> render("create.json")
   end

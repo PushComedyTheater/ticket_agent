@@ -24,7 +24,7 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
 
   defp generate_pdf_binary(html) do
     {:ok, pdf_path} = Briefly.create(extname: ".pdf")
-    case PuppeteerPdf.generate_with_html(html, pdf_path, []) do
+    case PuppeteerPdf.generate_with_html(html, pdf_path, [debug: true, print_background: true]) do
       {:ok, _} ->
         content = pdf_path |> File.read!
         pdf_path |> File.rm
@@ -39,7 +39,7 @@ defmodule TicketAgent.Generators.OrderPdfGenerator do
     filename = options[:filename] <> ".pdf"
     pdf_path = Path.join(System.tmp_dir, filename)
 
-    case PuppeteerPdf.generate_with_html(html, pdf_path, []) do
+    case PuppeteerPdf.generate_with_html(html, pdf_path, [debug: true, print_background: true]) do
       {:ok, _} ->
         pdf_path
       {:error, message} ->
