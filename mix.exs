@@ -5,8 +5,8 @@ defmodule TicketAgent.Umbrella.Mixfile do
     [
       apps_path: "apps",
       version: append_revision("0.1.2"),
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases()
     ]
@@ -19,7 +19,7 @@ defmodule TicketAgent.Umbrella.Mixfile do
   defp revision() do
     System.cmd("git", ["rev-parse", "--short", "HEAD"])
     |> elem(0)
-    |> String.trim_trailing
+    |> String.trim_trailing()
   end
 
   # Dependencies can be Hex packages:
@@ -37,7 +37,7 @@ defmodule TicketAgent.Umbrella.Mixfile do
   defp deps do
     [
       {:edeliver, "~> 1.5.0"},
-      {:distillery, "~> 1.5", warn_missing: false},
+      {:distillery, "~> 1.5", warn_missing: false}
     ]
   end
 
@@ -50,13 +50,14 @@ defmodule TicketAgent.Umbrella.Mixfile do
   defp aliases do
     [
       "ecto.setup": [
+        "ecto.drop",
         "ecto.create",
         "ecto.migrate",
         "run apps/ticket_agent/priv/repo/seeds.exs",
         "ecto.dump"
-        ],
+      ],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.drop", "ecto.create --quiet", "ecto.load", "test"]
+      test: ["ecto.drop", "ecto.create --quiet", "ecto.load", "test"]
     ]
   end
 end

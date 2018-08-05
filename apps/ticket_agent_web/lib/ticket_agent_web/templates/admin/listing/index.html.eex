@@ -12,11 +12,12 @@
               <th width="250px;">Actions</th>
               <th>Title</th>
               <th>Status</th>
-              <th>Tickets</th>
+              <th>Tickets/Sold</th>
               <th>Start Time</th>
               <th>End Time</th>
             </tr>
             <%= for listing <- @listings do %>
+            <% sold_count = Enum.count(listing.tickets, fn(x) -> x.status != "available" end) %>
               <tr>
                 <td align="center">
                   <span><%= link "View", to: admin_event_path(@conn, :show, listing), class: "btn btn-info btn-xs" %></span>
@@ -25,7 +26,7 @@
                 </td>
                 <td><%= listing.title %></td>
                 <td><%= listing.status %></td>
-                <td><%= Enum.count(listing.tickets) %></td>
+                <td><%= sold_count %>/<%= Enum.count(listing.tickets) %></td>
                 <td><%= order_timestamp(listing.start_at) %></td>
                 <td><%= order_timestamp(listing.end_at) %></td>
               </tr>

@@ -8,21 +8,21 @@ defmodule TicketAgent.Listing do
   @foreign_key_type :binary_id
 
   schema "listings" do
-    belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
-    belongs_to :event, Event, references: :id, foreign_key: :event_id, type: Ecto.UUID
-    belongs_to :class, Class, references: :id, foreign_key: :class_id, type: Ecto.UUID
+    belongs_to(:user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID)
+    belongs_to(:event, Event, references: :id, foreign_key: :event_id, type: Ecto.UUID)
+    belongs_to(:class, Class, references: :id, foreign_key: :class_id, type: Ecto.UUID)
 
-    has_many :tickets, Ticket
+    has_many(:tickets, Ticket)
 
-    field :slug, :string
-    field :title, :string
-    field :description, :string
-    field :status, :string
-    field :type, :string
-    field :start_at, :utc_datetime
-    field :end_at, :utc_datetime
+    field(:slug, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:status, :string)
+    field(:type, :string)
+    field(:start_at, :utc_datetime)
+    field(:end_at, :utc_datetime)
 
-    field :pass_fees_to_buyer, :boolean
+    field(:pass_fees_to_buyer, :boolean)
     timestamps(type: :utc_datetime)
   end
 
@@ -37,20 +37,32 @@ defmodule TicketAgent.Listing do
     |> unique_constraint(:slug)
   end
 
-  def listing_image_with_dimensions(%Listing{event_id: nil, class_id: class_id} = listing, width, height) do
-    listing = case Ecto.assoc_loaded?(listing.class) do
-      true -> listing
-      false -> Repo.preload(listing, :class)
-    end
+  def listing_image_with_dimensions(
+        %Listing{event_id: nil, class_id: class_id} = listing,
+        width,
+        height
+      ) do
+    listing =
+      case Ecto.assoc_loaded?(listing.class) do
+        true -> listing
+        false -> Repo.preload(listing, :class)
+      end
+
     listing.class.image_url
     |> get_cloudinary(width, height)
   end
 
-  def listing_image_with_dimensions(%Listing{event_id: event_id, class_id: nil} = listing, width, height) do
-    listing = case Ecto.assoc_loaded?(listing.event) do
-      true -> listing
-      false -> Repo.preload(listing, :event)
-    end
+  def listing_image_with_dimensions(
+        %Listing{event_id: event_id, class_id: nil} = listing,
+        width,
+        height
+      ) do
+    listing =
+      case Ecto.assoc_loaded?(listing.event) do
+        true -> listing
+        false -> Repo.preload(listing, :event)
+      end
+
     listing.event.image_url
     |> get_cloudinary(width, height)
   end
@@ -78,19 +90,22 @@ defmodule TicketAgent.Listing do
   def current_class_listing(%{id: class_id} = class) do
     utc_now =
       DateTime.utc_now()
-      |> Calendar.NaiveDateTime.to_date_time_utc
+      |> Calendar.NaiveDateTime.to_date_time_utc()
 
-    class = case Ecto.assoc_loaded?(class.listings) do
-      true -> class
-      false ->
-        Repo.preload(class, :listings)
-    end
+    class =
+      case Ecto.assoc_loaded?(class.listings) do
+        true ->
+          class
 
-    Enum.filter(class.listings, fn(listing) ->
+        false ->
+          Repo.preload(class, :listings)
+      end
+
+    Enum.filter(class.listings, fn listing ->
       end_at = convert_to_date_time_utc(listing.end_at)
       date_after(utc_now, end_at)
     end)
-    |> Enum.sort(fn(x,y) ->
+    |> Enum.sort(fn x, y ->
       DateTime.compare(
         Calendar.NaiveDateTime.to_date_time_utc(x.start_at),
         Calendar.NaiveDateTime.to_date_time_utc(y.start_at)
@@ -102,34 +117,45 @@ defmodule TicketAgent.Listing do
   def convert_to_date_time_utc(date), do: Calendar.NaiveDateTime.to_date_time_utc(date)
 
   def date_after(_, nil), do: false
-  def date_after(date, end_at), do: (DateTime.compare(end_at, date) == :gt)
+  def date_after(date, end_at), do: DateTime.compare(end_at, date) == :gt
 
   def camps do
-    query = from l in Listing,
-            where: l.type == "camp",
-            preload: [:event, :tickets],
-            order_by: [asc: :start_at]
+    query =
+      from(
+        l in Listing,
+        where: l.type == "camp",
+        preload: [:event, :tickets],
+        order_by: [asc: :start_at]
+      )
 
     Repo.all(query)
   end
 
   def list_listings(%{"status" => "active"} = params) do
-    query = from l in Listing,
-            where: is_nil(l.class_id),
-            where: l.status == "active",
-            preload: [:tickets],
-            order_by: [asc: :start_at]
+    query =
+      from(
+        l in Listing,
+        where: is_nil(l.class_id),
+        where: l.status == "active",
+        preload: [:tickets],
+        order_by: [asc: :start_at]
+      )
 
     Repo.paginate(query, params)
   end
 
   def list_listings(params) do
-    query = from l in Listing,
-            where: is_nil(l.class_id),
-            order_by: [asc: :start_at]
+    query =
+      from(
+        l in Listing,
+        where: is_nil(l.class_id),
+        preload: [:tickets],
+        order_by: [asc: :start_at]
+      )
 
     Repo.paginate(query, params)
   end
+
   def get_listing!(id), do: Repo.get!(Listing, id)
 
   def create_listing(attrs \\ %{}) do
@@ -162,7 +188,7 @@ defmodule TicketAgent.Listing do
       user_id: current_user.id,
       class_id: class.id,
       start_time: NaiveDateTime.utc_now(),
-      end_time: NaiveDateTime.utc_now(),
+      end_time: NaiveDateTime.utc_now()
     })
   end
 
@@ -171,23 +197,31 @@ defmodule TicketAgent.Listing do
       %ICalendar.Event{
         summary: listing.title,
         dtstart: listing.start_at,
-        dtend:   listing.end_at,
+        dtend: listing.end_at,
         description: Curtail.truncate(HtmlSanitizeEx.strip_tags(listing.description), length: 400),
         location: "Push Comedy Theater, 763 Granby St, Norfolk, VA 23510, USA",
-        url: "http://pushcomedytheater.com/events/#{listing.slug}-#{Listing.slugified_title(listing.title)}"
+        url:
+          "http://pushcomedytheater.com/events/#{listing.slug}-#{
+            Listing.slugified_title(listing.title)
+          }"
       }
     ]
-    %ICalendar{ events: events }
-    |> ICalendar.to_ics
+
+    %ICalendar{events: events}
+    |> ICalendar.to_ics()
   end
 
   def upcoming_shows do
-    query = from l in Listing,
-            where: fragment("? >= NOW()", l.start_at),
-            where: not is_nil(l.event_id),
-            order_by: [asc: :start_at],
-            preload: [:event, :tickets],
-            select: l
+    query =
+      from(
+        l in Listing,
+        where: fragment("? >= NOW()", l.start_at),
+        where: not is_nil(l.event_id),
+        order_by: [asc: :start_at],
+        preload: [:event, :tickets],
+        select: l
+      )
+
     Repo.all(query)
   end
 
@@ -199,8 +233,8 @@ defmodule TicketAgent.Listing do
 
   def slugified_title(title) do
     title
-      |> String.downcase
-      |> String.replace(~r/[^a-z0-9\s-]/, "")
-      |> String.replace(~r/(\s|-)+/, "-")
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9\s-]/, "")
+    |> String.replace(~r/(\s|-)+/, "-")
   end
 end

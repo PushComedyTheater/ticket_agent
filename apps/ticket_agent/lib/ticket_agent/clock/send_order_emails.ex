@@ -9,7 +9,7 @@ defmodule TicketAgent.Clock.SendOrderEmails do
   alias TicketAgent.Mailer
 
   def start_link(interval \\ 5_000) do
-    Logger.info "Starting SendOrderEmails link with interval #{interval}"
+    Logger.info("Starting SendOrderEmails link with interval #{interval}")
     GenServer.start_link(__MODULE__, interval, name: __MODULE__)
   end
 
@@ -33,16 +33,21 @@ defmodule TicketAgent.Clock.SendOrderEmails do
     case Repo.transaction(orders_to_be_emailed_transaction()) do
       {:ok, %{emailing_orders: {_, []}, send_email: emails}} ->
         if Enum.count(emails) > 0 do
-          Logger.info "Completed #{Enum.count(emails)} orders"
+          Logger.info("Completed #{Enum.count(emails)} orders")
         end
+
       _ ->
-        #no op      
+        nil
+        # no op
     end
   end
-  
+
   def orders_to_be_emailed_transaction() do
+    Logger.info("orders_to_be_emailed_transaction")
+
     Multi.new()
-    |> Multi.update_all(:emailing_orders,
+    |> Multi.update_all(
+      :emailing_orders,
       from(
         o in Order,
         where: o.status == "completed",
@@ -52,14 +57,12 @@ defmodule TicketAgent.Clock.SendOrderEmails do
       [
         set: [
           status: "completed",
-          emailed_at: NaiveDateTime.utc_now
+          emailed_at: NaiveDateTime.utc_now()
         ]
       ],
       returning: true
     )
-    |> Multi.run(:send_email, fn(%{emailing_orders: {_, orders}}) ->
-      
-      
+    |> Multi.run(:send_email, fn %{emailing_orders: {_, orders}} ->
       {:ok, orders}
     end)
   end
@@ -69,19 +72,22 @@ defmodule TicketAgent.Clock.SendOrderEmails do
   end
 
   defp process_orders([]), do: nil
-  defp process_orders(orders) do
-    Logger.info "Processing #{Enum.count(orders)} orders"
-      
-    Enum.each(orders, fn(order) ->
-      Logger.info "Sending primary email #{order.id}"
-      OrderEmail.order_receipt_email(order.id)
-      |> Mailer.deliver!
 
-      Logger.info "Sending admin email #{order.id}"
+  defp process_orders(orders) do
+    Logger.info("Processing #{Enum.count(orders)} orders")
+
+    Enum.each(orders, fn order ->
+      Logger.info("Sending primary email #{order.id}")
+
+      OrderEmail.order_receipt_email(order.id)
+      |> Mailer.deliver!()
+
+      Logger.info("Sending admin email #{order.id}")
+
       OrderEmail.admin_order_receipt_email(order.id)
-      |> Mailer.deliver!
+      |> Mailer.deliver!()
     end)
-    
-    Logger.info "Done #{Enum.count(orders)} orders"    
-  end    
+
+    Logger.info("Done #{Enum.count(orders)} orders")
+  end
 end
