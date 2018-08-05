@@ -12,24 +12,33 @@
   </div>
   <!-- /.box-header -->
   <div class="box-body">
-    <table class="table table-bordered">
-      <tr>
-        <th style="width: 150px"></th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Total</th>
-      </tr>
-      <%= for context <- @orders do %>
-      <tr>
-        <td>
-          <span><%= link "Show", to: admin_order_path(@conn, :show, context), class: "btn btn-info btn-xs" %></span>
-          <span><%= link "Edit", to: admin_order_path(@conn, :edit, context), class: "btn btn-warning btn-xs" %></span>
-        </td>
-        <td><%= context.user.name %></td>
-        <td><%= context.status %></td>
-        <td>$<%= cost(context.total_price / 100) %>
-      </tr>
-      <% end %>
+    <table id="datatable" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Buyer</th>
+          <th>Listing</th>
+          <th>Ticket Count</th>
+          <th>Status</th>
+          <th>Total</th>
+          <th>Started</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for context <- @orders do %>
+        <tr>
+          <td>
+            <span><%= link "Show", to: admin_order_path(@conn, :show, context), class: "btn btn-info btn-xs" %></span>
+          </td>
+          <td><%= context.user.name %></td>
+          <td><%= listing_name(context.listing) %></td>
+          <td><%= Enum.count(context.tickets) %></td>
+          <td><%= context.status %></td>
+          <td>$<%= cost(context.total_price / 100) %>
+          <td><%= context.completed_at %></td>
+        </tr>
+        <% end %>
+      </tbody>
     </table>
   </div>
   <div class="box-footer clearfix">
@@ -39,3 +48,9 @@
   </div>
 <!-- /.box-body -->
 </div>
+<script type="text/javascript">
+  $( document ).ready(function(){
+    window.oTable = $('#datatable').DataTable(  );
+  });
+
+</script>

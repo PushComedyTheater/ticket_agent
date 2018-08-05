@@ -117,6 +117,7 @@ defmodule TicketAgent.Listing do
     query = from l in Listing,
             where: is_nil(l.class_id),
             where: l.status == "active",
+            preload: [:tickets],
             order_by: [asc: :start_at]
 
     Repo.paginate(query, params)

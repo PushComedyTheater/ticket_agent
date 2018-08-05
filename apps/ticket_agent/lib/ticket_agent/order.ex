@@ -39,7 +39,7 @@ defmodule TicketAgent.Order do
   def list_orders(params) do
     Order
     |> order_by([:status, :inserted_at])
-    |> preload([:user, :credit_card])
+    |> preload([:user, :credit_card, :listing, :tickets])
     |> Repo.paginate(params)
   end
 
