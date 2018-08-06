@@ -9,3 +9,6 @@
   <p><%= dgettext "coherence", "Thank you!" %></p>
 </div>
 
+<br><br>
+<%= raw @upcoming_shows_html %>
+<br><br>

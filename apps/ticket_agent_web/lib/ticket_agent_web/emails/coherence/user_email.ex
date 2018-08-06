@@ -6,26 +6,44 @@ defmodule TicketAgentWeb.Coherence.UserEmail do
   alias Swoosh.Email
   require Logger
   alias Coherence.Config
+  alias TicketAgent.Listing
   import TicketAgentWeb.Gettext
+
+  @host Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
 
   defp site_name, do: Config.site_name(inspect Config.module)
 
   def password(user, url) do
+    upcoming_html_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.html.eex"
+    upcoming_text_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.txt.eex"
+
+    shows = Enum.take(Listing.upcoming_shows, 3)
+    upcoming_shows_html = EEx.eval_file(upcoming_html_template, [shows: shows, host: @host])
+    upcoming_shows_text = EEx.eval_file(upcoming_text_template, [shows: shows, host: @host])
+
+
     %Email{}
     |> from(from_email())
     |> to(user_email(user))
     |> add_reply_to()
     |> subject(dgettext("coherence", "%{site_name} - Reset password instructions", site_name: site_name()))
-    |> render_body("password.html", %{url: url, name: first_name(user.name)})
+    |> render_body("password.html", %{url: url, name: first_name(user.name), upcoming_shows_html: upcoming_shows_html})
   end
 
   def confirmation(user, url) do
+    upcoming_html_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.html.eex"
+    upcoming_text_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.txt.eex"
+
+    shows = Enum.take(Listing.upcoming_shows, 3)
+    upcoming_shows_html = EEx.eval_file(upcoming_html_template, [shows: shows, host: @host])
+    upcoming_shows_text = EEx.eval_file(upcoming_text_template, [shows: shows, host: @host])
+
     %Email{}
     |> from(from_email())
     |> to(user_email(user))
     |> add_reply_to()
     |> subject(dgettext("coherence", "%{site_name} - Confirm your new account", site_name: site_name()))
-    |> render_body("confirmation.html", %{url: url, name: first_name(user.name)})
+    |> render_body("confirmation.html", %{url: url, name: first_name(user.name), upcoming_shows_html: upcoming_shows_html})
   end
 
   def invitation(invitation, url) do
