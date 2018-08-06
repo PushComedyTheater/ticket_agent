@@ -3,6 +3,23 @@ defmodule TicketAgentWeb.Admin.ListingView do
   use TicketAgentWeb, :view
   import Scrivener.HTML
 
+  def render("index.json", %{listings: listings, draw_number: draw_number}) do
+    %{
+      recordsTotal: listings.total_entries,
+      draw: draw_number,
+      recordsFiltered: listings.total_entries,
+      data: Enum.map(listings, &zip_json/1)
+    }
+  end
+
+  def zip_json(zip) do
+    %{
+      title: zip.title,
+      status: zip.status,
+      start_at: zip.start_at
+    }
+  end
+
   def render("create.json", %{redirect_url: url}) do
     %{
       message: "ok",
@@ -11,30 +28,28 @@ defmodule TicketAgentWeb.Admin.ListingView do
   end
 
   def listing_type(true) do
-    ["Class": "class", "Show": "show", "Workshop": "workshop"]
+    [Class: "class", Show: "show", Workshop: "workshop"]
   end
 
   def listing_type(false) do
-    ["Show": "show", "Workshop": "workshop"]
+    [Show: "show", Workshop: "workshop"]
   end
 
   def cover_image(%Listing{} = listing) do
-    image = Enum.find(listing.images, fn(x) -> x.type == "cover" end)
+    image = Enum.find(listing.images, fn x -> x.type == "cover" end)
     public_id = ListingImage.public_id(image)
     Cloudinex.Url.for("covers/#{public_id}")
   end
 
   def social_image(%Listing{} = listing) do
-    image = Enum.find(listing.images, fn(x) -> x.type == "social" end)
+    image = Enum.find(listing.images, fn x -> x.type == "social" end)
     public_id = ListingImage.public_id(image)
     Cloudinex.Url.for("social/#{public_id}")
   end
 
   def purchased_tickets(tickets) do
-    Enum.filter(tickets, fn(ticket) ->
-      ticket.status == "purchased" ||
-      ticket.status == "emailed" ||
-      ticket.status == "checkedin"
+    Enum.filter(tickets, fn ticket ->
+      ticket.status == "purchased" || ticket.status == "emailed" || ticket.status == "checkedin"
     end)
   end
 
@@ -51,12 +66,11 @@ defmodule TicketAgentWeb.Admin.ListingView do
   end
 
   def my_datetime_select(form, field, opts \\ []) do
-
     builder = fn b ->
-    ~e"""
-    Date: <%= b.(:month, []) %> / <%= b.(:day, []) %> / <%= b.(:year, []) %>
-    Time: <%= b.(:hour, []) %> : <%= b.(:minute, []) %>
-    """
+      ~e"""
+      Date: <%= b.(:month, []) %> / <%= b.(:day, []) %> / <%= b.(:year, []) %>
+      Time: <%= b.(:hour, []) %> : <%= b.(:minute, []) %>
+      """
     end
 
     datetime_select(form, field, [builder: builder] ++ opts)

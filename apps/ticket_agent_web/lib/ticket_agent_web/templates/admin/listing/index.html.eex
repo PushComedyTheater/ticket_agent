@@ -7,39 +7,19 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
-          <table class="table table-hover">
+          <table id="datatable" class="table table-hover">
             <thead>
               <tr>
-                <th width="250px;">Actions</th>
                 <th>Title</th>
                 <th>Status</th>
-                <th>Tickets/Sold</th>
                 <th>Start Time</th>
-                <th>End Time</th>
               </tr>
             </thead>
             <tbody>
-            <%= for listing <- @listings do %>
-            <% sold_count = Enum.count(listing.tickets, fn(x) -> x.status != "available" end) %>
-              <tr>
-                <td align="center">
-                  <span><%= link "View", to: admin_event_path(@conn, :show, listing), class: "btn btn-info btn-xs" %></span>
-                  <span><%= link "Edit", to: admin_event_path(@conn, :edit, listing), class: "btn btn-warning btn-xs" %></span>
-                  <span><%= link "Delete", to: admin_event_path(@conn, :delete, listing), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
-                </td>
-                <td><%= listing.title %></td>
-                <td><%= listing.status %></td>
-                <td><%= sold_count %>/<%= Enum.count(listing.tickets) %></td>
-                <td><%= order_timestamp(listing.start_at) %></td>
-                <td><%= order_timestamp(listing.end_at) %></td>
-              </tr>
-            <% end %>
+
           </tbody></table>
         </div>
 <div class="box-footer clearfix">
-<div class="pull-right">
-  <%= pagination_links @listings %>
-  </div>
             </div>
 
         <!-- /.box-body -->
@@ -49,3 +29,24 @@
   </div>
 </section>
           <!-- /.box -->
+<script type="text/javascript">
+$(document).ready(function() {
+  var table = $('#datatable').DataTable( {
+        "ajax": "/admin/listings.json",
+        "processing": true,
+        "serverSide": true,
+        "pageLength": 10,
+        "ordering": false,
+        "lengthChange": false,
+        "columns": [
+            { "data": "title" },
+            { "data": "status" },
+            { "data": "start_at" }
+        ]
+    });
+      table.on( 'xhr', function ( e, settings, json ) {
+        console.log( 'Ajax event occurred. Returned data: ', json );
+      } );
+} );
+
+</script>

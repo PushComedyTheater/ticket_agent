@@ -4,7 +4,36 @@ defmodule TicketAgentWeb.Admin.ListingController do
   use TicketAgentWeb, :controller
   plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "listings"})
 
+  def index(conn, %{"_format" => "json"} = params) do
+    params =
+      cond do
+        Map.has_key?(params, "status") ->
+          params
+
+        true ->
+          params
+      end
+
+    {page_size, page_number, draw_number, search_term} = build_paging_info(params)
+
+    listings = retrieve_listings(page_size, page_number, search_term)
+
+    render(
+      conn,
+      "index.json",
+      listings: listings,
+      page_number: page_number,
+      draw_number: draw_number
+    )
+
+    # listings = Listing.list_listings(params)
+
+    # render(conn, "index.json", listings: listings)
+  end
+
   def index(conn, params) do
+    IO.inspect(params)
+
     params =
       cond do
         Map.has_key?(params, "status") ->
@@ -16,6 +45,48 @@ defmodule TicketAgentWeb.Admin.ListingController do
 
     listings = Listing.list_listings(params)
     render(conn, "index.html", listings: listings)
+  end
+
+  def build_paging_info(params) do
+    page_size = calculate_page_size(params["length"])
+    page_number = calculate_page_number(params["start"], page_size)
+    search_term = params["search"]["value"]
+    draw_number = increment_draw(params["draw"])
+    {page_size, page_number, draw_number, search_term}
+  end
+
+  defp increment_draw(value) when value == nil, do: 1
+
+  defp increment_draw(value) do
+    {draw_number, _} = Integer.parse(value)
+    draw_number + 1
+  end
+
+  defp calculate_page_number(nil, _), do: 1
+
+  defp calculate_page_number(value, page_size) do
+    {start_value, _} = Integer.parse(value)
+    round(start_value / page_size + 1)
+  end
+
+  defp calculate_page_size(nil), do: 25
+
+  defp calculate_page_size(value) do
+    {page_size, _} = Integer.parse(value)
+    page_size
+  end
+
+  defp retrieve_listings(page_size, page_number, search_term) do
+    query = from(l in Listing, select: struct(l, [:title, :status, :start_at, :end_at]))
+    query = add_filter(query, search_term)
+    Repo.paginate(query, page: page_number, page_size: page_size)
+  end
+
+  defp add_filter(query, search_term) when search_term == nil or search_term == "", do: query
+
+  defp add_filter(query, original_search_term) do
+    search_term = "%#{original_search_term}%"
+    from(z in query, where: ilike(z.title, ^search_term))
   end
 
   def new(conn, %{"class_id" => "new"}) do
