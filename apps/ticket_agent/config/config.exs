@@ -3,12 +3,13 @@ use Mix.Config
 config :ticket_agent, ecto_repos: [TicketAgent.Repo]
 config :ticket_agent, TicketAgent.Repo, migration_timestamps: [type: :timestampz]
 
-config :paper_trail, repo: TicketAgent.Repo,
-                     item_type: Ecto.UUID,
-                     originator_type: Ecto.UUID,
-                     originator: [name: :user, model: TicketAgent.User]
+config :paper_trail,
+  repo: TicketAgent.Repo,
+  item_type: Ecto.UUID,
+  originator_type: Ecto.UUID,
+  originator: [name: :user, model: TicketAgent.User]
 
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
 
 {sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
 sha = String.trim(sha)
@@ -16,11 +17,11 @@ config :ticket_agent, :release, sha
 
 config :sentry,
   dsn: System.get_env("SENTRY_PRIVATE_DSN") || "${SENTRY_PRIVATE_DSN}",
-  environment_name: Mix.env,
+  environment_name: Mix.env(),
   enable_source_code_context: true,
-  root_source_code_path: File.cwd!,
+  root_source_code_path: File.cwd!(),
   tags: %{
-    env: "#{Mix.env}",
+    env: "#{Mix.env()}",
     app: "ticket_agent"
   },
   use_error_logger: true,
@@ -40,44 +41,22 @@ config :coherence,
   user_token: true,
   email_from_name: "Push Comedy Theater",
   email_from_email: "support@pushcomedytheater.com",
-  opts: [:confirmable, :registerable, :authenticatable, :recoverable, :lockable, :trackable, :unlockable_with_token]
+  opts: [
+    :confirmable,
+    :registerable,
+    :authenticatable,
+    :recoverable,
+    :lockable,
+    :trackable,
+    :unlockable_with_token
+  ]
 
-# config :oauth2, debug: true
-
-# config :coherence, TicketAgentWeb.Coherence.Mailer,
-#   adapter: Swoosh.Adapters.Mailgun,
-#   api_key: System.get_env("MAILGUN_API_KEY"),
-#   domain: "mail.pushcomedytheater.com",
-#   email_from_name: "Push Comedy Theater",
-#   email_from_email: "support@pushcomedytheater.com"
-#
-# config :coherence, TicketAgent.Coherence.Mailer,
-#   adapter: Swoosh.Adapters.Mailgun,
-#   api_key: System.get_env("MAILGUN_API_KEY"),
-#   domain: "mail.pushcomedytheater.com",
-#   email_from_name: "Push Comedy Theater",
-#   email_from_email: "support@pushcomedytheater.com"
-#
 # config :ticket_agent, TicketAgent.Mailer,
 #   adapter: Swoosh.Adapters.Mailgun,
 #   api_key: System.get_env("MAILGUN_API_KEY"),
 #   domain: "mail.pushcomedytheater.com",
 #   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
-
-config :coherence, TicketAgentWeb.Coherence.Mailer,
-  adapter: Swoosh.Adapters.SMTP,
-  relay: "127.0.0.1",
-  port: 1025,
-  email_from_name: "ticket agent config",
-  email_from_email: "support@pushcomedytheater.com"
-
-config :coherence, TicketAgent.Coherence.Mailer,
-  adapter: Swoosh.Adapters.SMTP,
-  relay: "127.0.0.1",
-  port: 1025,
-  email_from_name: "ticket agent config",
-  email_from_email: "support@pushcomedytheater.com"
 
 config :ticket_agent, TicketAgent.Mailer,
   adapter: Swoosh.Adapters.SMTP,
@@ -86,13 +65,23 @@ config :ticket_agent, TicketAgent.Mailer,
   email_from_name: "ticket agent config",
   email_from_email: "support@pushcomedytheater.com"
 
+# config :ticket_agent, TicketAgent.Mailer,
+#   adapter: Swoosh.Adapters.SMTP,
+#   relay: "smtp.gmail.com",
+#   username: System.get_env("GMAIL_USERNAME") || "${GMAIL_USERNAME}",
+#   password: System.get_env("GMAIL_PASSWORD") || "${GMAIL_PASSWORD}",
+#   tls: :always,
+#   auth: :always,
+#   port: 587
+
 config :cloudinex,
   debug: false,
   base_url: "https://api.cloudinary.com/v1_1/",
   base_image_url: "https://res.cloudinary.com/",
   api_key: System.get_env("CLOUDINEX_API_KEY") || "${CLOUDINEX_API_KEY}",
   secret: System.get_env("CLOUDINEX_SECRET") || "${CLOUDINEX_SECRET}",
-  cloud_name: "push-comedy-theater" #no default
+  # no default
+  cloud_name: "push-comedy-theater"
 
 config :oauth2, debug: true
 
@@ -131,10 +120,12 @@ config :ticket_agent, Universe,
   client_secret: System.get_env("UNIVERSE_CLIENT_SECRET") || "${UNIVERSE_CLIENT_SECRET}",
   redirect_uri: System.get_env("UNIVERSE_REDIRECT_URI") || "${UNIVERSE_REDIRECT_URI}"
 
-value = case System.get_env("TICKET_LOCK_LENGTH") do
-  nil -> 302
-  value -> String.to_integer(value)
-end
+value =
+  case System.get_env("TICKET_LOCK_LENGTH") do
+    nil -> 302
+    value -> String.to_integer(value)
+  end
+
 config :ticket_agent, :ticket_lock_length, value
 
 config :ticket_agent, Stripe,

@@ -10,10 +10,11 @@ config :ticket_agent_web,
   namespace: TicketAgentWeb,
   ecto_repos: [TicketAgent.Repo]
 
-config :paper_trail, repo: TicketAgent.Repo,
-                     item_type: Ecto.UUID,
-                     originator_type: Ecto.UUID,
-                     originator: [name: :user, model: TicketAgent.User]
+config :paper_trail,
+  repo: TicketAgent.Repo,
+  item_type: Ecto.UUID,
+  originator_type: Ecto.UUID,
+  originator: [name: :user, model: TicketAgent.User]
 
 config :oauth2, debug: true
 
@@ -27,19 +28,18 @@ config :ticket_agent_web, TicketAgentWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "VXLaK4UAXL/fr9Js3OvDm1rpqEM/WW2yUOg38TSja1NscvZMOUnfeaB1bC34eXlU",
   render_errors: [view: TicketAgentWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: TicketAgentWeb.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: TicketAgentWeb.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :ticket_agent_web, :generators,
-  context_app: :ticket_agent
+config :ticket_agent_web, :generators, context_app: :ticket_agent
 
 {sha, _} = System.cmd("git", ["rev-parse", "HEAD"])
 sha = String.trim(sha)
+
 config :ticket_agent_web, :release, sha
 
 # config :sentry,
@@ -60,49 +60,33 @@ config :coherence,
   site_name: "push comedy theater",
   user_token: true
 
-  # config :coherence, TicketAgentWeb.Coherence.Mailer,
-  #   adapter: Swoosh.Adapters.Mailgun,
-  #   api_key: System.get_env("MAILGUN_API_KEY"),
-  #   domain: "mail.pushcomedytheater.com",
-  #   email_from_name: "Push Comedy Theater",
-  #   email_from_email: "support@pushcomedytheater.com"
-  #
-  # config :coherence, TicketAgent.Coherence.Mailer,
-  #   adapter: Swoosh.Adapters.Mailgun,
-  #   api_key: System.get_env("MAILGUN_API_KEY"),
-  #   domain: "mail.pushcomedytheater.com",
-  #   email_from_name: "Push Comedy Theater",
-  #   email_from_email: "support@pushcomedytheater.com"
-  #
-  # config :ticket_agent, TicketAgent.Mailer,
-  #   adapter: Swoosh.Adapters.Mailgun,
-  #   api_key: System.get_env("MAILGUN_API_KEY"),
-  #   domain: "mail.pushcomedytheater.com",
-  #   email_from_name: "Push Comedy Theater",
-  #   email_from_email: "support@pushcomedytheater.com"
+# config :coherence, TicketAgentWeb.Coherence.Mailer,
+#   adapter: Swoosh.Adapters.Mailgun,
+#   api_key: System.get_env("MAILGUN_API_KEY"),
+#   domain: "mail.pushcomedytheater.com",
+#   email_from_name: "Push Comedy Theater",
+#   email_from_email: "support@pushcomedytheater.com"
+#
 
-  config :coherence, TicketAgentWeb.Coherence.Mailer,
-    adapter: Swoosh.Adapters.SMTP,
-    relay: "127.0.0.1",
-    port: 1025,
-    email_from_name: "ticket agent config",
-    email_from_email: "support@pushcomedytheater.com"
+config :coherence, TicketAgentWeb.Coherence.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  relay: "127.0.0.1",
+  port: 1025,
+  email_from_name: "ticket agent config",
+  email_from_email: "support@pushcomedytheater.com"
 
-  config :coherence, TicketAgent.Coherence.Mailer,
-    adapter: Swoosh.Adapters.SMTP,
-    relay: "127.0.0.1",
-    port: 1025,
-    email_from_name: "ticket agent config",
-    email_from_email: "support@pushcomedytheater.com"
+# config :coherence, TicketAgentWeb.Coherence.Mailer,
+#   adapter: Swoosh.Adapters.SMTP,
+#   relay: "smtp.gmail.com",
+#   username: System.get_env("GMAIL_USERNAME") || "${GMAIL_USERNAME}",
+#   password: System.get_env("GMAIL_PASSWORD") || "${GMAIL_PASSWORD}",
+#   tls: :always,
+#   auth: :always,
+#   port: 587
 
-  config :ticket_agent, TicketAgent.Mailer,
-    adapter: Swoosh.Adapters.SMTP,
-    relay: "127.0.0.1",
-    port: 1025,
-    email_from_name: "ticket agent config",
-    email_from_email: "support@pushcomedytheater.com"
-
+# email_from_name: "ticket agent config",
+# email_from_email: "support@pushcomedytheater.com"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

@@ -22,4 +22,11 @@
     </tr>
   </tbody>
 </table>
+<p>
+<small>If the link above does not work, please visit<br /> <em><%= url %></em></small>
+</p>
 <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thanks for visiting PushComedyTheater.com!</p>
+<br><br>
+<hr>
+<%= upcoming_shows_html %>
+<br><br>
