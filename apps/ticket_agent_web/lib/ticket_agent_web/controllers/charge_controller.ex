@@ -3,8 +3,7 @@ defmodule TicketAgentWeb.ChargeController do
   use TicketAgentWeb, :controller
   alias TicketAgent.Services.Stripe
   alias TicketAgent.State.{ChargeProcessingState, UserState}
-  alias TicketAgent.Emails.OrderEmail
-  alias TicketAgent.Mailer
+  alias TicketAgent.Emails.MailSender
   alias TicketAgentWeb.ExceptionSender
   use Coherence.Config
   plug(TicketAgentWeb.Plugs.LoadOrder when action in [:create])
@@ -27,15 +26,8 @@ defmodule TicketAgentWeb.ChargeController do
     {:ok, {_, _}} = ChargeProcessingState.set_order_completed_with_tickets(updated_order)
 
     Task.start(fn ->
-      Logger.info("Sending order receipt email #{order.id}")
-
-      OrderEmail.order_receipt_email(order.id)
-      |> Mailer.deliver!()
-
-      Logger.info("Sending admin email #{order.id}")
-
-      OrderEmail.admin_order_receipt_email(order.id)
-      |> Mailer.deliver!()
+      MailSender.send_order_receipt_email(order)
+      MailSender.send_admin_order_receipt_email(order)
     end)
 
     conn
@@ -71,15 +63,8 @@ defmodule TicketAgentWeb.ChargeController do
            ChargeProcessingState.set_order_completed_with_tickets(updated_order),
          {:ok, _credit_card} <- UserState.store_card_for_order(updated_user, order, token["card"]) do
       Task.start(fn ->
-        Logger.info("ChargeController -> Sending order receipt email #{order.id}")
-
-        OrderEmail.order_receipt_email(order.id)
-        |> Mailer.deliver!()
-
-        Logger.info("ChargeController -> Sending admin email #{order.id}")
-
-        OrderEmail.admin_order_receipt_email(order.id)
-        |> Mailer.deliver!()
+        MailSender.send_order_receipt_email(order)
+        MailSender.send_admin_order_receipt_email(order)
       end)
 
       conn
