@@ -1,7 +1,7 @@
 <% import TicketAgent.OrderHelpers %>
 <img src="<%= listing_image_with_dimensions(listing, 590, 200) %>" style="border-radius: 5px;" />
 <br />
-<p>NICE WORK! You scored <%= ticket_word(ticket_count) %> to <em><%= listing.title %></em>!</p>
+<p>NICE sadfasdffsdWORK! You scored <%= ticket_word(ticket_count) %> to <em><%= listing.title %></em>!</p>
 <p>We'll see you on <%= event_date(listing.start_at) %> and we plan on starting the show around <%= event_time(listing.start_at) %>.</p>
 <br />
 <table style="width: 100%">

@@ -1,8 +1,0 @@
-<h2 align="center">Welcome Aboard, <%= name %>!</h2>
-<div style="background-color: #f7f7f7 !important; padding: 18px; border-radius: 15px;">
-  Thanks so much for joining us at PushComedyTheater.com.  We hope you enjoy our shows and classes and look forward to seeing you at the Push!
-</div>
-<br><br>
-<hr>
-<%= upcoming_shows_html %>
-<br><br>

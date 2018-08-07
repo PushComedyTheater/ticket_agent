@@ -8,7 +8,6 @@ defmodule TicketAgentWeb.Admin.EmailTemplateController do
   alias TicketAgentWeb.Coherence.UserEmail
 
   @host Application.get_env(:ticket_agent, :email_base_url, "https://pushcomedytheater.com")
-  @template_dir Application.app_dir(:ticket_agent, "priv/email_templates")
 
   def show(conn, %{"type" => "unlock"}) do
     current_user = Coherence.current_user(conn)
@@ -77,6 +76,18 @@ defmodule TicketAgentWeb.Admin.EmailTemplateController do
     conn
     |> put_resp_content_type("application/pdf")
     |> send_resp(200, value)
+  end
+
+  def show(conn, %{"type" => "order_cancel_email", "id" => order_slug}) do
+    order =
+      Order
+      |> Repo.get_by(slug: order_slug)
+
+    email = OrderEmail.order_cancellation_email(order.id)
+
+    conn
+    |> put_resp_content_type("text/html")
+    |> send_resp(200, email.html_body)
   end
 
   def show(conn, %{"type" => "order_email", "id" => order_slug}) do

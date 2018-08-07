@@ -48,8 +48,7 @@ defmodule TicketAgent.Emails.OrderEmail do
 
     %{name: name, email: email} = order.user
 
-    {html, text} = generate_content(order)
-
+    {html, text} = generate_cancellation_content(order)
 
     %Email{}
     |> to({name, email})
@@ -101,6 +100,42 @@ defmodule TicketAgent.Emails.OrderEmail do
   end
 
   def load_admin_content(_), do: raise("Missing details")
+
+  def generate_cancellation_content(
+        %Order{tickets: tickets, listing: %Listing{id: _} = listing} = order
+      )
+      when is_list(tickets) do
+    html_template = @template_dir <> "/customer_cancel_order.html.eex"
+    text_template = @template_dir <> "/customer_order.txt.eex"
+
+    html_layout = @template_dir <> "/layout.html.eex"
+    text_layout = @template_dir <> "/layout.txt.eex"
+
+    ticket_count = Enum.count(tickets)
+
+    customer_order_html =
+      html_template
+      |> EEx.eval_file(
+        listing: listing,
+        ticket_count: ticket_count,
+        order: order,
+        host: @host
+      )
+
+    customer_order_text =
+      text_template
+      |> EEx.eval_file(
+        listing: listing,
+        ticket_count: ticket_count,
+        order: order,
+        host: @host
+      )
+
+    {
+      EEx.eval_file(html_layout, body: customer_order_html),
+      EEx.eval_file(text_layout, body: customer_order_text)
+    }
+  end
 
   def generate_content(%Order{tickets: tickets, listing: %Listing{id: _} = listing} = order)
       when is_list(tickets) do
