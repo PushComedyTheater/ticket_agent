@@ -8,15 +8,23 @@ defmodule TicketAgentWeb.Admin.ListingView do
       recordsTotal: listings.total_entries,
       draw: draw_number,
       recordsFiltered: listings.total_entries,
-      data: Enum.map(listings, &zip_json/1)
+      data: Enum.map(listings, &listing_json/1)
     }
   end
 
-  def zip_json(zip) do
+  def listing_json(listing) do
+    tickets = listing.tickets
+    available = Enum.filter(tickets, fn x -> x.status == "available" end)
+
     %{
-      title: zip.title,
-      status: zip.status,
-      start_at: zip.start_at
+      slug: listing.slug,
+      title: listing.title,
+      status: listing.status,
+      type: listing.type,
+      start_at: order_timestamp(listing.start_at),
+      end_at: listing.end_at,
+      ticket_count: Enum.count(listing.tickets),
+      available_count: Enum.count(available)
     }
   end
 

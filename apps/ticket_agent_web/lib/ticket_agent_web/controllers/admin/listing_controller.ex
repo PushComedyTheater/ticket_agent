@@ -32,8 +32,6 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   def index(conn, params) do
-    IO.inspect(params)
-
     params =
       cond do
         Map.has_key?(params, "status") ->
@@ -77,7 +75,13 @@ defmodule TicketAgentWeb.Admin.ListingController do
   end
 
   defp retrieve_listings(page_size, page_number, search_term) do
-    query = from(l in Listing, select: struct(l, [:title, :status, :start_at, :end_at]))
+    query =
+      from(
+        l in Listing,
+        preload: [:tickets],
+        select: l
+      )
+
     query = add_filter(query, search_term)
     Repo.paginate(query, page: page_number, page_size: page_size)
   end

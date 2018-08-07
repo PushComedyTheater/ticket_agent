@@ -9,9 +9,18 @@
         <div class="box-body table-responsive no-padding">
           <table id="datatable" class="table table-hover">
             <thead>
+          <tr>
+            <th colspan="5">
+            Filter:&nbsp;
+            <input id="active_checkbox" type="checkbox"> Only Active
+            <input id="completed_checkbox" type="checkbox"> Only Completed
+            </th>
+          </tr>
               <tr>
                 <th>Title</th>
                 <th>Status</th>
+                <th>Available</th>
+                <th>Total</th>
                 <th>Start Time</th>
               </tr>
             </thead>
@@ -31,22 +40,51 @@
           <!-- /.box -->
 <script type="text/javascript">
 $(document).ready(function() {
-  var table = $('#datatable').DataTable( {
-        "ajax": "/admin/listings.json",
-        "processing": true,
-        "serverSide": true,
-        "pageLength": 10,
-        "ordering": false,
-        "lengthChange": false,
-        "columns": [
-            { "data": "title" },
-            { "data": "status" },
-            { "data": "start_at" }
-        ]
-    });
-      table.on( 'xhr', function ( e, settings, json ) {
-        console.log( 'Ajax event occurred. Returned data: ', json );
-      } );
+  $.fn.dataTableExt.afnFiltering.push(function(oSettings, aData, iDataIndex) {
+    console.log("LKSJFLKSDJFSLK");
+    if ($('#active_checkbox').is(':checked')) {
+      if (aData[2] == "active") {
+          return true;
+      } else {
+        return false;
+      }
+    }
+    if ($('#completed_checkbox').is(':checked')) {
+      if (aData[2] == "completed") {
+          return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  window.table = $('#datatable').DataTable( {
+    "ajax": "/admin/listings.json",
+    "processing": true,
+    "serverSide": true,
+    "pageLength": 10,
+    "ordering": false,
+    "lengthChange": true,
+    "columns": [
+        {
+          "data": "title",
+          "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+            $(nTd).html("<a href='/admin/listings/"+oData.slug+"'>"+oData.title+"</a>");
+          }
+        },
+        { "data": "status" },
+        { "data": "available_count" },
+        { "data": "ticket_count" },
+        { "data": "start_at" }
+    ],
+    "initComplete": function () {
+            var api = this.api();
+            console.log("DUDE");
+            console.log(api);
+        }
+  });
+
 } );
 
 </script>
