@@ -39,7 +39,7 @@ defmodule TicketAgent.Emails.OrderEmail do
   end
 
   def order_cancellation_email(order_id) do
-    Logger.info("order_receipt_email #{order_id}")
+    Logger.info("order_cancellation_email #{order_id}")
 
     order =
       order_id
@@ -48,24 +48,15 @@ defmodule TicketAgent.Emails.OrderEmail do
 
     %{name: name, email: email} = order.user
 
-    ticket_count = Enum.count(order.tickets)
-
-    pdf_task = Task.async(fn -> OrderPdfGenerator.generate_order_pdf_file(order) end)
-
-    ical_file_name = generate_ical(order)
-
     {html, text} = generate_content(order)
 
-    pdf_filename = Task.await(pdf_task, 20000)
 
     %Email{}
     |> to({name, email})
     |> from({"Push Comedy Theater", "support@pushcomedytheater.com"})
-    |> subject("Here are your tickets for #{order.listing.title}")
+    |> subject("Your order has been cancelled")
     |> text_body(text)
     |> html_body(html)
-    |> attachment(pdf_filename)
-    |> attachment(ical_file_name)
   end
 
   def admin_order_receipt_email(order_id) do
