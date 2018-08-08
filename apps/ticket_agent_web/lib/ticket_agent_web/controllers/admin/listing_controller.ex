@@ -6,10 +6,12 @@ defmodule TicketAgentWeb.Admin.ListingController do
   plug(TicketAgentWeb.Plugs.DatatablesParamParser, %{schema: Listing})
 
   def index(conn, %{"_format" => "json"} = params) do
+    records = retrieve_records(conn)
+
     render(
       conn,
       "index.json",
-      records: conn.assigns.records,
+      records: records,
       page_number: conn.assigns.page_number,
       draw_number: conn.assigns.draw_number
     )
@@ -19,7 +21,17 @@ defmodule TicketAgentWeb.Admin.ListingController do
     render(conn, "index.html")
   end
 
-  defp retrieve_listings(page_size, page_number, search_term) do
+  defp retrieve_records(
+         %Plug.Conn{
+           assigns: %{
+             page_size: page_size,
+             page_number: page_number,
+             search_term: search_term,
+             sort_column: sort_column,
+             sort_dir: sort_dir
+           }
+         } = conn
+       ) do
     query =
       from(
         l in Listing,

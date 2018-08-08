@@ -1,4 +1,4 @@
- <section class="content">
+<section class="content">
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -6,40 +6,47 @@
           <h3 class="box-title">Webhooks</h3>
         </div>
         <!-- /.box-header -->
-        <div class="box-body table-responsive no-padding">
-          <p style="padding: 10px;">Webhooks</p>
-
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Source</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-            <%= for detail <- @details do %>
-                <tr>
-                  <td>
-                    <span><%= link "Show", to: admin_webhook_path(@conn, :show, detail), class: "btn btn-info btn-xs" %></span>
-                  </td>
-                  <td><%= detail.source %></td>
-                  <td><%= order_timestamp(detail.inserted_at) %></td>
-                </tr>
-            <% end %>
-              </tbody>
-            </table>
-
+        <div class="box-body">
+          <table id="datatable" class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Source</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
         </div>
-<div class="box-footer clearfix">
-<div class="pull-right">
-  <%= pagination_links @details %>
-  </div>
-            </div>        
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
     </div>
   </div>
 </section>
-          <!-- /.box -->
+<script type="text/javascript">
+$(document).ready(function() {
+
+  window.table = $('#datatable').DataTable( {
+    ajax: {
+      url: "/admin/webhooks.json"
+    },
+    processing: true,
+    serverSide: true,
+    pageLength: 10,
+    columns: [
+      {
+        data: "id",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+          $(nTd).html("<a href='/admin/webhooks/"+oData.id+"'>"+oData.id+"</a>");
+        }
+      },
+      { data: "source" },
+      { data: "date" }
+    ]
+  });
+
+} );
+
+</script>

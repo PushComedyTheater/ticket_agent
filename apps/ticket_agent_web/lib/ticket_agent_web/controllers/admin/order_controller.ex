@@ -1,39 +1,48 @@
 defmodule TicketAgentWeb.Admin.OrderController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Order}
+  import Ecto.Query
   alias TicketAgent.State.ChargeProcessingState
+
   plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "orders"})
+  plug(TicketAgentWeb.Plugs.DatatablesParamParser)
+
+  def index(conn, %{"_format" => "json"} = params) do
+    records = retrieve_records(conn)
+
+    render(
+      conn,
+      "index.json",
+      records: records,
+      page_number: conn.assigns.page_number,
+      draw_number: conn.assigns.draw_number
+    )
+  end
+
+  defp retrieve_records(
+         %Plug.Conn{
+           assigns: %{
+             page_size: page_size,
+             page_number: page_number,
+             search_term: search_term,
+             sort_column: sort_column,
+             sort_dir: sort_dir
+           }
+         } = conn
+       ) do
+    query =
+      from(
+        l in Order,
+        preload: [:user, :credit_card, :listing, :tickets],
+        select: l
+      )
+
+    Repo.paginate(query, page: page_number, page_size: page_size)
+  end
 
   def index(conn, params) do
-    orders = Order.list_orders(params)
-
     conn
-    |> assign(:orders, orders)
     |> render("index.html")
-  end
-
-  def new(conn, _params) do
-    changeset = Order.changeset(%Order{}, %{})
-
-    conn
-    |> assign(:changeset, changeset)
-    |> render("new.html")
-  end
-
-  def create(conn, %{"teacher" => teacher_params}) do
-    changeset = Order.changeset(%Order{}, teacher_params)
-
-    case Repo.insert(changeset) do
-      {:ok, teacher} ->
-        conn
-        |> put_flash(:info, "Order created successfully.")
-        |> redirect(to: admin_teacher_path(conn, :show, teacher))
-
-      {:error, changeset} ->
-        conn
-        |> assign(:changeset, changeset)
-        |> render("new.html")
-    end
   end
 
   def show(conn, %{"id" => id}) do

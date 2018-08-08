@@ -1,73 +1,76 @@
 defmodule TicketAgentWeb.Plugs.DatatablesParamParser do
   require Logger
   import Plug.Conn
-  import Ecto.Query
-  alias TicketAgent.Repo
 
   def init(opts), do: opts
 
-  def call(%Plug.Conn{params: %{"_format" => "json"} = params} = conn, %{schema: schema}) do
-    {page_size, page_number, draw_number, search_term} = build_paging_info(params)
-
-    query = from(l in schema, select: struct(l, [:title, :status, :start_at, :end_at]))
-
-    records = retrieve_records(page_size, page_number, search_term, schema)
-
+  def call(%Plug.Conn{params: %{"_format" => "json"} = params} = conn, _) do
     conn
-    |> assign(:page_size, page_size)
-    |> assign(:page_number, page_number)
-    |> assign(:draw_number, draw_number)
-    |> assign(:search_term, search_term)
-    |> assign(:records, records)
+    |> calculate_page_size()
+    |> calculate_page_number()
+    |> increment_draw()
+    |> set_search_term()
+    |> set_order()
   end
 
   def call(conn, _), do: conn
 
-  def build_paging_info(params) do
-    page_size = calculate_page_size(params["length"])
-    page_number = calculate_page_number(params["start"], page_size)
-    search_term = params["search"]["value"]
-    draw_number = increment_draw(params["draw"])
-    {page_size, page_number, draw_number, search_term}
-  end
-
-  defp increment_draw(value) when value == nil, do: 1
-
-  defp increment_draw(value) do
-    {draw_number, _} = Integer.parse(value)
-    draw_number + 1
-  end
-
-  defp calculate_page_number(nil, _), do: 1
-
-  defp calculate_page_number(value, page_size) do
-    {start_value, _} = Integer.parse(value)
-    round(start_value / page_size + 1)
-  end
-
-  defp calculate_page_size(nil), do: 25
-
-  defp calculate_page_size(value) do
+  defp calculate_page_size(%Plug.Conn{params: %{"length" => value} = params} = conn)
+       when not is_nil(value) do
     {page_size, _} = Integer.parse(value)
-    page_size
+
+    conn
+    |> assign(:page_size, page_size)
   end
 
-  defp retrieve_records(page_size, page_number, search_term, schema) do
-    query =
-      from(
-        l in schema,
-        preload: [:tickets],
-        select: l
-      )
+  defp calculate_page_size(conn), do: assign(conn, :page_size, 10)
 
-    query = add_filter(query, search_term)
-    Repo.paginate(query, page: page_number, page_size: page_size)
+  defp increment_draw(%Plug.Conn{params: %{"draw" => value} = params} = conn)
+       when not is_nil(value) do
+    {draw_number, _} = Integer.parse(value)
+
+    conn
+    |> assign(:draw_number, draw_number + 1)
   end
 
-  defp add_filter(query, search_term) when search_term == nil or search_term == "", do: query
+  defp increment_draw(conn), do: assign(conn, :draw_number, 1)
 
-  defp add_filter(query, original_search_term) do
-    search_term = "%#{original_search_term}%"
-    from(z in query, where: ilike(z.title, ^search_term))
+  defp calculate_page_number(%Plug.Conn{params: %{"start" => value} = params} = conn)
+       when not is_nil(value) do
+    {start_value, _} = Integer.parse(value)
+    value = round(start_value / conn.assigns.page_size + 1)
+
+    conn
+    |> assign(:page_number, value)
+  end
+
+  defp calculate_page_number(conn), do: assign(conn, :page_number, 1)
+
+  defp set_search_term(%Plug.Conn{params: %{"search" => %{"value" => value}} = params} = conn)
+       when not is_nil(value) do
+    conn
+    |> assign(:search_term, value)
+  end
+
+  defp set_search_term(conn), do: assign(conn, :search_term, nil)
+
+  defp set_order(
+         %Plug.Conn{
+           params:
+             %{"columns" => columns, "order" => %{"0" => %{"column" => column, "dir" => dir}}} =
+               params
+         } = conn
+       ) do
+    column_data = get_in(columns, [column, "data"])
+
+    conn
+    |> assign(:sort_column, column_data)
+    |> assign(:sort_dir, dir)
+  end
+
+  defp set_order(conn) do
+    conn
+    |> assign(:sort_column, "id")
+    |> assign(:sort_dir, "asc")
   end
 end

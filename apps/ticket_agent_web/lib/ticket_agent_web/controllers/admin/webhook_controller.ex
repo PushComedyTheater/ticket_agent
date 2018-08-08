@@ -1,13 +1,25 @@
 defmodule TicketAgentWeb.Admin.WebHookController do
   use TicketAgentWeb, :controller
+  import Ecto.Query
   alias TicketAgent.{Repo, WebhookDetail}
-  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "webooks"}
+
+  plug(TicketAgentWeb.Plugs.DatatablesParamParser, %{schema: Listing})
+  plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "webhooks"})
+
+  def index(conn, %{"_format" => "json"} = params) do
+    records = retrieve_records(conn)
+
+    render(
+      conn,
+      "index.json",
+      records: records,
+      page_number: conn.assigns.page_number,
+      draw_number: conn.assigns.draw_number
+    )
+  end
 
   def index(conn, params) do
-    details = Repo.paginate(WebhookDetail, params)
-
     conn
-    |> assign(:details, details)
     |> render("index.html")
   end
 
@@ -17,6 +29,26 @@ defmodule TicketAgentWeb.Admin.WebHookController do
     conn
     |> assign(:detail, detail)
     |> render("show.html")
+  end
+
+  defp retrieve_records(
+         %Plug.Conn{
+           assigns: %{
+             page_size: page_size,
+             page_number: page_number,
+             search_term: search_term,
+             sort_column: sort_column,
+             sort_dir: sort_dir
+           }
+         } = conn
+       ) do
+    query =
+      from(
+        l in WebhookDetail,
+        select: l
+      )
+
+    Repo.paginate(query, page: page_number, page_size: page_size)
   end
 
   # def edit(conn, %{"id" => id}) do

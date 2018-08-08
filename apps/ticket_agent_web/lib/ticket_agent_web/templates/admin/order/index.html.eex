@@ -25,32 +25,41 @@
         </tr>
       </thead>
       <tbody>
-        <%= for context <- @orders do %>
-        <tr>
-          <td>
-            <span><%= link "Show", to: admin_order_path(@conn, :show, context), class: "btn btn-info btn-xs" %></span>
-          </td>
-          <td><%= context.user.name %></td>
-          <td><%= listing_name(context.listing) %></td>
-          <td><%= Enum.count(context.tickets) %></td>
-          <td><%= context.status %></td>
-          <td>$<%= cost(context.total_price / 100) %>
-          <td><%= context.completed_at %></td>
-        </tr>
-        <% end %>
       </tbody>
     </table>
   </div>
-  <div class="box-footer clearfix">
-    <div class="pull-right">
-      <%= pagination_links @orders %>
-    </div>
-  </div>
+
 <!-- /.box-body -->
 </div>
 <script type="text/javascript">
   $( document ).ready(function(){
-    window.oTable = $('#datatable').DataTable(  );
+    window.table = $('#datatable').DataTable( {
+      ajax: {
+        url: "/admin/orders.json"
+      },
+      processing: true,
+      serverSide: true,
+      pageLength: 10,
+    columns: [
+      {
+        data: "id",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+          $(nTd).html("<span><a href=\"/admin/orders/"+oData.slug+"\" class=\"btn btn-info btn-xs\">Show</a></span>");
+        }
+      },
+      { data: "buyer" },
+      { data: "listing" },
+      { data: "ticket_count"},
+      { data: "status"},
+      {
+        data: "total",
+        fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
+          $(nTd).html("$" + sData);
+        }
+      },
+      { data: "date"}
+    ]
+    } );
   });
 
 </script>
