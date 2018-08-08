@@ -94,11 +94,13 @@ $(document).ready(function() {
       }).done(function (response) {
         console.log("done");
         console.log(response);
+        window.location.reload();
         // window.location.href = "/admin/classes"
       }).fail(function (xhr, status, errorThrown) {
         // Code to run if the request fails; the raw request and
         // status codes are passed to the function
-        window.console.log("Received error creating order: ")
+        alert("There was an error cancelling this order.");
+        window.console.log("Received error cancelling order: ")
         window.console.log("errorThrown: " + errorThrown);
       });
 
