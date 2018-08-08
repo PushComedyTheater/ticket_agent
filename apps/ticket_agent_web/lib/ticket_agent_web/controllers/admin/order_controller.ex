@@ -1,6 +1,7 @@
 defmodule TicketAgentWeb.Admin.OrderController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Order}
+  alias TicketAgent.State.ChargeProcessingState
   plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "orders"})
 
   def index(conn, params) do
@@ -72,7 +73,14 @@ defmodule TicketAgentWeb.Admin.OrderController do
   end
 
   def delete(conn, %{"id" => slug}) do
-    order = Order.get_by_slug!(slug)
+    with order = Order.get_by_slug!(slug),
+         "completed" <- order.status,
+         :ok <- ChargeProcessingState.cancel_order_and_release_tickets(order) do
+      IO.inspect("IN HERE")
+    else
+      err ->
+        IO.inspect(err)
+    end
 
     # Repo.delete!(teacher)
 
