@@ -57,7 +57,7 @@ defmodule TicketAgentWeb.Plugs.DatatablesParamParser do
       from(
         l in schema,
         preload: [:tickets],
-        select: struct(l, [:title, :status, :start_at, :end_at])
+        select: l
       )
 
     query = add_filter(query, search_term)

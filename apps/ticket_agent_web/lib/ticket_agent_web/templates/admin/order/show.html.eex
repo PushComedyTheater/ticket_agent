@@ -4,6 +4,9 @@
   </div>
   <!-- /.box-header -->
   <div class="box-body">
+    <div class="pull-right"><button id="cancel_order" class="btn btn-warning">Cancel Order</button></div>
+    <br />
+    <br />
     <table class="table table-bordered">
       <tr>
         <th>User</th>
@@ -71,3 +74,39 @@
     <span><%= link "Back", to: admin_order_path(@conn, :index) %></span>
   </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+  $("#cancel_order").on("click", function(e) {
+    if (confirm("Are you sure you want to cancel this order and refund the customer's money?")) {
+      $.ajax({
+        // The URL for the request
+        url: "/admin/orders/<%= @order.slug %>",
+        // The data to send (will be converted to a query string)
+        // Whether this is a POST or GET request
+        type: "DELETE",
+        // The type of data we expect back
+        contentType: "application/json",
+        dataType: "json",
+        // add in csrf_token
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+        },
+      }).done(function (response) {
+        console.log("done");
+        console.log(response);
+        // window.location.href = "/admin/classes"
+      }).fail(function (xhr, status, errorThrown) {
+        // Code to run if the request fails; the raw request and
+        // status codes are passed to the function
+        window.console.log("Received error creating order: ")
+        window.console.log("errorThrown: " + errorThrown);
+      });
+
+
+
+
+    }
+    e.preventDefault();
+  })
+});
+</script>
