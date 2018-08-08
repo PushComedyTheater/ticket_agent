@@ -53,7 +53,13 @@ defmodule TicketAgentWeb.Plugs.DatatablesParamParser do
   end
 
   defp retrieve_records(page_size, page_number, search_term, schema) do
-    query = from(l in schema, select: struct(l, [:title, :status, :start_at, :end_at]))
+    query =
+      from(
+        l in schema,
+        preload: [:tickets],
+        select: struct(l, [:title, :status, :start_at, :end_at])
+      )
+
     query = add_filter(query, search_term)
     Repo.paginate(query, page: page_number, page_size: page_size)
   end

@@ -3,6 +3,7 @@ defmodule TicketAgentWeb.Admin.ListingController do
   import Ecto.Query
   use TicketAgentWeb, :controller
   plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "listings"})
+  plug(TicketAgentWeb.Plugs.DatatablesParamParser, %{schema: Listing})
 
   def index(conn, %{"_format" => "json"} = params) do
     params =
@@ -14,16 +15,12 @@ defmodule TicketAgentWeb.Admin.ListingController do
           params
       end
 
-    {page_size, page_number, draw_number, search_term} = build_paging_info(params)
-
-    listings = retrieve_listings(page_size, page_number, search_term)
-
     render(
       conn,
       "index.json",
-      listings: listings,
-      page_number: page_number,
-      draw_number: draw_number
+      records: conn.assigns.records,
+      page_number: conn.assigns.page_number,
+      draw_number: conn.assigns.draw_number
     )
 
     # listings = Listing.list_listings(params)

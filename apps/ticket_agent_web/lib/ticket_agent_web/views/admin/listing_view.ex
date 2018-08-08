@@ -3,27 +3,27 @@ defmodule TicketAgentWeb.Admin.ListingView do
   use TicketAgentWeb, :view
   import Scrivener.HTML
 
-  def render("index.json", %{listings: listings, draw_number: draw_number}) do
+  def render("index.json", %{records: records, page_number: page_number, draw_number: draw_number}) do
     %{
-      recordsTotal: listings.total_entries,
+      recordsTotal: records.total_entries,
       draw: draw_number,
-      recordsFiltered: listings.total_entries,
-      data: Enum.map(listings, &listing_json/1)
+      recordsFiltered: records.total_entries,
+      data: Enum.map(records, &records_json/1)
     }
   end
 
-  def listing_json(listing) do
-    tickets = listing.tickets
+  def records_json(record) do
+    tickets = record.tickets
     available = Enum.filter(tickets, fn x -> x.status == "available" end)
 
     %{
-      slug: listing.slug,
-      title: listing.title,
-      status: listing.status,
-      type: listing.type,
-      start_at: order_timestamp(listing.start_at),
-      end_at: listing.end_at,
-      ticket_count: Enum.count(listing.tickets),
+      slug: record.slug,
+      title: record.title,
+      status: record.status,
+      type: record.type,
+      start_at: order_timestamp(record.start_at),
+      end_at: record.end_at,
+      ticket_count: Enum.count(record.tickets),
       available_count: Enum.count(available)
     }
   end
