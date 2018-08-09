@@ -10,9 +10,9 @@ defmodule TicketAgentWeb.Mixfile do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.4",
-      elixirc_paths: elixirc_paths(Mix.env),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers,
-      start_permanent: Mix.env == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
     ]
@@ -25,8 +25,9 @@ defmodule TicketAgentWeb.Mixfile do
   defp revision() do
     System.cmd("git", ["rev-parse", "--short", "HEAD"])
     |> elem(0)
-    |> String.trim_trailing
+    |> String.trim_trailing()
   end
+
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
@@ -39,7 +40,7 @@ defmodule TicketAgentWeb.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -59,8 +60,8 @@ defmodule TicketAgentWeb.Mixfile do
       {:sentry, "~> 6.2.1"},
       {:scrivener_html, "~> 1.7"},
       {:trailing_format_plug, "~> 0.0.5"},
-
       {:timber, "~> 2.0"},
+      {:remote_ip, "~> 0.1.0"}
     ]
   end
 
@@ -69,6 +70,6 @@ defmodule TicketAgentWeb.Mixfile do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    ["test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+    [test: ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end

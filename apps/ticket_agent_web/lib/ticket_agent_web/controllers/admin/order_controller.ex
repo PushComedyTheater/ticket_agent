@@ -82,9 +82,8 @@ defmodule TicketAgentWeb.Admin.OrderController do
   end
 
   def delete(conn, %{"id" => slug}) do
-    with order = Order.get_by_slug!(slug),
-         "completed" <- order.status,
-         :ok <- ChargeProcessingState.cancel_order_and_release_tickets(order) do
+    with order = Order.get_by_slug!(slug), "completed" <- order.status do
+      IO.inspect(conn.remote_ip)
       IO.inspect("IN HERE")
     else
       err ->
