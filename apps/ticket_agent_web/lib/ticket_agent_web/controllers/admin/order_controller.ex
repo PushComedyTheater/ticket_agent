@@ -82,8 +82,13 @@ defmodule TicketAgentWeb.Admin.OrderController do
   end
 
   def delete(conn, %{"id" => slug}) do
-    with order = Order.get_by_slug!(slug), "completed" <- order.status do
-      IO.inspect(conn.remote_ip)
+    remote_ip = conn.remote_ip |> Tuple.to_list() |> Enum.join(".")
+
+    with order = Order.get_by_slug!(slug),
+         "completed" <- order.status,
+         {:ok, response} <- TicketAgent.Services.Stripe.refund(order, remote_ip),
+         :ok <- ChargeProcessingState.cancel_order_and_release_tickets(order) do
+      IO.inspect(remote_ip)
       IO.inspect("IN HERE")
     else
       err ->
