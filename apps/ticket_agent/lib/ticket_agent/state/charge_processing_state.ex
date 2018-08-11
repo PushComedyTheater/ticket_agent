@@ -160,4 +160,44 @@ defmodule TicketAgent.State.ChargeProcessingState do
         {:error, :unknown_error}
     end
   end
+
+  def cancel_order_and_tickets(%{tickets: %Ecto.Association.NotLoaded{}} = order),
+    do: cancel_order_and_tickets(Repo.preload(order, :tickets))
+
+  def cancel_order_and_tickets(order) do
+    order_ticket_count = Enum.count(order.tickets)
+    Logger.info("cancel_order_and_tickets->order_ticket_count: #{order_ticket_count}")
+
+    transaction =
+      order
+      |> TicketState.release_tickets()
+      |> Ecto.Multi.append(OrderState.release_order(order))
+
+    case Repo.transaction(transaction) do
+      {:ok,
+       %{
+         order_released: {1, [updated_order]},
+         release_tickets: {^order_ticket_count, updated_tickets}
+       }} ->
+        {:ok, {updated_order, updated_tickets}}
+
+      {:ok, %{order_started: {0, _}}} ->
+        Logger.error("cancel_order_and_tickets->#{order.slug}: order was not updated to canceled")
+        {:error, :order_starting_error}
+
+      {:ok, %{release_tickets: _}} ->
+        Logger.error(
+          "cancel_order_and_tickets->#{order.slug}: tickets were not updated to available"
+        )
+
+        {:error, :ticket_locked_error}
+
+      anything ->
+        Logger.error(
+          "cancel_order_and_tickets->#{order.slug}: received unmatched error: #{inspect(anything)}"
+        )
+
+        {:error, :unknown_error}
+    end
+  end
 end
