@@ -212,10 +212,10 @@ defmodule TicketAgent.Services.Stripe do
         {:ok, nil}
 
       {:ok, status, _headers, body} when status in [200, 201] ->
-        {:ok, Poison.decode!(body)}
+        {:ok, Jason.decode!(body)}
 
       {:ok, _status, _headers, body} ->
-        {:error, Poison.decode!(body)}
+        {:error, Jason.decode!(body)}
 
       {:error, reason} ->
         {:error, reason}

@@ -164,14 +164,14 @@ defmodule TicketAgent.State.ChargeProcessingState do
   def cancel_order_and_tickets(%{tickets: %Ecto.Association.NotLoaded{}} = order),
     do: cancel_order_and_tickets(Repo.preload(order, :tickets))
 
-  def cancel_order_and_tickets(order) do
+  def cancel_order_and_tickets(order, refunded_by) do
     order_ticket_count = Enum.count(order.tickets)
     Logger.info("cancel_order_and_tickets->order_ticket_count: #{order_ticket_count}")
 
     transaction =
       order
-      |> TicketState.release_tickets()
-      |> Ecto.Multi.append(OrderState.release_order(order))
+      |> TicketState.refund_tickets()
+      |> Ecto.Multi.append(OrderState.refund_order(order, refunded_by))
 
     case Repo.transaction(transaction) do
       {:ok,

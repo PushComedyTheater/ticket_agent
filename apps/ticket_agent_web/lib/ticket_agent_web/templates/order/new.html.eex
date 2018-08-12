@@ -93,7 +93,7 @@
 <script type="text/javascript">
   var tickets = {
   <%= for {p, ticket} <- @conn.assigns.tickets do %>
-    "<%= p %>": <%= raw Poison.encode!(ticket) %>,
+    "<%= p %>": <%= raw Jason.encode!(ticket) %>,
   <% end %>
   };
 

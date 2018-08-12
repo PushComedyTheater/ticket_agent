@@ -10,8 +10,11 @@
     <div class="card-block g-pa-0">
       <%= if Enum.count(@orders) == 0 do %>
       You have no orders at this time.
+      <% else %>
       <% end %>
+
       <%= for order <- @orders do %>
+
       <%
         ticket = Enum.at(order.tickets, 0)
         listing = ticket.listing

@@ -9,7 +9,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>push comedy theater admin</title>
   <script type="text/javascript">
-  window.csrf_token = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
+  window.csrf_token = <%= raw Jason.encode!(Plug.CSRFProtection.get_csrf_token()) %>;
   </script>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

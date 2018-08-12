@@ -4,7 +4,11 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
   import Phoenix.Controller
   def init(opts), do: opts
 
-  def call(%Plug.Conn{cookies: %{"ticket_data" => data}, params: %{"listing_id" => listing_id}} = conn, _) do
+  def call(
+        %Plug.Conn{cookies: %{"ticket_data" => data}, params: %{"listing_id" => listing_id}} =
+          conn,
+        _
+      ) do
     %{
       "listing" => %{
         "slug" => slug
@@ -13,16 +17,18 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
     } =
       data
       |> Base.decode64!()
-      |> Poison.decode!
+      |> Jason.decode!()
 
-    tickets = 
+    tickets =
       tickets
-      |> Enum.group_by(fn({_, ticket}) -> 
-        ticket["group"] 
-      end, 
-      fn({_, item}) -> 
-        item 
-      end)
+      |> Enum.group_by(
+        fn {_, ticket} ->
+          ticket["group"]
+        end,
+        fn {_, item} ->
+          item
+        end
+      )
 
     if slug == listing_id do
       conn
@@ -37,10 +43,10 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
   end
 
   def call(%Plug.Conn{params: %{"listing_id" => listing_id}} = conn, _) do
-      conn
-      |> delete_resp_cookie("ticket_data")
-      |> put_flash(:error, "Something went wrong with your request.")
-      |> redirect(to: "/events")
+    conn
+    |> delete_resp_cookie("ticket_data")
+    |> put_flash(:error, "Something went wrong with your request.")
+    |> redirect(to: "/events")
   end
 
   def call(conn, _) do

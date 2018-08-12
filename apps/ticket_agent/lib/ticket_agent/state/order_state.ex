@@ -174,4 +174,27 @@ defmodule TicketAgent.State.OrderState do
       returning: true
     )
   end
+
+  # An order can go from started, completed or processing -> cancelled
+  def refund_order(order, refunded_by, timestamp \\ NaiveDateTime.utc_now()) do
+    Logger.info("refund_order for order #{order.slug}")
+
+    Multi.new()
+    |> Multi.update_all(
+      :refund_order,
+      from(
+        o in Order,
+        where: o.id == ^order.id,
+        where: o.status in ["completed"]
+      ),
+      [
+        set: [
+          status: "refunded",
+          refunded_at: timestamp,
+          refunded_by: refunded_by
+        ]
+      ],
+      returning: true
+    )
+  end
 end

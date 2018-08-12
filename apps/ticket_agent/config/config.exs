@@ -122,8 +122,12 @@ config :ticket_agent, Universe,
 
 value =
   case System.get_env("TICKET_LOCK_LENGTH") do
-    nil -> 302
-    value -> String.to_integer(value)
+    nil ->
+      IO.inspect("NO TICKET_LOCK_LENGTH")
+      302
+
+    value ->
+      String.to_integer(value)
   end
 
 config :ticket_agent, :ticket_lock_length, value

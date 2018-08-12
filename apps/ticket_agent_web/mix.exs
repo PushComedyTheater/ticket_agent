@@ -47,7 +47,7 @@ defmodule TicketAgentWeb.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0"},
+      {:phoenix, "~> 1.3.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
       {:phoenix_html, "~> 2.10"},
@@ -55,9 +55,9 @@ defmodule TicketAgentWeb.Mixfile do
       {:gettext, "~> 0.11"},
       {:ticket_agent, in_umbrella: true},
       {:cowboy, "~> 1.0"},
-      {:swoosh, "~> 0.13.0"},
-      {:gen_smtp, "~> 0.12.0"},
-      {:sentry, "~> 6.2.1"},
+      {:swoosh, "~> 0.16.0"},
+      {:gen_smtp, "~> 0.13.0"},
+      {:sentry, "~> 6.2"},
       {:scrivener_html, "~> 1.7"},
       {:trailing_format_plug, "~> 0.0.5"},
       {:timber, "~> 2.0"},

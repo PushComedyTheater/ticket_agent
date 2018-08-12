@@ -38,15 +38,16 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
     test "redirect if the show and slug don't match", %{conn: conn} do
       listing = insert(:listing)
       other_listing = insert(:listing)
-      cookies = %{
-        "listing" =>
-          %{
+
+      cookies =
+        %{
+          "listing" => %{
             "slug" => other_listing.slug
           },
           "tickets" => []
-      }
-      |> Poison.encode!()
-      |> Base.encode64()
+        }
+        |> Jason.encode!()
+        |> Base.encode64()
 
       conn =
         conn
@@ -55,31 +56,29 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
         |> ValidateShowRequest.call([])
 
       assert html_response(conn, 302)
-    end  
+    end
 
     test "sets stuff if the show and slug match", %{conn: conn} do
       listing = insert(:listing)
 
-      cookies = %{
-        "listing" =>
-          %{
+      cookies =
+        %{
+          "listing" => %{
             "slug" => listing.slug
           },
-          "tickets" => 
-            %{
-              "default_0" => 
-              %{
-                "email" => "patrick@pushcomedytheater.com",
-                "group" => "default",
-                "listing_id" => listing.id,
-                "name" => "Patrick Veverka",
-                "price" => 500,
-                "valid" => true
-              }
+          "tickets" => %{
+            "default_0" => %{
+              "email" => "patrick@pushcomedytheater.com",
+              "group" => "default",
+              "listing_id" => listing.id,
+              "name" => "Patrick Veverka",
+              "price" => 500,
+              "valid" => true
             }
-      }
-      |> Poison.encode!()
-      |> Base.encode64()
+          }
+        }
+        |> Jason.encode!()
+        |> Base.encode64()
 
       conn =
         conn
@@ -88,7 +87,19 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
         |> ValidateShowRequest.call([])
 
       assert conn.assigns.listing_id == listing.slug
-      assert conn.assigns.tickets == %{"default" => [%{"email" => "patrick@pushcomedytheater.com", "group" => "default", "listing_id" => listing.id, "name" => "Patrick Veverka", "price" => 500, "valid" => true}]}
-    end    
+
+      assert conn.assigns.tickets == %{
+               "default" => [
+                 %{
+                   "email" => "patrick@pushcomedytheater.com",
+                   "group" => "default",
+                   "listing_id" => listing.id,
+                   "name" => "Patrick Veverka",
+                   "price" => 500,
+                   "valid" => true
+                 }
+               ]
+             }
+    end
   end
 end

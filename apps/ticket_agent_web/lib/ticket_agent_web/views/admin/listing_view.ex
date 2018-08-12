@@ -43,18 +43,6 @@ defmodule TicketAgentWeb.Admin.ListingView do
     [Show: "show", Workshop: "workshop"]
   end
 
-  def cover_image(%Listing{} = listing) do
-    image = Enum.find(listing.images, fn x -> x.type == "cover" end)
-    public_id = ListingImage.public_id(image)
-    Cloudinex.Url.for("covers/#{public_id}")
-  end
-
-  def social_image(%Listing{} = listing) do
-    image = Enum.find(listing.images, fn x -> x.type == "social" end)
-    public_id = ListingImage.public_id(image)
-    Cloudinex.Url.for("social/#{public_id}")
-  end
-
   def purchased_tickets(tickets) do
     Enum.filter(tickets, fn ticket ->
       ticket.status == "purchased" || ticket.status == "emailed" || ticket.status == "checkedin"

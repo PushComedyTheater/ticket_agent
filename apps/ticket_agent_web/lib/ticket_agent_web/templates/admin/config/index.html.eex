@@ -66,7 +66,7 @@
               Sentry
               </th>
               <td>
-                <%= raw Poison.encode!(Application.fetch_env!(:sentry, :dsn)) %>
+                <%= raw Jason.encode!(Application.fetch_env!(:sentry, :dsn)) %>
               </td>
             </tr>
             <tr>
@@ -74,7 +74,7 @@
               Amazon
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Amazon, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Amazon, "")) %>
               </td>
             </tr>
             <tr>
@@ -82,7 +82,7 @@
               Facebook
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Facebook, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Facebook, "")) %>
               </td>
             </tr>
             <tr>
@@ -90,7 +90,7 @@
               Google
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Google, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Google, "")) %>
               </td>
             </tr>
             <tr>
@@ -98,7 +98,7 @@
               LinkedIn
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, LinkedIn, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, LinkedIn, "")) %>
               </td>
             </tr>
             <tr>
@@ -106,7 +106,7 @@
               Microsoft
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Microsoft, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Microsoft, "")) %>
               </td>
             </tr>
             <tr>
@@ -114,7 +114,7 @@
               Stripe
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Stripe, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Stripe, "")) %>
               </td>
             </tr>
             <tr>
@@ -122,7 +122,7 @@
               Twitter
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Twitter, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Twitter, "")) %>
               </td>
             </tr>
             <tr>
@@ -130,7 +130,7 @@
               Universe
               </th>
               <td>
-                <%= raw Poison.encode!(get_application_env(:ticket_agent, Universe, "")) %>
+                <%= raw Jason.encode!(get_application_env(:ticket_agent, Universe, "")) %>
               </td>
             </tr>
           </tbody></table>

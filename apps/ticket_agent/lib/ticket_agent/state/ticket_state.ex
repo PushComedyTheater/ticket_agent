@@ -202,6 +202,32 @@ defmodule TicketAgent.State.TicketState do
     )
   end
 
+  def refund_tickets(order) do
+    Logger.info("refund_tickets->order_id  = #{order.id}")
+
+    Multi.new()
+    |> Multi.update_all(
+      :refund_tickets,
+      from(
+        t in Ticket,
+        where: t.order_id == ^order.id
+      ),
+      [
+        set: [
+          status: "available",
+          order_id: nil,
+          locked_until: nil,
+          guest_name: nil,
+          guest_email: nil,
+          purchased_at: nil,
+          emailed_at: nil,
+          checked_in_at: nil
+        ]
+      ],
+      returning: true
+    )
+  end
+
   def filter_created_tickets(order, listing_id, input_tickets, group) do
     Logger.info("filter_created_tickets->order.id:         #{inspect(order.id)}")
     Logger.info("filter_created_tickets->listing_id:       #{inspect(listing_id)}")

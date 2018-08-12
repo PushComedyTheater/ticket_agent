@@ -21,6 +21,6 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.0.0/json2html.min.js"></script>
 <script type="text/javascript">
-window.request_details = <%= raw Poison.encode!(@detail.request) %>;
+window.request_details = <%= raw Jason.encode!(@detail.request) %>;
 $("#details").html(JSON.stringify(window.request_details, null, 4));
 </script>

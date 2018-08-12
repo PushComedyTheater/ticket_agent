@@ -128,7 +128,8 @@ CREATE TYPE public.order_status AS ENUM (
     'processing',
     'completed',
     'errored',
-    'cancelled'
+    'cancelled',
+    'refunded'
 );
 
 
@@ -333,6 +334,8 @@ CREATE TABLE public.orders (
     emailed_at timestamp with time zone,
     errored_at timestamp with time zone,
     cancelled_at timestamp with time zone,
+    refunded_at timestamp with time zone,
+    refunded_by uuid,
     inserted_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -1094,6 +1097,14 @@ ALTER TABLE ONLY public.order_details
 
 ALTER TABLE ONLY public.orders
     ADD CONSTRAINT orders_credit_card_id_fkey FOREIGN KEY (credit_card_id) REFERENCES public.credit_cards(id);
+
+
+--
+-- Name: orders orders_refunded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_refunded_by_fkey FOREIGN KEY (refunded_by) REFERENCES public.users(id);
 
 
 --

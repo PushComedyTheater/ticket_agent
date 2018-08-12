@@ -28,7 +28,7 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-config :tesla, :adapter, :hackney
+config :tesla, :adapter, Tesla.Adapter.Hackney
 import_config "#{Mix.env()}.exs"
 
 # Import Timber, structured logging
