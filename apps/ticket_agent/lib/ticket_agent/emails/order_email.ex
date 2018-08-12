@@ -36,6 +36,9 @@ defmodule TicketAgent.Emails.OrderEmail do
     |> html_body(html)
     |> attachment(pdf_filename)
     |> attachment(ical_file_name)
+    |> put_provider_option(:custom_vars, %{
+      metadata: %{order_id: order_id, order_slug: order.slug}
+    })
   end
 
   def order_cancellation_email(order_id) do
