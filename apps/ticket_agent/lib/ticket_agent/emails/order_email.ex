@@ -37,7 +37,8 @@ defmodule TicketAgent.Emails.OrderEmail do
     |> attachment(pdf_filename)
     |> attachment(ical_file_name)
     |> put_provider_option(:custom_vars, %{
-      metadata: %{order_id: order_id, order_slug: order.slug}
+      order_id: order.id,
+      order_slug: order.slug
     })
   end
 

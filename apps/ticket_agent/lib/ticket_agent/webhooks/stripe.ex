@@ -4,35 +4,40 @@ defmodule TicketAgent.Webhooks.Stripe do
   alias TicketAgent.Finders.UserFinder
 
   def process_webhook(%{"type" => "customer.deleted"} = webhook) do
-    Logger.info "process_webhook->Customer Deleted Webhook = #{inspect webhook}"
+    Logger.info("process_webhook->Customer Deleted Webhook = #{inspect(webhook)}")
 
     email = get_in(webhook, ["data", "object", "email"])
     stripe_customer_id = get_in(webhook, ["data", "object", "id"])
 
     case UserFinder.find_by_email_stripe_id(email, stripe_customer_id) do
       nil ->
-        Logger.error "User with email #{email} and stripe_customer_id #{stripe_customer_id} not found"
+        Logger.error(
+          "User with email #{email} and stripe_customer_id #{stripe_customer_id} not found"
+        )
+
       {:ok, user} ->
-        Logger.info "User found #{inspect user}"
-        User.update_stripe_customer_id(user, nil) |> IO.inspect
+        Logger.info("User found #{inspect(user)}")
+        User.update_stripe_customer_id(user, nil)
+
       anything ->
-        IO.inspect anything
+        Logger.info("Who knows what happened?  #{inspect(anything)}")
+        nil
     end
   end
 
   def process_webhook(%{"type" => "charge.succeeded"} = webhook) do
-    Logger.info "process_webhook->Charge Succeeded Webhook = #{inspect webhook}"
+    Logger.info("process_webhook->Charge Succeeded Webhook = #{inspect(webhook)}")
   end
 
   def process_webhook(%{"type" => "customer.source.created"} = webhook) do
-    Logger.info "process_webhook->Customer Source Created Webhook = #{inspect webhook}"
+    Logger.info("process_webhook->Customer Source Created Webhook = #{inspect(webhook)}")
   end
 
   def process_webhook(%{"type" => "customer.created"} = webhook) do
-    Logger.info "process_webhook->Customer Created Webhook = #{inspect webhook}"
+    Logger.info("process_webhook->Customer Created Webhook = #{inspect(webhook)}")
   end
 
   def process_webhook(webhook) do
-    Logger.info "Unknown Webhook = #{inspect webhook}"
+    Logger.info("Unknown Webhook = #{inspect(webhook)}")
   end
 end

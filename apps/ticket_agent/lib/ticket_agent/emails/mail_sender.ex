@@ -1,7 +1,7 @@
 defmodule TicketAgent.Emails.MailSender do
   require Logger
   alias TicketAgent.Emails.OrderEmail
-  alias TicketAgent.{Listing, Mailer}
+  alias TicketAgent.{Listing, Mailer, Repo}
   alias TicketAgent.State.{OrderState, TicketState}
 
   def send_order_receipt_email(order) do
@@ -15,6 +15,7 @@ defmodule TicketAgent.Emails.MailSender do
     case Repo.transaction(transaction) do
       {:ok, _} ->
         Logger.info("Updated tickets to emailed")
+
       _ ->
         Logger.info("Ticket was not updated")
     end

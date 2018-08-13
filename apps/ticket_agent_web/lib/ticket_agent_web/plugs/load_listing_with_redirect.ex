@@ -1,4 +1,5 @@
 defmodule TicketAgentWeb.Plugs.LoadListingWithRedirect do
+  require Logger
   import Plug.Conn
   import Phoenix.Controller
   alias TicketAgent.{Listing, Repo}
@@ -6,20 +7,28 @@ defmodule TicketAgentWeb.Plugs.LoadListingWithRedirect do
 
   def init(opts), do: opts
 
-  def call(%Plug.Conn{params: %{"listing" => %{"id" => listing_id}}} = conn, _) when not is_nil(listing_id) do
+  def call(%Plug.Conn{params: %{"listing" => %{"id" => listing_id}}} = conn, _)
+      when not is_nil(listing_id) do
+    Logger.info("Line 11")
+
     listing_id
     |> ListingFinder.find_by_id()
     |> setup_conn(conn)
   end
 
   def call(%Plug.Conn{params: %{"listing_id" => listing_slug}} = conn, _) do
+    Logger.info("Line 18")
+
     listing_slug
     |> ListingFinder.find_by_slug()
     |> setup_conn(conn)
-  end  
+  end
+
   def call(conn, _), do: setup_conn(nil, conn)
 
   def setup_conn(nil, conn) do
+    Logger.info("Line 30")
+
     conn
     |> put_flash(:error, "We could not find that listing.")
     |> redirect(to: "/events")
@@ -30,8 +39,9 @@ defmodule TicketAgentWeb.Plugs.LoadListingWithRedirect do
       true ->
         conn
         |> put_flash(:error, "The show #{listing.slug} has ended.")
-        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")       
-        |> halt() 
+        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")
+        |> halt()
+
       false ->
         conn
         |> Plug.Conn.assign(:listing, listing)
@@ -43,7 +53,8 @@ defmodule TicketAgentWeb.Plugs.LoadListingWithRedirect do
       true ->
         conn
         |> put_flash(:error, "The show #{listing.slug} has ended.")
-        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")        
+        |> redirect(to: "/events/#{Phoenix.Param.to_param(listing.event)}")
+
       false ->
         conn
         |> Plug.Conn.assign(:listing, listing)
@@ -53,12 +64,12 @@ defmodule TicketAgentWeb.Plugs.LoadListingWithRedirect do
   defp past_date(start_at) do
     utc_now =
       DateTime.utc_now()
-      |> Calendar.NaiveDateTime.to_date_time_utc
-    
+      |> Calendar.NaiveDateTime.to_date_time_utc()
+
     start_at =
       start_at
-      |> Calendar.NaiveDateTime.to_date_time_utc
+      |> Calendar.NaiveDateTime.to_date_time_utc()
 
-    (DateTime.compare(start_at, utc_now) == :lt)
-  end  
+    DateTime.compare(start_at, utc_now) == :lt
+  end
 end

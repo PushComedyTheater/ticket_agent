@@ -9,6 +9,8 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
           conn,
         _
       ) do
+    Logger.info(12)
+
     %{
       "listing" => %{
         "slug" => slug
@@ -43,13 +45,18 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
   end
 
   def call(%Plug.Conn{params: %{"listing_id" => listing_id}} = conn, _) do
+    Logger.info("Line 46")
+
     conn
     |> delete_resp_cookie("ticket_data")
+    |> halt
     |> put_flash(:error, "Something went wrong with your request.")
     |> redirect(to: "/events")
   end
 
   def call(conn, _) do
+    Logger.info("Line 53")
+
     conn
     |> delete_resp_cookie("ticket_data")
     |> put_flash(:error, "Something went wrong with your request.")

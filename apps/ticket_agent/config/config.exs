@@ -51,19 +51,19 @@ config :coherence,
     :unlockable_with_token
   ]
 
-config :ticket_agent, TicketAgent.Mailer,
-  adapter: Swoosh.Adapters.Mailgun,
-  api_key: System.get_env("MAILGUN_API_KEY"),
-  domain: "mail.pushcomedytheater.com",
-  email_from_name: "Push Comedy Theater",
-  email_from_email: "support@pushcomedytheater.com"
-
 # config :ticket_agent, TicketAgent.Mailer,
-#   adapter: Swoosh.Adapters.SMTP,
-#   relay: "127.0.0.1",
-#   port: 1025,
-#   email_from_name: "ticket agent config",
+#   adapter: Swoosh.Adapters.Mailgun,
+#   api_key: System.get_env("MAILGUN_API_KEY"),
+#   domain: "mail.pushcomedytheater.com",
+#   email_from_name: "Push Comedy Theater",
 #   email_from_email: "support@pushcomedytheater.com"
+
+config :ticket_agent, TicketAgent.Mailer,
+  adapter: Swoosh.Adapters.SMTP,
+  relay: "127.0.0.1",
+  port: 1025,
+  email_from_name: "ticket agent config",
+  email_from_email: "support@pushcomedytheater.com"
 
 # config :ticket_agent, TicketAgent.Mailer,
 #   adapter: Swoosh.Adapters.SMTP,
@@ -123,7 +123,6 @@ config :ticket_agent, Universe,
 value =
   case System.get_env("TICKET_LOCK_LENGTH") do
     nil ->
-      IO.inspect("NO TICKET_LOCK_LENGTH")
       302
 
     value ->

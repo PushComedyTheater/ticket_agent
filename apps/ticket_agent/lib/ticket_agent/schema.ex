@@ -9,7 +9,10 @@ defmodule TicketAgent.Schema do
       @primary_key {:id, :binary_id, autogenerate: true}
       @foreign_key_type :binary_id
       @derive {Phoenix.Param, key: :id}
-      @timestamps_opts [type: :utc_datetime, autogenerate: {Ecto.Schema, :__timestamps__, [:utc_datetime, :seconds]}]
+      @timestamps_opts [
+        type: :utc_datetime,
+        autogenerate: {Ecto.Schema, :__timestamps__, [:utc_datetime, :seconds]}
+      ]
       import Logger
 
       alias TicketAgent.{
@@ -28,6 +31,7 @@ defmodule TicketAgent.Schema do
         Ticket,
         User,
         UserCredential,
+        UserStorage,
         Waitlist,
         WebhookDetail
       }

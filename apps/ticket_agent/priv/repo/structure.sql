@@ -412,6 +412,19 @@ CREATE TABLE public.user_credentials (
 
 
 --
+-- Name: user_storages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_storages (
+    id uuid NOT NULL,
+    user_id uuid,
+    details jsonb,
+    inserted_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL,
+    updated_at timestamp with time zone DEFAULT clock_timestamp() NOT NULL
+);
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -612,6 +625,14 @@ ALTER TABLE ONLY public.tickets
 
 ALTER TABLE ONLY public.user_credentials
     ADD CONSTRAINT user_credentials_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_storages user_storages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_storages
+    ADD CONSTRAINT user_storages_pkey PRIMARY KEY (id);
 
 
 --
@@ -885,6 +906,13 @@ CREATE INDEX user_credentials_user_id_index ON public.user_credentials USING btr
 
 
 --
+-- Name: user_storages_user_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX user_storages_user_id_index ON public.user_storages USING btree (user_id);
+
+
+--
 -- Name: users_email_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1148,6 +1176,14 @@ ALTER TABLE ONLY public.user_credentials
 
 
 --
+-- Name: user_storages user_storages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_storages
+    ADD CONSTRAINT user_storages_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: users users_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1191,5 +1227,5 @@ ALTER TABLE ONLY public.waitlists
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20170724134755), (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180527161836);
+INSERT INTO public."schema_migrations" (version) VALUES (20170724134755), (20170724134756), (20170725134756), (20170728231040), (20170728233531), (20170806194117), (20171016234419), (20171116020407), (20171116020408), (20171116020409), (20171116020410), (20171116020412), (20171116020414), (20171208181236), (20171211141945), (20171223212910), (20180527161836), (20180812215341);
 

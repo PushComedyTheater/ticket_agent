@@ -3,9 +3,18 @@ defmodule TicketAgent.ListingsGenerator do
   alias Ecto.Multi
   alias TicketAgent.{Account, Class, Event, Listing, Repo, Ticket}
 
-  def create_event(%{"user" => user, "event_id" => "", "image" => image_url, "title" => title, "description" => description, "listings" => listings} = params) do
-    Logger.info "ListingsGenerator.create_event->event_id is not set"
-    account_id = Account.push_theater.id
+  def create_event(
+        %{
+          "user" => user,
+          "event_id" => "",
+          "image" => image_url,
+          "title" => title,
+          "description" => description,
+          "listings" => listings
+        } = params
+      ) do
+    Logger.info("ListingsGenerator.create_event->event_id is not set")
+    account_id = Account.push_theater().id
 
     event =
       Event.changeset(
@@ -20,40 +29,49 @@ defmodule TicketAgent.ListingsGenerator do
           account_id: account_id
         }
       )
-      |> IO.inspect
-      |> Repo.insert!
+      |> Repo.insert!()
 
     params = Map.put(params, "event_id", event.id)
     create_event(params)
   end
 
-  def create_event(%{"user" => user, "event_id" => event_id, "title" => title, "description" => description, "listings" => listings} = params) do
-    Logger.info "ListingsGenerator.create_event->title:    #{title}"
-    Logger.info "ListingsGenerator.create_event->event_id:    #{event_id}"
+  def create_event(
+        %{
+          "user" => user,
+          "event_id" => event_id,
+          "title" => title,
+          "description" => description,
+          "listings" => listings
+        } = params
+      ) do
+    Logger.info("ListingsGenerator.create_event->title:    #{title}")
+    Logger.info("ListingsGenerator.create_event->event_id:    #{event_id}")
 
     listings
-    |> Enum.each(fn(listing) ->
-      Logger.info "ListingsGenerator.create_event->processing listing #{inspect listing}"
+    |> Enum.each(fn listing ->
+      Logger.info("ListingsGenerator.create_event->processing listing #{inspect(listing)}")
 
       listing_start_at = load_time(listing["start_time"])
       listing_end_at = load_time(listing["end_time"])
       pass_fees_to_buyer = listing["pass_fees_to_buyer"]
 
-      Logger.info "listing_end_at = #{listing_end_at}"
+      Logger.info("listing_end_at = #{listing_end_at}")
 
       tickets =
         listing["tickets"]
-        |> Enum.flat_map(fn(ticket) ->
-          Logger.info "ListingsGenerator.create_event->processing ticket #{inspect ticket}"
-          ticket_start_at = case ticket["sale_start"] do
-            nil -> NaiveDateTime.utc_now
-            "" -> NaiveDateTime.utc_now
-            anything -> load_time(anything)
-          end
+        |> Enum.flat_map(fn ticket ->
+          Logger.info("ListingsGenerator.create_event->processing ticket #{inspect(ticket)}")
+
+          ticket_start_at =
+            case ticket["sale_start"] do
+              nil -> NaiveDateTime.utc_now()
+              "" -> NaiveDateTime.utc_now()
+              anything -> load_time(anything)
+            end
 
           ticket_end_at = load_time(ticket["sale_end"])
 
-          Enum.map(1..ticket["quantity"], fn(x) ->
+          Enum.map(1..ticket["quantity"], fn x ->
             %{
               slug: TicketAgent.Random.generate_slug(),
               name: ticket["name"],
@@ -66,11 +84,10 @@ defmodule TicketAgent.ListingsGenerator do
           end)
         end)
 
-
-      Logger.info "ListingsGenerator.create_event->setting up transaction"
+      Logger.info("ListingsGenerator.create_event->setting up transaction")
 
       transaction =
-        Multi.new
+        Multi.new()
         |> Multi.insert(
           :listing,
           Listing.changeset(
@@ -90,45 +107,56 @@ defmodule TicketAgent.ListingsGenerator do
             }
           )
         )
-        |> Multi.run(:update, fn(%{listing: listing}) ->
+        |> Multi.run(:update, fn %{listing: listing} ->
           Listing.changeset(
             listing,
             %{
               status: "active"
             }
           )
-          |> Repo.update
+          |> Repo.update()
         end)
+
       Repo.transaction(transaction)
     end)
   end
 
-  def create_from_class(%{"user" => user, "class_id" => class_id, "title" => title, "description" => description, "listings" => listings} = params) do
-    Logger.info "ListingsGenerator.create_from_class->class_id: #{class_id}"
-    Logger.info "ListingsGenerator.create_from_class->title:    #{title}"
+  def create_from_class(
+        %{
+          "user" => user,
+          "class_id" => class_id,
+          "title" => title,
+          "description" => description,
+          "listings" => listings
+        } = params
+      ) do
+    Logger.info("ListingsGenerator.create_from_class->class_id: #{class_id}")
+    Logger.info("ListingsGenerator.create_from_class->title:    #{title}")
 
     listings
-    |> Enum.each(fn(listing) ->
-      Logger.info "ListingsGenerator.create_from_class->processing listing #{inspect listing}"
+    |> Enum.each(fn listing ->
+      Logger.info("ListingsGenerator.create_from_class->processing listing #{inspect(listing)}")
       listing_start_at = load_time(listing["start_time"])
       listing_end_at = load_time(listing["end_time"])
       pass_fees_to_buyer = listing["pass_fees_to_buyer"]
 
-      Logger.info "listing_end_at = #{listing_end_at}"
+      Logger.info("listing_end_at = #{listing_end_at}")
 
       tickets =
         listing["tickets"]
-        |> Enum.flat_map(fn(ticket) ->
-          Logger.info "ListingsGenerator.create_from_class->processing ticket #{inspect ticket}"
-          ticket_start_at = case ticket["sale_start"] do
-            nil -> NaiveDateTime.utc_now
-            "" -> NaiveDateTime.utc_now
-            anything -> load_time(anything)
-          end
+        |> Enum.flat_map(fn ticket ->
+          Logger.info("ListingsGenerator.create_from_class->processing ticket #{inspect(ticket)}")
+
+          ticket_start_at =
+            case ticket["sale_start"] do
+              nil -> NaiveDateTime.utc_now()
+              "" -> NaiveDateTime.utc_now()
+              anything -> load_time(anything)
+            end
 
           ticket_end_at = load_time(ticket["sale_end"])
 
-          Enum.map(1..ticket["quantity"], fn(x) ->
+          Enum.map(1..ticket["quantity"], fn x ->
             %{
               slug: TicketAgent.Random.generate_slug(),
               name: ticket["name"],
@@ -141,10 +169,10 @@ defmodule TicketAgent.ListingsGenerator do
           end)
         end)
 
-      Logger.info "ListingsGenerator.create_from_class->setting up transaction"
+      Logger.info("ListingsGenerator.create_from_class->setting up transaction")
 
       transaction =
-        Multi.new
+        Multi.new()
         |> Multi.insert(
           :listing,
           Listing.changeset(
@@ -164,21 +192,23 @@ defmodule TicketAgent.ListingsGenerator do
             }
           )
         )
-        |> Multi.run(:update, fn(%{listing: listing}) ->
+        |> Multi.run(:update, fn %{listing: listing} ->
           Listing.changeset(
             listing,
             %{
               status: "active"
             }
           )
-          |> Repo.update
+          |> Repo.update()
         end)
+
       Repo.transaction(transaction)
     end)
   end
 
   def load_time(nil), do: nil
   def load_time(""), do: nil
+
   def load_time(value) do
     {:ok, start_at, _offset} = DateTime.from_iso8601(value)
     start_at

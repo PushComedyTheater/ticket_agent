@@ -105,8 +105,6 @@ defmodule TicketAgent.OrderHelpers do
 
   def ticket_table(order) do
     Enum.map_join(order.tickets, "", fn ticket ->
-      IO.inspect(ticket)
-
       "<tr><td>#{ticket.name}</td><td>$#{:erlang.float_to_binary(ticket.price / 100, decimals: 2)}</td></tr>"
     end)
   end

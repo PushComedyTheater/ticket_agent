@@ -114,7 +114,6 @@ defmodule TicketAgent.Services.Stripe do
       user
       |> load_customer_charge_values()
       |> load_body(%{})
-      |> IO.inspect()
 
     uri = api_url() <> "/charges?" <> body
 

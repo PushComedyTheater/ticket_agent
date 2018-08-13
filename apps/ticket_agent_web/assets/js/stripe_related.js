@@ -141,47 +141,53 @@ window.reserve_tickets = function () {
 }
 
 window.release_tickets = function (redirect) {
-  // window.console_dir("releasing tickets with redirect: " + redirect);
-  $.ajax({
-    // The URL for the request
-    url: "/orders/push.json",
-    // The data to send (will be converted to a query string)
-    data: JSON.stringify(window.details),
-    // Whether this is a POST or GET request
-    type: "DELETE",
-    // The type of data we expect back
-    contentType: "application/json",
-    dataType: "json",
-    // add in csrf_token
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
-    },
-  }).done(function (json) {
-    //window.console_log("Response successful");
-    // Code to run if the request succeeds (is done);
-    // The response is passed to the function
-    //window.console_dir(json);
-    ////window.console_group_end();
-    if (redirect) {
-      window.removeEventListener("beforeunload", window.unloader);
-      var location = "";
-      if (window.details.listing.type == "class") {
-        location = "/class/" + window.details.listing.class_slug + "?msg=cancelled_order"
-      } else {
-        location = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
+  if (window.loading_token) {
+    console.log("Cannot release because token is set");
+    setTimeout(function () {
+      window.release_tickets(redirect);
+    }, 2000);
+  } else {
+    window.console_dir("releasing tickets with redirect: " + redirect);
+    $.ajax({
+      // The URL for the request
+      url: "/orders/push.json",
+      // The data to send (will be converted to a query string)
+      data: JSON.stringify(window.details),
+      // Whether this is a POST or GET request
+      type: "DELETE",
+      // The type of data we expect back
+      contentType: "application/json",
+      dataType: "json",
+      // add in csrf_token
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+      },
+    }).done(function (json) {
+      //window.console_log("Response successful");
+      // Code to run if the request succeeds (is done);
+      // The response is passed to the function
+      //window.console_dir(json);
+      ////window.console_group_end();
+      if (redirect) {
+        window.removeEventListener("beforeunload", window.unloader);
+        var location = "";
+        if (window.details.listing.type == "class") {
+          location = "/class/" + window.details.listing.class_slug + "?msg=cancelled_order"
+        } else {
+          location = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
+        }
+        window.location.href = location;
       }
-      window.location.href = location;
-    }
-  }).fail(function (xhr, status, errorThrown) {
-    // Code to run if the request fails; the raw request and
-    // status codes are passed to the function
-    window.console_error("Received error creating order: ")
-    window.console_error("errorThrown: " + errorThrown);
-    //window.console_group_end();
-    window.removeEventListener("beforeunload", window.unloader);
-    window.location.href = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
-  });
-
+    }).fail(function (xhr, status, errorThrown) {
+      // Code to run if the request fails; the raw request and
+      // status codes are passed to the function
+      window.console_error("Received error creating order: ")
+      window.console_error("errorThrown: " + errorThrown);
+      //window.console_group_end();
+      window.removeEventListener("beforeunload", window.unloader);
+      window.location.href = "/events/" + window.details.listing.slug + "?msg=cancelled_order"
+    });
+  }
 }
 
 window.stripeTokenHandler = function (result, ev) {
@@ -351,6 +357,7 @@ window.setup_submit_button = function (div_id) {
     $("#submit_button").css("disabled", "disabled");
 
     if (window.loading_token) {
+      console.log("Loading token is set");
       return false;
     }
 

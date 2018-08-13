@@ -12,20 +12,25 @@ defmodule TicketAgent.UserTest do
         %{
           password: "123456789"
         },
-      :password)
+        :password
+      )
       |> Repo.update()
 
       admin = insert(:user)
+
       User.admin_update_user(
         user,
-        %{"name" => "Patrick Veverkas", "role" => "admin", "stripe_customer_id" => "cus_Cs85cPRtCyzxKG"},
-        admin)
+        %{
+          "name" => "Patrick Veverkas",
+          "role" => "admin",
+          "stripe_customer_id" => "cus_Cs85cPRtCyzxKG"
+        },
+        admin
+      )
 
       ticket =
         Repo.all(PaperTrail.Version)
         |> hd
-        |> IO.inspect
-
     end
   end
 end

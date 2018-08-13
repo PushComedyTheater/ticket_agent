@@ -46,7 +46,6 @@ $(document).on('ready', function () {
   }
 
   window.save_ticket = function(counter, individual_button, e) {
-    console.log("SAVING");
     e.preventDefault();
     var valid_form = true;
     var name  = $("#attendee_name_" + counter).val();
@@ -121,7 +120,8 @@ $(document).on('ready', function () {
   window.save_details_to_cookie = function() {
     var encodedData = window.btoa(JSON.stringify(window.details));
     var inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
-    Cookies.set("ticket_data", encodedData, {expires: inFifteenMinutes});
+    Cookies.set("ticket_data", window.details, {expires: inFifteenMinutes});
+    return encodedData;
   }
 
   window.save_all_tickets_and_redirect = function (event) {
@@ -135,10 +135,35 @@ $(document).on('ready', function () {
         valid_tickets = false;
       }
     })
-    window.save_details_to_cookie();
+
     if (valid_tickets && ticket_count > 0) {
-      var redirect_url = "/orders/new?listing_id=" + window.details.listing.slug;
-      window.location.href = redirect_url;
+      $.ajax({
+        // The URL for the request
+        url: "/tickets",
+        // The data to send (will be converted to a query string)
+        data: JSON.stringify({data: window.details}),
+        // Whether this is a POST or GET request
+        type: "POST",
+        // The type of data we expect back
+        contentType: "application/json",
+        dataType: "json",
+        // add in csrf_token
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+        },
+      }).done(function (response) {
+        var inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+        Cookies.set("user_storage", response.unique_id, {expires: inFifteenMinutes});
+        var redirect_url = "/orders/new?uid=" + response.unique_id + "&listing_id=" + window.details.listing.slug;
+        window.location.href = redirect_url;
+      }).fail(function (xhr, status, errorThrown) {
+        // Code to run if the request fails; the raw request and
+        // status codes are passed to the function
+        window.console_log("Received error storing order: ")
+        window.console_log("errorThrown: " + errorThrown);
+      });
+
+
     }
   }
 
