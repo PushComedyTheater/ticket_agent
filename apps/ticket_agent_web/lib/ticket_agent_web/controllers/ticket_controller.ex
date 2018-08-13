@@ -21,7 +21,7 @@ defmodule TicketAgentWeb.TicketController do
     |> render("new.html")
   end
 
-  def create(conn, params) do
+  def create(conn, %{"data" => data} = params) do
     user = Coherence.current_user(conn)
 
     result =
@@ -32,7 +32,7 @@ defmodule TicketAgentWeb.TicketController do
         storage ->
           storage
       end
-      |> UserStorage.changeset(%{details: params})
+      |> UserStorage.changeset(%{details: data})
       |> Repo.insert_or_update()
 
     case result do

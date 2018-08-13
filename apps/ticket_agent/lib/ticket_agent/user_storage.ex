@@ -1,7 +1,7 @@
 defmodule TicketAgent.UserStorage do
   use Ecto.Schema
   import Ecto.Changeset
-  alias TicketAgent.{User, UserStorage}
+  alias TicketAgent.{Repo, User, UserStorage}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -18,4 +18,6 @@ defmodule TicketAgent.UserStorage do
     |> cast(attrs, [:user_id, :details])
     |> unique_constraint(:user_id)
   end
+
+  def get_user_storage!(id), do: Repo.get!(UserStorage, id)
 end
