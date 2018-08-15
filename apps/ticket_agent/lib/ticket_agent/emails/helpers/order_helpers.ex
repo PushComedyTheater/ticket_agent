@@ -30,6 +30,20 @@ defmodule TicketAgent.OrderHelpers do
     |> Calendar.Strftime.strftime!("%Y%m%dT%H%M%SZ")
   end
 
+  def sold_ticket_count(%Listing{tickets: %Ecto.Association.NotLoaded{}} = listing) do
+    sold_ticket_count(Repo.preload(listing, [:tickets]))
+  end
+
+  def sold_ticket_count(%Listing{tickets: tickets}) do
+    sold_tickets =
+      tickets
+      |> Enum.filter(fn ticket ->
+        Enum.member?(~w(purchased emailed checkedin), ticket.status)
+      end)
+
+    ticket_count(%{tickets: sold_tickets})
+  end
+
   def ticket_count(%{tickets: tickets}) when length(tickets) > 1,
     do: "#{Enum.count(tickets)} tickets"
 
@@ -51,6 +65,7 @@ defmodule TicketAgent.OrderHelpers do
       tickets
       |> Enum.filter(fn ticket -> ticket.status == "purchased" end)
 
+    IO.inspect(tickets)
     ticket_count(%{tickets: tickets})
   end
 

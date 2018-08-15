@@ -101,4 +101,16 @@ defmodule TicketAgentWeb.Admin.EmailTemplateController do
     |> put_resp_content_type("text/html")
     |> send_resp(200, email.html_body)
   end
+
+  def show(conn, %{"type" => "admin_order_email", "id" => order_slug}) do
+    order =
+      Order
+      |> Repo.get_by(slug: order_slug)
+
+    email = OrderEmail.admin_order_receipt_email(order.id)
+
+    conn
+    |> put_resp_content_type("text/html")
+    |> send_resp(200, email.html_body)
+  end
 end

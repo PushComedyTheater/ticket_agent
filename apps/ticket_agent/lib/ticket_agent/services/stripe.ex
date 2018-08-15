@@ -2,7 +2,7 @@ defmodule TicketAgent.Services.Stripe do
   require Logger
   @stripe_api_version "2018-07-27"
   @stripe_user_agent "TicketAgent 1.0"
-  alias TicketAgent.{OrderDetail, Repo, User}
+  alias TicketAgent.{Order, OrderDetail, Repo, User}
   alias TicketAgent.State.OrderState
 
   def publishable_key, do: get_env_variable(:publishable_key)
@@ -122,6 +122,11 @@ defmodule TicketAgent.Services.Stripe do
     # {status, response} =
     #   request(:post, uri, [], body, hackney_opts())
     #   |> insert_order_details(order.id, client_ip)
+  end
+
+  def refund(%Order{total_price: 0} = order, _, _) do
+    Logger.info("Processing refund for #{order.slug} - free order")
+    {:ok, nil}
   end
 
   def refund(order, client_ip, metadata \\ %{}) do

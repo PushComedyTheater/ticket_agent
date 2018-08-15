@@ -4,7 +4,7 @@
   <%= order.user.name %> (<%= order.user.email %>) bought <%= ticket_count(order) %> for <em>"<%= listing.title %>"</em> on <%= event_date(listing.start_at) %> at <%= event_time(listing.start_at) %>.
   <br />
   <br />
-  So far, you have sold <%= listing_ticket_count(listing) %> for this show!
+  So far, you have sold <%= sold_ticket_count(listing) %> for this show!
 </div>
 <br />
 <hr />
@@ -16,11 +16,9 @@ Tickets
 <%= for ticket <- order.tickets do %>
 <tr>
   <td style="text-align: left; padding: 5px; border-bottom: 1px solid #d2d2d2;">
-    <%= ticket.description %>
-    <br />
     <small>Ticket for <%= ticket.guest_name %></small>
   </td>
-  <td style="text-align: right; padding: 5px;">
+  <td style="text-align: right; padding: 5px; border-bottom: 1px solid #d2d2d2;">
     <%= money(ticket.price) %>
   </td>
 </tr>
@@ -60,6 +58,9 @@ Tickets
     <strong>Payment Method</strong><br>
       <%= order.credit_card.type %> ending in <%= order.credit_card.last_4 %>
     </p>
+    <% else %>
+    <strong>Payment Method</strong><br>
+    None
     <% end %>
     </th>
     <th class="callout-inner secondary" style="border-left: 0px;">
