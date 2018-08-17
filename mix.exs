@@ -37,7 +37,7 @@ defmodule TicketAgent.Umbrella.Mixfile do
   defp deps do
     [
       {:edeliver, "~> 1.5.0"},
-      {:distillery, "~> 1.5", warn_missing: false}
+      {:distillery, "~> 2.0", warn_missing: false}
     ]
   end
 
