@@ -1,6 +1,6 @@
 defmodule TicketAgent.Generators.OrderPdfGenerator do
   require Logger
-  alias TicketAgent.Repo
+  alias TicketAgent.{Order, Repo}
 
   @root_dir File.cwd!()
   @template_dir Application.app_dir(:ticket_agent, "priv/email_templates")

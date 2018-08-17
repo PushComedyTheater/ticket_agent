@@ -71,6 +71,16 @@ defmodule TicketAgent.OrderHelpers do
 
   def listing_image_with_dimensions(%Listing{event_id: event_id} = show, width, height)
       when not is_nil(event_id) do
+    show =
+      case Ecto.assoc_loaded?(show.event) do
+        true ->
+          show
+
+        false ->
+          show
+          |> Repo.preload(:event)
+      end
+
     listing_with_dimensions(show.event.image_url, width, height)
   end
 

@@ -15,15 +15,16 @@ defmodule TicketAgent.State.OrderStateTest do
       ticket = insert(:ticket, price: 500, order: order)
       timestamp = NaiveDateTime.utc_now()
 
-      {order, tickets, locked_until, pricing} = OrderState.calculate_price({order, [ticket], timestamp})
+      {order, tickets, locked_until, pricing} =
+        OrderState.calculate_price({order, [ticket], timestamp})
 
       assert Enum.count(tickets) == 1
       assert locked_until == timestamp
 
-      assert order.subtotal        == 500
+      assert order.subtotal == 500
       assert order.credit_card_fee == 48
-      assert order.processing_fee  == 55
-      assert order.total_price     == 603
+      assert order.processing_fee == 55
+      assert order.total_price == 603
 
       assert pricing.subtotal == 500
       assert pricing.processing_fee == 103
@@ -39,14 +40,16 @@ defmodule TicketAgent.State.OrderStateTest do
 
       order = Repo.reload(order)
 
-      {order, tickets, locked_until, pricing} = OrderState.calculate_price({order, [ticket], timestamp})
+      {order, tickets, locked_until, pricing} =
+        OrderState.calculate_price({order, [ticket], timestamp})
+
       assert Enum.count(tickets) == 1
       assert locked_until == timestamp
 
-      assert order.subtotal        == 500
+      assert order.subtotal == 500
       assert order.credit_card_fee == 0
-      assert order.processing_fee  == 55
-      assert order.total_price     == 500
+      assert order.processing_fee == 55
+      assert order.total_price == 500
 
       assert pricing.subtotal == 500
       assert pricing.processing_fee == 55
@@ -62,14 +65,16 @@ defmodule TicketAgent.State.OrderStateTest do
 
       order = Repo.reload(order)
 
-      {order, tickets, locked_until, pricing} = OrderState.calculate_price({order, [ticket], timestamp})
+      {order, tickets, locked_until, pricing} =
+        OrderState.calculate_price({order, [ticket], timestamp})
+
       assert Enum.count(tickets) == 1
       assert locked_until == timestamp
 
-      assert order.subtotal        == 0
+      assert order.subtotal == 0
       assert order.credit_card_fee == 0
-      assert order.processing_fee  == 0
-      assert order.total_price     == 0
+      assert order.processing_fee == 0
+      assert order.total_price == 0
 
       assert pricing.subtotal == 0
       assert pricing.processing_fee == 0
@@ -84,10 +89,10 @@ defmodule TicketAgent.State.OrderStateTest do
 
       order = OrderState.calculate_order_cost(order)
 
-      assert order.subtotal        == 500
+      assert order.subtotal == 500
       assert order.credit_card_fee == 48
-      assert order.processing_fee  == 55
-      assert order.total_price     == 603
+      assert order.processing_fee == 55
+      assert order.total_price == 603
     end
 
     test "calculates 5 ticket price" do
@@ -100,17 +105,18 @@ defmodule TicketAgent.State.OrderStateTest do
 
       order = OrderState.calculate_order_cost(order)
 
-      assert order.subtotal        == 2400
+      assert order.subtotal == 2400
       assert order.credit_card_fee == 105
-      assert order.processing_fee  == 74
-      assert order.total_price     == 2579
+      assert order.processing_fee == 74
+      assert order.total_price == 2579
     end
   end
 
   describe "calculate_fees passing fees to buyer" do
     test "calculates price for 0 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: true)
-      price = 0 #1 dollar
+      # 1 dollar
+      price = 0
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 0
       assert processing_fee == 0
@@ -119,7 +125,8 @@ defmodule TicketAgent.State.OrderStateTest do
 
     test "calculates price for 1 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: true)
-      price = 100 #1 dollar
+      # 1 dollar
+      price = 100
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 187
       assert processing_fee == 51
@@ -128,7 +135,8 @@ defmodule TicketAgent.State.OrderStateTest do
 
     test "calculates price for 100 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: true)
-      price = 10000 #100 dollar
+      # 100 dollar
+      price = 10000
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 10485
       assert processing_fee == 150
@@ -137,9 +145,10 @@ defmodule TicketAgent.State.OrderStateTest do
 
     test "calculates price for 2100 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: true)
-      price = 210000 #1 dollar
+      # 1 dollar
+      price = 210_000
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
-      assert total == 218517
+      assert total == 218_517
       assert processing_fee == 2150
       assert stripe_fee == 6367
     end
@@ -148,7 +157,8 @@ defmodule TicketAgent.State.OrderStateTest do
   describe "calculate_fees absorbing fees" do
     test "calculates price for 0 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: false)
-      price = 0 #1 dollar
+      # 1 dollar
+      price = 0
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 0
       assert processing_fee == 0
@@ -157,7 +167,8 @@ defmodule TicketAgent.State.OrderStateTest do
 
     test "calculates price for 1 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: false)
-      price = 100 #1 dollar
+      # 1 dollar
+      price = 100
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 100
       assert processing_fee == 51
@@ -166,7 +177,8 @@ defmodule TicketAgent.State.OrderStateTest do
 
     test "calculates price for 100 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: false)
-      price = 10000 #100 dollar
+      # 100 dollar
+      price = 10000
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
       assert total == 10000
       assert processing_fee == 150
@@ -175,9 +187,10 @@ defmodule TicketAgent.State.OrderStateTest do
 
     test "calculates price for 2100 dollar" do
       listing = insert(:listing, pass_fees_to_buyer: false)
-      price = 210000 #1 dollar
+      # 1 dollar
+      price = 210_000
       {total, stripe_fee, processing_fee} = OrderState.calculate_fees(price, listing)
-      assert total == 210000
+      assert total == 210_000
       assert processing_fee == 2150
       assert stripe_fee == 0
     end
@@ -189,10 +202,12 @@ defmodule TicketAgent.State.OrderStateTest do
       multi = OrderState.set_order_started(order, timestamp)
 
       assert [
-        order_started: {:update_all, query, updates, [returning: true]}
-      ] = Multi.to_list(multi)
+               order_started: {:update_all, query, updates, [returning: true]}
+             ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status == \"processing\">)
+      assert inspect(query) ==
+               ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status == \"processing\">)
+
       assert updates == [set: [status: "started", started_at: timestamp]]
 
       {:ok, %{order_started: {1, [updated_order]}}} = Repo.transaction(multi)
@@ -205,12 +220,13 @@ defmodule TicketAgent.State.OrderStateTest do
     end
 
     test "does not affect others" do
-      Enum.each(~w(started completed errored cancelled), fn(status) ->
+      Enum.each(~w(started completed errored cancelled), fn status ->
         order = insert(:order, status: status)
+
         {:ok, %{order_started: {0, _}}} =
           order
           |> OrderState.set_order_started()
-          |> Repo.transaction
+          |> Repo.transaction()
 
         order = Repo.reload(order)
         assert order.status == status
@@ -224,10 +240,12 @@ defmodule TicketAgent.State.OrderStateTest do
       multi = OrderState.set_order_processing(order, timestamp)
 
       assert [
-        order_processing: {:update_all, query, updates, [returning: true]}
-      ] = Multi.to_list(multi)
+               order_processing: {:update_all, query, updates, [returning: true]}
+             ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status == \"started\">)
+      assert inspect(query) ==
+               ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status == \"started\">)
+
       assert updates == [set: [status: "processing", processing_at: timestamp]]
 
       {:ok, %{order_processing: {1, [updated_order]}}} = Repo.transaction(multi)
@@ -240,12 +258,13 @@ defmodule TicketAgent.State.OrderStateTest do
     end
 
     test "does not affect others" do
-      Enum.each(~w(processing completed errored cancelled), fn(status) ->
+      Enum.each(~w(processing completed errored cancelled), fn status ->
         order = insert(:order, status: status)
+
         {:ok, %{order_processing: {0, _}}} =
           order
           |> OrderState.set_order_processing()
-          |> Repo.transaction
+          |> Repo.transaction()
 
         order = Repo.reload(order)
         assert order.status == status
@@ -259,10 +278,12 @@ defmodule TicketAgent.State.OrderStateTest do
       multi = OrderState.set_order_completed(order, timestamp)
 
       assert [
-        order_completed: {:update_all, query, updates, [returning: true]}
-      ] = Multi.to_list(multi)
+               order_completed: {:update_all, query, updates, [returning: true]}
+             ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
+      assert inspect(query) ==
+               ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
+
       assert updates == [set: [status: "completed", completed_at: timestamp]]
 
       {:ok, %{order_completed: {1, [updated_order]}}} = Repo.transaction(multi)
@@ -279,10 +300,12 @@ defmodule TicketAgent.State.OrderStateTest do
       multi = OrderState.set_order_completed(order, timestamp)
 
       assert [
-        order_completed: {:update_all, query, updates, [returning: true]}
-      ] = Multi.to_list(multi)
+               order_completed: {:update_all, query, updates, [returning: true]}
+             ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
+      assert inspect(query) ==
+               ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
+
       assert updates == [set: [status: "completed", completed_at: timestamp]]
 
       {:ok, %{order_completed: {1, [updated_order]}}} = Repo.transaction(multi)
@@ -295,12 +318,13 @@ defmodule TicketAgent.State.OrderStateTest do
     end
 
     test "does not affect others" do
-      Enum.each(~w(errored cancelled), fn(status) ->
+      Enum.each(~w(errored cancelled), fn status ->
         order = insert(:order, status: status)
+
         {:ok, %{order_completed: {0, _}}} =
           order
           |> OrderState.set_order_completed()
-          |> Repo.transaction
+          |> Repo.transaction()
 
         order = Repo.reload(order)
         assert order.status == status
@@ -314,11 +338,13 @@ defmodule TicketAgent.State.OrderStateTest do
       multi = OrderState.release_order(order, timestamp)
 
       assert [
-        order_released: {:update_all, query, updates, [returning: true]}
-      ] = Multi.to_list(multi)
+               order_released: {:update_all, query, updates, [returning: true]}
+             ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
-      assert updates == [set: [status: "cancelled",cancelled_at: timestamp]]
+      assert inspect(query) ==
+               ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\", \"completed\"]>)
+
+      assert updates == [set: [status: "cancelled", cancelled_at: timestamp]]
 
       {:ok, %{order_released: {1, [updated_order]}}} = Repo.transaction(multi)
       assert order.id == updated_order.id
@@ -334,10 +360,12 @@ defmodule TicketAgent.State.OrderStateTest do
       multi = OrderState.release_order(order, timestamp)
 
       assert [
-        order_released: {:update_all, query, updates, [returning: true]}
-      ] = Multi.to_list(multi)
+               order_released: {:update_all, query, updates, [returning: true]}
+             ] = Multi.to_list(multi)
 
-      assert inspect(query) == ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\"]>)
+      assert inspect(query) ==
+               ~s(#Ecto.Query<from o in TicketAgent.Order, where: o.id == ^\"#{order.id}\", where: o.status in [\"started\", \"processing\", \"completed\"]>)
+
       assert updates == [set: [status: "cancelled", cancelled_at: timestamp]]
 
       {:ok, %{order_released: {1, [updated_order]}}} = Repo.transaction(multi)
@@ -350,12 +378,13 @@ defmodule TicketAgent.State.OrderStateTest do
     end
 
     test "does not affect others" do
-      Enum.each(~w(completed errored cancelled), fn(status) ->
+      Enum.each(~w(errored cancelled), fn status ->
         order = insert(:order, status: status)
+
         {:ok, %{order_released: {0, _}}} =
           order
           |> OrderState.release_order()
-          |> Repo.transaction
+          |> Repo.transaction()
 
         order = Repo.reload(order)
         assert order.status == status
