@@ -1,4 +1,4 @@
-<li class="nav-item g-mx-10--lg g-mx-15--xl">
+<li class="nav-item g-mx-10--lg g-mx-15--xl" style="display: none;">
   <a id="nav-link--camps" class="<%= menu_class(@conn.path_info, "camps") %>" href="/camps">Summer Camps</a>
   <!-- End Submenu -->
 </li>
