@@ -117,32 +117,32 @@
             <ul class="list-inline text-center text-md-right mb-0">
               <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Facebook">
                 <a href="https://www.facebook.com/PushComedyTheater" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                  <i class="fa fa-facebook"></i>
+                  <i class="fab fa-facebook"></i>
                 </a>
               </li>
               <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Twitter">
                 <a href="https://twitter.com/pushcomedy" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                  <i class="fa fa-twitter"></i>
+                  <i class="fab fa-twitter"></i>
                 </a>
               </li>
               <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Google Plus">
                 <a href="https://plus.google.com/u/0/b/111820986003170275262/+PushComedyTheaterNorfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                  <i class="fa fa-google-plus"></i>
+                  <i class="fab fa-google-plus"></i>
                 </a>
               </li>
               <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Instagram">
                 <a href="https://www.instagram.com/pushcomedy/" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                  <i class="fa fa-instagram"></i>
+                  <i class="fab fa-instagram"></i>
                 </a>
               </li>
               <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Slack">
                 <a href="https://pushcomedytheater.slack.com/" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                  <i class="fa fa-slack"></i>
+                  <i class="fab fa-slack"></i>
                 </a>
               </li>
               <li class="list-inline-item g-mx-10" data-toggle="tooltip" data-placement="top" title="Yelp">
                 <a href="https://www.yelp.com/biz/push-comedy-theater-norfolk" target="_blank" class="g-color-white-opacity-0_5 g-color-white--hover">
-                  <i class="fa fa-yelp"></i>
+                  <i class="fab fa-yelp"></i>
                 </a>
               </li>
             </ul>
