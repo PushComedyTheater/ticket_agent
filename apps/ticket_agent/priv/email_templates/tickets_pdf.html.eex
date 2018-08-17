@@ -45,7 +45,7 @@
       padding-left: 500px;
       border-bottom: none;
       box-shadow: none;
-      background-image: url(https://cdn.rawgit.com/PushComedyTheater/assets/master/images/header_logo_wide.jpg);
+      background-image: url(https://pushcomedytheater.com/pushassets/images/header_logo_wide.jpg);
       background-repeat: no-repeat;
       min-height: 100px;
       align: right;

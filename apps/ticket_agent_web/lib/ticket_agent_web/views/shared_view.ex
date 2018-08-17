@@ -207,6 +207,7 @@ defmodule TicketAgentWeb.SharedView do
       |> String.split(".")
       |> List.first()
 
+    public_id = "covers/#{public_id}"
     Logger.info("Event image is #{public_id}")
 
     Cloudinex.Url.for(public_id, %{
@@ -239,7 +240,7 @@ defmodule TicketAgentWeb.SharedView do
     og_data(
       conn,
       :page_image,
-      "https://cdn.rawgit.com/PushComedyTheater/assets/master/images/logo.jpg"
+      "https://pushcomedytheater.com/pushassets/images/logo.jpg"
     )
   end
 

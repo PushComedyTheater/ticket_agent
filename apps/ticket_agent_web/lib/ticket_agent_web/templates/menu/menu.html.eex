@@ -14,7 +14,7 @@
 
           <!-- Logo -->
           <%= link to: root_path(@conn, :index), class: "navbar-brand" do %>
-            <img alt="Logo" src="https://cdn.rawgit.com/PushComedyTheater/assets/master/images/logo-sm.png"  />
+            <img alt="Logo" src="https://pushcomedytheater.com/pushassets/images/logo-sm.png"  />
           <% end %>
           <!-- End Logo -->
 

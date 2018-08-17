@@ -9,7 +9,7 @@ defmodule TicketAgentWeb.RootView do
              brad_purple brad_purple brad_purple)
 
   def header_image do
-    "https://cdn.rawgit.com/PushComedyTheater/assets/master/images/headers/#{Random.sample(@images)}.jpg"
+    "https://pushcomedytheater.com/pushassets/images/headers/#{Random.sample(@images)}.jpg"
   end
 
   def event_date(date) do

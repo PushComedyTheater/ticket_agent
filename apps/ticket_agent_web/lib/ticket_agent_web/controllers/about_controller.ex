@@ -13,18 +13,24 @@ defmodule TicketAgentWeb.AboutController do
 
     conn
     |> assign(:page_title, "About The Push Comedy Theater")
-    |> assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(@theater_description, false))
+    |> assign(
+      :page_description,
+      TicketAgentWeb.SharedView.open_graph_description(@theater_description, false)
+    )
     |> render("index.html", teachers: teachers)
   end
 
   def show(conn, %{"id" => id}) do
-    teacher = Repo.get_by(Teacher, [slug: id])
+    teacher = Repo.get_by(Teacher, slug: id)
     teachers = Repo.all(Teacher)
 
     conn
     |> assign(:page_title, teacher.name)
-    |> assign(:page_description, TicketAgentWeb.SharedView.open_graph_description(teacher.biography, false))
-    |> assign(:page_image, "https://cdn.rawgit.com/PushComedyTheater/assets/master/images/#{teacher.slug}.jpg")
+    |> assign(
+      :page_description,
+      TicketAgentWeb.SharedView.open_graph_description(teacher.biography, false)
+    )
+    |> assign(:page_image, "https://pushcomedytheater.com/pushassets/images/#{teacher.slug}.jpg")
     |> render("show.html", teacher: teacher, teachers: teachers)
   end
 end
