@@ -21,10 +21,24 @@ defmodule TicketAgent.Emails.MailSender do
     end
   end
 
-  def send_admin_order_receipt_email(order_id) do
-    Logger.info("Sending admin email #{order_id}")
+  def send_admin_order_receipt_email(order) do
+    Logger.info("Sending admin email #{order.id}")
 
-    OrderEmail.admin_order_receipt_email(order_id)
+    OrderEmail.admin_order_receipt_email(order.id)
+    |> Mailer.deliver!()
+  end
+
+  def send_order_cancellation_email(order) do
+    Logger.info("Sending order cancellation email #{order.id}")
+
+    OrderEmail.order_cancellation_email(order.id)
+    |> Mailer.deliver!()
+  end
+
+  def send_admin_order_cancellation_email(order) do
+    Logger.info("Sending admin email #{order.id}")
+
+    OrderEmail.admin_order_receipt_email(order.id)
     |> Mailer.deliver!()
   end
 end

@@ -5,16 +5,8 @@ defmodule TicketAgentWeb.EventView do
   def load_event_image(event, width \\ 1050)
 
   def load_event_image(%{image_url: image_url}, width) do
-    image = image_url
-
-    public_id =
-      image
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
-    public_id = "covers/#{public_id}"
+    # from shared_view
+    public_id = load_public_id(image_url)
 
     Cloudinex.Url.for(public_id, %{
       width: width,

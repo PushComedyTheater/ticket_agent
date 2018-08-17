@@ -159,12 +159,7 @@ defmodule TicketAgentWeb.SharedView do
   def full_event_time(_), do: "Unknown"
 
   def listing_image_with_dimensions(show, width, height) do
-    public_id =
-      show.event.image_url
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
+    public_id = load_public_id(show.event.image_url)
 
     Cloudinex.Url.for(public_id, %{
       width: width,
@@ -176,15 +171,7 @@ defmodule TicketAgentWeb.SharedView do
   end
 
   def listing_image(show, width \\ 1050) do
-    image = show.event.image_url
-
-    public_id =
-      image
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
+    public_id = load_public_id(show.event.image_url)
     Logger.info("Listing image public id = #{public_id}")
 
     Cloudinex.Url.for(public_id, %{
@@ -197,17 +184,8 @@ defmodule TicketAgentWeb.SharedView do
   end
 
   def event_image(image_url, width \\ 1050) do
-    image = "#{image_url}"
+    public_id = load_public_id(image_url)
 
-    # https://res.cloudinary.com/push-comedy-theater/image/upload/v1531017452/cover/pojawwsiu4rdvtkcrho7.png
-    public_id =
-      image
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
-    public_id = "covers/#{public_id}"
     Logger.info("Event image is #{public_id}")
 
     Cloudinex.Url.for(public_id, %{
@@ -219,6 +197,17 @@ defmodule TicketAgentWeb.SharedView do
       format: "jpg",
       tag: "cover"
     })
+  end
+
+  def load_public_id(image_url) do
+    public_id =
+      image_url
+      |> String.split("/")
+      |> List.last()
+      |> String.split(".")
+      |> List.first()
+
+    "covers/#{public_id}"
   end
 
   def open_graph_description(text, true) do

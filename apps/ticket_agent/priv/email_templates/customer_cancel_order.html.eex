@@ -1,9 +1,12 @@
 <% import TicketAgent.OrderHelpers %>
 <img src="<%= listing_image_with_dimensions(listing, 590, 200) %>" style="border-radius: 5px;" />
 <br />
+<%= if order.total_price == 0 do %>
+<p>Your order for <%= ticket_word(ticket_count) %> to <em><%= listing.title %></em> has been cancelled.</p>
+<% else %>
 <p>Your order for <%= ticket_word(ticket_count) %> to <em><%= listing.title %></em> has been cancelled and fully refunded.</p>
 <p>The funds will be returned to the account used to make the payment. Refunds can take 5 - 8 business days.</p>
-
+<% end %>
 <br />
 
 <table class="spacer"><tbody><tr><td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td></tr></tbody></table>

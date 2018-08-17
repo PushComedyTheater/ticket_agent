@@ -96,14 +96,7 @@ defmodule TicketAgent.OrderHelpers do
   end
 
   def listing_with_dimensions(image_url, width, height) do
-    public_id =
-      image_url
-      |> String.split("/")
-      |> List.last()
-      |> String.split(".")
-      |> List.first()
-
-    public_id = "covers/" <> public_id
+    public_id = load_public_id(image_url)
 
     Cloudinex.Url.for(public_id, %{
       width: width,
@@ -112,6 +105,17 @@ defmodule TicketAgent.OrderHelpers do
       crop: "fill",
       flags: 'progressive'
     })
+  end
+
+  def load_public_id(image_url) do
+    public_id =
+      image_url
+      |> String.split("/")
+      |> List.last()
+      |> String.split(".")
+      |> List.first()
+
+    "covers/#{public_id}"
   end
 
   def ticket_word(ticket_count) do
