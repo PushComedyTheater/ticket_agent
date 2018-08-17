@@ -6,7 +6,7 @@ defmodule TicketAgentWeb.OrderControllerTest do
     conn_without = conn
 
     user = insert(:user)
-    
+
     conn =
       conn
       |> assign(:current_user, user)
@@ -27,20 +27,22 @@ defmodule TicketAgentWeb.OrderControllerTest do
       conn = get(conn, action)
       assert html_response(conn, 302)
     end
-    
+
     test "requires active user who owns", %{conn: conn} do
       user = insert(:user)
       order = insert(:order, user: user)
       action = order_path(conn, :show, order)
       conn = get(conn, action)
       assert html_response(conn, 404)
-    end 
-    
+    end
+
     test "shows with user who owns", %{conn: conn} do
+      listing = insert(:listing)
       order = insert(:order, user: conn.assigns.current_user)
+      insert(:ticket, listing: listing, order: order)
       action = order_path(conn, :show, order)
       conn = get(conn, action, %{"msg" => "test"})
       assert html_response(conn, 200) =~ "Thank you so much for your order."
-    end     
+    end
   end
 end

@@ -15,9 +15,11 @@ defmodule TicketAgent.Factory do
     Ticket,
     User,
     UserCredential,
+    UserStorage,
     Waitlist,
     WebhookDetail
   }
+
   @lorem "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam quis leo eu mauris tincidunt aliquam quis sed sapien. Donec tristique malesuada diam ut venenatis. Quisque bibendum scelerisque massa. Suspendisse potenti. Pellentesque odio lacus, cursus ut venenatis id, posuere vitae ligula. Morbi mollis libero non ex vulputate interdum. Nullam a suscipit nisi. Morbi egestas interdum neque vel vestibulum. Aenean lacinia euismod viverra. Phasellus suscipit, lectus quis viverra sodales, arcu quam dictum est, porta iaculis sapien nisi nec urna. Curabitur pulvinar mi at odio mollis, sed scelerisque metus aliquam. Phasellus sit amet ante porta, imperdiet libero sit amet, blandit augue. Vestibulum in congue mauris. Mauris sed dolor quis velit euismod aliquet."
   use ExMachina.Ecto, repo: TicketAgent.Repo
 
@@ -32,16 +34,26 @@ defmodule TicketAgent.Factory do
   end
 
   def class_factory do
-    type = Random.sample(["improvisation", "sketch", "improvisation", "improvisation", "standup", "acting"])
+    type =
+      Random.sample([
+        "improvisation",
+        "sketch",
+        "improvisation",
+        "improvisation",
+        "standup",
+        "acting"
+      ])
+
     title = sequence(:name, &"#{type} 10#{&1}")
-    slug = String.split(title, " ") |> hd |> String.downcase
+    slug = String.split(title, " ") |> hd |> String.downcase()
 
     %Class{
       type: type,
       title: title,
       slug: slug,
       description: @lorem,
-      image_url: "https://res.cloudinary.com/push-comedy-theater/image/upload/covers/wd4vnbdjwchrclmuhomg.jpg"
+      image_url:
+        "https://res.cloudinary.com/push-comedy-theater/image/upload/covers/wd4vnbdjwchrclmuhomg.jpg"
     }
   end
 
@@ -49,7 +61,16 @@ defmodule TicketAgent.Factory do
     %CreditCard{
       user: build(:user),
       stripe_id: sequence(:stripe_id, &"card_1BhrdEBwsbTzoyHbzn#{&1}"),
-      type: Random.sample(["Visa", "American Express", "MasterCard", "Discover", "JCB", "Diners Club", "Unknown"]),
+      type:
+        Random.sample([
+          "Visa",
+          "American Express",
+          "MasterCard",
+          "Discover",
+          "JCB",
+          "Diners Club",
+          "Unknown"
+        ]),
       name: sequence(:name, &"Jane Smith#{&1}"),
       line_1_check: "pass",
       zip_check: "pass",
@@ -64,7 +85,7 @@ defmodule TicketAgent.Factory do
     %Event{
       slug: Random.generate_slug(),
       title: ExMachina.Sequence.next("title"),
-      description: @lorem,
+      description: @lorem
     }
   end
 
@@ -130,6 +151,13 @@ defmodule TicketAgent.Factory do
 
   def user_credential_factory do
     %UserCredential{}
+  end
+
+  def user_storage_factory do
+    %UserStorage{
+      user: build(:user),
+      details: %{}
+    }
   end
 
   def waitlist_factory do

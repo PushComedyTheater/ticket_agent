@@ -16,43 +16,28 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
     test "redirects when there is nothing", %{conn: conn} do
       conn =
         conn
-        |> Map.put(:cookies, %{"ticket_data" => ""})
         |> ValidateShowRequest.call([])
 
       assert html_response(conn, 302)
-      refute conn.cookies["ticket_data"]
-    end
-
-    test "redirects when cookies aren't there", %{conn: conn} do
-      listing = insert(:listing)
-
-      conn =
-        conn
-        |> Map.put(:params, %{"listing_id" => listing.slug})
-        |> ValidateShowRequest.call([])
-
-      assert html_response(conn, 302)
-      refute conn.cookies["ticket_data"]
     end
 
     test "redirect if the show and slug don't match", %{conn: conn} do
       listing = insert(:listing)
       other_listing = insert(:listing)
 
-      cookies =
-        %{
-          "listing" => %{
-            "slug" => other_listing.slug
-          },
-          "tickets" => []
-        }
-        |> Jason.encode!()
+      storage =
+        insert(
+          :user_storage,
+          details: %{"listing" => %{"slug" => other_listing.slug}}
+        )
+
+      uid =
+        storage.id
         |> Base.encode64()
 
       conn =
         conn
-        |> Map.put(:params, %{"listing_id" => listing.slug})
-        |> Map.put(:cookies, %{"ticket_data" => cookies})
+        |> Map.put(:params, %{"listing_id" => listing.slug, "uid" => uid})
         |> ValidateShowRequest.call([])
 
       assert html_response(conn, 302)
@@ -61,29 +46,33 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequestTest do
     test "sets stuff if the show and slug match", %{conn: conn} do
       listing = insert(:listing)
 
-      cookies =
-        %{
-          "listing" => %{
-            "slug" => listing.slug
-          },
-          "tickets" => %{
-            "default_0" => %{
-              "email" => "patrick@pushcomedytheater.com",
-              "group" => "default",
-              "listing_id" => listing.id,
-              "name" => "Patrick Veverka",
-              "price" => 500,
-              "valid" => true
+      storage =
+        insert(
+          :user_storage,
+          details: %{
+            "listing" => %{
+              "slug" => listing.slug
+            },
+            "tickets" => %{
+              "default_0" => %{
+                "email" => "patrick@pushcomedytheater.com",
+                "group" => "default",
+                "listing_id" => listing.id,
+                "name" => "Patrick Veverka",
+                "price" => 500,
+                "valid" => true
+              }
             }
           }
-        }
-        |> Jason.encode!()
+        )
+
+      uid =
+        storage.id
         |> Base.encode64()
 
       conn =
         conn
-        |> Map.put(:params, %{"listing_id" => listing.slug})
-        |> Map.put(:cookies, %{"ticket_data" => cookies})
+        |> Map.put(:params, %{"listing_id" => listing.slug, "uid" => uid})
         |> ValidateShowRequest.call([])
 
       assert conn.assigns.listing_id == listing.slug

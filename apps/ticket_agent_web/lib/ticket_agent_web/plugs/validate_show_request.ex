@@ -6,32 +6,36 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
   def init(opts), do: opts
 
   def call(%Plug.Conn{params: %{"listing_id" => listing_id, "uid" => uid}} = conn, _) do
+    Logger.info("Handling uid")
+
     storage =
       uid
       |> Base.decode64!()
       |> UserStorage.get_user_storage!()
 
-    IO.inspect(storage.details)
-
-    tickets =
-      storage.details["tickets"]
-      |> Enum.group_by(
-        fn {_, ticket} ->
-          ticket["group"]
-        end,
-        fn {_, item} ->
-          item
-        end
-      )
-
     listing = storage.details["listing"]
     slug = listing["slug"]
 
     if slug == listing_id do
+      Logger.info("slug and listing id match")
+
+      tickets =
+        storage.details["tickets"]
+        |> Enum.group_by(
+          fn {_, ticket} ->
+            ticket["group"]
+          end,
+          fn {_, item} ->
+            item
+          end
+        )
+
       conn
       |> assign(:listing_id, slug)
       |> assign(:tickets, tickets)
     else
+      Logger.error("The storage does not match the params")
+
       conn
       |> put_flash(:error, "Something went wrong with your request.")
       |> redirect(to: "/events/#{slug}")
@@ -48,7 +52,8 @@ defmodule TicketAgentWeb.Plugs.ValidateShowRequest do
     |> redirect(to: "/events")
   end
 
-  def call(conn, _) do
+  def call(conn, params) do
+    IO.inspect(conn.params)
     Logger.info("Line 53")
 
     conn
