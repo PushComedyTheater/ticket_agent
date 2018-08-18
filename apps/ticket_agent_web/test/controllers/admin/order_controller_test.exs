@@ -19,4 +19,11 @@ defmodule TicketAgentWeb.Admin.OrderControllerTest do
     conn = get(conn, action)
     assert html_response(conn, 200)
   end
+
+  test "post it", %{conn: conn} do
+    action = admin_order_path(conn, :delete)
+
+    conn = post(conn, action, %{})
+    assert %{"message" => "ok"} == json_response(conn, 200)
+  end
 end
