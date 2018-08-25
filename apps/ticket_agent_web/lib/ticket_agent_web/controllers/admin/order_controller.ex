@@ -89,10 +89,9 @@ defmodule TicketAgentWeb.Admin.OrderController do
     with order = Order.get_by_slug!(slug),
          "completed" <- order.status,
          {:ok, response} <- TicketAgent.Services.Stripe.refund(order, remote_ip),
-         {:ok, {updated_order, updated_tickets}} <-
+         {:ok, %{order: updated_order, tickets: updated_tickets}} <-
            ChargeProcessingState.cancel_order_and_tickets(order, user.id) do
-      IO.inspect(remote_ip)
-      IO.inspect("IN HERE")
+      IO.inspect("HAPP")
     else
       err ->
         IO.inspect("ERROR")

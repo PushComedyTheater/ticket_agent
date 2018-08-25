@@ -140,12 +140,13 @@ defmodule TicketAgent.Services.Stripe do
 
     details = Enum.at(order.details, 0)
 
+    uri = api_url() <> "/refunds"
+    Logger.info("uri = #{uri}")
+
     body =
       details
       |> load_refund_values()
       |> load_body(metadata)
-
-    uri = api_url() <> "/refunds"
 
     Logger.info("uri = #{uri}")
 

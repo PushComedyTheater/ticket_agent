@@ -216,7 +216,10 @@ defmodule TicketAgentWeb.Admin.ListingController do
   def edit(conn, %{"titled_slug" => titled_slug}) do
     show = load_show(titled_slug)
     changeset = Listing.changeset(show, %{})
-    render(conn, "edit.html", show: show, changeset: changeset)
+    render(conn, "edit.html", show: show, changeset: changeset, titled_slug: titled_slug)
+  end
+
+  def update(conn, params) do
   end
 
   def count_by_day(query, date_field) do

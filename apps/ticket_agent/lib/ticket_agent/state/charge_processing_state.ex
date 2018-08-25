@@ -176,27 +176,18 @@ defmodule TicketAgent.State.ChargeProcessingState do
     case Repo.transaction(transaction) do
       {:ok,
        %{
-         order_released: {1, [updated_order]},
-         release_tickets: {^order_ticket_count, updated_tickets}
+         refund_order: {1, [updated_order]},
+         refund_tickets: {order_ticket_count, updated_tickets}
        }} ->
-        {:ok, {updated_order, updated_tickets}}
-
-      {:ok, %{order_started: {0, _}}} ->
-        Logger.error("cancel_order_and_tickets->#{order.slug}: order was not updated to canceled")
-        {:error, :order_starting_error}
-
-      {:ok, %{release_tickets: _}} ->
-        Logger.error(
-          "cancel_order_and_tickets->#{order.slug}: tickets were not updated to available"
-        )
-
-        {:error, :ticket_locked_error}
+        Logger.info("Refunded order and all tickets")
+        {:ok, %{order: updated_order, tickets: updated_tickets}}
 
       anything ->
         Logger.error(
           "cancel_order_and_tickets->#{order.slug}: received unmatched error: #{inspect(anything)}"
         )
 
+        IO.inspect(anything)
         {:error, :unknown_error}
     end
   end
