@@ -21,6 +21,36 @@
       <span id="listing_description_error" style="display: none;" class="help-block">This field is required</span>
       </div>
     </div>
+
+    <div id="listing_start_at_group" class="row form-group">
+      <div class="col-sm-2">
+        <%= label f, :start_at, class: "control-label" %>
+      </div>
+      <div class="input-group col-sm-9">
+        <div class="input-group-addon">
+          <i class="far fa-clock"></i>
+        </div>
+        <input type="text" class="form-control pull-right listing_time" value="<%= @show.start_at %>">
+        <div class="input-group-addon">
+          EST
+        </div>
+      </div>
+    </div>
+    <div id="listing_end_at_group" class="row form-group">
+      <div class="col-sm-2">
+        <%= label f, :end_at, class: "control-label" %>
+      </div>
+      <div class="input-group col-sm-9">
+        <div class="input-group-addon">
+          <i class="far fa-clock"></i>
+        </div>
+        <input type="text" class="form-control pull-right listing_time" value="<%= @show.end_at %>">
+        <div class="input-group-addon">
+          EST
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
