@@ -1,3 +1,4 @@
+<script src="<%= static_path(@conn, "/js/new_listing.js") %>"></script>
 <script type="text/javascript">
 window.event_id = "<%= @event_id %>";
 window.set_image = function(url) {

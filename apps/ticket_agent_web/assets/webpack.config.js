@@ -23,7 +23,9 @@ module.exports = {
     application: ['./js/app.js', './js/hs.count-qty.js'],
     stripe_related: ['./js/stripe_response_parser.js', './js/stripe_related.js'],
     ticket_related: ['./js/ticket_related.js'],
-    admin: ['./js/admin/admin.js', './js/admin/listing/new.js'],
+    admin: './js/admin/admin.js',
+    new_listing: ['./js/admin/listing/new.js'],
+    edit_listing: ['./js/admin/listing/edit.js'],
     concierge: './js/concierge/checkin.js'
   },
   output: {
@@ -36,7 +38,10 @@ module.exports = {
     new CleanWebpackPlugin(pathsToClean, cleanOptions),
     new CopyWebpackPlugin([
       // {output}/file.txt
-      { from: './images', to: '../images/' },
+      {
+        from: './images',
+        to: '../images/'
+      },
       {
         from: './static/apple-developer-merchantid-domain-association',
         to: '../.well-known/'
@@ -54,8 +59,7 @@ module.exports = {
     // }),
   ],
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.handlebars$/,
         loader: "handlebars-loader?helperDirs[]=./helpers",
         query: {

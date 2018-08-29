@@ -4,14 +4,14 @@ import serializer from './serializer'
 
 window.current_date_time = new Date().toJSON().slice(0, 10) + " 00:00";
 
-window.delete_listing = function(listing_id) {
+window.delete_listing = function (listing_id) {
   if (confirm("Are you sure you want to remove this time and all associated tickets?")) {
     $("#row_" + listing_id).remove();
     $("#tickets_" + listing_id).remove();
   }
 }
 
-window.add_ticket = function(item) {
+window.add_ticket = function (item) {
   var iterator = parseInt($(item).data("iterator"));
   var current_ticket_count = $("#tickets_" + iterator + " .ticket_row").length;
   console.log("add_ticket -> " + iterator + " / " + current_ticket_count);
@@ -30,18 +30,18 @@ window.add_ticket = function(item) {
   window.setup_date_pickers();
 }
 
-window.toggle_ticket_settings = function(ticket_counter_id) {
+window.toggle_ticket_settings = function (ticket_counter_id) {
   console.log("toggle_ticket_settings -> " + ticket_counter_id);
   $("#row_ticket_settings_" + ticket_counter_id).toggle();
 }
 
-window.delete_ticket = function(ticket_counter_id) {
+window.delete_ticket = function (ticket_counter_id) {
   console.log("delete_ticket -> " + ticket_counter_id);
   $("#row_ticket_settings_" + ticket_counter_id).remove();
   $("#row_ticket_" + ticket_counter_id).remove();
 }
 
-window.copy_ticket = function(ticket_counter_id) {
+window.copy_ticket = function (ticket_counter_id) {
   console.log("copy_ticket -> " + ticket_counter_id);
   var iterator = ticket_counter_id.split("_")[0];
 
@@ -62,6 +62,7 @@ window.copy_ticket = function(ticket_counter_id) {
 }
 
 window.setup_date_pickers = function () {
+  console.log("setup_date_pickers")
   $('.listing_time').datetimepicker({
     format: 'yyyy-mm-dd hh:ii',
     showMeridian: true,
@@ -144,29 +145,30 @@ window.PopupCenter = function (url, title, w, h) {
 }
 
 $(function () {
+  console.log("DUFD");
   window.add_listing_template();
-  $("#create_it").on("click", function(e) {
+  $("#create_it").on("click", function (e) {
     window.create_it(e);
   })
 
-$("#choose_photo").on("click", function () {
-  window.PopupCenter("/admin/images?tag=social", "Images", "800", "500")
-  return false;
-});
-
-$(document).on('cloudinarywidgetfileuploadsuccess', function (e, data) {;
-  $("#the_image").attr("src", data.secure_url);
-});
-
-
-$("#upload_photo").on("click", function () {
-  cloudinary.openUploadWidget({
-    cloud_name: 'push-comedy-theater',
-    upload_preset: 'nxqcwxoc',
-    sources: ["local", "url", "facebook", "dropbox", "google_photos", "instagram"]
-  },
-  function (error, result) {
-    console.log(error, result)
+  $("#choose_photo").on("click", function () {
+    window.PopupCenter("/admin/images?tag=social", "Images", "800", "500")
+    return false;
   });
-})
+
+  $(document).on('cloudinarywidgetfileuploadsuccess', function (e, data) {;
+    $("#the_image").attr("src", data.secure_url);
+  });
+
+
+  $("#upload_photo").on("click", function () {
+    cloudinary.openUploadWidget({
+        cloud_name: 'push-comedy-theater',
+        upload_preset: 'nxqcwxoc',
+        sources: ["local", "url", "facebook", "dropbox", "google_photos", "instagram"]
+      },
+      function (error, result) {
+        console.log(error, result)
+      });
+  })
 });
