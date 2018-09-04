@@ -46,16 +46,16 @@ defmodule TicketAgent.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:puppeteer_pdf, "~> 0.1.1"},
+      {:puppeteer_pdf, "~> 1.0.0"},
       {:calendar, "~> 0.17.0"},
       {:coherence, "~> 0.1"},
       {:cloudinex, "~> 0.1"},
       {:ecto, "~> 2.1"},
       {:extwitter, "~> 0.8"},
       {:html_sanitize_ex, "~> 1.3.0-rc3"},
-      {:oauth2, "~> 0.9"},
+      {:oauth2, "~> 0.9.3"},
       {:postgrex, ">= 0.0.0"},
-      {:swoosh, "~> 0.16.0"},
+      {:swoosh, "~> 0.17.0"},
       {:gen_smtp, "~> 0.13.0"},
       # {:qrcode, git: "https://gitlab.com/Pacodastre/qrcode", runtime: false},
       {:qrcode, github: "sunboshan/qrcode"},

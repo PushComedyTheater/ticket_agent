@@ -1,3 +1,4 @@
+window.current_date_time = new Date().toJSON().slice(0, 10) + " 00:00";
 window.setup_date_pickers = function () {
   console.log("setup_date_pickers")
   $('.listing_time').datetimepicker({
@@ -19,12 +20,14 @@ window.setup_date_pickers = function () {
 $(function () {
   $(":input").inputmask();
   var start_time = $("#listing_start_time").val();
-  start_time = moment.tz(start_time, "Europe/London").clone().tz("America/New_York").format('YYYY-MM-DD hh:mm');
+  start_time = moment.tz(start_time, "Europe/London").clone().tz("America/New_York").format('YYYY-MM-DD HH:mm');
+  console.log(start_time);
   $("#listing_start_time").val(start_time);
 
   var end_time = $("#listing_end_time").val();
+  end_time = moment.tz(end_time, "Europe/London").clone().tz("America/New_York").format('YYYY-MM-DD HH:mm');
   console.log(end_time);
-  end_time = moment.tz(end_time, "Europe/London").clone().tz("America/New_York").format('YYYY-MM-DD hh:mm');
+
   $("#listing_end_time").val(end_time);
   window.setup_date_pickers();
 });
