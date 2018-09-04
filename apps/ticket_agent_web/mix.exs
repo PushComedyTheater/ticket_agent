@@ -54,7 +54,7 @@ defmodule TicketAgentWeb.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:ticket_agent, in_umbrella: true},
-      {:cowboy, "~> 2.0"},
+      {:cowboy, "~> 1.0"},
       {:swoosh, "~> 0.17.0"},
       {:gen_smtp, "~> 0.13.0"},
       {:sentry, "~> 6.2"},
