@@ -1,7 +1,9 @@
 APP="ticket_agent"
 AUTO_VERSION=mix-env+branch+commit-count-branch+revision
 
-BUILD_HOST="newpushers"
+
+BUILD_HOST="104.248.53.212"
+# BUILD_HOST="newpushers"
 BUILD_USER="pushers"
 BUILD_AT="/home/pushers/app_build"
 

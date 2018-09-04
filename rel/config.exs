@@ -7,14 +7,13 @@ Path.join(["rel", "plugins", "*.exs"])
 |> Enum.map(&Code.eval_file(&1))
 
 use Mix.Releases.Config,
-    # This sets the default release built by `mix release`
-    default_release: :default,
-    # This sets the default environment used by `mix release`
-    default_environment: Mix.env()
+  # This sets the default release built by `mix release`
+  default_release: :default,
+  # This sets the default environment used by `mix release`
+  default_environment: Mix.env()
 
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/configuration.html
-
 
 # You may define one or more environments in this file,
 # an environment's settings will override those of a release
@@ -28,16 +27,16 @@ environment :dev do
   # It is recommended that you build with MIX_ENV=prod and pass
   # the --env flag to Distillery explicitly if you want to use
   # dev mode.
-  set dev_mode: true
-  set include_erts: false
-  set cookie: :"O[Mnelm7m$jUPj]aLv)%~~=r$<B@3lRt(W3NlX:17oDm2TPSq%bn=b$u)Mk`q6],"
+  set(dev_mode: true)
+  set(include_erts: false)
+  set(cookie: :"O[Mnelm7m$jUPj]aLv)%~~=r$<B@3lRt(W3NlX:17oDm2TPSq%bn=b$u)Mk`q6],")
 end
 
 environment :prod do
-  set include_erts: true
-  set include_src: false
-  set cookie: :"ts79:gDyQxY&6l=9~HV$8]tajqaRjVin{kz!RY?8vCHg*T@F3RpCgJdlfyd/3E7P"
-  set output_dir: "rel/ticket_agent"
+  set(include_erts: true)
+  set(include_src: false)
+  set(cookie: :"ts79:gDyQxY&6l=9~HV$8]tajqaRjVin{kz!RY?8vCHg*T@F3RpCgJdlfyd/3E7P")
+  set(output_dir: "rel/ticket_agent")
 end
 
 # You may define one or more releases in this file.
@@ -46,17 +45,19 @@ end
 # will be used by default
 
 release :ticket_agent do
-  set version: current_version(:ticket_agent)
-  set applications: [
-    :parse_trans,
-    :runtime_tools,
-    :misc_random,
-    :elixir_make,
-    :oauther,
-    :edeliver,
-    :porcelain,
-    :pdf_generator,
-    ticket_agent: :permanent,
-    ticket_agent_web: :permanent
-  ]
+  set(version: current_version(:ticket_agent))
+
+  set(
+    applications: [
+      :runtime_tools,
+      :misc_random,
+      :elixir_make,
+      :oauther,
+      :edeliver,
+      :porcelain,
+      :pdf_generator,
+      ticket_agent: :permanent,
+      ticket_agent_web: :permanent
+    ]
+  )
 end
