@@ -1,14 +1,34 @@
 defmodule TicketAgentWeb.Coherence.RegistrationView do
   use TicketAgentWeb.Coherence, :view
 
-  def load_redirect_url(%{"redirect_url" => redirect_url}) do
-    case String.match?(redirect_url, ~r/\?/) do
-       false ->
-        redirect_url <> "?guest_checkout=true"
-       true ->
-        redirect_url <> "&guest_checkout=true"
-    end
+  def render("registration.json", %{user: user}) do
+    %{
+      user: %{
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    }
   end
 
-  def load_redirect_url(_), do: "?guest_checkout=true"
+  def render("session.json", %{user: user}) do
+    %{
+      user: %{
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    }
+  end
+
+  def render("error.json", %{changeset: changeset}) do
+    changeset =
+      cond do
+        is_nil(changeset) || changeset == "" -> "Unknown error."
+        is_bitstring(changeset) -> changeset
+        true -> error_string_from_changeset(changeset)
+      end
+
+    %{error: changeset}
+  end
 end

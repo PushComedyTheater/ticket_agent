@@ -29,10 +29,10 @@ defmodule TicketAgentWeb.Coherence do
       import Plug.Conn
       import TicketAgentWeb.Router.Helpers
       import TicketAgentWeb.Gettext
-      import Coherence.ControllerHelpers
+      import Coherence.Controller
 
       alias Coherence.Config
-      alias Coherence.ControllerHelpers, as: Helpers
+      alias Coherence.Controller
 
       require Redirects
     end
