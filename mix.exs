@@ -4,7 +4,7 @@ defmodule TicketAgent.Umbrella.Mixfile do
   def project do
     [
       apps_path: "apps",
-      version: append_revision("0.1.3"),
+      version: append_revision("0.1.4"),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
