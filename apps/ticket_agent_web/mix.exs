@@ -57,7 +57,7 @@ defmodule TicketAgentWeb.Mixfile do
       {:cowboy, "~> 1.0"},
       {:swoosh, "~> 0.17.0"},
       {:gen_smtp, "~> 0.13.0"},
-      {:sentry, "~> 6.2"},
+      {:sentry, "~> 7.0"},
       {:scrivener_html, "~> 1.7"},
       {:trailing_format_plug, "~> 0.0.5"},
       {:timber, "~> 2.0"},
