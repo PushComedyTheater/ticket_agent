@@ -1,4 +1,5 @@
 <%= form_for @changeset, admin_event_path(@conn, :update, @titled_slug), fn f -> %>
+
 <div class="box box-primary">
   <div class="box-header with-border">
     <h3 class="box-title">Editing '<%= @show.title %>'</h3>
@@ -64,7 +65,7 @@
     <%= for {group, tickets} <- Enum.group_by(@show.tickets, fn(x) -> x.group end) do %>
       <% sold = Enum.count(tickets, fn(ticket) -> ticket.status != "available" end)%>
       <% ticket = List.first(tickets) %>
-        <div id="row_ticket_<%= group %>" class="row form-group ticket_row">
+        <div id="row_ticket_<%= group %>" data-group="<%= group %>" class="row form-group ticket_row">
           <div class="col-sm-6" id="ticket_name_<%= group %>_group" style="margin-left: 10px;">
             <label class="control-label">Ticket Name:</label>
             <input id="ticket_name_<%= group %>" type="text" class="form-control pull-right" value="<%= ticket.name %>" placeholder="e.g. General Admission">
@@ -108,4 +109,7 @@
 </div>
 <button id="create_it" type="button" class="btn btn-block btn-info btn-flat">Update Class Listing </button>
 <% end %>
+<script type="text/javascript">
+window.listing_id = "<%= @show.id %>";
+</script>
 <script src="<%= static_path(@conn, "/js/edit_listing.js") %>"></script>

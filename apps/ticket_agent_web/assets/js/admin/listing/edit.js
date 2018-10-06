@@ -1,3 +1,6 @@
+import validation from './validation'
+import serializer from './serializer'
+
 window.current_date_time = new Date().toJSON().slice(0, 10) + " 00:00";
 window.setup_date_pickers = function () {
   console.log("setup_date_pickers")
@@ -17,6 +20,51 @@ window.setup_date_pickers = function () {
   });
 }
 
+window.update_it = function (e) {
+  console.log("crea");
+  var valid_form = true;
+  valid_form = window.validate_title(valid_form);
+  valid_form = window.validate_description(valid_form);
+  valid_form = window.validate_listings(valid_form);
+
+  if (valid_form) {
+    var details = {
+      title: $("#listing_title").val(),
+      description: window.load_description(),
+      image: $("#the_image").attr("src"),
+      tickets: window.load_edit_tickets()
+    };
+    console.log(details);
+    //   $.ajax({
+    //     // The URL for the request
+    //     url: "/admin/listings",
+    //     // The data to send (will be converted to a query string)
+    //     data: JSON.stringify(details),
+    //     // Whether this is a POST or GET request
+    //     type: "POST",
+    //     // The type of data we expect back
+    //     contentType: "application/json",
+    //     dataType: "json",
+    //     // add in csrf_token
+    //     beforeSend: function beforeSend(xhr) {
+    //       xhr.setRequestHeader("X-CSRF-Token", window.csrf_token);
+    //     }
+    //   }).done(function (response) {
+    //     console.log("done");
+    //     console.log(response); // window.location.href = "/admin/classes"
+    //   }).fail(function (xhr, status, errorThrown) {
+    //     // Code to run if the request fails; the raw request and
+    //     // status codes are passed to the function
+    //     window.console.log("Received error creating order: ");
+    //     window.console.log("errorThrown: " + errorThrown);
+    //   });
+  } else {
+    console.log("Form is invalid");
+  }
+
+  e.preventDefault();
+};
+
 $(function () {
   $(":input").inputmask();
   var start_time = $("#listing_start_time").val();
@@ -31,3 +79,7 @@ $(function () {
   $("#listing_end_time").val(end_time);
   window.setup_date_pickers();
 });
+
+$("#create_it").on("click", function (e) {
+  window.update_it(e);
+})

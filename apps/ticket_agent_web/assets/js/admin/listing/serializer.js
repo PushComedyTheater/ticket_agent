@@ -18,7 +18,21 @@ window.load_listings = function () {
   return listings;
 }
 
-window.load_listing = function(i) {
+window.load_edit_tickets = function () {
+  var tickets = [];
+
+  $.each($(".ticket_row"), function (index, value) {
+    var group = $(value).data("group");
+    tickets.push({
+      name: $("#ticket_name_" + group).val(),
+      quantity: parseInt($("#ticket_quantity_" + group).val()),
+      price: parseInt($("#ticket_price_" + group).val().replace("$ ", "").replace(".", ""))
+    })
+  })
+  return tickets;
+}
+
+window.load_listing = function (i) {
   var start_time = $("#listing_start_time_" + i).val();
   start_time = moment.tz(start_time, "America/New_York").clone().tz("Europe/London").format();
 
@@ -36,7 +50,7 @@ window.load_listing = function(i) {
   }
 }
 
-window.load_tickets = function(i) {
+window.load_tickets = function (i) {
   var ticket_count = parseInt($("#add_ticket_" + i).data("ticket-count"));
   var current_ticket_count = $("#tickets_" + i + " .ticket_row").length;
   console.log("ticket_count " + ticket_count);
@@ -61,7 +75,7 @@ window.load_tickets = function(i) {
       name: $("#ticket_name_" + i + "_" + j).val(),
       description: $("#ticket_description_" + i + "_" + j).val(),
       group: window.random.hex(15),
-      quantity:  parseInt($("#ticket_quantity_" + i + "_" + j).val()),
+      quantity: parseInt($("#ticket_quantity_" + i + "_" + j).val()),
       price: parseInt($("#ticket_price_" + i + "_" + j).val().replace("$ ", "").replace(".", "")),
       sale_start: sale_start,
       sale_end: sale_end,
