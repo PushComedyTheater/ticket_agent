@@ -7,13 +7,21 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :ticket_agent_web, TicketAgentWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: 5000],
   debug_errors: true,
   # catch_errors: true,
   code_reloader: true,
   check_origin: false,
   # watchers: [npm: ["run", "watch"]]
-  watchers: [node: ["node_modules/webpack/bin/webpack.js", "--watch", "--progress", "--color", cd: Path.expand("../assets", __DIR__)]]
+  watchers: [
+    node: [
+      "node_modules/webpack/bin/webpack.js",
+      "--watch",
+      "--progress",
+      "--color",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
 
 # ## SSL Support
 #
@@ -41,4 +49,5 @@ config :ticket_agent_web, TicketAgentWeb.Endpoint,
       ~r{lib/ticket_agent_web/templates/.*(eex)$}
     ]
   ]
+
 config :ticket_agent_web, :email_base_url, "https://veverka.ngrok.io"

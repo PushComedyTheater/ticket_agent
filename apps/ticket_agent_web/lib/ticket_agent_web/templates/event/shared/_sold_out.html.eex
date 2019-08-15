@@ -9,7 +9,7 @@
               </div>
             </div>
 
-            <%= if @conn.assigns.waitlisted do %>
+            <%= if false do %>
             <a style="margin-left: 20px;" href="#" onclick="return false;" class="btn btn-md u-btn-inset u-btn-inset--rounded u-btn-blue g-font-weight-600 g-letter-spacing-0_5 text-uppercase g-brd-2 g-rounded-50 g-mr-10 g-mb-15">
               <i class="fa fa-check-circle g-mr-3"></i>
               On Waitlist
