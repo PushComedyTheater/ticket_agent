@@ -7,10 +7,13 @@ defmodule TicketAgentWeb.Plugs.TicketAuthCheck do
   def call(%Plug.Conn{params: %{"listing_id" => listing_id}} = conn, _) do
     if !Coherence.logged_in?(conn) do
       conn
-      |> Phoenix.Controller.redirect(to: Helpers.ticket_auth_path(conn, :new, %{listing_id: listing_id}))
+      |> Phoenix.Controller.redirect(
+        to: Helpers.ticket_auth_path(conn, :new, %{listing_id: listing_id})
+      )
     else
       conn
     end
   end
+
   def call(conn, _), do: conn
 end

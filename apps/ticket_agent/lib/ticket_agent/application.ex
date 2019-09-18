@@ -15,10 +15,14 @@ defmodule TicketAgent.Application do
     # :ok = :error_logger.add_report_handler(Sentry.Logger)
     # end
 
-    Supervisor.start_link([
-      supervisor(TicketAgent.Repo, []),
-      supervisor(TicketAgent.Clock, []),
-    ], strategy: :one_for_one, name: TicketAgent.Supervisor)
+    Supervisor.start_link(
+      [
+        supervisor(TicketAgent.Repo, []),
+        supervisor(TicketAgent.Clock, [])
+      ],
+      strategy: :one_for_one,
+      name: TicketAgent.Supervisor
+    )
   end
 
   defp ensure_porcelain_init() do

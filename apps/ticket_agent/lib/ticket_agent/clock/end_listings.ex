@@ -7,7 +7,7 @@ defmodule TicketAgent.Clock.EndListings do
   alias TicketAgent.{Listing, Repo}
 
   def start_link(interval \\ 5_000) do
-    Logger.info "Starting EndListings link with interval #{interval}"
+    Logger.info("Starting EndListings link with interval #{interval}")
     GenServer.start_link(__MODULE__, interval, name: __MODULE__)
   end
 
@@ -21,10 +21,12 @@ defmodule TicketAgent.Clock.EndListings do
     case Repo.transaction(expired_listings_transaction()) do
       {:ok, %{completing_listings: {count, _}}} ->
         if count > 0 do
-          Logger.info "Completed #{count} listings"
+          Logger.info("Completed #{count} listings")
         end
+
       _ ->
-        #no op      
+        nil
+        # no op      
     end
 
     tick(interval)
@@ -37,7 +39,8 @@ defmodule TicketAgent.Clock.EndListings do
 
   def expired_listings_transaction() do
     Multi.new()
-    |> Multi.update_all(:completing_listings,
+    |> Multi.update_all(
+      :completing_listings,
       from(
         l in Listing,
         where: l.status == "active",

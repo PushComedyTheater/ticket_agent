@@ -6,7 +6,7 @@ defmodule TicketAgentWeb.Admin.TeacherView do
   end
 
   def social_links(social) when is_map(social) do
-    Enum.map(social, fn({type, link}) ->
+    Enum.map(social, fn {type, link} ->
       "#{type} - #{link}"
     end)
   end

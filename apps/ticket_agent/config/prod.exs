@@ -16,4 +16,4 @@ config :ticket_agent, :email_base_url, "https://new.pushcomedytheater.com"
 config :ticket_agent, :pdf_generator, TicketAgent.PdfGenerator.Generator
 
 config :pdf_generator,
-    wkhtml_path:    "/usr/local/bin/wkhtmltopdf"
+  wkhtml_path: "/usr/local/bin/wkhtmltopdf"

@@ -7,18 +7,23 @@ defmodule TicketAgent.Class do
   @foreign_key_type :binary_id
 
   schema "classes" do
-    field :type, :string
-    field :title, :string
-    field :slug, :string
-    field :description, :string
-    field :menu_order, :integer
-    field :image_url, :string
+    field(:type, :string)
+    field(:title, :string)
+    field(:slug, :string)
+    field(:description, :string)
+    field(:menu_order, :integer)
+    field(:image_url, :string)
 
-    belongs_to :account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID
-    belongs_to :prerequisite, Class, references: :id, foreign_key: :prerequisite_id, type: Ecto.UUID
+    belongs_to(:account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID)
 
-    has_many :listings, Listing
-    has_many :class_tickets, through: [:listings, :tickets]
+    belongs_to(:prerequisite, Class,
+      references: :id,
+      foreign_key: :prerequisite_id,
+      type: Ecto.UUID
+    )
+
+    has_many(:listings, Listing)
+    has_many(:class_tickets, through: [:listings, :tickets])
     timestamps(type: :utc_datetime)
   end
 

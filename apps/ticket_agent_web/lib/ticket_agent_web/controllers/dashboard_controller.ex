@@ -7,6 +7,6 @@ defmodule TicketAgentWeb.DashboardController do
       Coherence.current_user(conn)
       |> OrderFinder.find_all_customer_orders()
 
-    render conn, "index.html", %{orders: orders}
+    render(conn, "index.html", %{orders: orders})
   end
 end

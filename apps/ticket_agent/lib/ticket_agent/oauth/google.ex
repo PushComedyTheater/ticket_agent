@@ -7,10 +7,12 @@ defmodule TicketAgent.Google do
   alias OAuth2.Strategy.AuthCode
 
   defp config do
-    [strategy: TicketAgent.Google,
-     site: "https://accounts.google.com",
-     authorize_url: "/o/oauth2/auth",
-     token_url: "/o/oauth2/token"]
+    [
+      strategy: TicketAgent.Google,
+      site: "https://accounts.google.com",
+      authorize_url: "/o/oauth2/auth",
+      token_url: "/o/oauth2/token"
+    ]
   end
 
   # Public API

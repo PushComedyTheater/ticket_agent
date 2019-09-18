@@ -4,14 +4,16 @@ defmodule TicketAgent.Finders.WaitlistFinder do
   alias TicketAgent.{Repo, Waitlist}
 
   def find_by_email_and_listing_id(nil, _), do: nil
+
   def find_by_email_and_listing_id(email_address, listing_id) do
-    query = from(
-      w in Waitlist,
-      where: w.listing_id == ^listing_id,
-      where: w.email_address == ^email_address,
-      limit: 1,
-      select: w
-    )
+    query =
+      from(
+        w in Waitlist,
+        where: w.listing_id == ^listing_id,
+        where: w.email_address == ^email_address,
+        limit: 1,
+        select: w
+      )
 
     Repo.all(query)
   end

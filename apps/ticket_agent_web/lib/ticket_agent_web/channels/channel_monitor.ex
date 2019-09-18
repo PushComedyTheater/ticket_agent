@@ -4,15 +4,15 @@ defmodule TicketAgentWeb.ChannelMonitor do
   use GenServer
 
   def start_link(initial_state) do
-   GenServer.start_link(__MODULE__, initial_state, name: __MODULE__)
+    GenServer.start_link(__MODULE__, initial_state, name: __MODULE__)
   end
 
   def user_joined(channel, user) do
-   GenServer.call(__MODULE__, {:user_joined, channel, user})
+    GenServer.call(__MODULE__, {:user_joined, channel, user})
   end
 
   def users_in_channel(channel) do
-   GenServer.call(__MODULE__, {:users_in_channel, channel})
+    GenServer.call(__MODULE__, {:users_in_channel, channel})
   end
 
   def user_left(channel, user_id) do
@@ -21,12 +21,14 @@ defmodule TicketAgentWeb.ChannelMonitor do
 
   # GenServer implementation
   def handle_call({:user_joined, channel, user}, _from, state) do
-    new_state = case Map.get(state, channel) do
-      nil ->
-        Map.put(state, channel, [user])
-      users ->
-        Map.put(state, channel, Enum.uniq([user | users]))
-    end
+    new_state =
+      case Map.get(state, channel) do
+        nil ->
+          Map.put(state, channel, [user])
+
+        users ->
+          Map.put(state, channel, Enum.uniq([user | users]))
+      end
 
     {:reply, new_state, new_state}
   end
@@ -36,11 +38,12 @@ defmodule TicketAgentWeb.ChannelMonitor do
   end
 
   def handle_call({:user_left, channel, user_id}, _from, state) do
-    new_users = state
+    new_users =
+      state
       |> Map.get(channel)
       |> Enum.reject(&(&1.id == user_id))
 
-    new_state = Map.update!(state, channel, fn(_) -> new_users end)
+    new_state = Map.update!(state, channel, fn _ -> new_users end)
 
     {:reply, new_state, new_state}
   end

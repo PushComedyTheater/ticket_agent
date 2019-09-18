@@ -2,12 +2,14 @@ defmodule TicketAgentWeb.Backend.ClassController do
   alias TicketAgent.{Class, Repo}
   import Ecto.Query
   use TicketAgentWeb, :controller
-  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "classes"}
+  plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "classes"})
 
   def index(conn, _params) do
-    query = from c in Class,
-            order_by: c.type,
-            select: c
+    query =
+      from(c in Class,
+        order_by: c.type,
+        select: c
+      )
 
     classes = Repo.all(query)
 
@@ -36,21 +38,24 @@ defmodule TicketAgentWeb.Backend.ClassController do
         conn
         |> put_flash(:info, "Class updated successfully.")
         |> redirect(to: backend_class_path(conn, :index))
+
       {:error, _} ->
         render(conn, "edit.html", load_form_details(class))
     end
   end
 
   def load_form_details(class) do
-    classes = Repo.all(Class)
-              |> Enum.map(&{&1.title, &1.id})
+    classes =
+      Repo.all(Class)
+      |> Enum.map(&{&1.title, &1.id})
 
     class_types = [
-      "Improv": "improvisation",
-      "Sketch": "sketch",
-      "Standup": "standup",
-      "Acting": "acting"
+      Improv: "improvisation",
+      Sketch: "sketch",
+      Standup: "standup",
+      Acting: "acting"
     ]
+
     changeset = Class.changeset(class, %{})
 
     [
@@ -62,7 +67,7 @@ defmodule TicketAgentWeb.Backend.ClassController do
   end
 
   def load_class(id) do
-    Repo.get_by!(Class, [slug: id])
+    Repo.get_by!(Class, slug: id)
     |> Repo.preload(:prerequisite)
   end
 end

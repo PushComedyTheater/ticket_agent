@@ -5,12 +5,15 @@ defmodule TicketAgent.Amazon do
   use OAuth2.Strategy
 
   alias OAuth2.Strategy.AuthCode
-# https://login.live.com/oauth20_authorize.srf?client_id=073ce2f8-e2ef-4408-b830-500bee19cdad&scope=wl.emails,wl.basic&response_type=code&redirect_uri=https://veverka.ngrok.io/auth/microsoft/callback
+
+  # https://login.live.com/oauth20_authorize.srf?client_id=073ce2f8-e2ef-4408-b830-500bee19cdad&scope=wl.emails,wl.basic&response_type=code&redirect_uri=https://veverka.ngrok.io/auth/microsoft/callback
   defp config do
-    [strategy: TicketAgent.Amazon,
-     site: "",
-     authorize_url: "https://www.amazon.com/ap/oa",
-     token_url: "https://api.amazon.com/auth/o2/token"]
+    [
+      strategy: TicketAgent.Amazon,
+      site: "",
+      authorize_url: "https://www.amazon.com/ap/oa",
+      token_url: "https://api.amazon.com/auth/o2/token"
+    ]
   end
 
   # Public API

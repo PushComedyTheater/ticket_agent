@@ -5,11 +5,14 @@ defmodule TicketAgent.Universe do
   use OAuth2.Strategy
 
   alias OAuth2.Strategy.AuthCode
+
   defp config do
-    [strategy: TicketAgent.Universe,
-     site: "https://www.universe.com/api/v2",
-     authorize_url: "https://www.universe.com/oauth/authorize",
-     token_url: "https://www.universe.com/oauth/token"]
+    [
+      strategy: TicketAgent.Universe,
+      site: "https://www.universe.com/api/v2",
+      authorize_url: "https://www.universe.com/oauth/authorize",
+      token_url: "https://www.universe.com/oauth/token"
+    ]
   end
 
   # Public API

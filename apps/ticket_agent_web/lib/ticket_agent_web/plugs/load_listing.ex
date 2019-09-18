@@ -6,7 +6,8 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
 
   def init(opts), do: opts
 
-  def call(%Plug.Conn{params: %{"listing" => %{"id" => listing_id}}} = conn, _) when not is_nil(listing_id) do
+  def call(%Plug.Conn{params: %{"listing" => %{"id" => listing_id}}} = conn, _)
+      when not is_nil(listing_id) do
     listing_id
     |> ListingFinder.find_by_id()
     |> setup_conn(conn)
@@ -16,11 +17,13 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
     listing_slug
     |> ListingFinder.find_by_slug()
     |> setup_conn(conn)
-  end  
+  end
+
   def call(conn, _), do: setup_conn(nil, conn)
 
   def setup_conn(nil, conn) do
     message = "Could not find that listing"
+
     conn
     |> put_status(422)
     |> put_view(TicketAgentWeb.ErrorView)
@@ -32,11 +35,13 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
     case past_date(start_at) do
       true ->
         message = "That listing has expired."
+
         conn
         |> put_status(422)
         |> put_view(TicketAgentWeb.ErrorView)
         |> render("error.json", %{code: "reset", reason: message})
         |> halt()
+
       false ->
         conn
         |> Plug.Conn.assign(:listing, listing)
@@ -47,11 +52,13 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
     case past_date(end_at) do
       true ->
         message = "That listing has expired."
+
         conn
         |> put_status(422)
         |> put_view(TicketAgentWeb.ErrorView)
         |> render("error.json", %{code: "reset", reason: message})
         |> halt()
+
       false ->
         conn
         |> Plug.Conn.assign(:listing, listing)
@@ -61,12 +68,12 @@ defmodule TicketAgentWeb.Plugs.LoadListing do
   defp past_date(start_at) do
     utc_now =
       DateTime.utc_now()
-      |> Calendar.NaiveDateTime.to_date_time_utc
-    
+      |> Calendar.NaiveDateTime.to_date_time_utc()
+
     start_at =
       start_at
-      |> Calendar.NaiveDateTime.to_date_time_utc
+      |> Calendar.NaiveDateTime.to_date_time_utc()
 
-    (DateTime.compare(start_at, utc_now) == :lt)
-  end  
+    DateTime.compare(start_at, utc_now) == :lt
+  end
 end

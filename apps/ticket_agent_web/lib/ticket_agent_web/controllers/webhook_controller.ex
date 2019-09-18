@@ -5,11 +5,11 @@ defmodule TicketAgentWeb.WebhookController do
   use TicketAgentWeb, :controller
 
   def create(conn, %{"provider" => "stripe"} = params) do
-    Logger.info "Processing Stripe Webhook"
+    Logger.info("Processing Stripe Webhook")
 
     %WebhookDetail{}
     |> WebhookDetail.changeset(%{source: "stripe", request: params})
-    |> Repo.insert
+    |> Repo.insert()
 
     Stripe.process_webhook(params)
 
@@ -19,10 +19,11 @@ defmodule TicketAgentWeb.WebhookController do
   end
 
   def create(conn, %{"provider" => "mailgun"} = params) do
-    Logger.info "Processing MailGun Webhook"
+    Logger.info("Processing MailGun Webhook")
+
     %WebhookDetail{}
     |> WebhookDetail.changeset(%{source: "mailgun", request: params})
-    |> Repo.insert
+    |> Repo.insert()
 
     conn
     |> put_status(200)
@@ -30,7 +31,7 @@ defmodule TicketAgentWeb.WebhookController do
   end
 
   def create(conn, _params) do
-   conn
+    conn
     |> put_status(200)
     |> render("create.json", %{})
   end

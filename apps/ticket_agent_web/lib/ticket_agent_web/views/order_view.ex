@@ -1,7 +1,13 @@
 defmodule TicketAgentWeb.OrderView do
   use TicketAgentWeb, :view
 
-  def render("create.json", %{order: order, tickets: tickets, locked_until: locked_until, pricing: pricing, pass_fees: pass_fees}) do
+  def render("create.json", %{
+        order: order,
+        tickets: tickets,
+        locked_until: locked_until,
+        pricing: pricing,
+        pass_fees: pass_fees
+      }) do
     %{
       order_slug: order.slug,
       status: order.status,

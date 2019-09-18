@@ -8,7 +8,7 @@ defmodule TicketAgentWeb.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(TicketAgentWeb.Endpoint, []),
-      worker(TicketAgentWeb.ChannelMonitor, [%{}]),
+      worker(TicketAgentWeb.ChannelMonitor, [%{}])
       # Start your own worker by calling: TicketAgentWeb.Worker.start_link(arg1, arg2, arg3)
       # worker(TicketAgentWeb.Worker, [arg1, arg2, arg3]),
     ]

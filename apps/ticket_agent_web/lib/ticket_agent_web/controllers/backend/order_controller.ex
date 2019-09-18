@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.Backend.OrderController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Order}
-  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "orders"}
+  plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "orders"})
 
   def index(conn, params) do
     orders = Order.list_orders(params)
@@ -27,6 +27,7 @@ defmodule TicketAgentWeb.Backend.OrderController do
         conn
         |> put_flash(:info, "Order created successfully.")
         |> redirect(to: admin_teacher_path(conn, :show, teacher))
+
       {:error, changeset} ->
         conn
         |> assign(:changeset, changeset)
@@ -61,6 +62,7 @@ defmodule TicketAgentWeb.Backend.OrderController do
         conn
         |> put_flash(:info, "Order updated successfully.")
         |> redirect(to: admin_teacher_path(conn, :show, teacher))
+
       {:error, changeset} ->
         conn
         |> assign(:teacher, teacher)

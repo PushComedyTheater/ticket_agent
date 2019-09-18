@@ -198,7 +198,8 @@ defmodule TicketAgent.Listing do
         summary: listing.title,
         dtstart: listing.start_at,
         dtend: listing.end_at,
-        description: Curtail.truncate(HtmlSanitizeEx.strip_tags(listing.description), length: 400),
+        description:
+          Curtail.truncate(HtmlSanitizeEx.strip_tags(listing.description), length: 400),
         location: "Push Comedy Theater, 763 Granby St, Norfolk, VA 23510, USA",
         url:
           "http://pushcomedytheater.com/events/#{listing.slug}-#{

@@ -5,11 +5,14 @@ defmodule TicketAgent.Facebook do
   use OAuth2.Strategy
 
   alias OAuth2.Strategy.AuthCode
+
   defp config do
-    [strategy: TicketAgent.Facebook,
-     site: "https://graph.facebook.com",
-     authorize_url: "https://www.facebook.com/dialog/oauth",
-     token_url: "/oauth/access_token"]
+    [
+      strategy: TicketAgent.Facebook,
+      site: "https://graph.facebook.com",
+      authorize_url: "https://www.facebook.com/dialog/oauth",
+      token_url: "/oauth/access_token"
+    ]
   end
 
   # Public API

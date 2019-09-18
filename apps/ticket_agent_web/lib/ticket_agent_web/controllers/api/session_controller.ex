@@ -6,7 +6,10 @@ defmodule TicketAgentWeb.Api.SessionController do
   use TicketAgentWeb, :controller
 
   def index(conn, _params) do
-    render conn, "index.json", logged_in: Coherence.logged_in?(conn), user: Coherence.current_user(conn)
+    render(conn, "index.json",
+      logged_in: Coherence.logged_in?(conn),
+      user: Coherence.current_user(conn)
+    )
   end
 
   def create(conn, params) do
@@ -15,9 +18,8 @@ defmodule TicketAgentWeb.Api.SessionController do
 
     {user, conn} =
       email_address
-      |> Coherence.Schemas.get_user_by_email
+      |> Coherence.Schemas.get_user_by_email()
       |> check_login(password, conn)
-
 
     if user do
       conn
@@ -40,7 +42,11 @@ defmodule TicketAgentWeb.Api.SessionController do
   defp check_login(nil, _, conn) do
     conn =
       conn
-      |> put_private(:api_error_message, Messages.backend().incorrect_login_or_password(login_field: Config.login_field()))
+      |> put_private(
+        :api_error_message,
+        Messages.backend().incorrect_login_or_password(login_field: Config.login_field())
+      )
+
     {nil, conn}
   end
 
@@ -53,14 +59,20 @@ defmodule TicketAgentWeb.Api.SessionController do
           Helpers.unlock!(user)
         end
 
-        conn = Config.auth_module()
-               |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
+        conn =
+          Config.auth_module()
+          |> apply(Config.create_login(), [conn, user, [id_key: Config.schema_key()]])
+
         {user, conn}
+
       _ ->
         conn =
           conn
-          |> failed_login(user, User.lockable?)
-          |> put_private(:api_error_message, Messages.backend().incorrect_login_or_password(login_field: Config.login_field()))
+          |> failed_login(user, User.lockable?())
+          |> put_private(
+            :api_error_message,
+            Messages.backend().incorrect_login_or_password(login_field: Config.login_field())
+          )
 
         {nil, conn}
     end
@@ -68,22 +80,32 @@ defmodule TicketAgentWeb.Api.SessionController do
 
   defp failed_login(conn, %{} = user, true) do
     attempts = user.failed_attempts + 1
+
     {conn, flash, params} =
       if attempts >= Config.max_failed_login_attempts() do
         new_conn =
           conn
           |> assign(:locked, true)
-        {new_conn, Messages.backend().maximum_login_attempts_exceeded(), %{locked_at: Ecto.DateTime.utc()}}
+
+        {new_conn, Messages.backend().maximum_login_attempts_exceeded(),
+         %{locked_at: Ecto.DateTime.utc()}}
       else
-        {conn, Messages.backend().incorrect_login_or_password(login_field: Config.login_field()), %{}}
+        {conn, Messages.backend().incorrect_login_or_password(login_field: Config.login_field()),
+         %{}}
       end
 
     :session
     |> Helpers.changeset(user.__struct__, user, Map.put(params, :failed_attempts, attempts))
-    |> Schemas.update
+    |> Schemas.update()
 
     put_private(conn, :api_error_message, flash)
   end
-  defp failed_login(conn, _user, _), do: put_flash(conn, :error, Messages.backend().incorrect_login_or_password(login_field: Config.login_field()))
 
+  defp failed_login(conn, _user, _),
+    do:
+      put_flash(
+        conn,
+        :error,
+        Messages.backend().incorrect_login_or_password(login_field: Config.login_field())
+      )
 end

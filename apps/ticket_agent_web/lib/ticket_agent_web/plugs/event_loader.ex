@@ -6,7 +6,7 @@ defmodule TicketAgentWeb.Plugs.EventLoader do
   def init(opts), do: opts
 
   def call(%Plug.Conn{params: %{"slug" => slug}} = conn, _) do
-    Logger.info "EventLoader->slug #{slug}"
+    Logger.info("EventLoader->slug #{slug}")
     current_user = Coherence.current_user(conn)
 
     ShowFinder.load_show_details_by_slug(slug)
@@ -15,18 +15,20 @@ defmodule TicketAgentWeb.Plugs.EventLoader do
   end
 
   def setup_with_event({nil, _}, _, conn) do
-    Logger.error "EventLoader->Cannot find listing"
+    Logger.error("EventLoader->Cannot find listing")
+
     conn
     |> Plug.Conn.put_status(404)
     |> Phoenix.Controller.render(
-          TicketAgentWeb.ErrorView,
-          "404.html",
-          message: "Cannot find listing")
-    |> Plug.Conn.halt()    
-  end  
+      TicketAgentWeb.ErrorView,
+      "404.html",
+      message: "Cannot find listing"
+    )
+    |> Plug.Conn.halt()
+  end
 
   def setup_with_event({event, listings}, user, conn) do
-    Logger.info "EventLoader->setup_with_event and NO user"
+    Logger.info("EventLoader->setup_with_event and NO user")
 
     tickets = setup_tickets(listings)
     {min, max} = load_min_max(tickets)
@@ -34,7 +36,10 @@ defmodule TicketAgentWeb.Plugs.EventLoader do
     conn
     |> load_flash_message()
     |> Plug.Conn.assign(:page_title, "#{event.title} at Push Comedy Theater")
-    |> Plug.Conn.assign(:page_description, SharedView.open_graph_description(event.description, true))
+    |> Plug.Conn.assign(
+      :page_description,
+      SharedView.open_graph_description(event.description, true)
+    )
     |> Plug.Conn.assign(:page_image, SharedView.event_image(event.image_url))
     |> assign(:tickets, tickets)
     |> assign(:min_ticket_price, min)
@@ -46,26 +51,29 @@ defmodule TicketAgentWeb.Plugs.EventLoader do
 
   def load_min_max(tickets) do
     tickets
-    |> Enum.reduce({100000, 0}, fn(ticket, {min, max}) -> 
-      min = if ticket.price < min do
-        ticket.price
-      else
-        min
-      end
+    |> Enum.reduce({100_000, 0}, fn ticket, {min, max} ->
+      min =
+        if ticket.price < min do
+          ticket.price
+        else
+          min
+        end
 
-      max = if ticket.price > max do
-        ticket.price
-      else
-        max
-      end
+      max =
+        if ticket.price > max do
+          ticket.price
+        else
+          max
+        end
+
       {min, max}
-    end)    
+    end)
   end
 
   def assign_user(conn, nil, _) do
     conn
     |> assign(:purchase_orders, [])
-    |> assign(:has_purchased_event, false)    
+    |> assign(:has_purchased_event, false)
   end
 
   def assign_user(conn, user, event) do
@@ -74,31 +82,51 @@ defmodule TicketAgentWeb.Plugs.EventLoader do
 
     conn
     |> assign(:purchase_orders, purchase_orders)
-    |> assign(:has_purchased_event, has_purchased_event)  
-  end  
+    |> assign(:has_purchased_event, has_purchased_event)
+  end
 
   def setup_tickets(listings) when length(listings) > 0 do
-    tickets = 
+    tickets =
       listings
-      |> Enum.reduce([], fn(listing, acc) ->
+      |> Enum.reduce([], fn listing, acc ->
         acc = acc ++ [listing.id]
       end)
       |> TicketFinder.all_available_tickets_by_listing_ids()
+
     tickets
   end
+
   def setup_tickets(_), do: []
 
   def load_flash_message(%{params: params} = conn) do
     import TicketAgentWeb.Gettext
     import Phoenix.Controller, only: [put_flash: 3]
+
     case params["msg"] do
-      nil -> conn
+      nil ->
+        conn
+
       "show_expired" ->
-        put_flash(conn, :error, dgettext("show_expired", "This show is no longer available for purchase."))
+        put_flash(
+          conn,
+          :error,
+          dgettext("show_expired", "This show is no longer available for purchase.")
+        )
+
       "released_tickets" ->
-        put_flash(conn, :error, dgettext("released_tickets", "Your tickets were released due to session timeout."))
+        put_flash(
+          conn,
+          :error,
+          dgettext("released_tickets", "Your tickets were released due to session timeout.")
+        )
+
       "cancelled_order" ->
-        put_flash(conn, :error, dgettext("cancelled_order", "Your tickets were released when you cancelled your order."))
+        put_flash(
+          conn,
+          :error,
+          dgettext("cancelled_order", "Your tickets were released when you cancelled your order.")
+        )
+
       _ ->
         put_flash(conn, :error, dgettext("unknown", "Your tickets were released."))
     end

@@ -5,18 +5,20 @@ defmodule TicketAgentWeb.OrderPdfController do
   alias TicketAgent.Generators.OrderPdfGenerator
   alias TicketAgent.Repo
 
-  @root_dir File.cwd!
+  @root_dir File.cwd!()
 
   def show(conn, %{"order_id" => order_id}) do
     current_user = Coherence.current_user(conn)
+
     case OrderFinder.find_order(order_id, current_user.id) do
       nil ->
-        Logger.info "NO ORDER FOUND"
+        Logger.info("NO ORDER FOUND")
+
         conn
         |> put_status(404)
         |> render(TicketAgentWeb.ErrorView, "404.html")
-      order ->
 
+      order ->
         value =
           order
           |> Repo.preload([:user, :credit_card, :tickets, listing: [:event]])

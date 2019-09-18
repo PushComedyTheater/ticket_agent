@@ -22,8 +22,8 @@ defmodule TicketAgent.Random do
 
   """
   def random do
-    :rand.seed(:exs64, :os.timestamp)
-    :rand.uniform
+    :rand.seed(:exs64, :os.timestamp())
+    :rand.uniform()
   end
 
   @doc """
@@ -84,8 +84,8 @@ defmodule TicketAgent.Random do
 
   """
   def sample(list, n) when is_list(list) and is_integer(n) and n >= 0 do
-    list = for x <- list, do: {:rand.uniform, x}
-    for {_, x} <- (list |> :lists.sort |> :lists.sublist(n)), do: x
+    list = for x <- list, do: {:rand.uniform(), x}
+    for {_, x} <- list |> :lists.sort() |> :lists.sublist(n), do: x
   end
 
   def sample(%Range{} = range, n) when is_integer(n) and n >= 0 do
@@ -104,8 +104,8 @@ defmodule TicketAgent.Random do
 
   """
   def shuffle(list) when is_list(list) do
-    list = for x <- list, do: {:rand.uniform, x}
-    for {_, x} <- (list |> :lists.sort), do: x
+    list = for x <- list, do: {:rand.uniform(), x}
+    for {_, x} <- list |> :lists.sort(), do: x
   end
 
   def shuffle(%Range{} = range) do

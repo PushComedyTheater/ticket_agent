@@ -7,13 +7,13 @@ defmodule TicketAgentWeb.Plugs.LoadOrderTest do
     conn_without = conn
 
     user = insert(:user)
-    
+
     conn =
       conn
       |> assign(:current_user, user)
 
     {:ok, %{conn: conn, conn_without: conn_without}}
-  end  
+  end
 
   describe "call/2" do
     test "returns conn with order when params", %{conn: conn} do
@@ -22,7 +22,7 @@ defmodule TicketAgentWeb.Plugs.LoadOrderTest do
       conn =
         conn
         |> Map.put(:params, %{"order_id" => order.slug})
-        |> LoadOrder.call([])        
+        |> LoadOrder.call([])
 
       assert conn.assigns.order
     end
@@ -31,9 +31,9 @@ defmodule TicketAgentWeb.Plugs.LoadOrderTest do
       conn =
         conn
         |> Map.put(:params, %{"order_id" => ""})
-        |> LoadOrder.call([])        
+        |> LoadOrder.call([])
 
       assert json_response(conn, 422)
-    end    
+    end
   end
 end

@@ -20,7 +20,7 @@ defmodule TicketAgent.Finders.OrderFinder do
   end
 
   def has_customer_ordered_event?(user, event_id) when not is_nil(user) do
-    count = 
+    count =
       customer_event_orders(user.id, event_id)
       |> Enum.count()
 
@@ -28,8 +28,9 @@ defmodule TicketAgent.Finders.OrderFinder do
   end
 
   def customer_event_orders(user_id, event_id) do
-    Logger.info "user_id = #{user_id}"
-    Logger.info "event_id = #{event_id}"
+    Logger.info("user_id = #{user_id}")
+    Logger.info("event_id = #{event_id}")
+
     query =
       from(
         listing in Listing,
@@ -42,13 +43,13 @@ defmodule TicketAgent.Finders.OrderFinder do
       )
 
     query
-    |> Repo.all()    
+    |> Repo.all()
   end
 
   def find_or_create_order(current_user) when not is_nil(current_user) do
     case find_started_order(current_user) do
       nil ->
-        Logger.info "Creating a new order for this user"
+        Logger.info("Creating a new order for this user")
 
         %Order{}
         |> Order.changeset(%{
@@ -59,15 +60,17 @@ defmodule TicketAgent.Finders.OrderFinder do
           total_price: 0,
           status: "started"
         })
-        |> Repo.insert!
+        |> Repo.insert!()
+
       order ->
-        Logger.info "Found an existing started order #{inspect order.id}"
+        Logger.info("Found an existing started order #{inspect(order.id)}")
         order
     end
   end
 
   def find_started_order(current_user) do
-    Logger.info "OrderFinder.find_started_order: current_user: #{current_user.email}"
+    Logger.info("OrderFinder.find_started_order: current_user: #{current_user.email}")
+
     query =
       from(
         o in Order,
@@ -81,7 +84,8 @@ defmodule TicketAgent.Finders.OrderFinder do
   end
 
   def find_order(order_slug, user_id) do
-    Logger.info "OrderFinder.find_order: looking for slug #{order_slug} and user_id #{user_id}"
+    Logger.info("OrderFinder.find_order: looking for slug #{order_slug} and user_id #{user_id}")
+
     query =
       from(
         o in Order,

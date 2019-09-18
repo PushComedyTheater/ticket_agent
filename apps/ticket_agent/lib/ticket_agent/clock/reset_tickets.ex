@@ -6,7 +6,7 @@ defmodule TicketAgent.Clock.ResetTickets do
   alias TicketAgent.{Repo, Ticket}
 
   def start_link(interval \\ 5_000) do
-    Logger.info "Starting ResetTickets link with interval #{interval}"
+    Logger.info("Starting ResetTickets link with interval #{interval}")
     GenServer.start_link(__MODULE__, interval, name: __MODULE__)
   end
 
@@ -18,7 +18,7 @@ defmodule TicketAgent.Clock.ResetTickets do
   # Process
   def handle_info(:tick, interval) do
     expired_tickets_query()
-    |> Repo.all
+    |> Repo.all()
     |> Enum.each(&release_ticket/1)
 
     tick(interval)
@@ -30,7 +30,7 @@ defmodule TicketAgent.Clock.ResetTickets do
   end
 
   def release_ticket(ticket) do
-    Logger.info "TicketAgent.Clock.ResetTickets: Releasing Ticket #{ticket.slug}"
+    Logger.info("TicketAgent.Clock.ResetTickets: Releasing Ticket #{ticket.slug}")
 
     ticket
     |> Ecto.Changeset.cast(
@@ -49,7 +49,7 @@ defmodule TicketAgent.Clock.ResetTickets do
         :guest_email
       ]
     )
-    |> Repo.update!
+    |> Repo.update!()
   end
 
   def expired_tickets_query() do

@@ -5,11 +5,14 @@ defmodule TicketAgent.Microsoft do
   use OAuth2.Strategy
 
   alias OAuth2.Strategy.AuthCode
+
   defp config do
-    [strategy: TicketAgent.Microsoft,
-     site: "https://login.live.com",
-     authorize_url: "/oauth20_authorize.srf",
-     token_url: "/oauth20_token.srf"]
+    [
+      strategy: TicketAgent.Microsoft,
+      site: "https://login.live.com",
+      authorize_url: "/oauth20_authorize.srf",
+      token_url: "/oauth20_token.srf"
+    ]
   end
 
   # Public API

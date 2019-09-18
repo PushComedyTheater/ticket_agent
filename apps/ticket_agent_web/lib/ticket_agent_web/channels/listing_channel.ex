@@ -14,7 +14,7 @@ defmodule TicketAgentWeb.ListingChannel do
 
   def broadcast_change(listing_id, ticket) do
     payload = %{
-      "checkedin" => (ticket.status == "checkedin"),
+      "checkedin" => ticket.status == "checkedin",
       "slug" => ticket.slug,
       "guest_name" => ticket.guest_name,
       "id" => ticket.id
@@ -28,13 +28,17 @@ defmodule TicketAgentWeb.ListingChannel do
     case Coherence.verify_user_token(socket, token, &assign/3) do
       {:error, _} ->
         false
+
       {:ok, socket} ->
         user = Repo.get(User, socket.assigns.user_id)
+
         cond do
           is_nil(user) ->
             false
+
           Enum.member?(["admin", "concierge"], user.role) ->
             true
+
           true ->
             false
         end
@@ -43,9 +47,9 @@ defmodule TicketAgentWeb.ListingChannel do
 
   defp load_tickets(listing_id) do
     TicketFinder.all_tickets_for_checkin(listing_id)
-    |> Enum.map(fn(ticket) ->
+    |> Enum.map(fn ticket ->
       %{
-        "checkedin" => (ticket.status == "checkedin"),
+        "checkedin" => ticket.status == "checkedin",
         "slug" => ticket.slug,
         "guest_name" => ticket.guest_name,
         "id" => ticket.id

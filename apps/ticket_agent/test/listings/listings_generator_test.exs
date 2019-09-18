@@ -8,6 +8,7 @@ defmodule TicketAgent.ListingsGeneratorTest do
     test "it creates an event from an event" do
       event = insert(:event)
       user = insert(:user)
+
       listings = [
         %{
           "end_time" => "",
@@ -39,7 +40,8 @@ defmodule TicketAgent.ListingsGeneratorTest do
 
       params = %{
         "description" => "asdlfkjsdflkj",
-        "image" => "https://res.cloudinary.com/push-comedy-theater/image/upload/v1530992150/cover/k0gmdxgq55dkjmot4myn.png",
+        "image" =>
+          "https://res.cloudinary.com/push-comedy-theater/image/upload/v1530992150/cover/k0gmdxgq55dkjmot4myn.png",
         "listings" => listings,
         "title" => "sfadskjlkjl",
         "user" => user,
@@ -52,13 +54,13 @@ defmodule TicketAgent.ListingsGeneratorTest do
 
       assert 2 == Enum.count(tickets)
 
-      first = Enum.filter(tickets, fn(x) -> x.price == 10000 end) |> hd
+      first = Enum.filter(tickets, fn x -> x.price == 10000 end) |> hd
       assert {:ok, first.sale_start, 0} == DateTime.from_iso8601("2018-04-02 04:40:00.000000Z")
       assert {:ok, first.sale_end, 0} == DateTime.from_iso8601("2018-04-03 04:50:00.000000Z")
       assert first.group == "TEST - REMOVE"
       assert first.status == "available"
 
-      second = Enum.filter(tickets, fn(x) -> x.price == 15000 end) |> hd
+      second = Enum.filter(tickets, fn x -> x.price == 15000 end) |> hd
       assert second.sale_start
       refute second.sale_end
       assert second.group == "TEST - REMOVEs"
@@ -71,8 +73,8 @@ defmodule TicketAgent.ListingsGeneratorTest do
     end
 
     test "it creates an event not from an event" do
-
       user = insert(:user)
+
       listings = [
         %{
           "end_time" => "",
@@ -104,7 +106,8 @@ defmodule TicketAgent.ListingsGeneratorTest do
 
       params = %{
         "description" => "asdlfkjsdflkj",
-        "image" => "https://res.cloudinary.com/push-comedy-theater/image/upload/v1530992150/cover/k0gmdxgq55dkjmot4myn.png",
+        "image" =>
+          "https://res.cloudinary.com/push-comedy-theater/image/upload/v1530992150/cover/k0gmdxgq55dkjmot4myn.png",
         "listings" => listings,
         "title" => "sfadskjlkjl",
         "user" => user,
@@ -117,13 +120,13 @@ defmodule TicketAgent.ListingsGeneratorTest do
 
       assert 2 == Enum.count(tickets)
 
-      first = Enum.filter(tickets, fn(x) -> x.price == 10000 end) |> hd
+      first = Enum.filter(tickets, fn x -> x.price == 10000 end) |> hd
       assert {:ok, first.sale_start, 0} == DateTime.from_iso8601("2018-04-02 04:40:00.000000Z")
       assert {:ok, first.sale_end, 0} == DateTime.from_iso8601("2018-04-03 04:50:00.000000Z")
       assert first.group == "TEST - REMOVE"
       assert first.status == "available"
 
-      second = Enum.filter(tickets, fn(x) -> x.price == 15000 end) |> hd
+      second = Enum.filter(tickets, fn x -> x.price == 15000 end) |> hd
       assert second.sale_start
       refute second.sale_end
       assert second.group == "TEST - REMOVEs"
@@ -135,7 +138,6 @@ defmodule TicketAgent.ListingsGeneratorTest do
       assert listing.pass_fees_to_buyer
     end
   end
-
 
   # describe "create_from_class" do
   #   test "it creates from a class" do

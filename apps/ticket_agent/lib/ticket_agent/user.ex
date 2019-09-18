@@ -8,15 +8,15 @@ defmodule TicketAgent.User do
   @foreign_key_type :binary_id
 
   schema "users" do
-    belongs_to :account, Account
-    has_many :orders, Order
-    field :name, :string
-    field :email, :string
+    belongs_to(:account, Account)
+    has_many(:orders, Order)
+    field(:name, :string)
+    field(:email, :string)
     coherence_schema()
-    field :role, :string
-    field :stripe_customer_id, :string
-    field :one_time_token, :string
-    field :one_time_token_at, :utc_datetime
+    field(:role, :string)
+    field(:stripe_customer_id, :string)
+    field(:one_time_token, :string)
+    field(:one_time_token_at, :utc_datetime)
     timestamps(type: :utc_datetime)
   end
 
@@ -30,7 +30,18 @@ defmodule TicketAgent.User do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:name, :email, :account_id, :role, :stripe_customer_id, :one_time_token, :one_time_token_at] ++ coherence_fields())
+    |> cast(
+      params,
+      [
+        :name,
+        :email,
+        :account_id,
+        :role,
+        :stripe_customer_id,
+        :one_time_token,
+        :one_time_token_at
+      ] ++ coherence_fields()
+    )
     |> validate_required([:name, :email, :role])
     |> validate_format(:email, ~r/@/)
     |> unique_constraint(:email)
@@ -44,7 +55,10 @@ defmodule TicketAgent.User do
 
   def changeset(model, params, :password) do
     model
-    |> cast(params, ~w(password password_confirmation reset_password_token reset_password_sent_at))
+    |> cast(
+      params,
+      ~w(password password_confirmation reset_password_token reset_password_sent_at)
+    )
     |> validate_coherence_password_reset(params)
   end
 
@@ -82,63 +96,88 @@ defmodule TicketAgent.User do
     User.changeset(user, %{})
   end
 
-  def find_or_create_with_credentials(name, email, provider, token, token_secret, extra_details \\ %{}) do
+  def find_or_create_with_credentials(
+        name,
+        email,
+        provider,
+        token,
+        token_secret,
+        extra_details \\ %{}
+      ) do
     # create/update user in db
-    user = case Repo.get_by(User, email: email) do
-      nil ->
-        Logger.info "User: could not find user with email #{email}"
+    user =
+      case Repo.get_by(User, email: email) do
+        nil ->
+          Logger.info("User: could not find user with email #{email}")
 
-        user =
-          %User{}
-          |> User.changeset(%{name: name,
-                              email: email,
-                              password: token,
-                              password_confirmation: token,
-                              role: "oauth_customer"})
-          |> Repo.insert!
+          user =
+            %User{}
+            |> User.changeset(%{
+              name: name,
+              email: email,
+              password: token,
+              password_confirmation: token,
+              role: "oauth_customer"
+            })
+            |> Repo.insert!()
+
           Task.start(fn ->
             send_welcome_email(name, email)
           end)
+
           user
-      user ->
-        Logger.info "User: found user with email #{email}"
-        user
-        |> User.changeset(%{name: name})
-        |> Repo.update!
-    end
+
+        user ->
+          Logger.info("User: found user with email #{email}")
+
+          user
+          |> User.changeset(%{name: name})
+          |> Repo.update!()
+      end
 
     case Repo.get_by(UserCredential, provider: provider, user_id: user.id) do
       nil ->
-        Logger.info "User: could not find credentials for user with #{provider}"
+        Logger.info("User: could not find credentials for user with #{provider}")
+
         %UserCredential{}
-        |> UserCredential.changeset(%{user_id: user.id,
-                                      provider: provider,
-                                      token: token,
-                                      secret: token_secret,
-                                      extra_details: extra_details})
-        |> Repo.insert!
+        |> UserCredential.changeset(%{
+          user_id: user.id,
+          provider: provider,
+          token: token,
+          secret: token_secret,
+          extra_details: extra_details
+        })
+        |> Repo.insert!()
+
       credential ->
-        Logger.info "User: found credentials for user with #{provider}"
+        Logger.info("User: found credentials for user with #{provider}")
+
         credential
-        |> UserCredential.changeset(%{token: token, secret: token_secret, extra_details: extra_details})
-        |> Repo.update!
+        |> UserCredential.changeset(%{
+          token: token,
+          secret: token_secret,
+          extra_details: extra_details
+        })
+        |> Repo.update!()
     end
+
     user
   end
 
   def send_welcome_email(name, email) do
     TicketAgent.Emails.UserWelcomeEmail.welcome_email(name, email)
-    |> TicketAgent.Mailer.deliver!
+    |> TicketAgent.Mailer.deliver!()
   end
 
   def get_stripe_customer_id(nil), do: nil
+
   def get_stripe_customer_id(%{id: user_id}) do
     from(
       u in User,
       where: u.id == ^user_id,
       select: u.stripe_customer_id
     )
-    |> Repo.one!
+    |> Repo.one!()
   end
 
   def update_stripe_customer_id(user, stripe_customer_id) do
@@ -149,8 +188,12 @@ defmodule TicketAgent.User do
     case Repo.update(changeset) do
       {:ok, user} ->
         {:ok, user}
+
       {:error, error} ->
-        Logger.error "update_stripe_customer_id->There was an error updating this user #{inspect error}"
+        Logger.error(
+          "update_stripe_customer_id->There was an error updating this user #{inspect(error)}"
+        )
+
         {:error, :persistence_error}
     end
   end

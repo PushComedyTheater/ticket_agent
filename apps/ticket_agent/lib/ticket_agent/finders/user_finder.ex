@@ -7,10 +7,12 @@ defmodule TicketAgent.Finders.UserFinder do
   end
 
   def find_guest_by_email(email) do
-    query = from user in User,
-            where: user.role == "guest",
-            where: user.email == ^email,
-            select: user
+    query =
+      from(user in User,
+        where: user.role == "guest",
+        where: user.email == ^email,
+        select: user
+      )
 
     Repo.one(query)
   end
@@ -18,12 +20,14 @@ defmodule TicketAgent.Finders.UserFinder do
   def find_guest_by_token(token) do
     threshold = NaiveDateTime.add(NaiveDateTime.utc_now(), -600)
 
-    query = from user in User,
-            where: user.role == "guest",
-            where: user.one_time_token == ^token,
-            where: user.one_time_token_at >= ^threshold,
-            select: user
+    query =
+      from(user in User,
+        where: user.role == "guest",
+        where: user.one_time_token == ^token,
+        where: user.one_time_token_at >= ^threshold,
+        select: user
+      )
 
     Repo.one(query)
-  end  
+  end
 end

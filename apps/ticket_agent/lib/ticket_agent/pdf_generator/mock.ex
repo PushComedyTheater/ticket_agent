@@ -1,7 +1,7 @@
 # defmodule TicketAgent.PdfGenerator.Mock do
 #   Code.compiler_options(ignore_module_conflict: true)
 #   @behaviour TicketAgent.PdfBehaviour
-  
+
 #   def generate_file(html, options \\ []) do
 #     {:ok, "mock"}
 #   end

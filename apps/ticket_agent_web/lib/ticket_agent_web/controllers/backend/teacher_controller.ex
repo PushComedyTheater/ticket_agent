@@ -1,7 +1,7 @@
 defmodule TicketAgentWeb.Backend.TeacherController do
   use TicketAgentWeb, :controller
   alias TicketAgent.{Repo, Teacher}
-  plug TicketAgentWeb.Plugs.MenuLoader, %{root: "teachers"}
+  plug(TicketAgentWeb.Plugs.MenuLoader, %{root: "teachers"})
 
   def index(conn, _params) do
     teachers = Repo.paginate(Teacher)
@@ -27,6 +27,7 @@ defmodule TicketAgentWeb.Backend.TeacherController do
         conn
         |> put_flash(:info, "Teacher created successfully.")
         |> redirect(to: backend_teacher_path(conn, :show, teacher))
+
       {:error, changeset} ->
         conn
         |> assign(:changeset, changeset)
@@ -61,6 +62,7 @@ defmodule TicketAgentWeb.Backend.TeacherController do
         conn
         |> put_flash(:info, "Teacher updated successfully.")
         |> redirect(to: backend_teacher_path(conn, :show, teacher))
+
       {:error, changeset} ->
         conn
         |> assign(:teacher, teacher)

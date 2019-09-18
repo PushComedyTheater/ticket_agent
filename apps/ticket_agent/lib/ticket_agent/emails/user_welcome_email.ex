@@ -4,24 +4,43 @@ defmodule TicketAgent.Emails.UserWelcomeEmail do
   alias TicketAgent.{Listing}
 
   def welcome_email(name, email) do
-    upcoming_html_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.html.eex"
-    upcoming_text_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.txt.eex"
-    
-    shows = Enum.take(Listing.upcoming_shows, 3)
-    upcoming_shows_html = EEx.eval_file(upcoming_html_template, [shows: shows, host: host()])
-    upcoming_shows_text = EEx.eval_file(upcoming_text_template, [shows: shows, host: host()])
+    upcoming_html_template =
+      File.cwd!() <>
+        "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.html.eex"
 
-    user_welcome_html_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/user_welcome.html.eex"
-    user_welcome_text_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/user_welcome.txt.eex"
+    upcoming_text_template =
+      File.cwd!() <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/upcoming_shows.txt.eex"
 
-    user_welcome_html = EEx.eval_file(user_welcome_html_template, [name: name, upcoming_shows_html: upcoming_shows_html])
-    user_welcome_text = EEx.eval_file(user_welcome_text_template, [name: name, upcoming_shows_text: upcoming_shows_text])
+    shows = Enum.take(Listing.upcoming_shows(), 3)
+    upcoming_shows_html = EEx.eval_file(upcoming_html_template, shows: shows, host: host())
+    upcoming_shows_text = EEx.eval_file(upcoming_text_template, shows: shows, host: host())
 
-    html_layout_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex"
-    text_layout_template = File.cwd! <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.txt.eex"
+    user_welcome_html_template =
+      File.cwd!() <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/user_welcome.html.eex"
 
-    html = EEx.eval_file(html_layout_template, [body: user_welcome_html])
-    text = EEx.eval_file(text_layout_template, [body: user_welcome_text])
+    user_welcome_text_template =
+      File.cwd!() <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/user_welcome.txt.eex"
+
+    user_welcome_html =
+      EEx.eval_file(user_welcome_html_template,
+        name: name,
+        upcoming_shows_html: upcoming_shows_html
+      )
+
+    user_welcome_text =
+      EEx.eval_file(user_welcome_text_template,
+        name: name,
+        upcoming_shows_text: upcoming_shows_text
+      )
+
+    html_layout_template =
+      File.cwd!() <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.html.eex"
+
+    text_layout_template =
+      File.cwd!() <> "/apps/ticket_agent/lib/ticket_agent/emails/templates/layout.txt.eex"
+
+    html = EEx.eval_file(html_layout_template, body: user_welcome_html)
+    text = EEx.eval_file(text_layout_template, body: user_welcome_text)
 
     %Email{}
     |> to({name, email})

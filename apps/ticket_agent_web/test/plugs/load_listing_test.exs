@@ -21,7 +21,7 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
       conn =
         conn
         |> Map.put(:params, %{"listing" => %{"id" => listing.id}})
-        |> LoadListing.call([])        
+        |> LoadListing.call([])
 
       assert conn.assigns.listing
       assert conn.assigns.listing.id == listing.id
@@ -35,11 +35,11 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
       conn =
         conn
         |> Map.put(:params, %{"listing" => %{"id" => listing.id}})
-        |> LoadListing.call([])        
+        |> LoadListing.call([])
 
       refute Map.has_key?(conn.assigns, :listing)
       assert json_response(conn, 422)
-    end    
+    end
 
     test "returns conn with listing when params have listing_id and start > now", %{conn: conn} do
       event = insert(:event)
@@ -49,7 +49,7 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
       conn =
         conn
         |> Map.put(:params, %{"listing_id" => listing.slug})
-        |> LoadListing.call([])        
+        |> LoadListing.call([])
 
       assert conn.assigns.listing
       assert conn.assigns.listing.id == listing.id
@@ -63,17 +63,17 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
       conn =
         conn
         |> Map.put(:params, %{"listing_id" => listing.slug})
-        |> LoadListing.call([])        
+        |> LoadListing.call([])
 
       refute Map.has_key?(conn.assigns, :listing)
       assert json_response(conn, 422)
-    end    
+    end
 
     test "no listing", %{conn: conn} do
       conn =
         conn
         |> Map.put(:params, %{"listing" => %{"id" => "00000000-0000-0000-0000-000000000000"}})
-        |> LoadListing.call([])        
+        |> LoadListing.call([])
 
       refute Map.has_key?(conn.assigns, :listing)
       assert json_response(conn, 422)
@@ -82,10 +82,10 @@ defmodule TicketAgentWeb.Plugs.LoadListingTest do
     test "no params", %{conn: conn} do
       conn =
         conn
-        |> LoadListing.call([])        
+        |> LoadListing.call([])
 
       refute Map.has_key?(conn.assigns, :listing)
       assert json_response(conn, 422)
-    end    
+    end
   end
 end

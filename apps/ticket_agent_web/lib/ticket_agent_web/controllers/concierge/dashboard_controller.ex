@@ -4,7 +4,7 @@ defmodule TicketAgentWeb.Concierge.DashboardController do
   use TicketAgentWeb, :controller
 
   def index(conn, _) do
-    listings = ListingFinder.active_show_listings
-    render conn, "index.html", listings: listings
+    listings = ListingFinder.active_show_listings()
+    render(conn, "index.html", listings: listings)
   end
 end

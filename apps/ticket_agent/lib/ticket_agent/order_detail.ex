@@ -7,17 +7,17 @@ defmodule TicketAgent.OrderDetail do
             amount network_status risk_level response client_ip)a
 
   schema "order_details" do
-    belongs_to :order, Order, references: :id, foreign_key: :order_id, type: Ecto.UUID
-    field :charge_id, :string
-    field :balance_transaction, :string
-    field :client_ip, :string
-    field :status, :string
-    field :failure_code, :string
-    field :failure_message, :string
-    field :amount, :string
-    field :network_status, :string
-    field :risk_level, :string
-    field :response, :map
+    belongs_to(:order, Order, references: :id, foreign_key: :order_id, type: Ecto.UUID)
+    field(:charge_id, :string)
+    field(:balance_transaction, :string)
+    field(:client_ip, :string)
+    field(:status, :string)
+    field(:failure_code, :string)
+    field(:failure_message, :string)
+    field(:amount, :string)
+    field(:network_status, :string)
+    field(:risk_level, :string)
+    field(:response, :map)
 
     timestamps(type: :utc_datetime)
   end
@@ -31,7 +31,7 @@ defmodule TicketAgent.OrderDetail do
   end
 
   def parse_stripe_response(%{"error" => error} = response, order_id) do
-     %{
+    %{
       order_id: order_id,
       charge_id: error["charge"],
       balance_transaction: nil,
@@ -48,6 +48,7 @@ defmodule TicketAgent.OrderDetail do
   def parse_stripe_response(response, order_id) do
     outcome = response["outcome"]
     amount = response["amount"]
+
     %{
       order_id: order_id,
       charge_id: response["id"],

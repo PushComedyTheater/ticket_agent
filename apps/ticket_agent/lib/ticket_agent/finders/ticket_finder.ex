@@ -3,12 +3,13 @@ defmodule TicketAgent.Finders.TicketFinder do
   alias TicketAgent.{Listing, Order, Repo, Ticket}
 
   def paginate_tickets_for_listing(listing_id, params \\ %{}) do
-    query = from(
-      t in Ticket,
-      where: t.listing_id == ^listing_id,
-      order_by: :purchased_at
-    )
-    |> Repo.paginate(params)
+    query =
+      from(
+        t in Ticket,
+        where: t.listing_id == ^listing_id,
+        order_by: :purchased_at
+      )
+      |> Repo.paginate(params)
   end
 
   def find_by_listing_and_order(listing_id, order_id) do
@@ -35,26 +36,28 @@ defmodule TicketAgent.Finders.TicketFinder do
   end
 
   def count_by_listing_and_user(_, nil), do: {false, nil}
+
   def count_by_listing_and_user(listing_id, %{id: user_id}) do
     orders =
       from(
         t in Ticket,
-        left_join: o in Order, on: o.id == t.order_id,
+        left_join: o in Order,
+        on: o.id == t.order_id,
         where: o.user_id == ^user_id,
         where: t.listing_id == ^listing_id,
         select: o
       )
-      |> Repo.all
+      |> Repo.all()
 
     count = Enum.count(orders)
 
     cond do
       count > 0 ->
         {true, hd(orders)}
+
       true ->
         {false, nil}
     end
-
   end
 
   def listing_price(listing_id) do
@@ -64,7 +67,7 @@ defmodule TicketAgent.Finders.TicketFinder do
       limit: 1,
       select: t.price
     )
-    |> Repo.all
+    |> Repo.all()
   end
 
   def price_range(listing_ids) do
@@ -76,7 +79,7 @@ defmodule TicketAgent.Finders.TicketFinder do
         max_price: max(t.price)
       }
     )
-    |> Repo.one
+    |> Repo.one()
   end
 
   def all_available_tickets_by_listing_id(listing_id) do
@@ -92,21 +95,20 @@ defmodule TicketAgent.Finders.TicketFinder do
       order_by: [desc: ticket.price, asc: ticket.name, desc: ticket.price],
       select: ticket
     )
-    |> Repo.all
-
-
+    |> Repo.all()
   end
 
   def all_available_tickets_by_listing_slug(listing_slug) do
-# SELECT json_agg(distinct t0."name"), t0."price", count(t0.id) 
-# FROM "tickets" AS t0 
-# LEFT OUTER JOIN "listings" AS l1 ON l1."id" = t0."listing_id" 
-# WHERE (l1."slug" = 'JL18Y9') AND (t0."status" = 'available') AND (t0."locked_until" IS NULL) 
-# AND (t0."order_id" IS NULL) AND (t0."guest_name" IS NULL) AND (t0."guest_email" IS NULL) 
-# GROUP BY t0.price    
+    # SELECT json_agg(distinct t0."name"), t0."price", count(t0.id) 
+    # FROM "tickets" AS t0 
+    # LEFT OUTER JOIN "listings" AS l1 ON l1."id" = t0."listing_id" 
+    # WHERE (l1."slug" = 'JL18Y9') AND (t0."status" = 'available') AND (t0."locked_until" IS NULL) 
+    # AND (t0."order_id" IS NULL) AND (t0."guest_name" IS NULL) AND (t0."guest_email" IS NULL) 
+    # GROUP BY t0.price    
     from(
       ticket in Ticket,
-      left_join: listing in Listing, on: listing.id == ticket.listing_id,
+      left_join: listing in Listing,
+      on: listing.id == ticket.listing_id,
       where: listing.slug == ^listing_slug,
       where: ticket.status == "available",
       where: is_nil(ticket.locked_until),
@@ -121,8 +123,8 @@ defmodule TicketAgent.Finders.TicketFinder do
         ticket_id: max(fragment("CAST(? AS CHAR(100))", ticket.id))
       }
     )
-    |> Repo.all
-  end  
+    |> Repo.all()
+  end
 
   def all_available_tickets_by_listing_ids(listing_ids) do
     from(
@@ -135,9 +137,8 @@ defmodule TicketAgent.Finders.TicketFinder do
       where: is_nil(t.guest_email),
       select: t
     )
-    |> Repo.all
+    |> Repo.all()
   end
-
 
   def all_tickets_for_checkin(listing_id) do
     from(
@@ -147,6 +148,6 @@ defmodule TicketAgent.Finders.TicketFinder do
       order_by: fragment("substring(? from '[a-zA-Z]*$') ASC", t.guest_name),
       select: t
     )
-    |> Repo.all
+    |> Repo.all()
   end
 end

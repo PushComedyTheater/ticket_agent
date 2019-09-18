@@ -1,16 +1,16 @@
 defmodule TicketAgent.Services.StripeTest do
   import TicketAgent.Factory
   import TicketAgent.ExpectJson
-  use ExUnit.Case, async: false  
+  use ExUnit.Case, async: false
   use TicketAgent.DataCase
   alias TicketAgent.Services.Stripe
   alias TicketAgent.{OrderDetail, Repo}
 
   setup do
-    bypass = Bypass.open
+    bypass = Bypass.open()
     Application.put_env(:ticket_agent, :stripe_api_url, "http://localhost:#{bypass.port}")
     {:ok, bypass: bypass}
-  end  
+  end
 
   describe "load_stripe_token" do
     test "loads a stripe token if user record has one" do
@@ -25,15 +25,16 @@ defmodule TicketAgent.Services.StripeTest do
         "id": "cus_C762tFGaC3ctq4"
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/customers" == conn.request_path
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 200, response)
-      end
+      end)
+
       {:ok, updated_user} = Stripe.load_stripe_token(user, "blah")
       assert updated_user.stripe_customer_id == "cus_C762tFGaC3ctq4"
-    end  
-    
+    end
+
     test "loads from stripe with error", %{bypass: bypass} do
       user = insert(:user, stripe_customer_id: nil)
       response = ~s<{
@@ -42,13 +43,14 @@ defmodule TicketAgent.Services.StripeTest do
         "param": "source"
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/customers" == conn.request_path
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 400, response)
-      end
+      end)
+
       {:error, :token_error} = Stripe.load_stripe_token(user, "blah")
-    end      
+    end
   end
 
   describe "create_customer" do
@@ -59,11 +61,11 @@ defmodule TicketAgent.Services.StripeTest do
         "id": "cus_C762tFGaC3ctq4"
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/customers" == conn.request_path
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 200, response)
-      end
+      end)
 
       {:ok, updated_user} = Stripe.create_customer(user, "blah", %{})
 
@@ -82,19 +84,19 @@ defmodule TicketAgent.Services.StripeTest do
         "param": "source"
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/customers" == conn.request_path
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 400, response)
-      end
+      end)
 
       {:error, :stripe_error} = Stripe.create_customer(user, "blah", %{})
 
       user = Repo.reload(user)
 
       assert is_nil(user.stripe_customer_id)
-    end   
-    
+    end
+
     test "handles nested error", %{bypass: bypass} do
       user = insert(:user, stripe_customer_id: nil)
 
@@ -106,19 +108,19 @@ defmodule TicketAgent.Services.StripeTest do
         }
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/customers" == conn.request_path
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 400, response)
-      end
+      end)
 
       {:error, _} = Stripe.create_customer(user, "blah", %{})
 
       user = Repo.reload(user)
 
       assert is_nil(user.stripe_customer_id)
-    end  
-    
+    end
+
     test "handles unknown error", %{bypass: bypass} do
       user = insert(:user, stripe_customer_id: nil)
 
@@ -130,18 +132,18 @@ defmodule TicketAgent.Services.StripeTest do
         }
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/customers" == conn.request_path
         assert "POST" == conn.method
         Plug.Conn.resp(conn, 400, response)
-      end
+      end)
 
       {:error, _} = Stripe.create_customer(user, "blah", %{})
 
       user = Repo.reload(user)
 
       assert is_nil(user.stripe_customer_id)
-    end      
+    end
   end
 
   describe "create_charge" do
@@ -224,21 +226,26 @@ defmodule TicketAgent.Services.StripeTest do
         "transfer_group": null
       }>
 
-      expect_json bypass, fn conn ->
+      expect_json(bypass, fn conn ->
         assert "/charges" == conn.request_path
         assert "POST" == conn.method
         {:ok, body, conn} = Plug.Conn.read_body(conn, length: 1_000_000)
-        assert body == "amount=603&application_fee=55&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+
+        assert body ==
+                 "amount=603&application_fee=55&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+
         Plug.Conn.resp(conn, 200, response)
-      end
+      end)
 
       assert Enum.count(Repo.all(OrderDetail)) == 0
+
       Stripe.create_charge(
         order,
         user,
         "description",
         client_ip
       )
+
       assert Enum.count(Repo.all(OrderDetail)) == 1
     end
 
@@ -255,25 +262,30 @@ defmodule TicketAgent.Services.StripeTest do
           "type": "invalid_request_error"
         }
       }>
-    
-      expect_json bypass, fn conn ->
+
+      expect_json(bypass, fn conn ->
         assert "/charges" == conn.request_path
         assert "POST" == conn.method
         {:ok, body, conn} = Plug.Conn.read_body(conn, length: 1_000_000)
-        assert body == "amount=603&application_fee=55&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+
+        assert body ==
+                 "amount=603&application_fee=55&currency=usd&customer=cus_C762tFGaC3ctq4&description=description"
+
         Plug.Conn.resp(conn, 400, response)
-      end
+      end)
 
       assert Enum.count(Repo.all(OrderDetail)) == 0
+
       Stripe.create_charge(
         order,
         user,
         "description",
         client_ip
       )
+
       assert Enum.count(Repo.all(OrderDetail)) == 1
-    end   
-    
+    end
+
     # test "handles nested error", %{bypass: bypass} do
     #   user = insert(:user, stripe_customer_id: nil)
 
@@ -297,7 +309,7 @@ defmodule TicketAgent.Services.StripeTest do
 
     #   assert is_nil(user.stripe_customer_id)
     # end  
-    
+
     # test "handles unknown error", %{bypass: bypass} do
     #   user = insert(:user, stripe_customer_id: nil)
 
@@ -321,5 +333,5 @@ defmodule TicketAgent.Services.StripeTest do
 
     #   assert is_nil(user.stripe_customer_id)
     # end      
-  end  
+  end
 end

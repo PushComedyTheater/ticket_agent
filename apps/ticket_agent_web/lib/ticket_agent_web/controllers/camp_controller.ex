@@ -3,7 +3,7 @@ defmodule TicketAgentWeb.CampController do
   use TicketAgentWeb, :controller
 
   def index(conn, _params) do
-    camps = Listing.camps
+    camps = Listing.camps()
 
     conn
     |> assign(:camps, camps)

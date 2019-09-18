@@ -7,7 +7,7 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
 
   def show(conn, %{"ticket_id" => ticket_id}) do
     ticket = Repo.get(Ticket, ticket_id)
-    render conn, "show.html", ticket: ticket
+    render(conn, "show.html", ticket: ticket)
   end
 
   def show(conn, %{"listing_slug" => listing_slug}) do
@@ -15,8 +15,10 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
     listing = ListingFinder.find_listing_by_slug(listing_slug)
     user = Coherence.current_user(conn)
     token = Coherence.SessionService.sign_user_token(conn, user)
+
     render(
-      conn, "show_all.html",
+      conn,
+      "show_all.html",
       session_token: token,
       listing_slug: listing_slug,
       listing: listing
@@ -27,17 +29,19 @@ defmodule TicketAgentWeb.Concierge.CheckinController do
     user = Coherence.current_user(conn)
     transaction = TicketState.set_ticket_checkedin(ticket_id, user.id)
 
-    ticket = case Repo.transaction(transaction) do
-      {:ok, %{checked_in_tickets: {1, [ticket]}}} ->
-        Logger.info "Updated ticket #{ticket_id}"
-        ticket
-      _ ->
-        Logger.info "Ticket #{ticket_id} was not updated"
-        Repo.get!(Ticket, ticket_id)
-    end
+    ticket =
+      case Repo.transaction(transaction) do
+        {:ok, %{checked_in_tickets: {1, [ticket]}}} ->
+          Logger.info("Updated ticket #{ticket_id}")
+          ticket
+
+        _ ->
+          Logger.info("Ticket #{ticket_id} was not updated")
+          Repo.get!(Ticket, ticket_id)
+      end
 
     TicketAgentWeb.ListingChannel.broadcast_change(ticket.listing_id, ticket)
 
-    json conn, "OK"
+    json(conn, "OK")
   end
 end

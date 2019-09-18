@@ -6,7 +6,7 @@ defmodule TicketAgentWeb.ErrorView do
       code: code,
       reason: reason
     }
-  end  
+  end
 
   def render("error.json", %{message: message}) do
     %{message: message}

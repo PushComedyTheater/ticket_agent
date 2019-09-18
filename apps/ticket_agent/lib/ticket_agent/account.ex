@@ -6,15 +6,15 @@ defmodule TicketAgent.Account do
   @foreign_key_type :binary_id
 
   schema "accounts" do
-    field :name, :string
-    field :description, :string
-    field :url, :string
-    field :enabled, :boolean
-    field :logo, :string
-    belongs_to :creator, User, references: :id, foreign_key: :creator_id, type: Ecto.UUID
+    field(:name, :string)
+    field(:description, :string)
+    field(:url, :string)
+    field(:enabled, :boolean)
+    field(:logo, :string)
+    belongs_to(:creator, User, references: :id, foreign_key: :creator_id, type: Ecto.UUID)
 
-    has_many :classes, Class
-    has_many :events, Event
+    has_many(:classes, Class)
+    has_many(:events, Event)
 
     timestamps(type: :utc_datetime)
   end

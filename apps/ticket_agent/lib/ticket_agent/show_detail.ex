@@ -1,12 +1,12 @@
 defmodule TicketAgent.ShowDetail do
   defstruct [
-    :event_slug, 
-    :event_title, 
-    :event_description, 
-    :event_image_url, 
-    :event_id, 
-    :listing_count, 
-    :start_at, 
+    :event_slug,
+    :event_title,
+    :event_description,
+    :event_image_url,
+    :event_id,
+    :listing_count,
+    :start_at,
     :listing_ids
   ]
 
@@ -18,8 +18,8 @@ defmodule TicketAgent.ShowDetail do
 
   def slugified_title(title) do
     title
-      |> String.downcase
-      |> String.replace(~r/[^a-z0-9\s-]/, "")
-      |> String.replace(~r/(\s|-)+/, "-")
-  end    
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9\s-]/, "")
+    |> String.replace(~r/(\s|-)+/, "-")
+  end
 end

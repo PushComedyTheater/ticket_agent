@@ -6,7 +6,7 @@ defmodule TicketAgent.Clock.CheckWaitlist do
   alias TicketAgent.{Repo, Waitlist}
 
   def start_link(interval \\ 5_000) do
-    Logger.info "Starting link with interval #{interval}"
+    Logger.info("Starting link with interval #{interval}")
     GenServer.start_link(__MODULE__, interval, name: __MODULE__)
   end
 
@@ -41,14 +41,15 @@ defmodule TicketAgent.Clock.CheckWaitlist do
   end
 
   def update_to_sent([]), do: "Nothing to update"
+
   def update_to_sent(waitlists) do
-    ids = Enum.map(waitlists, fn(list) -> list.id end)
+    ids = Enum.map(waitlists, fn list -> list.id end)
+
     from(
       w in Waitlist,
       where: w.id in ^ids
     )
-    |> Repo.update_all(set: [admin_notified: true, message_sent_at: NaiveDateTime.utc_now])
-
+    |> Repo.update_all(set: [admin_notified: true, message_sent_at: NaiveDateTime.utc_now()])
   end
 
   defp tick(interval) do

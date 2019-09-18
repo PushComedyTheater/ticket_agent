@@ -3,11 +3,12 @@ defmodule TicketAgent.PdfBehaviour do
   Generates a pdf file from given html string. Returns a string containing a
   temporary file path for that PDF.
   """
-  @callback generate_file(html :: term, options :: term) :: {:ok, result :: term} | {:error, reason :: term}
+  @callback generate_file(html :: term, options :: term) ::
+              {:ok, result :: term} | {:error, reason :: term}
 
   @doc """
   Same as generate_file but returns PDF file name only (raises on error).
-  """  
+  """
   @callback generate_file!(html :: term, options :: term) :: any
 
   @doc """
@@ -17,8 +18,9 @@ defmodule TicketAgent.PdfBehaviour do
   In case option _delete_temporary_ is true, will as well delete the temporary
   pdf file.
   """
-  @callback generate_binary(html :: term, options :: term) :: {:ok, result :: term} | {:error, reason :: term}
-  
+  @callback generate_binary(html :: term, options :: term) ::
+              {:ok, result :: term} | {:error, reason :: term}
+
   @doc """
   Same as generate_binary but returns PDF content directly or raises on
   error.

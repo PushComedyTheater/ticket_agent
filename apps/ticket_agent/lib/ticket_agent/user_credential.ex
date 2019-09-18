@@ -4,13 +4,13 @@ defmodule TicketAgent.UserCredential do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
-  
+
   schema "user_credentials" do
-    belongs_to :user, User
-    field :provider, :string
-    field :token, :string
-    field :secret, :string
-    field :extra_details, :map
+    belongs_to(:user, User)
+    field(:provider, :string)
+    field(:token, :string)
+    field(:secret, :string)
+    field(:extra_details, :map)
     timestamps(type: :utc_datetime)
   end
 

@@ -8,6 +8,7 @@ defmodule TicketAgentWeb.MenuView do
     case is_concierge(conn.assigns) do
       true ->
         concierge_dashboard_path(conn, :index)
+
       false ->
         dashboard_path(conn, :index)
     end
@@ -21,18 +22,24 @@ defmodule TicketAgentWeb.MenuView do
   def is_admin(_), do: false
 
   def class_types do
-    query = from c in Class,
-            group_by: c.type,
-            order_by: c.type,
-            select: c.type
+    query =
+      from(c in Class,
+        group_by: c.type,
+        order_by: c.type,
+        select: c.type
+      )
+
     Repo.all(query)
   end
 
   def classes_by_type(type) do
-    query = from c in Class,
-            where: c.type == ^type,
-            order_by: c.menu_order,
-            select: c
+    query =
+      from(c in Class,
+        where: c.type == ^type,
+        order_by: c.menu_order,
+        select: c
+      )
+
     Repo.all(query)
   end
 

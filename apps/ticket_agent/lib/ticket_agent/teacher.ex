@@ -6,11 +6,11 @@ defmodule TicketAgent.Teacher do
   @foreign_key_type :binary_id
 
   schema "teachers" do
-    field :slug, :string
-    field :name, :string
-    field :email, :string
-    field :biography, :string
-    field :social, :map
+    field(:slug, :string)
+    field(:name, :string)
+    field(:email, :string)
+    field(:biography, :string)
+    field(:social, :map)
     timestamps(type: :utc_datetime)
   end
 
@@ -31,9 +31,9 @@ defmodule TicketAgent.Teacher do
   end
 
   def generate_teacher_slug(attrs) do
-    Map.get_lazy(attrs, "name", fn() -> Map.get(attrs, :name, "") end)
+    Map.get_lazy(attrs, "name", fn -> Map.get(attrs, :name, "") end)
     |> String.split(" ")
     |> hd
-    |> String.downcase
+    |> String.downcase()
   end
 end

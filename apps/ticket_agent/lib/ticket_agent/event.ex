@@ -10,20 +10,20 @@ defmodule TicketAgent.Event do
   @foreign_key_type :binary_id
 
   schema "events" do
-    field :slug, :string
-    field :title, :string
-    field :description, :string
-    field :status, :string
-    field :image_url, :string
+    field(:slug, :string)
+    field(:title, :string)
+    field(:description, :string)
+    field(:status, :string)
+    field(:image_url, :string)
 
-    has_many :event_tags, EventTag
+    has_many(:event_tags, EventTag)
 
-    belongs_to :account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID
-    belongs_to :user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID
+    belongs_to(:account, Account, references: :id, foreign_key: :account_id, type: Ecto.UUID)
+    belongs_to(:user, User, references: :id, foreign_key: :user_id, type: Ecto.UUID)
 
-    has_many :listings, Listing
+    has_many(:listings, Listing)
 
-    has_many :event_tickets, through: [:listings, :tickets]
+    has_many(:event_tickets, through: [:listings, :tickets])
 
     timestamps(type: :utc_datetime)
   end
@@ -45,8 +45,8 @@ defmodule TicketAgent.Event do
 
   def slugified_title(title) do
     title
-      |> String.downcase
-      |> String.replace(~r/[^a-z0-9\s-]/, "")
-      |> String.replace(~r/(\s|-)+/, "-")
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9\s-]/, "")
+    |> String.replace(~r/(\s|-)+/, "-")
   end
 end

@@ -5,14 +5,15 @@ defmodule TicketAgentWeb.Api.ListingTicketsView do
     %{
       tickets: render_many(page.entries, __MODULE__, "ticket.json"),
       page_number: page.page_number,
-      page_size: page.page_size, 
-      total_entries: page.total_entries, 
+      page_size: page.page_size,
+      total_entries: page.total_entries,
       total_pages: page.total_pages
     }
   end
 
   def render("ticket.json", ticket) do
     ticket = ticket.listing_tickets
+
     %{
       slug: ticket.slug,
       guest_name: ticket.guest_name,
