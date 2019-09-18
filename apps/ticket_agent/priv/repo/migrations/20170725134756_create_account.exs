@@ -7,6 +7,8 @@ defmodule TicketAgent.Repo.Migrations.CreateAccount do
       add :name, :text
       add :description, :text
       add :url, :text
+      add :address, :text
+      add :support_email, :text
       add :enabled, :boolean
       add :logo, :text
       add :creator_id, references(:users, type: :binary_id)
