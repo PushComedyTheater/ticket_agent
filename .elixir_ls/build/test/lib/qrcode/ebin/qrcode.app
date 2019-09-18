@@ -1,0 +1,9 @@
+{application,qrcode,
+             [{applications,[kernel,stdlib,elixir,logger]},
+              {description,"qrcode"},
+              {modules,['Elixir.QRCode','Elixir.QRCode.Encode',
+                        'Elixir.QRCode.GaloisField','Elixir.QRCode.Mask',
+                        'Elixir.QRCode.Matrix','Elixir.QRCode.ReedSolomon',
+                        'Elixir.QRCode.Render']},
+              {registered,[]},
+              {vsn,"0.1.0"}]}.
