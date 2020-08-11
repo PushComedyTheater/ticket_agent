@@ -3,13 +3,16 @@ import Ecto.Query
 
 defmodule Seeds do
   def base_account do
-    query = from a in TicketAgent.Account,
-            limit: 1,
-            select: a.id
+    query =
+      from(a in TicketAgent.Account,
+        limit: 1,
+        select: a.id
+      )
 
     case TicketAgent.Repo.one(query) do
       nil ->
-        Logger.info "SeedHelpers->base_account: Creating account"
+        Logger.info("SeedHelpers->base_account: Creating account")
+
         account =
           %TicketAgent.Account{
             name: "Push Comedy Theater",
@@ -18,19 +21,24 @@ defmodule Seeds do
             enabled: true
           }
           |> TicketAgent.Repo.insert!()
+
         account.id
-      account_id -> account_id
+
+      account_id ->
+        account_id
     end
   end
 
   def create_user(email, account_id, role \\ "admin") do
-    query = from u in TicketAgent.User,
-            where: u.email == ^email,
-            select: u
+    query =
+      from(u in TicketAgent.User,
+        where: u.email == ^email,
+        select: u
+      )
 
     case TicketAgent.Repo.one(query) do
       nil ->
-        Logger.info "SeedHelpers->create_user:  Creating user"
+        Logger.info("SeedHelpers->create_user:  Creating user")
 
         changes = %{
           name: "Patrick Veverka",
@@ -40,20 +48,23 @@ defmodule Seeds do
           account_id: account_id,
           role: role,
           confirmation_token: "supersecret",
-          confirmed_at: NaiveDateTime.utc_now,
-          confirmation_sent_at: NaiveDateTime.utc_now
+          confirmed_at: NaiveDateTime.utc_now(),
+          confirmation_sent_at: NaiveDateTime.utc_now()
         }
 
         user =
           %TicketAgent.User{}
           |> TicketAgent.User.changeset(changes)
-          |> TicketAgent.Repo.insert!
+          |> TicketAgent.Repo.insert!()
+
         user.id
-      user -> user.id
+
+      user ->
+        user.id
     end
   end
 end
 
-account = Seeds.base_account
+account = Seeds.base_account()
 user = Seeds.create_user("patrick@pushcomedytheater.com", account)
 user = Seeds.create_user("concierge@veverka.net", account, "concierge")
